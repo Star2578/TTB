@@ -1,15 +1,16 @@
-package pieces.player;
+package pieces.enemy;
 
 import javafx.scene.image.ImageView;
 import pieces.BasePiece;
 import utils.BaseStatus;
+import utils.Config;
 
-public class PlayerPiece extends BasePiece implements BaseStatus {
+public class BaseMonsterPiece extends BasePiece implements BaseStatus {
     private int currentHp;
     private int maxHp;
 
-    public PlayerPiece(int row, int col) {
-        super("Player", new ImageView("sprites/player/Knight.png"), row, col);
+    public BaseMonsterPiece(int row, int col) {
+        super("Monster", new ImageView(Config.placeholderPath), row, col);
     }
 
     @Override
@@ -38,11 +39,11 @@ public class PlayerPiece extends BasePiece implements BaseStatus {
 
     @Override
     public boolean isAlive() {
-        return currentHp > 0;
+        return false;
     }
 
     @Override
     public void onDeath() {
-        // TODO: Call Game Over
+
     }
 }

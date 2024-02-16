@@ -1,13 +1,13 @@
+package game;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import pieces.BasePiece;
 import pieces.player.PlayerPiece;
@@ -57,6 +57,7 @@ public class Main extends Application {
         // Set up the scene and stage
         Scene scene = new Scene(root, 1280, 720);
         setupMouseEvents(scene);
+        primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Dungeon Crawler");
         primaryStage.show();
