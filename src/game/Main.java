@@ -10,6 +10,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import logic.DungeonGenerator;
+import logic.GameLoop;
 import pieces.BasePiece;
 import pieces.player.*;
 import pieces.wall.*;
@@ -60,6 +61,20 @@ public class Main extends Application {
         // Add game area and GUI panes to the root BorderPane
         root.setTop(topPane);
         root.setBottom(bottomPane);
+
+        // Define update logic
+        Runnable updateLogic = () -> {
+            // Update game state
+        };
+
+        // Define render logic
+        Runnable renderLogic = () -> {
+            // Render game graphics
+        };
+
+        // Create an instance of GameLoop with the update and render logic
+        GameLoop gameLoop = new GameLoop(updateLogic, renderLogic);
+        gameLoop.start();
 
         // Set up the scene and stage
         Scene gameScene = new Scene(root, 1280, 720);
