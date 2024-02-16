@@ -16,9 +16,9 @@ import pieces.player.*;
 import pieces.wall.*;
 
 public class Main extends Application {
-    private static final int BOARD_SIZE = 16;
+    private static final int BOARD_SIZE = 20;
     private static final int SQUARE_SIZE = 32;
-    private static final int GAME_SIZE = 512;
+    private static final int GAME_SIZE = 640;
     private GridPane boardPane = new GridPane();
     private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE];
     private BasePiece[][] pieces = new BasePiece[BOARD_SIZE][BOARD_SIZE];
@@ -35,7 +35,7 @@ public class Main extends Application {
 
     public void start(Stage primaryStage) {
         BorderPane root = new BorderPane();
-        root.setBackground(Background.fill(Color.DARKBLUE));
+        root.setStyle("-fx-background-color: #1c0a05;");
         VBox topPane = new VBox(); // Pane for top area
         topPane.setBackground(Background.fill(Color.DARKRED));
         VBox bottomPane = new VBox(); // Pane for bottom GUI
@@ -49,7 +49,7 @@ public class Main extends Application {
         centerPane.getChildren().add(boardPane);
         boardPane.setBackground(Background.fill(Color.GOLD));
         root.setCenter(centerPane);
-        centerPane.setPadding(new Insets(0, 0, 200, 0));
+//        centerPane.setPadding(new Insets(0, 0, 200, 0));
 
         // Initialize player at starting position
         player = new BasePlayerPiece(0, 0); // Start at (0, 0) for now
@@ -80,6 +80,7 @@ public class Main extends Application {
         Scene gameScene = new Scene(root, 1280, 720);
         SceneManager.getInstance().setGameScene(gameScene);
         setupMouseEvents(gameScene);
+        setupKeyEvents(gameScene); // Debug Tool
         primaryStage.setResizable(false);
         primaryStage.setScene(gameScene);
         primaryStage.setTitle("Dungeon Crawler");
@@ -237,5 +238,39 @@ public class Main extends Application {
                 }
             }
         }
+    }
+
+    private void removeElements() {
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                if (pieces[row][col] != null) {
+                    boardPane.getChildren().remove(pieces[row][col].getTexture());
+                    pieces[row][col] = null;
+                }
+            }
+        }
+        boardPane.getChildren().remove(player.getTexture());
+    }
+
+    private void setupKeyEvents(Scene scene) {
+        scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case F1:
+                    removeElements();
+                    break;
+                case F2:
+                    removeElements();
+                    dungeonGenerator.generateDungeon();
+                    placeDungeon();
+                    placePlayerAtValidPosition();
+                    break;
+                case F3:
+                    removeElements();
+                    dungeonGenerator.generateDungeon();
+                    placeDungeon();
+                    placePlayerAtValidPosition();
+                    break;
+            }
+        });
     }
 }

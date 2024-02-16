@@ -3,9 +3,10 @@ package logic;
 import java.util.*;
 
 public class DungeonGenerator {
-    private static final int BOARD_SIZE = 16;
-    private static final int ROOM_MIN_SIZE = 3;
-    private static final int ROOM_MAX_SIZE = 6;
+    private static final int BOARD_SIZE = 20;
+    private static final int ROOM_MIN_SIZE = 4;
+    private static final int ROOM_MAX_SIZE = 7;
+    private static final int MIN_ROOM_DISTANCE = 4; // Minimum distance between room centers
 
     private char[][] dungeon;
 
@@ -25,19 +26,27 @@ public class DungeonGenerator {
         // Generate rooms
         List<Room> rooms = new ArrayList<>();
         Random random = new Random();
-        for (int i = 0; i < 5; i++) { // Generate 5 rooms
+        Random randomNumberOfRooms = new Random();
+        int numberOfRooms = randomNumberOfRooms.nextInt(5, 8);
+        int attempt = 1000;
+        int roomPassed = 0;
+        for (int i = 0; i < attempt; i++) { // Generate 5 - 8 rooms
             int roomWidth = random.nextInt(ROOM_MAX_SIZE - ROOM_MIN_SIZE + 1) + ROOM_MIN_SIZE;
             int roomHeight = random.nextInt(ROOM_MAX_SIZE - ROOM_MIN_SIZE + 1) + ROOM_MIN_SIZE;
             int startX = random.nextInt(BOARD_SIZE - roomWidth - 1) + 1;
             int startY = random.nextInt(BOARD_SIZE - roomHeight - 1) + 1;
             Room room = new Room(startX, startY, roomWidth, roomHeight);
-            rooms.add(room);
-            // Carve out the room
-            for (int x = startX; x < startX + roomWidth; x++) {
-                for (int y = startY; y < startY + roomHeight; y++) {
-                    dungeon[x][y] = '.';
+            if (isValidRoomPlacement(room, rooms)) {
+                rooms.add(room);
+                roomPassed++;
+                // Carve out the room
+                for (int x = startX; x < startX + roomWidth; x++) {
+                    for (int y = startY; y < startY + roomHeight; y++) {
+                        dungeon[x][y] = '.';
+                    }
                 }
             }
+            if (roomPassed == numberOfRooms) break;
         }
 
         // Connect rooms using corridors (Recursive Backtracking)
@@ -50,6 +59,18 @@ public class DungeonGenerator {
             }
             System.out.println();
         }
+    }
+
+    private boolean isValidRoomPlacement(Room newRoom, List<Room> existingRooms) {
+        for (Room room : existingRooms) {
+            int distanceSquared = (room.centerX() - newRoom.centerX()) * (room.centerX() - newRoom.centerX()) +
+                    (room.centerY() - newRoom.centerY()) * (room.centerY() - newRoom.centerY());
+            int minDistanceSquared = MIN_ROOM_DISTANCE * MIN_ROOM_DISTANCE;
+            if (distanceSquared < minDistanceSquared) {
+                return false; // Rooms are too close
+            }
+        }
+        return true;
     }
 
     private void connectRooms(Room currentRoom, List<Room> rooms, Set<Room> visited) {
