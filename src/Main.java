@@ -79,19 +79,11 @@ public class Main extends Application {
         ImageView pieceView = piece.getTexture();
         pieceView.setFitWidth(SQUARE_SIZE);
         pieceView.setFitHeight(SQUARE_SIZE);
-
-        // Create a transparent overlay to capture click events
-        Rectangle overlay = new Rectangle(SQUARE_SIZE, SQUARE_SIZE);
-        overlay.setFill(Color.TRANSPARENT);
-        overlay.setOnMouseClicked(event -> handlePieceClick(piece));
-
-        // Bind the position of the overlay with the position of the player's texture
-        overlay.translateXProperty().bind(pieceView.xProperty());
-        overlay.translateYProperty().bind(pieceView.yProperty());
+        pieceView.setOnMouseClicked(event -> handlePieceClick(piece));
 
         GridPane.setRowIndex(pieceView, piece.getRow()); // Set row index
         GridPane.setColumnIndex(pieceView, piece.getCol()); // Set column index
-        boardPane.getChildren().addAll(pieceView, overlay); // Add piece to board
+        boardPane.getChildren().addAll(pieceView); // Add piece to board
     }
 
     private void setupMouseEvents(Scene scene) {
@@ -151,6 +143,8 @@ public class Main extends Application {
         GridPane.setColumnIndex(player.getTexture(), col);
         playerRow = row;
         playerCol = col;
+        player.setCol(playerCol);
+        player.setRow(playerRow);
     }
 
     private boolean isValidMove(int row, int col) {
