@@ -10,7 +10,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import pieces.BasePiece;
-import pieces.player.PlayerPiece;
+import pieces.player.*;
+import pieces.wall.*;
 
 public class Main extends Application {
     private static final int BOARD_SIZE = 16;
@@ -18,7 +19,8 @@ public class Main extends Application {
     private static final int GAME_SIZE = 512;
     private GridPane boardPane = new GridPane();
     private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE];
-    private PlayerPiece player;
+    private BasePiece[][] pieces = new BasePiece[BOARD_SIZE][BOARD_SIZE];
+    private BasePlayerPiece player;
     private int playerRow = 0;
     private int playerCol = 0;
     private boolean isPieceSelected = false;
@@ -47,18 +49,25 @@ public class Main extends Application {
         centerPane.setPadding(new Insets(0, 0, 200, 0));
 
         // Initialize player at starting position
-        player = new PlayerPiece(0, 0); // Start at (0, 0) for now
-        placePiece(player);
+        player = new BasePlayerPiece(0, 0); // Start at (0, 0) for now
+//        placePiece(player);
+//
+//        // For testing
+//        BaseWallPiece wall = new BaseWallPiece(5, 5);
+//        placePiece(wall);
+//        pieces[5][5] = wall;
+        generateDungeon();
 
         // Add game area and GUI panes to the root BorderPane
         root.setTop(topPane);
         root.setBottom(bottomPane);
 
         // Set up the scene and stage
-        Scene scene = new Scene(root, 1280, 720);
-        setupMouseEvents(scene);
+        Scene gameScene = new Scene(root, 1280, 720);
+        SceneManager.getInstance().setGameScene(gameScene);
+        setupMouseEvents(gameScene);
         primaryStage.setResizable(false);
-        primaryStage.setScene(scene);
+        primaryStage.setScene(gameScene);
         primaryStage.setTitle("Dungeon Crawler");
         primaryStage.show();
     }
@@ -80,11 +89,12 @@ public class Main extends Application {
         ImageView pieceView = piece.getTexture();
         pieceView.setFitWidth(SQUARE_SIZE);
         pieceView.setFitHeight(SQUARE_SIZE);
-        pieceView.setOnMouseClicked(event -> handlePieceClick(piece));
+        if (piece instanceof BasePlayerPiece)
+            pieceView.setOnMouseClicked(event -> handlePieceClick(piece));
 
         GridPane.setRowIndex(pieceView, piece.getRow()); // Set row index
         GridPane.setColumnIndex(pieceView, piece.getCol()); // Set column index
-        boardPane.getChildren().addAll(pieceView); // Add piece to board
+        boardPane.getChildren().add(pieceView); // Add piece to board
     }
 
     private void setupMouseEvents(Scene scene) {
@@ -100,9 +110,9 @@ public class Main extends Application {
     }
 
     private void handlePieceClick(BasePiece piece) {
-        if (piece instanceof PlayerPiece playerPiece) {
-            System.out.println("Clicked on player piece at (" + playerPiece.getRow() + ", " + playerPiece.getCol() + ")");
-            handleSquareClick(playerPiece.getRow(), playerPiece.getCol());
+        if (piece instanceof BasePlayerPiece basePlayerPiece) {
+            System.out.println("Clicked on player piece at (" + basePlayerPiece.getRow() + ", " + basePlayerPiece.getCol() + ")");
+            handleSquareClick(basePlayerPiece.getRow(), basePlayerPiece.getCol());
         }
     }
 
@@ -149,6 +159,9 @@ public class Main extends Application {
     }
 
     private boolean isValidMove(int row, int col) {
+        if (pieces[row][col] instanceof BaseWallPiece) {
+            return false; // Destination square contains a wall, invalid move
+        }
         // For simplicity, consider all adjacent squares as valid moves
         return Math.abs(row - playerRow) <= 1 && Math.abs(col - playerCol) <= 1;
     }
@@ -180,5 +193,77 @@ public class Main extends Application {
 
     private boolean isValidPosition(int row, int col) {
         return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE;
+    }
+
+    private static final int MAX_STEPS = 1000; // Maximum number of steps for the random walk
+    private int stepsTaken = 0; // Counter for steps taken during the random walk
+
+    // Terminate the algorithm if the maximum number of steps is reached
+    private boolean reachedMaxSteps() {
+        return stepsTaken >= MAX_STEPS;
+    }
+    private void generateDungeon() {
+        // Initialize the dungeon with empty spaces
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                pieces[row][col] = null;
+            }
+        }
+
+        // Start the random walk from a random position
+        int currentRow = getRandomNumber(0, BOARD_SIZE - 1);
+        int currentCol = getRandomNumber(0, BOARD_SIZE - 1);
+        pieces[currentRow][currentCol] = new BaseWallPiece(currentRow, currentCol);
+        placePiece(pieces[currentRow][currentCol]);
+
+        // Perform random walk steps
+        while (stepsTaken < MAX_STEPS) {
+            // Move to a neighboring position randomly
+            int[] direction = getRandomDirection();
+            int newRow = currentRow + direction[0];
+            int newCol = currentCol + direction[1];
+
+            // Ensure the new position is within bounds
+            if (isValidPosition(newRow, newCol) && pieces[newRow][newCol] == null) {
+                // Place a wall piece at the new position
+                pieces[newRow][newCol] = new BaseWallPiece(newRow, newCol);
+                placePiece(pieces[newRow][newCol]);
+
+                // Update current position
+                currentRow = newRow;
+                currentCol = newCol;
+            }
+
+            // Increment stepsTaken counter
+            stepsTaken++;
+        }
+
+        placePlayerAtValidPosition();
+    }
+
+    private int getRandomNumber(int min, int max) {
+        return (int) (Math.random() * (max - min + 1)) + min;
+    }
+
+    private int[] getRandomDirection() {
+        int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        return directions[getRandomNumber(0, directions.length - 1)];
+    }
+
+    private void placePlayerAtValidPosition() {
+        // Find a valid starting position for the player
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                if (pieces[row][col] == null) {
+                    // Found an empty space, place the player here
+                    playerRow = row;
+                    playerCol = col;
+                    player.setRow(playerRow);
+                    player.setCol(playerCol);
+                    placePiece(player);
+                    return; // Exit the loop
+                }
+            }
+        }
     }
 }

@@ -31,4 +31,28 @@ public class SceneManager {
     public int getScreenWidth() {
         return screenWidth;
     }
+
+    public Scene getGameScene() {
+        return gameScene;
+    }
+
+    public void setGameScene(Scene gameScene) {
+        this.gameScene = gameScene;
+    }
+
+    public Scene getMenuScene() {
+        return menuScene;
+    }
+
+    public void setMenuScene(Scene menuScene) {
+        this.menuScene = menuScene;
+    }
+
+    public Scene getSettingsScene() {
+        return settingsScene;
+    }
+
+    public void setSettingsScene(Scene settingsScene) {
+        this.settingsScene = settingsScene;
+    }
 }

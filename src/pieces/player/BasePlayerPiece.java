@@ -4,11 +4,11 @@ import javafx.scene.image.ImageView;
 import pieces.BasePiece;
 import utils.BaseStatus;
 
-public class PlayerPiece extends BasePiece implements BaseStatus {
+public class BasePlayerPiece extends BasePiece implements BaseStatus {
     private int currentHp;
     private int maxHp;
 
-    public PlayerPiece(int row, int col) {
+    public BasePlayerPiece(int row, int col) {
         super("Player", new ImageView("sprites/player/Knight.png"), row, col);
     }
 
