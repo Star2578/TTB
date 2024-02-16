@@ -9,6 +9,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import logic.DungeonGenerator;
 import pieces.BasePiece;
 import pieces.player.*;
 import pieces.wall.*;
@@ -20,6 +21,7 @@ public class Main extends Application {
     private GridPane boardPane = new GridPane();
     private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE];
     private BasePiece[][] pieces = new BasePiece[BOARD_SIZE][BOARD_SIZE];
+    private DungeonGenerator dungeonGenerator;
     private BasePlayerPiece player;
     private int playerRow = 0;
     private int playerCol = 0;
@@ -50,13 +52,10 @@ public class Main extends Application {
 
         // Initialize player at starting position
         player = new BasePlayerPiece(0, 0); // Start at (0, 0) for now
-//        placePiece(player);
-//
-//        // For testing
-//        BaseWallPiece wall = new BaseWallPiece(5, 5);
-//        placePiece(wall);
-//        pieces[5][5] = wall;
-        generateDungeon();
+        dungeonGenerator = new DungeonGenerator(); // Initialize DungeonGenerator
+        dungeonGenerator.generateDungeon(); // Generate dungeon
+        placeDungeon();
+        placePlayerAtValidPosition();
 
         // Add game area and GUI panes to the root BorderPane
         root.setTop(topPane);
@@ -81,6 +80,19 @@ public class Main extends Application {
                 square.setImage(new Image("sprites/ground/floor_1.png")); // Set default texture
                 gridPane.add(square, col, row);
                 squares[row][col] = square;
+            }
+        }
+    }
+
+    private void placeDungeon() {
+        char[][] dungeonLayout = dungeonGenerator.getDungeonLayout();
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                if (dungeonLayout[row][col] == '#') {
+                    BaseWallPiece wall = new BaseWallPiece(row, col);
+                    placePiece(wall);
+                    pieces[row][col] = wall;
+                }
             }
         }
     }
@@ -193,61 +205,6 @@ public class Main extends Application {
 
     private boolean isValidPosition(int row, int col) {
         return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE;
-    }
-
-    private static final int MAX_STEPS = 1000; // Maximum number of steps for the random walk
-    private int stepsTaken = 0; // Counter for steps taken during the random walk
-
-    // Terminate the algorithm if the maximum number of steps is reached
-    private boolean reachedMaxSteps() {
-        return stepsTaken >= MAX_STEPS;
-    }
-    private void generateDungeon() {
-        // Initialize the dungeon with empty spaces
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                pieces[row][col] = null;
-            }
-        }
-
-        // Start the random walk from a random position
-        int currentRow = getRandomNumber(0, BOARD_SIZE - 1);
-        int currentCol = getRandomNumber(0, BOARD_SIZE - 1);
-        pieces[currentRow][currentCol] = new BaseWallPiece(currentRow, currentCol);
-        placePiece(pieces[currentRow][currentCol]);
-
-        // Perform random walk steps
-        while (stepsTaken < MAX_STEPS) {
-            // Move to a neighboring position randomly
-            int[] direction = getRandomDirection();
-            int newRow = currentRow + direction[0];
-            int newCol = currentCol + direction[1];
-
-            // Ensure the new position is within bounds
-            if (isValidPosition(newRow, newCol) && pieces[newRow][newCol] == null) {
-                // Place a wall piece at the new position
-                pieces[newRow][newCol] = new BaseWallPiece(newRow, newCol);
-                placePiece(pieces[newRow][newCol]);
-
-                // Update current position
-                currentRow = newRow;
-                currentCol = newCol;
-            }
-
-            // Increment stepsTaken counter
-            stepsTaken++;
-        }
-
-        placePlayerAtValidPosition();
-    }
-
-    private int getRandomNumber(int min, int max) {
-        return (int) (Math.random() * (max - min + 1)) + min;
-    }
-
-    private int[] getRandomDirection() {
-        int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-        return directions[getRandomNumber(0, directions.length - 1)];
     }
 
     private void placePlayerAtValidPosition() {
