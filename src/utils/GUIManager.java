@@ -59,17 +59,17 @@ public class GUIManager {
         playerCharacterFrame.setSpacing(10);
         playerCharacterFrame.setAlignment(Pos.CENTER_LEFT);
 
-        // Example: Player Character Image
+        // Player Character Image
         ImageView playerCharacterImage = new ImageView(new Image(Config.placeholderPath));
         playerCharacterImage.setFitWidth(80);
         playerCharacterImage.setFitHeight(80);
 
-        // Example: HP Bar
-        ProgressBar hpBar = new ProgressBar(0.8); // Example value, change as needed
+        // HP Bar
+        ProgressBar hpBar = new ProgressBar(0.8);
         hpBar.setPrefWidth(200);
 
-        // Example: Mana Bar
-        ProgressBar manaBar = new ProgressBar(0.6); // Example value, change as needed
+        // Mana Bar
+        ProgressBar manaBar = new ProgressBar(0.6);
         manaBar.setPrefWidth(200);
 
         playerCharacterFrame.getChildren().addAll(playerCharacterImage, hpBar, manaBar);
