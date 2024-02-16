@@ -8,12 +8,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import logic.DungeonGenerator;
 import logic.GameLoop;
 import pieces.BasePiece;
 import pieces.player.*;
 import pieces.wall.*;
+import utils.GUIManager;
 
 public class Main extends Application {
     private static final int BOARD_SIZE = 20;
@@ -28,6 +30,7 @@ public class Main extends Application {
     private int playerCol = 0;
     private boolean isPieceSelected = false;
     private ImageView selectedPieceView = null;
+    private GUIManager guiManager = new GUIManager();
 
     public static void main(String[] args) {
         launch(args);
@@ -36,12 +39,14 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #1c0a05;");
-        VBox topPane = new VBox(); // Pane for top area
-        topPane.setBackground(Background.fill(Color.DARKRED));
-        VBox bottomPane = new VBox(); // Pane for bottom GUI
+        VBox rightPane = new VBox(); // Pane for top area
+        rightPane.setBackground(Background.fill(Color.DARKRED));
+        VBox leftPane = new VBox(); // Pane for bottom GUI
+        leftPane.setBackground(Background.fill(Color.DARKCYAN));
 
         // Create the main game area
         initGrid(boardPane);
+        boardPane.setMinSize(GAME_SIZE, GAME_SIZE);
         boardPane.setMaxSize(GAME_SIZE, GAME_SIZE);
 
         // Center the game board using a StackPane
@@ -49,7 +54,6 @@ public class Main extends Application {
         centerPane.getChildren().add(boardPane);
         boardPane.setBackground(Background.fill(Color.GOLD));
         root.setCenter(centerPane);
-//        centerPane.setPadding(new Insets(0, 0, 200, 0));
 
         // Initialize player at starting position
         player = new BasePlayerPiece(0, 0); // Start at (0, 0) for now
@@ -59,8 +63,12 @@ public class Main extends Application {
         placePlayerAtValidPosition();
 
         // Add game area and GUI panes to the root BorderPane
-        root.setTop(topPane);
-        root.setBottom(bottomPane);
+        root.setRight(rightPane);
+        rightPane.getChildren().add(guiManager.getRightSideUI());
+
+        root.setLeft(leftPane);
+        leftPane.getChildren().addAll(guiManager.getTurnOrderDisplay(), guiManager.getPlayerOptionsMenu());
+        leftPane.setPadding(new Insets(10));
 
         // Define update logic
         Runnable updateLogic = () -> {
@@ -259,12 +267,6 @@ public class Main extends Application {
                     removeElements();
                     break;
                 case F2:
-                    removeElements();
-                    dungeonGenerator.generateDungeon();
-                    placeDungeon();
-                    placePlayerAtValidPosition();
-                    break;
-                case F3:
                     removeElements();
                     dungeonGenerator.generateDungeon();
                     placeDungeon();
