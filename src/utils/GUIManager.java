@@ -60,7 +60,7 @@ public class GUIManager {
         playerCharacterFrame.setAlignment(Pos.CENTER_LEFT);
 
         // Player Character Image
-        ImageView playerCharacterImage = new ImageView(new Image(Config.placeholderPath));
+        ImageView playerCharacterImage = new ImageView(new Image(Config.PlaceholderPath));
         playerCharacterImage.setFitWidth(80);
         playerCharacterImage.setFitHeight(80);
 

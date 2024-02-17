@@ -10,7 +10,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private int maxHp;
 
     public BasePlayerPiece(int row, int col) {
-        super("Player", new ImageView(Config.placeholderPath), row, col);
+        super("Player", new ImageView(Config.PlaceholderPath), row, col);
     }
 
     @Override

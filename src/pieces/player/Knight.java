@@ -1,5 +1,7 @@
 package pieces.player;
 
+import utils.Config;
+
 public class Knight extends BasePlayerPiece {
     private int currentMana;
     private int maxMana;
@@ -7,7 +9,7 @@ public class Knight extends BasePlayerPiece {
         super(row, col);
         maxMana = 10;
         currentMana = maxMana;
-        setTextureByPath("sprites/player/Knight.png");
+        setTextureByPath(Config.KnightPath);
     }
 
     @Override

@@ -15,6 +15,7 @@ import logic.GameLoop;
 import pieces.BasePiece;
 import pieces.player.*;
 import pieces.wall.*;
+import utils.Config;
 import utils.GUIManager;
 
 public class Main extends Application {
@@ -103,7 +104,7 @@ public class Main extends Application {
                 ImageView square = new ImageView();
                 square.setFitWidth(SQUARE_SIZE);
                 square.setFitHeight(SQUARE_SIZE);
-                square.setImage(new Image("sprites/ground/floor_1.png")); // Set default texture
+                square.setImage(new Image(Config.FloorPath)); // Set default texture
                 gridPane.add(square, col, row);
                 squares[row][col] = square;
             }
@@ -200,7 +201,7 @@ public class Main extends Application {
                 // Check if the new position is within the board bounds and not the current position
                 if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
                     if (validMovesCache[newRow][newCol]) {
-                        squares[newRow][newCol].setImage(new Image("sprites/ground/floor_2.png")); // Set texture to indicate valid move
+                        squares[newRow][newCol].setImage(new Image(Config.ValidMovePath)); // Set texture to indicate valid move
                     }
                 }
             }
@@ -213,7 +214,7 @@ public class Main extends Application {
         // Reset the texture of all squares to the default floor texture
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
-                squares[row][col].setImage(new Image("sprites/ground/floor_1.png"));
+                squares[row][col].setImage(new Image(Config.FloorPath));
             }
         }
     }

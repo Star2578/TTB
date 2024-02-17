@@ -1,4 +1,4 @@
-package pieces.enemy;
+package pieces.enemies;
 
 import javafx.scene.image.ImageView;
 import pieces.BasePiece;
@@ -10,7 +10,7 @@ public class BaseMonsterPiece extends BasePiece implements BaseStatus {
     private int maxHp;
 
     public BaseMonsterPiece(int row, int col) {
-        super("Monster", new ImageView(Config.placeholderPath), row, col);
+        super("Monster", new ImageView(Config.PlaceholderPath), row, col);
     }
 
     @Override
