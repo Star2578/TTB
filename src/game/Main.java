@@ -5,10 +5,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import logic.DungeonGenerator;
 import logic.GameLoop;
@@ -19,9 +17,9 @@ import utils.Config;
 import utils.GUIManager;
 
 public class Main extends Application {
-    private static final int BOARD_SIZE = 20;
-    private static final int SQUARE_SIZE = 32;
-    private static final int GAME_SIZE = 640;
+    private static final int BOARD_SIZE = Config.BOARD_SIZE;
+    private static final int SQUARE_SIZE = Config.SQUARE_SIZE;
+    private static final int GAME_SIZE = Config.GAME_SIZE;
     private GridPane boardPane = new GridPane();
     private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE];
     private BasePiece[][] pieces = new BasePiece[BOARD_SIZE][BOARD_SIZE];
@@ -59,6 +57,7 @@ public class Main extends Application {
 
         // Initialize player at starting position
         player = new Knight(0, 0); // Start at (0, 0) for now
+        GameManager.getInstance().currentPlayerClass = player;
         dungeonGenerator = new DungeonGenerator(); // Initialize DungeonGenerator
         dungeonGenerator.generateDungeon(); // Generate dungeon
         placeDungeon();

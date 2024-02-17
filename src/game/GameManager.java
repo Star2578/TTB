@@ -1,7 +1,11 @@
 package game;
 
+import pieces.player.BasePlayerPiece;
+
 public class GameManager {
     public static GameManager instance;
+
+    public BasePlayerPiece currentPlayerClass;
 
     public GameManager() {
 
