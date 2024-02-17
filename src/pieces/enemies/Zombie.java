@@ -20,7 +20,6 @@ public class Zombie extends BaseMonsterPiece{
     private final int ATTACK_RANGE = 1;
     private final int VISON_RANGE = 3;
     private Random random;
-    private BasePlayerPiece playerPiece = GameManager.getInstance().currentPlayerClass;
 
     public Zombie(int row, int col, boolean[][] validMovesCache) {
         super(row, col);
@@ -57,7 +56,7 @@ public class Zombie extends BaseMonsterPiece{
 
     private void chasePlayer() {
         // Calculate the distance between the Zombie and the player
-        double distance = Math.sqrt(Math.pow(playerPiece.getRow() - getRow(), 2) + Math.pow(playerPiece.getCol() - getCol(), 2));
+        double distance = Math.sqrt(Math.pow(GameManager.getInstance().player.getRow() - getRow(), 2) + Math.pow(GameManager.getInstance().player.getCol() - getCol(), 2));
 
         // If the player is within attack range, attempt to attack
         if (distance <= ATTACK_RANGE) {
@@ -78,8 +77,8 @@ public class Zombie extends BaseMonsterPiece{
 
     private void moveTowardsPlayer() {
         // Get the direction towards the player
-        int dRow = Integer.compare(playerPiece.getRow(), getRow());
-        int dCol = Integer.compare(playerPiece.getCol(), getCol());
+        int dRow = Integer.compare(GameManager.getInstance().player.getRow(), getRow());
+        int dCol = Integer.compare(GameManager.getInstance().player.getCol(), getCol());
 
         // Calculate the new position towards the player
         int newRow = getRow() + dRow;

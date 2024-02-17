@@ -32,9 +32,7 @@ public class Main extends Application {
     private int playerRow = 0;
     private int playerCol = 0;
     private boolean isPieceSelected = false;
-    private ImageView selectedPieceView = null;
     private GUIManager guiManager = new GUIManager();
-    private int currentPlayerIndex = 0; // Index of the current player in the list of players
     private List<BasePiece> environmentPieces = new ArrayList<>(); // List of all environment pieces (monsters and traps)
     private TurnManager turnManager;
 
@@ -62,8 +60,7 @@ public class Main extends Application {
         root.setCenter(centerPane);
 
         // Initialize player at starting position
-        player = new Knight(0, 0); // Start at (0, 0) for now
-        GameManager.getInstance().currentPlayerClass = player;
+        player = GameManager.getInstance().player;
         dungeonGenerator = new DungeonGenerator(); // Initialize DungeonGenerator
         dungeonGenerator.generateDungeon(); // Generate dungeon
         placeDungeon();
@@ -99,7 +96,7 @@ public class Main extends Application {
         // Set up the scene and stage
         Scene gameScene = new Scene(root, 1280, 720);
         SceneManager.getInstance().setGameScene(gameScene);
-        setupMouseEvents(gameScene);
+        setupMouseEvents();
         setupKeyEvents(gameScene); // Debug Tool
         primaryStage.setResizable(false);
         primaryStage.setScene(gameScene);
@@ -161,15 +158,13 @@ public class Main extends Application {
         ImageView pieceView = piece.getTexture();
         pieceView.setFitWidth(SQUARE_SIZE);
         pieceView.setFitHeight(SQUARE_SIZE);
-        if (piece instanceof BasePlayerPiece)
-            pieceView.setOnMouseClicked(event -> handleSquareClick(piece.getRow(), piece.getCol()));
 
         GridPane.setRowIndex(pieceView, piece.getRow()); // Set row index
         GridPane.setColumnIndex(pieceView, piece.getCol()); // Set column index
         boardPane.getChildren().add(pieceView); // Add piece to board
     }
 
-    private void setupMouseEvents(Scene scene) {
+    private void setupMouseEvents() {
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 final int currentRow = row; // Make row effectively final
@@ -184,7 +179,6 @@ public class Main extends Application {
         System.out.println("Clicked on square (" + row + ", " + col + ")");
         if (!isPieceSelected && playerRow == row && playerCol == col) {
             isPieceSelected = true;
-            selectedPieceView = squares[row][col];
             // Show valid moves by changing the color of adjacent squares
             showValidMovesFromCache(row, col);
         } else if (isPieceSelected) {
@@ -243,7 +237,6 @@ public class Main extends Application {
 
     private void resetSelection() {
         isPieceSelected = false;
-        selectedPieceView = null;
         // Reset the texture of all squares to the default floor texture
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
@@ -262,6 +255,12 @@ public class Main extends Application {
             row = (int) (Math.random() * BOARD_SIZE);
             col = (int) (Math.random() * BOARD_SIZE);
         } while (!isValidMove(row, col) || pieces[row][col] != null);
+
+        if (entity instanceof BasePlayerPiece) {
+            playerCol = col;
+            playerRow = row;
+            entity.getTexture().setOnMouseClicked(event -> handleSquareClick(entity.getRow(), entity.getCol()));
+        }
 
         entity.setRow(row);
         entity.setCol(col);

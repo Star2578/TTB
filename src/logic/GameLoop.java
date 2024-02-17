@@ -23,10 +23,4 @@ public class GameLoop extends AnimationTimer {
             lastUpdateTime = now;
         }
     }
-
-    public void endTurn() {
-        // End the current turn and start the next turn
-        turnManager.endPlayerTurn();
-        turnManager.startTurn();
-    }
 }

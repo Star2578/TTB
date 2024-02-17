@@ -4,9 +4,11 @@ import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import pieces.player.BasePlayerPiece;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TurnManager {
+    public static TurnManager instance;
     private BasePlayerPiece player;
     private List<BasePiece> environmentPieces;
     private int currentEnvironmentPieceIndex;
@@ -17,7 +19,14 @@ public class TurnManager {
         this.currentEnvironmentPieceIndex = 0;
     }
 
-    public void startTurn() {
+    public static TurnManager getInstance() {
+        if (instance == null) {
+            instance = new TurnManager(GameManager.getInstance().player, new ArrayList<>());
+        }
+        return instance;
+    }
+
+    public void startPlayerTurn() {
         // Start the turn for the player
         player.startTurn();
     }
@@ -36,6 +45,7 @@ public class TurnManager {
 
         // Move to the next environment piece
         currentEnvironmentPieceIndex = (currentEnvironmentPieceIndex + 1) % environmentPieces.size();
+        if (currentEnvironmentPieceIndex == environmentPieces.size()) startPlayerTurn();
     }
 
     public BasePlayerPiece getCurrentPlayer() {

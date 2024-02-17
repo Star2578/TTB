@@ -1,14 +1,15 @@
 package logic;
 
 import pieces.player.BasePlayerPiece;
+import pieces.player.Knight;
 
 public class GameManager {
-    public static GameManager instance;
+    private static GameManager instance;
 
-    public BasePlayerPiece currentPlayerClass;
+    public BasePlayerPiece player;
 
     public GameManager() {
-
+        player = new Knight(0, 0);
     }
 
     public static GameManager getInstance() {

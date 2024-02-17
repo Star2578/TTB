@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 public class GUIManager {
     private VBox turnOrderDisplay;
@@ -75,17 +76,21 @@ public class GUIManager {
         playerCharacterFrame.getChildren().addAll(playerCharacterImage, hpBar, manaBar);
         playerOptionsMenu.getChildren().add(playerCharacterFrame);
 
+        Text displayActionPoint = new Text("Action Point: ");
+        displayActionPoint.setFill(Color.WHITE);
+
         // Buttons for Player Options
         Button inventoryButton = new Button("Inventory");
         Button useItemButton = new Button("Use Item");
         Button useSkillsButton = new Button("Use Skills");
+        Button endTurnButton = new Button("End Turn");
 
         // Add spacing between buttons
         VBox.setMargin(inventoryButton, new Insets(10, 0, 0, 0));
         VBox.setMargin(useItemButton, new Insets(10, 0, 0, 0));
         VBox.setMargin(useSkillsButton, new Insets(10, 0, 0, 0));
 
-        playerOptionsMenu.getChildren().addAll(inventoryButton, useItemButton, useSkillsButton);
+        playerOptionsMenu.getChildren().addAll(inventoryButton, useItemButton, useSkillsButton, displayActionPoint, endTurnButton);
 
         playerOptionsMenu.setMinWidth(300);
         playerOptionsMenu.setMaxWidth(300);
