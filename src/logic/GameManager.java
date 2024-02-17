@@ -1,4 +1,4 @@
-package game;
+package logic;
 
 import pieces.player.BasePlayerPiece;
 

@@ -8,13 +8,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import logic.DungeonGenerator;
-import logic.GameLoop;
+import logic.*;
 import pieces.BasePiece;
+import pieces.enemies.*;
 import pieces.player.*;
 import pieces.wall.*;
 import utils.Config;
 import utils.GUIManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends Application {
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
@@ -31,6 +34,9 @@ public class Main extends Application {
     private boolean isPieceSelected = false;
     private ImageView selectedPieceView = null;
     private GUIManager guiManager = new GUIManager();
+    private int currentPlayerIndex = 0; // Index of the current player in the list of players
+    private List<BasePiece> environmentPieces = new ArrayList<>(); // List of all environment pieces (monsters and traps)
+    private TurnManager turnManager;
 
     public static void main(String[] args) {
         launch(args);
@@ -61,8 +67,12 @@ public class Main extends Application {
         dungeonGenerator = new DungeonGenerator(); // Initialize DungeonGenerator
         dungeonGenerator.generateDungeon(); // Generate dungeon
         placeDungeon();
-        placePlayerAtValidPosition();
+        placeEntityRandomly(player);
         precomputeValidMoves();
+        initializeEnvironment();
+
+        // Initialize TurnManager after setting up player and environment
+        turnManager = new TurnManager(player, environmentPieces);
 
         // Add game area and GUI panes to the root BorderPane
         root.setRight(rightPane);
@@ -83,7 +93,7 @@ public class Main extends Application {
         };
 
         // Create an instance of GameLoop with the update and render logic
-        GameLoop gameLoop = new GameLoop(updateLogic, renderLogic);
+        GameLoop gameLoop = new GameLoop(updateLogic, renderLogic, turnManager);
         gameLoop.start();
 
         // Set up the scene and stage
@@ -97,6 +107,15 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    private void initializeEnvironment() {
+        // Add environment pieces (monsters and traps) to the list
+        environmentPieces.add(new Zombie(0, 0, validMovesCache)); // Add a zombie at position (3, 3)
+
+        for (BasePiece entity : environmentPieces) {
+            placeEntityRandomly(entity);
+        }
+    }
+
     private void initGrid(GridPane gridPane) {
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
@@ -108,6 +127,21 @@ public class Main extends Application {
                 squares[row][col] = square;
             }
         }
+    }
+
+    private void switchTurns() {
+        // Start player's turn
+        player.startTurn();
+
+        // End player's turn
+
+        // Start environment's turn
+        for (BasePiece piece : environmentPieces) {
+            if (piece instanceof BaseMonsterPiece) {
+                ((BaseMonsterPiece) piece).performAction(); // Perform action for monsters
+            }
+        }
+        // End environment's turn
     }
 
     private void placeDungeon() {
@@ -222,21 +256,16 @@ public class Main extends Application {
         return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE;
     }
 
-    private void placePlayerAtValidPosition() {
-        // Find a valid starting position for the player
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                if (pieces[row][col] == null) {
-                    // Found an empty space, place the player here
-                    playerRow = row;
-                    playerCol = col;
-                    player.setRow(playerRow);
-                    player.setCol(playerCol);
-                    placePiece(player);
-                    return; // Exit the loop
-                }
-            }
-        }
+    private void placeEntityRandomly(BasePiece entity) {
+        int row, col;
+        do {
+            row = (int) (Math.random() * BOARD_SIZE);
+            col = (int) (Math.random() * BOARD_SIZE);
+        } while (!isValidMove(row, col) || pieces[row][col] != null);
+
+        entity.setRow(row);
+        entity.setCol(col);
+        placePiece(entity);
     }
 
     private void removeElements() {
@@ -247,6 +276,9 @@ public class Main extends Application {
                     pieces[row][col] = null;
                 }
             }
+        }
+        for (BasePiece entity : environmentPieces) {
+            boardPane.getChildren().remove(entity.getTexture());
         }
         boardPane.getChildren().remove(player.getTexture());
     }
@@ -261,8 +293,11 @@ public class Main extends Application {
                     removeElements();
                     dungeonGenerator.generateDungeon();
                     placeDungeon();
-                    placePlayerAtValidPosition();
+                    placeEntityRandomly(player);
                     precomputeValidMoves();
+                    for (BasePiece entity : environmentPieces) {
+                        placeEntityRandomly(entity);
+                    }
                     break;
             }
         });

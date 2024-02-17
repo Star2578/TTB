@@ -1,6 +1,6 @@
 package pieces.enemies;
 
-import game.GameManager;
+import logic.GameManager;
 import javafx.scene.image.ImageView;
 import pieces.player.BasePlayerPiece;
 import utils.Config;

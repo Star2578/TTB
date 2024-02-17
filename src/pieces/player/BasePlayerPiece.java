@@ -8,9 +8,13 @@ import utils.Config;
 public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private int currentHp;
     private int maxHp;
+    private int currentActionPoint;
+    private int maxActionPoint;
 
     public BasePlayerPiece(int row, int col) {
         super("Player", new ImageView(Config.PlaceholderPath), row, col);
+        maxActionPoint = 10;
+        currentActionPoint = maxActionPoint;
     }
 
     @Override
@@ -26,6 +30,22 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     @Override
     public int getMaxHealth() {
         return maxHp;
+    }
+
+    public void setCurrentActionPoint(int currentActionPoint) {
+        this.currentActionPoint = Math.max(currentActionPoint, 0);
+    }
+
+    public int getCurrentActionPoint() {
+        return currentActionPoint;
+    }
+
+    public void setMaxActionPoint(int maxActionPoint) {
+        this.maxActionPoint = Math.max(maxActionPoint, 1);
+    }
+
+    public int getMaxActionPoint() {
+        return maxActionPoint;
     }
 
     @Override
@@ -46,6 +66,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void onDeath() {
         // TODO: Call Game Over
     }
+
+    public abstract void startTurn();
+
+    public abstract void endTurn();
 
     public abstract boolean validMove(int row, int col); // To set valid move for each classes
 }

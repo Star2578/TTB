@@ -19,4 +19,15 @@ public class Knight extends BasePlayerPiece {
 
         return Math.abs(row - currentRow) <= 1 && Math.abs(col - currentCol) <= 1;
     }
+
+    @Override
+    public void startTurn() {
+        currentMana = maxMana;
+        setCurrentActionPoint(getMaxActionPoint());
+    }
+
+    @Override
+    public void endTurn() {
+        System.out.println("End Turn");
+    }
 }

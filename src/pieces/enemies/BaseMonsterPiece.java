@@ -5,7 +5,7 @@ import pieces.BasePiece;
 import utils.BaseStatus;
 import utils.Config;
 
-public class BaseMonsterPiece extends BasePiece implements BaseStatus {
+public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     private int currentHp;
     private int maxHp;
 
@@ -46,4 +46,6 @@ public class BaseMonsterPiece extends BasePiece implements BaseStatus {
     public void onDeath() {
 
     }
+
+    public abstract void performAction();
 }

@@ -6,11 +6,13 @@ public class GameLoop extends AnimationTimer {
     private final long TARGET_FRAME_TIME = 1_000_000_000 / 60; // 60 FPS
     private final Runnable updateLogic;
     private final Runnable renderLogic;
+    private TurnManager turnManager;
     private long lastUpdateTime = 0;
 
-    public GameLoop(Runnable updateLogic, Runnable renderLogic) {
+    public GameLoop(Runnable updateLogic, Runnable renderLogic, TurnManager turnManager) {
         this.updateLogic = updateLogic;
         this.renderLogic = renderLogic;
+        this.turnManager = turnManager;
     }
 
     @Override
@@ -20,5 +22,11 @@ public class GameLoop extends AnimationTimer {
             renderLogic.run();
             lastUpdateTime = now;
         }
+    }
+
+    public void endTurn() {
+        // End the current turn and start the next turn
+        turnManager.endPlayerTurn();
+        turnManager.startTurn();
     }
 }
