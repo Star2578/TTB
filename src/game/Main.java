@@ -24,6 +24,7 @@ public class Main extends Application {
     private GridPane boardPane = new GridPane();
     private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE];
     private BasePiece[][] pieces = new BasePiece[BOARD_SIZE][BOARD_SIZE];
+    private boolean[][] validMovesCache = new boolean[BOARD_SIZE][BOARD_SIZE];
     private DungeonGenerator dungeonGenerator;
     private BasePlayerPiece player;
     private int playerRow = 0;
@@ -56,11 +57,12 @@ public class Main extends Application {
         root.setCenter(centerPane);
 
         // Initialize player at starting position
-        player = new BasePlayerPiece(0, 0); // Start at (0, 0) for now
+        player = new Knight(0, 0); // Start at (0, 0) for now
         dungeonGenerator = new DungeonGenerator(); // Initialize DungeonGenerator
         dungeonGenerator.generateDungeon(); // Generate dungeon
         placeDungeon();
         placePlayerAtValidPosition();
+        precomputeValidMoves();
 
         // Add game area and GUI panes to the root BorderPane
         root.setRight(rightPane);
@@ -126,7 +128,7 @@ public class Main extends Application {
         pieceView.setFitWidth(SQUARE_SIZE);
         pieceView.setFitHeight(SQUARE_SIZE);
         if (piece instanceof BasePlayerPiece)
-            pieceView.setOnMouseClicked(event -> handlePieceClick(piece));
+            pieceView.setOnMouseClicked(event -> handleSquareClick(piece.getRow(), piece.getCol()));
 
         GridPane.setRowIndex(pieceView, piece.getRow()); // Set row index
         GridPane.setColumnIndex(pieceView, piece.getCol()); // Set column index
@@ -140,15 +142,7 @@ public class Main extends Application {
                 final int currentCol = col; // Make col effectively final
                 ImageView square = squares[row][col];
                 square.setOnMouseClicked(event -> handleSquareClick(currentRow, currentCol));
-                square.setOnMouseDragged(event -> handleSquareDrag(event, currentRow, currentCol));
             }
-        }
-    }
-
-    private void handlePieceClick(BasePiece piece) {
-        if (piece instanceof BasePlayerPiece basePlayerPiece) {
-            System.out.println("Clicked on player piece at (" + basePlayerPiece.getRow() + ", " + basePlayerPiece.getCol() + ")");
-            handleSquareClick(basePlayerPiece.getRow(), basePlayerPiece.getCol());
         }
     }
 
@@ -158,29 +152,15 @@ public class Main extends Application {
             isPieceSelected = true;
             selectedPieceView = squares[row][col];
             // Show valid moves by changing the color of adjacent squares
-            showValidMoves(row, col);
+            showValidMovesFromCache(row, col);
         } else if (isPieceSelected) {
-            if (isValidMove(row, col)) {
+            if (validMovesCache[row][col] && player.validMove(row, col)) {
                 System.out.println("Moving player to square (" + row + ", " + col + ")");
                 movePlayer(row, col);
             } else {
                 System.out.println("Invalid move");
             }
             resetSelection();
-        }
-    }
-
-    private void handleSquareDrag(MouseEvent event, int row, int col) {
-        if (isPieceSelected) {
-            System.out.println("Dragging piece to square (" + row + ", " + col + ")");
-            // Update the position of the selected piece
-            selectedPieceView.relocate(event.getSceneX() - SQUARE_SIZE / 2, event.getSceneY() - SQUARE_SIZE / 2);
-            // Check if the piece is dropped onto a valid square
-            if (event.getEventType() == MouseEvent.MOUSE_RELEASED && isValidMove(row, col)) {
-                System.out.println("Dropped piece on valid square");
-                movePlayer(row, col);
-                resetSelection();
-            }
         }
     }
 
@@ -199,7 +179,32 @@ public class Main extends Application {
             return false; // Destination square contains a wall, invalid move
         }
         // For simplicity, consider all adjacent squares as valid moves
-        return Math.abs(row - playerRow) <= 1 && Math.abs(col - playerCol) <= 1;
+        return true;
+    }
+
+    private void precomputeValidMoves() {
+        // Iterate over all squares to compute valid moves and cache them
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                validMovesCache[row][col] = isValidMove(row, col);
+            }
+        }
+    }
+
+    private void showValidMovesFromCache(int row, int col) {
+        // Iterate over adjacent squares and update images based on cached valid moves
+        for (int dRow = -1; dRow <= 1; dRow++) {
+            for (int dCol = -1; dCol <= 1; dCol++) {
+                int newRow = row + dRow;
+                int newCol = col + dCol;
+                // Check if the new position is within the board bounds and not the current position
+                if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
+                    if (validMovesCache[newRow][newCol]) {
+                        squares[newRow][newCol].setImage(new Image("sprites/ground/floor_2.png")); // Set texture to indicate valid move
+                    }
+                }
+            }
+        }
     }
 
     private void resetSelection() {
@@ -209,20 +214,6 @@ public class Main extends Application {
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 squares[row][col].setImage(new Image("sprites/ground/floor_1.png"));
-            }
-        }
-    }
-
-    private void showValidMoves(int row, int col) {
-        // Iterate over adjacent squares
-        for (int dRow = -1; dRow <= 1; dRow++) {
-            for (int dCol = -1; dCol <= 1; dCol++) {
-                int newRow = row + dRow;
-                int newCol = col + dCol;
-                // Check if the new position is within the board bounds and not the current position
-                if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
-                    squares[newRow][newCol].setImage(new Image("sprites/ground/floor_2.png")); // Set texture to indicate valid move
-                }
             }
         }
     }
@@ -271,6 +262,7 @@ public class Main extends Application {
                     dungeonGenerator.generateDungeon();
                     placeDungeon();
                     placePlayerAtValidPosition();
+                    precomputeValidMoves();
                     break;
             }
         });

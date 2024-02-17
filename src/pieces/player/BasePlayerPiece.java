@@ -3,13 +3,14 @@ package pieces.player;
 import javafx.scene.image.ImageView;
 import pieces.BasePiece;
 import utils.BaseStatus;
+import utils.Config;
 
-public class BasePlayerPiece extends BasePiece implements BaseStatus {
+public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private int currentHp;
     private int maxHp;
 
     public BasePlayerPiece(int row, int col) {
-        super("Player", new ImageView("sprites/player/Knight.png"), row, col);
+        super("Player", new ImageView(Config.placeholderPath), row, col);
     }
 
     @Override
@@ -45,4 +46,6 @@ public class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void onDeath() {
         // TODO: Call Game Over
     }
+
+    public abstract boolean validMove(int row, int col); // To set valid move for each classes
 }
