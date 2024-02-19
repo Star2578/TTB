@@ -213,8 +213,8 @@ public class Main extends Application {
         pieces[player.getRow()][player.getCol()] = null;
         pieces[row][col] = player;
 
-        player.setCol(row);
-        player.setRow(col);
+        player.setCol(col);
+        player.setRow(row);
     }
 
     private boolean isValidMove(int row, int col) {
