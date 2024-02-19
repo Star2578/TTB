@@ -113,7 +113,7 @@ public class Zombie extends BaseMonsterPiece{
             for (int dCol = -1; dCol <= 1; dCol++) {
                 int newRow = row + dRow;
                 int newCol = col + dCol;
-                if (isValidPosition(newRow, newCol) && validMovesCache[newRow][newCol]) {
+                if (isValidPosition(newRow, newCol) && validMovesCache[newRow][newCol] && GameManager.getInstance().pieces[newRow][newCol] == null) {
                     validMoves.add(new int[]{newRow, newCol});
                 }
             }

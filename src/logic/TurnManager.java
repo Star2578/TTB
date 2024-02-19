@@ -35,7 +35,7 @@ public class TurnManager {
     }
 
     public void startEnvironmentTurn() {
-        System.out.println("Environment Turn Start");
+        System.out.println("Environment Turn Start for " + currentEnvironmentPieceIndex);
         // Start the turn for the current environment piece
         BasePiece currentPiece = environmentPieces.get(currentEnvironmentPieceIndex);
         System.out.println(currentPiece.getClass().getSimpleName());
@@ -45,8 +45,8 @@ public class TurnManager {
         }
 
         // Move to the next environment piece
-        currentEnvironmentPieceIndex = (currentEnvironmentPieceIndex + 1) % environmentPieces.size();
-        if (currentEnvironmentPieceIndex == environmentPieces.size()-1) {
+        currentEnvironmentPieceIndex++;
+        if (currentEnvironmentPieceIndex == environmentPieces.size()) {
             currentEnvironmentPieceIndex = 0;
             startPlayerTurn();
         } else {

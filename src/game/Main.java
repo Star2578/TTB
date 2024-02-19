@@ -26,7 +26,7 @@ public class Main extends Application {
     private GameManager gameManager = GameManager.getInstance();
     private GridPane boardPane = gameManager.boardPane;
     private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE];
-    private BasePiece[][] pieces = new BasePiece[BOARD_SIZE][BOARD_SIZE];
+    private BasePiece[][] pieces = GameManager.getInstance().pieces;
     private boolean[][] validMovesCache = new boolean[BOARD_SIZE][BOARD_SIZE];
     private DungeonGenerator dungeonGenerator;
     private BasePlayerPiece player;
@@ -96,7 +96,13 @@ public class Main extends Application {
 
     private void initializeEnvironment() {
         // Add environment pieces (monsters and traps) to the list
-        environmentPieces.add(new Zombie(0, 0, validMovesCache)); // Add a zombie at position (3, 3)
+        environmentPieces.add(new Zombie(0, 0, validMovesCache));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache));
 
         for (BasePiece entity : environmentPieces) {
             placeEntityRandomly(entity);
@@ -178,9 +184,9 @@ public class Main extends Application {
         if (!isPieceSelected && playerRow == row && playerCol == col) {
             isPieceSelected = true;
             // Show valid moves by changing the color of adjacent squares
-            showValidMovesFromCache(row, col);
+            showValidMoves(row, col);
         } else if (isPieceSelected) {
-            if (validMovesCache[row][col] && player.validMove(row, col)) {
+            if (validMovesCache[row][col] && player.validMove(row, col) && (pieces[row][col] == null || pieces[row][col] == player)) {
                 System.out.println("Moving player to square (" + row + ", " + col + ")");
                 movePlayer(row, col);
             } else {
@@ -192,16 +198,15 @@ public class Main extends Application {
 
     private void movePlayer(int row, int col) {
         // Update player position and move the piece on the board
-        movePiece(player, row, col);
+        GridPane.setRowIndex(player.getTexture(), row);
+        GridPane.setColumnIndex(player.getTexture(), col);
+
+        pieces[player.getRow()][player.getCol()] = null;
+        pieces[row][col] = player;
         playerRow = row;
         playerCol = col;
         player.setCol(playerCol);
         player.setRow(playerRow);
-    }
-
-    private void movePiece(BasePiece piece, int row, int col) {
-        GridPane.setRowIndex(piece.getTexture(), row);
-        GridPane.setColumnIndex(piece.getTexture(), col);
     }
 
     private boolean isValidMove(int row, int col) {
@@ -221,7 +226,7 @@ public class Main extends Application {
         }
     }
 
-    private void showValidMovesFromCache(int row, int col) {
+    private void showValidMoves(int row, int col) {
         // Iterate over adjacent squares and update images based on cached valid moves
         for (int dRow = -1; dRow <= 1; dRow++) {
             for (int dCol = -1; dCol <= 1; dCol++) {
@@ -229,7 +234,7 @@ public class Main extends Application {
                 int newCol = col + dCol;
                 // Check if the new position is within the board bounds and not the current position
                 if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
-                    if (validMovesCache[newRow][newCol]) {
+                    if (validMovesCache[newRow][newCol] && pieces[newRow][newCol] == null) {
                         squares[newRow][newCol].setImage(new Image(Config.ValidMovePath)); // Set texture to indicate valid move
                     }
                 }
@@ -266,6 +271,7 @@ public class Main extends Application {
 
         entity.setRow(row);
         entity.setCol(col);
+        pieces[row][col] = entity; // Mark the position as occupied
         placePiece(entity);
     }
 
@@ -300,6 +306,14 @@ public class Main extends Application {
                         placeEntityRandomly(entity);
                     }
                     break;
+                case F3:
+                    for (int i = 0; i < Config.BOARD_SIZE; i++) {
+                        for (int j = 0; j < Config.BOARD_SIZE; j++) {
+                            if (pieces[i][j] != null && !(pieces[i][j] instanceof BaseWallPiece)) {
+                                System.out.println("There is " + pieces[i][j] + "at " + i + " " + j);
+                            }
+                        }
+                    }
             }
         });
     }
