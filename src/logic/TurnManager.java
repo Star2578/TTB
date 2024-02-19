@@ -36,10 +36,9 @@ public class TurnManager {
     }
 
     public void startEnvironmentTurn() {
-        System.out.println("Environment Turn Start for " + currentEnvironmentPieceIndex);
         // Start the turn for the current environment piece
         BasePiece currentPiece = environmentPieces.get(currentEnvironmentPieceIndex);
-        System.out.println(currentPiece.getClass().getSimpleName());
+        System.out.println("Environment Turn Start for " + currentEnvironmentPieceIndex + " " + currentPiece.getClass().getSimpleName());
         if (currentPiece instanceof Zombie) {
             ((Zombie) currentPiece).updateState(player.getRow(),player.getCol());
             ((Zombie) currentPiece).performAction(); // Perform action for monsters
@@ -53,13 +52,5 @@ public class TurnManager {
         } else {
             startEnvironmentTurn();
         }
-    }
-
-    public BasePlayerPiece getCurrentPlayer() {
-        return player;
-    }
-
-    public BasePiece getCurrentEnvironmentPiece() {
-        return environmentPieces.get(currentEnvironmentPieceIndex);
     }
 }

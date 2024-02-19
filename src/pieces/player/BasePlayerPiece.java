@@ -10,9 +10,9 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private int maxHp;
     private int currentActionPoint;
     private int maxActionPoint;
-    private boolean canAct;
     private int currentMana;
     private int maxMana;
+    private boolean canAct;
 
     public BasePlayerPiece(int row, int col) {
         super("Player", new ImageView(Config.PlaceholderPath), row, col);

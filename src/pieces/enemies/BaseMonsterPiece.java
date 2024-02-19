@@ -46,17 +46,17 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
 
     @Override
     public void onDeath() {
-
+        // To call when this monster died
     }
 
-    public abstract void performAction();
-    public abstract void updateState(int playerRow, int playerCol);
-    protected abstract boolean isValidMoveset(int row, int col);
+    public abstract void performAction(); // To call when it's this monster turn
+    public abstract void updateState(int playerRow, int playerCol); // Update the state of monster
+    protected abstract boolean isValidMoveSet(int row, int col); // Each monster have unique move set
 
     protected void move(int newRow, int newCol) {
         if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) return;
 
-        // Update the position of the Zombie on the board
+        // Update the position of the monster on the board
         GridPane.setRowIndex(getTexture(), newRow);
         GridPane.setColumnIndex(getTexture(), newCol);
 

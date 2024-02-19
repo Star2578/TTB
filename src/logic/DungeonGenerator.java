@@ -75,7 +75,6 @@ public class DungeonGenerator {
 
     private void connectRooms(Room currentRoom, List<Room> rooms, Set<Room> visited) {
         visited.add(currentRoom);
-        Random random = new Random();
         Collections.shuffle(rooms); // Shuffle the rooms for randomness
         for (Room nextRoom : rooms) {
             if (!visited.contains(nextRoom)) {

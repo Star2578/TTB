@@ -75,6 +75,7 @@ public class Zombie extends BaseMonsterPiece{
 
     private void attack(BasePlayerPiece playerPiece) {
         System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
+        // TODO : Implement attack method
     }
 
     private void moveTowardsPlayer() {
@@ -87,7 +88,7 @@ public class Zombie extends BaseMonsterPiece{
         int newCol = getCol() + dCol;
 
         // If the new position is valid, move the Zombie there
-        if (isValidMoveset(newRow, newCol)) {
+        if (isValidMoveSet(newRow, newCol)) {
             move(newRow, newCol);
         }
     }
@@ -111,7 +112,7 @@ public class Zombie extends BaseMonsterPiece{
             for (int dCol = -1; dCol <= 1; dCol++) {
                 int newRow = row + dRow;
                 int newCol = col + dCol;
-                if (isValidMoveset(newRow, newCol) && validMovesCache[newRow][newCol] && GameManager.getInstance().isEmptySquare(newRow, newCol)) {
+                if (isValidMoveSet(newRow, newCol) && validMovesCache[newRow][newCol] && GameManager.getInstance().isEmptySquare(newRow, newCol)) {
                     validMoves.add(new int[]{newRow, newCol});
                 }
             }
@@ -121,7 +122,7 @@ public class Zombie extends BaseMonsterPiece{
 
     // Method to check if a position is valid on the board
     @Override
-    public boolean isValidMoveset(int row, int col) {
+    public boolean isValidMoveSet(int row, int col) {
         return row >= 0 && row < validMovesCache.length && col >= 0 && col < validMovesCache[0].length;
     }
 }

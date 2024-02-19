@@ -13,12 +13,13 @@ import java.util.List;
 public class GameManager {
     private static GameManager instance;
 
-    public BasePlayerPiece player;
-    public GridPane boardPane;
-    public BasePiece[][] pieces = new BasePiece[Config.BOARD_SIZE][Config.BOARD_SIZE];
-    public List<BasePiece> environmentPieces = new ArrayList<>();
     public TurnManager turnManager ;
     public GUIManager guiManager;
+    public BasePlayerPiece player;
+    public GridPane boardPane;
+
+    public BasePiece[][] pieces = new BasePiece[Config.BOARD_SIZE][Config.BOARD_SIZE];
+    public List<BasePiece> environmentPieces = new ArrayList<>();
 
     public GameManager() {
         player = new Knight(0, 0);

@@ -16,26 +16,26 @@ import pieces.wall.*;
 import utils.Config;
 import utils.GUIManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends Application {
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
     private static final int SQUARE_SIZE = Config.SQUARE_SIZE;
     private static final int GAME_SIZE = Config.GAME_SIZE;
+
     private GameManager gameManager = GameManager.getInstance();
-    private GridPane boardPane = gameManager.boardPane;
-    private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE];
-    private BasePiece[][] pieces = GameManager.getInstance().pieces;
-    private boolean[][] validMovesCache = new boolean[BOARD_SIZE][BOARD_SIZE];
-    private DungeonGenerator dungeonGenerator;
     private BasePlayerPiece player;
-    private int playerRow = 0;
-    private int playerCol = 0;
-    private boolean isPieceSelected = false;
     private GUIManager guiManager;
-    private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
     private TurnManager turnManager;
+    private DungeonGenerator dungeonGenerator;
+    private GridPane boardPane = gameManager.boardPane;
+
+    private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE]; // The dungeon floor texture
+    private boolean[][] validMovesCache = new boolean[BOARD_SIZE][BOARD_SIZE]; // Valid moves without entity
+    private BasePiece[][] pieces = GameManager.getInstance().pieces; // Where each entity locate
+    private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
+    private boolean isPieceSelected = false;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -43,9 +43,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #1c0a05;");
-        VBox rightPane = new VBox(); // Pane for top area
+        VBox rightPane = new VBox(); // Pane for right area
         rightPane.setBackground(Background.fill(Color.DARKRED));
-        VBox leftPane = new VBox(); // Pane for bottom GUI
+        VBox leftPane = new VBox(); // Pane for left area
         leftPane.setBackground(Background.fill(Color.DARKCYAN));
 
         // Create the main game area
@@ -80,12 +80,12 @@ public class Main extends Application {
         };
 
         // Create an instance of GameLoop with the update and render logic
-        GameLoop gameLoop = new GameLoop(updateLogic, renderLogic, turnManager);
+        GameLoop gameLoop = new GameLoop(updateLogic, renderLogic);
         gameLoop.start();
 
         // Set up the scene and stage
         Scene gameScene = new Scene(root, 1280, 720);
-        SceneManager.getInstance().setGameScene(gameScene);
+        SceneManager.getInstance().setGameScene(gameScene); // Save this scene for later use
         setupMouseEvents();
         setupKeyEvents(gameScene); // Debug Tool
         primaryStage.setResizable(false);
@@ -119,7 +119,6 @@ public class Main extends Application {
         precomputeValidMoves();
         initializeEnvironment();
 
-        // Initialize TurnManager after setting up player and environment
         turnManager = gameManager.turnManager;
 
         guiManager = gameManager.guiManager;
@@ -128,12 +127,13 @@ public class Main extends Application {
     }
 
     private void initGrid(GridPane gridPane) {
+        // Generate the dungeon floor according to BOARD_SIZE
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 ImageView square = new ImageView();
                 square.setFitWidth(SQUARE_SIZE);
                 square.setFitHeight(SQUARE_SIZE);
-                square.setImage(new Image(Config.FloorPath)); // Set default texture
+                square.setImage(new Image(Config.FloorPath)); // Set texture of dungeon floor
                 gridPane.add(square, col, row);
                 squares[row][col] = square;
             }
@@ -141,6 +141,7 @@ public class Main extends Application {
     }
 
     private void placeDungeon() {
+        // Place the walls according to dungeon generated
         char[][] dungeonLayout = dungeonGenerator.getDungeonLayout();
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
@@ -164,6 +165,7 @@ public class Main extends Application {
     }
 
     private void setupMouseEvents() {
+        // Add mouse event for each square
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 final int currentRow = row; // Make row effectively final
@@ -181,7 +183,7 @@ public class Main extends Application {
             return;
         }
 
-        if (!isPieceSelected && playerRow == row && playerCol == col) {
+        if (!isPieceSelected && player.getRow() == row && player.getCol() == col) {
             isPieceSelected = true;
             // Show valid moves by changing the color of adjacent squares
             showValidMoves(row, col);
@@ -210,17 +212,16 @@ public class Main extends Application {
 
         pieces[player.getRow()][player.getCol()] = null;
         pieces[row][col] = player;
-        playerRow = row;
-        playerCol = col;
-        player.setCol(playerCol);
-        player.setRow(playerRow);
+
+        player.setCol(row);
+        player.setRow(col);
     }
 
     private boolean isValidMove(int row, int col) {
         if (pieces[row][col] instanceof BaseWallPiece) {
             return false; // Destination square contains a wall, invalid move
         }
-        // For simplicity, consider all adjacent squares as valid moves
+
         return true;
     }
 
@@ -240,7 +241,7 @@ public class Main extends Application {
                 int newRow = row + dRow;
                 int newCol = col + dCol;
                 // Check if the new position is within the board bounds and not the current position
-                if (isValidMoveset(newRow, newCol) && (newRow != row || newCol != col)) {
+                if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
                     if (validMovesCache[newRow][newCol] && pieces[newRow][newCol] == null) {
                         squares[newRow][newCol].setImage(new Image(Config.ValidMovePath)); // Set texture to indicate valid move
                     }
@@ -259,7 +260,8 @@ public class Main extends Application {
         }
     }
 
-    private boolean isValidMoveset(int row, int col) {
+    private boolean isValidPosition(int row, int col) {
+        // Check if the position is inside the board
         return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE;
     }
 
@@ -271,8 +273,6 @@ public class Main extends Application {
         } while (!isValidMove(row, col) || pieces[row][col] != null);
 
         if (entity instanceof BasePlayerPiece) {
-            playerCol = col;
-            playerRow = row;
             entity.getTexture().setOnMouseClicked(event -> handleSquareClick(entity.getRow(), entity.getCol()));
         }
 
@@ -283,6 +283,8 @@ public class Main extends Application {
     }
 
     private void removeElements() {
+        // Mostly for debugging purpose
+        // to try re-generate the dungeon
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 if (pieces[row][col] != null) {
@@ -298,6 +300,7 @@ public class Main extends Application {
     }
 
     private void setupKeyEvents(Scene scene) {
+        // Debug tool
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case F1:
