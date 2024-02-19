@@ -23,7 +23,8 @@ public class Main extends Application {
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
     private static final int SQUARE_SIZE = Config.SQUARE_SIZE;
     private static final int GAME_SIZE = Config.GAME_SIZE;
-    private GridPane boardPane = new GridPane();
+    private GameManager gameManager = GameManager.getInstance();
+    private GridPane boardPane = gameManager.boardPane;
     private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE];
     private BasePiece[][] pieces = new BasePiece[BOARD_SIZE][BOARD_SIZE];
     private boolean[][] validMovesCache = new boolean[BOARD_SIZE][BOARD_SIZE];
@@ -32,10 +33,9 @@ public class Main extends Application {
     private int playerRow = 0;
     private int playerCol = 0;
     private boolean isPieceSelected = false;
-    private GUIManager guiManager = new GUIManager();
+    private GUIManager guiManager;
     private List<BasePiece> environmentPieces = new ArrayList<>(); // List of all environment pieces (monsters and traps)
     private TurnManager turnManager;
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -59,17 +59,7 @@ public class Main extends Application {
         boardPane.setBackground(Background.fill(Color.GOLD));
         root.setCenter(centerPane);
 
-        // Initialize player at starting position
-        player = GameManager.getInstance().player;
-        dungeonGenerator = new DungeonGenerator(); // Initialize DungeonGenerator
-        dungeonGenerator.generateDungeon(); // Generate dungeon
-        placeDungeon();
-        placeEntityRandomly(player);
-        precomputeValidMoves();
-        initializeEnvironment();
-
-        // Initialize TurnManager after setting up player and environment
-        turnManager = new TurnManager(player, environmentPieces);
+        gameStart();
 
         // Add game area and GUI panes to the root BorderPane
         root.setRight(rightPane);
@@ -113,6 +103,24 @@ public class Main extends Application {
         }
     }
 
+    private void gameStart() {
+        // Initialize player at starting position
+        player = GameManager.getInstance().player;
+        dungeonGenerator = new DungeonGenerator(); // Initialize DungeonGenerator
+        dungeonGenerator.generateDungeon(); // Generate dungeon
+        placeDungeon();
+        placeEntityRandomly(player);
+        precomputeValidMoves();
+        initializeEnvironment();
+
+        // Initialize TurnManager after setting up player and environment
+        turnManager = new TurnManager(player, environmentPieces);
+
+        guiManager = new GUIManager(turnManager);
+
+        turnManager.startPlayerTurn();
+    }
+
     private void initGrid(GridPane gridPane) {
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
@@ -124,21 +132,6 @@ public class Main extends Application {
                 squares[row][col] = square;
             }
         }
-    }
-
-    private void switchTurns() {
-        // Start player's turn
-        player.startTurn();
-
-        // End player's turn
-
-        // Start environment's turn
-        for (BasePiece piece : environmentPieces) {
-            if (piece instanceof BaseMonsterPiece) {
-                ((BaseMonsterPiece) piece).performAction(); // Perform action for monsters
-            }
-        }
-        // End environment's turn
     }
 
     private void placeDungeon() {
@@ -177,6 +170,11 @@ public class Main extends Application {
 
     private void handleSquareClick(int row, int col) {
         System.out.println("Clicked on square (" + row + ", " + col + ")");
+        if (!player.canAct()) {
+            System.out.println("Not on your turn");
+            return;
+        }
+
         if (!isPieceSelected && playerRow == row && playerCol == col) {
             isPieceSelected = true;
             // Show valid moves by changing the color of adjacent squares
@@ -194,12 +192,16 @@ public class Main extends Application {
 
     private void movePlayer(int row, int col) {
         // Update player position and move the piece on the board
-        GridPane.setRowIndex(player.getTexture(), row);
-        GridPane.setColumnIndex(player.getTexture(), col);
+        movePiece(player, row, col);
         playerRow = row;
         playerCol = col;
         player.setCol(playerCol);
         player.setRow(playerRow);
+    }
+
+    private void movePiece(BasePiece piece, int row, int col) {
+        GridPane.setRowIndex(piece.getTexture(), row);
+        GridPane.setColumnIndex(piece.getTexture(), col);
     }
 
     private boolean isValidMove(int row, int col) {

@@ -1,5 +1,6 @@
 package pieces.enemies;
 
+import javafx.scene.layout.GridPane;
 import logic.GameManager;
 import javafx.scene.image.ImageView;
 import pieces.player.BasePlayerPiece;
@@ -30,6 +31,7 @@ public class Zombie extends BaseMonsterPiece{
     }
 
     // Method to update the state of the Zombie based on the player's position
+    @Override
     public void updateState(int playerRow, int playerCol) {
         // Calculate the distance between the Zombie and the player
         double distance = Math.sqrt(Math.pow(playerRow - getRow(), 2) + Math.pow(playerCol - getCol(), 2));
@@ -40,6 +42,8 @@ public class Zombie extends BaseMonsterPiece{
         } else {
             currentState = State.NEUTRAL_ROAMING; // Transition back to the Neutral/Roaming State
         }
+
+        System.out.println("Zombie is in " + currentState);
     }
 
     // Method to perform actions based on the current state
@@ -61,7 +65,7 @@ public class Zombie extends BaseMonsterPiece{
         // If the player is within attack range, attempt to attack
         if (distance <= ATTACK_RANGE) {
             // Attack the player
-            // Implement attack logic here
+            attack(GameManager.getInstance().player);
         } else if (distance <= VISON_RANGE) {
             // If the player is within vision range but not attack range, move towards the player
             moveTowardsPlayer();
@@ -72,7 +76,7 @@ public class Zombie extends BaseMonsterPiece{
     }
 
     private void attack(BasePlayerPiece playerPiece) {
-
+        System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
     }
 
     private void moveTowardsPlayer() {
@@ -117,17 +121,9 @@ public class Zombie extends BaseMonsterPiece{
         return validMoves;
     }
 
-    // Method to move the Zombie to a new position
-    private void move(int newRow, int newCol) {
-        setRow(newRow);
-        setCol(newCol);
-        // Update the position of the Zombie on the board
-        ImageView texture = getTexture();
-        texture.relocate(newCol * Config.SQUARE_SIZE, newRow * Config.SQUARE_SIZE);
-    }
-
     // Method to check if a position is valid on the board
-    private boolean isValidPosition(int row, int col) {
+    @Override
+    public boolean isValidPosition(int row, int col) {
         return row >= 0 && row < validMovesCache.length && col >= 0 && col < validMovesCache[0].length;
     }
 }

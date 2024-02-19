@@ -9,16 +9,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import logic.TurnManager;
 
 public class GUIManager {
+    private TurnManager turnManager;
     private VBox turnOrderDisplay;
     private VBox playerOptionsMenu;
     private VBox rightSideUI;
 
-    public GUIManager() {
+    public GUIManager(TurnManager turnManager) {
         initializeTurnOrderDisplay();
         initializePlayerOptionsMenu();
         initializeRightSideUI();
+        this.turnManager = turnManager;
     }
 
     private void initializeTurnOrderDisplay() {
@@ -84,6 +87,10 @@ public class GUIManager {
         Button useItemButton = new Button("Use Item");
         Button useSkillsButton = new Button("Use Skills");
         Button endTurnButton = new Button("End Turn");
+
+        endTurnButton.setOnMouseClicked(mouseEvent -> {
+            turnManager.endPlayerTurn();
+        });
 
         // Add spacing between buttons
         VBox.setMargin(inventoryButton, new Insets(10, 0, 0, 0));

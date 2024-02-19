@@ -2,13 +2,13 @@ package logic;
 
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
+import pieces.enemies.Zombie;
 import pieces.player.BasePlayerPiece;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TurnManager {
-    public static TurnManager instance;
     private BasePlayerPiece player;
     private List<BasePiece> environmentPieces;
     private int currentEnvironmentPieceIndex;
@@ -19,33 +19,39 @@ public class TurnManager {
         this.currentEnvironmentPieceIndex = 0;
     }
 
-    public static TurnManager getInstance() {
-        if (instance == null) {
-            instance = new TurnManager(GameManager.getInstance().player, new ArrayList<>());
-        }
-        return instance;
-    }
-
     public void startPlayerTurn() {
         // Start the turn for the player
         player.startTurn();
+        player.setCanAct(true);
+        System.out.println("Player Turn Start");
     }
 
     public void endPlayerTurn() {
         // End the turn for the player
         player.endTurn();
+        player.setCanAct(false);
+        System.out.println("Player Turn End");
+        startEnvironmentTurn();
     }
 
     public void startEnvironmentTurn() {
+        System.out.println("Environment Turn Start");
         // Start the turn for the current environment piece
         BasePiece currentPiece = environmentPieces.get(currentEnvironmentPieceIndex);
-        if (currentPiece instanceof BaseMonsterPiece) {
-            ((BaseMonsterPiece) currentPiece).performAction(); // Perform action for monsters
+        System.out.println(currentPiece.getClass().getSimpleName());
+        if (currentPiece instanceof Zombie) {
+            ((Zombie) currentPiece).updateState(player.getRow(),player.getCol());
+            ((Zombie) currentPiece).performAction(); // Perform action for monsters
         }
 
         // Move to the next environment piece
         currentEnvironmentPieceIndex = (currentEnvironmentPieceIndex + 1) % environmentPieces.size();
-        if (currentEnvironmentPieceIndex == environmentPieces.size()) startPlayerTurn();
+        if (currentEnvironmentPieceIndex == environmentPieces.size()-1) {
+            currentEnvironmentPieceIndex = 0;
+            startPlayerTurn();
+        } else {
+            startEnvironmentTurn();
+        }
     }
 
     public BasePlayerPiece getCurrentPlayer() {

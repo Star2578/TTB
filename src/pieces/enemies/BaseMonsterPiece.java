@@ -1,6 +1,7 @@
 package pieces.enemies;
 
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import pieces.BasePiece;
 import utils.BaseStatus;
 import utils.Config;
@@ -48,4 +49,14 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     }
 
     public abstract void performAction();
+    public abstract void updateState(int playerRow, int playerCol);
+    protected abstract boolean isValidPosition(int row, int col);
+
+    protected void move(int newRow, int newCol) {
+        setRow(newRow);
+        setCol(newCol);
+        // Update the position of the Zombie on the board
+        GridPane.setRowIndex(getTexture(), newRow);
+        GridPane.setColumnIndex(getTexture(), newCol);
+    }
 }

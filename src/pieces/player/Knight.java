@@ -10,6 +10,7 @@ public class Knight extends BasePlayerPiece {
         maxMana = 10;
         currentMana = maxMana;
         setTextureByPath(Config.KnightPath);
+        setCanAct(false);
     }
 
     @Override
@@ -22,12 +23,13 @@ public class Knight extends BasePlayerPiece {
 
     @Override
     public void startTurn() {
+        setCanAct(true);
         currentMana = maxMana;
         setCurrentActionPoint(getMaxActionPoint());
     }
 
     @Override
     public void endTurn() {
-        System.out.println("End Turn");
+        setCanAct(false);
     }
 }

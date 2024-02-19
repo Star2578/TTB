@@ -10,11 +10,13 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private int maxHp;
     private int currentActionPoint;
     private int maxActionPoint;
+    private boolean canAct;
 
     public BasePlayerPiece(int row, int col) {
         super("Player", new ImageView(Config.PlaceholderPath), row, col);
         maxActionPoint = 10;
         currentActionPoint = maxActionPoint;
+        canAct = false;
     }
 
     @Override
@@ -46,6 +48,14 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     public int getMaxActionPoint() {
         return maxActionPoint;
+    }
+
+    public void setCanAct(boolean canAct) {
+        this.canAct = canAct;
+    }
+
+    public boolean canAct() {
+        return canAct;
     }
 
     @Override
