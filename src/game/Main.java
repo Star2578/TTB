@@ -233,7 +233,7 @@ public class Main extends Application {
                 int newRow = row + dRow;
                 int newCol = col + dCol;
                 // Check if the new position is within the board bounds and not the current position
-                if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
+                if (isValidMoveset(newRow, newCol) && (newRow != row || newCol != col)) {
                     if (validMovesCache[newRow][newCol] && pieces[newRow][newCol] == null) {
                         squares[newRow][newCol].setImage(new Image(Config.ValidMovePath)); // Set texture to indicate valid move
                     }
@@ -252,7 +252,7 @@ public class Main extends Application {
         }
     }
 
-    private boolean isValidPosition(int row, int col) {
+    private boolean isValidMoveset(int row, int col) {
         return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE;
     }
 

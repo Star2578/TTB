@@ -1,8 +1,6 @@
 package pieces.enemies;
 
-import javafx.scene.layout.GridPane;
 import logic.GameManager;
-import javafx.scene.image.ImageView;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 
@@ -89,7 +87,7 @@ public class Zombie extends BaseMonsterPiece{
         int newCol = getCol() + dCol;
 
         // If the new position is valid, move the Zombie there
-        if (isValidPosition(newRow, newCol)) {
+        if (isValidMoveset(newRow, newCol)) {
             move(newRow, newCol);
         }
     }
@@ -113,7 +111,7 @@ public class Zombie extends BaseMonsterPiece{
             for (int dCol = -1; dCol <= 1; dCol++) {
                 int newRow = row + dRow;
                 int newCol = col + dCol;
-                if (isValidPosition(newRow, newCol) && validMovesCache[newRow][newCol] && GameManager.getInstance().pieces[newRow][newCol] == null) {
+                if (isValidMoveset(newRow, newCol) && validMovesCache[newRow][newCol] && GameManager.getInstance().isEmptySquare(newRow, newCol)) {
                     validMoves.add(new int[]{newRow, newCol});
                 }
             }
@@ -123,7 +121,7 @@ public class Zombie extends BaseMonsterPiece{
 
     // Method to check if a position is valid on the board
     @Override
-    public boolean isValidPosition(int row, int col) {
+    public boolean isValidMoveset(int row, int col) {
         return row >= 0 && row < validMovesCache.length && col >= 0 && col < validMovesCache[0].length;
     }
 }

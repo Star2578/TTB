@@ -51,9 +51,11 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
 
     public abstract void performAction();
     public abstract void updateState(int playerRow, int playerCol);
-    protected abstract boolean isValidPosition(int row, int col);
+    protected abstract boolean isValidMoveset(int row, int col);
 
     protected void move(int newRow, int newCol) {
+        if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) return;
+
         // Update the position of the Zombie on the board
         GridPane.setRowIndex(getTexture(), newRow);
         GridPane.setColumnIndex(getTexture(), newCol);

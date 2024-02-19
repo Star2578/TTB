@@ -25,5 +25,9 @@ public class GameManager {
         return instance;
     }
 
+    public boolean isEmptySquare(int row, int col) {
+        return pieces[row][col] == null;
+    }
+
     // TODO: Implement Save & Load System in here
 }
