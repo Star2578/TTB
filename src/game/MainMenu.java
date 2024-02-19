@@ -79,6 +79,7 @@ public class MainMenu {
         playBtn.setOnMouseClicked(mouseEvent -> {
             //will do scene event handler on this one
             buttonGetClicked(playBtn,playBtnText);
+            SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getGameScene());
 
         });
         playBtn.setOnMouseReleased(mouseEvent -> buttonSetDefault(playBtn,playBtnText));
