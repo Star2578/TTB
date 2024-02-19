@@ -34,7 +34,7 @@ public class Main extends Application {
     private int playerCol = 0;
     private boolean isPieceSelected = false;
     private GUIManager guiManager;
-    private List<BasePiece> environmentPieces = new ArrayList<>(); // List of all environment pieces (monsters and traps)
+    private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
     private TurnManager turnManager;
     public static void main(String[] args) {
         launch(args);
@@ -120,9 +120,9 @@ public class Main extends Application {
         initializeEnvironment();
 
         // Initialize TurnManager after setting up player and environment
-        turnManager = new TurnManager(player, environmentPieces);
+        turnManager = gameManager.turnManager;
 
-        guiManager = new GUIManager(turnManager);
+        guiManager = gameManager.guiManager;
 
         turnManager.startPlayerTurn();
     }
@@ -197,6 +197,13 @@ public class Main extends Application {
     }
 
     private void movePlayer(int row, int col) {
+        if (Config.MOVE_ACTIONPOINT > player.getCurrentActionPoint()) {
+            System.out.println("Not enough Action Point");
+            return;
+        }
+        player.decreaseActionPoint(Config.MOVE_ACTIONPOINT);
+        guiManager.updateGUI();
+
         // Update player position and move the piece on the board
         GridPane.setRowIndex(player.getTexture(), row);
         GridPane.setColumnIndex(player.getTexture(), col);

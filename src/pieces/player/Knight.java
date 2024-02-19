@@ -3,12 +3,12 @@ package pieces.player;
 import utils.Config;
 
 public class Knight extends BasePlayerPiece {
-    private int currentMana;
-    private int maxMana;
     public Knight(int row, int col) {
         super(row, col);
-        maxMana = 10;
-        currentMana = maxMana;
+        setMaxMana(10);
+        setCurrentMana(getMaxMana());
+        setMaxHealth(20);
+        setCurrentHealth(getMaxHealth());
         setTextureByPath(Config.KnightPath);
         setCanAct(false);
     }
@@ -24,7 +24,7 @@ public class Knight extends BasePlayerPiece {
     @Override
     public void startTurn() {
         setCanAct(true);
-        currentMana = maxMana;
+        setCurrentMana(getMaxMana());
         setCurrentActionPoint(getMaxActionPoint());
     }
 

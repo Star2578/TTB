@@ -11,6 +11,8 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private int currentActionPoint;
     private int maxActionPoint;
     private boolean canAct;
+    private int currentMana;
+    private int maxMana;
 
     public BasePlayerPiece(int row, int col) {
         super("Player", new ImageView(Config.PlaceholderPath), row, col);
@@ -32,6 +34,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     @Override
     public int getMaxHealth() {
         return maxHp;
+    }
+
+    public void decreaseActionPoint(int decrease) {
+        this.currentActionPoint = Math.max(0, this.currentActionPoint - decrease);
     }
 
     public void setCurrentActionPoint(int currentActionPoint) {
@@ -56,6 +62,22 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     public boolean canAct() {
         return canAct;
+    }
+
+    public int getCurrentMana() {
+        return currentMana;
+    }
+
+    public void setCurrentMana(int currentMana) {
+        this.currentMana = Math.max(currentMana, 0);
+    }
+
+    public int getMaxMana() {
+        return maxMana;
+    }
+
+    public void setMaxMana(int maxMana) {
+        this.maxMana = Math.max(1, maxMana);
     }
 
     @Override

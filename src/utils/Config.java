@@ -8,6 +8,8 @@ public class Config {
     public static final int SQUARE_SIZE = 32;
     public static final int GAME_SIZE = 640;
 
+    public static final int MOVE_ACTIONPOINT = 1;
+
     // Player
     public static String KnightPath = "sprites/player/Knight.png";
 

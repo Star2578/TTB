@@ -9,19 +9,27 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import logic.GameManager;
 import logic.TurnManager;
+import pieces.player.BasePlayerPiece;
 
 public class GUIManager {
     private TurnManager turnManager;
+    private BasePlayerPiece player;
     private VBox turnOrderDisplay;
     private VBox playerOptionsMenu;
     private VBox rightSideUI;
 
-    public GUIManager(TurnManager turnManager) {
+    private Text displayActionPoint;
+    private ProgressBar hpBar;
+    private ProgressBar manaBar;
+
+    public GUIManager(TurnManager turnManager, BasePlayerPiece player) {
+        this.turnManager = turnManager;
+        this.player = player;
         initializeTurnOrderDisplay();
         initializePlayerOptionsMenu();
         initializeRightSideUI();
-        this.turnManager = turnManager;
     }
 
     private void initializeTurnOrderDisplay() {
@@ -69,17 +77,17 @@ public class GUIManager {
         playerCharacterImage.setFitHeight(80);
 
         // HP Bar
-        ProgressBar hpBar = new ProgressBar(0.8);
+        hpBar = new ProgressBar(1);
         hpBar.setPrefWidth(200);
 
         // Mana Bar
-        ProgressBar manaBar = new ProgressBar(0.6);
+        manaBar = new ProgressBar(1);
         manaBar.setPrefWidth(200);
 
         playerCharacterFrame.getChildren().addAll(playerCharacterImage, hpBar, manaBar);
         playerOptionsMenu.getChildren().add(playerCharacterFrame);
 
-        Text displayActionPoint = new Text("Action Point: ");
+        displayActionPoint = new Text("Action Point: " + player.getCurrentActionPoint() + "/" + player.getMaxActionPoint());
         displayActionPoint.setFill(Color.WHITE);
 
         // Buttons for Player Options
@@ -137,5 +145,22 @@ public class GUIManager {
 
     public VBox getRightSideUI() {
         return rightSideUI;
+    }
+
+    public void updateGUI() {
+        updateActionPointDisplay();
+        updateStatusBar();
+    }
+
+    private void updateStatusBar() {
+        double hp = (double) player.getCurrentHealth() / player.getMaxHealth();
+        double mana = (double) player.getCurrentMana() / player.getMaxMana();
+
+        hpBar.setProgress(hp);
+        manaBar.setProgress(mana);
+    }
+
+    private void updateActionPointDisplay() {
+        displayActionPoint.setText("Action Point: " + player.getCurrentActionPoint() + "/" + player.getMaxActionPoint());
     }
 }

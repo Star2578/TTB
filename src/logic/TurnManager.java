@@ -23,6 +23,7 @@ public class TurnManager {
         // Start the turn for the player
         player.startTurn();
         player.setCanAct(true);
+        GameManager.getInstance().guiManager.updateGUI();
         System.out.println("Player Turn Start");
     }
 
