@@ -20,8 +20,8 @@ public class Zombie extends BaseMonsterPiece{
     private final int VISON_RANGE = 3;
     private Random random;
 
-    public Zombie(int row, int col, boolean[][] validMovesCache) {
-        super(row, col);
+    public Zombie(int row, int col, boolean[][] validMovesCache, int defaultDirection) {
+        super(row, col, defaultDirection);
         setTextureByPath(Config.ZombiePath);
         currentState = State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
         this.validMovesCache = validMovesCache;
@@ -89,6 +89,9 @@ public class Zombie extends BaseMonsterPiece{
 
         // If the new position is valid, move the Zombie there
         if (isValidMoveSet(newRow, newCol)) {
+            // Determine the new direction and call changeDirection
+            int newDirection = dCol == 1 ? 1 : -1; // Assuming positive direction is right
+            changeDirection(newDirection);
             move(newRow, newCol);
         }
     }
@@ -101,7 +104,17 @@ public class Zombie extends BaseMonsterPiece{
         // If there are valid moves, randomly choose one and move to that position
         if (!validMoves.isEmpty()) {
             int[] randomMove = validMoves.get(random.nextInt(validMoves.size()));
-            move(randomMove[0], randomMove[1]);
+            int newRow = randomMove[0];
+            int newCol = randomMove[1];
+
+            // Determine the direction of movement
+            int newDirection = Integer.compare(newCol, getCol());
+
+            // Call changeDirection with the new direction
+            changeDirection(newDirection);
+
+            // Move the zombie to the new position
+            move(newRow, newCol);
         }
     }
 

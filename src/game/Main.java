@@ -98,13 +98,13 @@ public class Main extends Application {
 
     private void initializeEnvironment() {
         // Add environment pieces (monsters and traps) to the list
-        environmentPieces.add(new Zombie(0, 0, validMovesCache));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
 
         for (BasePiece entity : environmentPieces) {
             placeEntityRandomly(entity);

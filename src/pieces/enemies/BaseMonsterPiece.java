@@ -10,9 +10,14 @@ import utils.Config;
 public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     private int currentHp;
     private int maxHp;
+    private int currentDirection;
 
-    public BaseMonsterPiece(int row, int col) {
+    public BaseMonsterPiece(int row, int col, int defaultDirection) {
         super("Monster", new ImageView(Config.PlaceholderPath), row, col);
+        if (defaultDirection == -1) {
+            ImageView imageView = getTexture();
+            imageView.setScaleX(-1); // Flipping the image horizontally
+        }
     }
 
     @Override
@@ -65,5 +70,16 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         pieces[newRow][newCol] = this;
         setRow(newRow);
         setCol(newCol);
+    }
+
+    public void changeDirection(int direction) {
+        if (direction != 1 && direction != -1) {
+            return;
+        }
+        if (currentDirection != direction) {
+            currentDirection = direction;
+            ImageView imageView = getTexture();
+            imageView.setScaleX(direction); // Flipping the image horizontally if direction is -1
+        }
     }
 }
