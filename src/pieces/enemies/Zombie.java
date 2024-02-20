@@ -16,7 +16,7 @@ public class Zombie extends BaseMonsterPiece{
 
     private State currentState;
     private boolean[][] validMovesCache; // Cache of valid moves for the entire board
-    private final int ATTACK_RANGE = 1;
+    private final double ATTACK_RANGE = 1.5; // Why it's .5? Because it's for diagonal
     private final int VISON_RANGE = 3;
     private final int ATTACK_DAMAGE = 3;
     private Random random;
@@ -61,8 +61,15 @@ public class Zombie extends BaseMonsterPiece{
         // Calculate the distance between the Zombie and the player
         double distance = Math.sqrt(Math.pow(GameManager.getInstance().player.getRow() - getRow(), 2) + Math.pow(GameManager.getInstance().player.getCol() - getCol(), 2));
 
+        // Get the direction towards the player
+//        int dRow = Integer.compare(GameManager.getInstance().player.getRow(), getRow());
+        int dCol = Integer.compare(GameManager.getInstance().player.getCol(), getCol());
+
         // If the player is within attack range, attempt to attack
         if (distance <= ATTACK_RANGE) {
+            // Turn to face the player
+            changeDirection(dCol);
+
             // Attack the player
             attack(GameManager.getInstance().player);
         } else if (distance <= VISON_RANGE) {
@@ -77,7 +84,6 @@ public class Zombie extends BaseMonsterPiece{
     @Override
     public void attack(BasePlayerPiece playerPiece) {
         System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
-        // TODO : Implement attack method
 
         int currentHealth = playerPiece.getCurrentHealth();
         playerPiece.setCurrentHealth(currentHealth - ATTACK_DAMAGE);
