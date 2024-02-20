@@ -265,6 +265,10 @@ public class Main extends Application {
         }
     }
 
+    private void showValidAttacks(int row, int col) {
+        // TODO: Implement Show Valid Attacks
+    }
+
     private void resetSelection() {
         isPieceSelected = false;
         // Reset the texture of all squares to the default floor texture

@@ -1,5 +1,6 @@
 package pieces.player;
 
+import logic.GameManager;
 import pieces.enemies.BaseMonsterPiece;
 import utils.Config;
 
@@ -16,6 +17,15 @@ public class Knight extends BasePlayerPiece {
 
     @Override
     public boolean validMove(int row, int col) {
+        int currentRow = getRow();
+        int currentCol = getCol();
+
+        return Math.abs(row - currentRow) <= 1 && Math.abs(col - currentCol) <= 1;
+    }
+
+    @Override
+    public boolean validAttack(int row, int col) {
+        // For Knight, it's the same as his movement
         int currentRow = getRow();
         int currentCol = getCol();
 

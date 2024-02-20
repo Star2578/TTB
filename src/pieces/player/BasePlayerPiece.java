@@ -112,6 +112,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public abstract void endTurn();
 
     public abstract boolean validMove(int row, int col); // To set valid move for each classes
+    public abstract boolean validAttack(int row, int col); // To set valid attack for each classes
 
     public void changeDirection(int direction) {
         if (direction != 1 && direction != -1) {

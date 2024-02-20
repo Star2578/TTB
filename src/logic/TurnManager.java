@@ -1,11 +1,12 @@
 package logic;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import pieces.BasePiece;
-import pieces.enemies.BaseMonsterPiece;
 import pieces.enemies.Zombie;
 import pieces.player.BasePlayerPiece;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TurnManager {
@@ -14,6 +15,7 @@ public class TurnManager {
     private int currentEnvironmentPieceIndex;
 
     public boolean isPlayerTurn;
+    private final double DELAY_BETWEEN_ENVIRONMENT = 0.25;
 
     public TurnManager(BasePlayerPiece player, List<BasePiece> environmentPieces) {
         this.player = player;
@@ -45,17 +47,19 @@ public class TurnManager {
         BasePiece currentPiece = environmentPieces.get(currentEnvironmentPieceIndex);
         System.out.println("Environment Turn Start for " + currentEnvironmentPieceIndex + " " + currentPiece.getClass().getSimpleName());
         if (currentPiece instanceof Zombie) {
-            ((Zombie) currentPiece).updateState(player.getRow(),player.getCol());
-            ((Zombie) currentPiece).performAction(); // Perform action for monsters
-        }
-
-        // Move to the next environment piece
-        currentEnvironmentPieceIndex++;
-        if (currentEnvironmentPieceIndex == environmentPieces.size()) {
-            currentEnvironmentPieceIndex = 0;
-            startPlayerTurn();
-        } else {
-            startEnvironmentTurn();
+            ((Zombie) currentPiece).updateState(player.getRow(), player.getCol());
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(DELAY_BETWEEN_ENVIRONMENT), event -> {
+                ((Zombie) currentPiece).performAction(); // Perform action for monsters after a delay of 1 second
+                // Move to the next environment piece
+                currentEnvironmentPieceIndex++;
+                if (currentEnvironmentPieceIndex == environmentPieces.size()) {
+                    currentEnvironmentPieceIndex = 0;
+                    startPlayerTurn();
+                } else {
+                    startEnvironmentTurn();
+                }
+            }));
+            timeline.play();
         }
     }
 }

@@ -104,6 +104,10 @@ public class GUIManager {
         Button attackButton = new Button("Attack");
         Button endTurnButton = new Button("End Turn");
 
+        attackButton.setOnMouseClicked(mouseEvent -> {
+            GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+        });
+
         endTurnButton.setOnMouseClicked(mouseEvent -> {
             turnManager.endPlayerTurn();
         });
