@@ -27,6 +27,13 @@ public class GUIManager {
     private ProgressBar hpBar;
     private ProgressBar manaBar;
 
+    private Button inventoryButton;
+    private Button useItemButton;
+    private Button useSkillsButton;
+    private Button endTurnButton;
+    private Button attackButton;
+
+
     public GUIManager(TurnManager turnManager, BasePlayerPiece player) {
         this.turnManager = turnManager;
         this.player = player;
@@ -98,23 +105,23 @@ public class GUIManager {
         displayActionPoint.setFill(Color.WHITE);
 
         // Buttons for Player Options
-        Button inventoryButton = new Button("Inventory");
+        inventoryButton = new Button("Inventory");
         inventoryButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:16;");
 
-        Button useItemButton = new Button("Use Item");
+        useItemButton = new Button("Use Item");
         useItemButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:16;");
 
-        Button useSkillsButton = new Button("Use Skills");
+        useSkillsButton = new Button("Use Skills");
         useSkillsButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:16;");
 
-        Button attackButton = new Button("Attack");
+        attackButton = new Button("Attack");
         attackButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:16;");
 
-        Button endTurnButton = new Button("End Turn");
+        endTurnButton = new Button("End Turn");
         endTurnButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:16;");
 
@@ -124,6 +131,7 @@ public class GUIManager {
 
         endTurnButton.setOnMouseClicked(mouseEvent -> {
             turnManager.endPlayerTurn();
+            endTurnButton.setDisable(true);
         });
 
         // Add spacing between buttons
@@ -191,5 +199,9 @@ public class GUIManager {
 
     private void updateActionPointDisplay() {
         displayActionPoint.setText("Action Point: " + player.getCurrentActionPoint() + "/" + player.getMaxActionPoint());
+    }
+
+    public void enableEndTurnButton(){
+        endTurnButton.setDisable(false);
     }
 }
