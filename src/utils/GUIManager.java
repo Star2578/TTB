@@ -92,9 +92,20 @@ public class GUIManager {
 
         // Buttons for Player Options
         Button inventoryButton = new Button("Inventory");
+        inventoryButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:16;");
+
         Button useItemButton = new Button("Use Item");
+        useItemButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:16;");
+
         Button useSkillsButton = new Button("Use Skills");
+        useSkillsButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:16;");
+
         Button endTurnButton = new Button("End Turn");
+        endTurnButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:16;");
 
         endTurnButton.setOnMouseClicked(mouseEvent -> {
             turnManager.endPlayerTurn();
