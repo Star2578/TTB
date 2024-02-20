@@ -222,6 +222,9 @@ public class GameScene {
         player.decreaseActionPoint(Config.MOVE_ACTIONPOINT);
         guiManager.updateGUI();
 
+        int newDirection = Integer.compare(col, player.getCol());
+        player.changeDirection(newDirection);
+
         // Update player position and move the piece on the board
         GridPane.setRowIndex(player.getTexture(), row);
         GridPane.setColumnIndex(player.getTexture(), col);
