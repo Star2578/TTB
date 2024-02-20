@@ -3,8 +3,8 @@ package pieces.player;
 import utils.Config;
 
 public class Knight extends BasePlayerPiece {
-    public Knight(int row, int col) {
-        super(row, col);
+    public Knight(int row, int col, int defaultDirection) {
+        super(row, col, defaultDirection);
         setMaxMana(10);
         setCurrentMana(getMaxMana());
         setMaxHealth(20);

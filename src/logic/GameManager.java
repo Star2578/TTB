@@ -28,7 +28,7 @@ public class GameManager {
     public List<BasePiece> environmentPieces = new ArrayList<>();
 
     public GameManager() {
-        player = new Knight(0, 0);
+        player = new Knight(0, 0, 1);
         boardPane = new GridPane();
         turnManager = new TurnManager(player, environmentPieces);
         guiManager = new GUIManager(turnManager, player);

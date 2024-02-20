@@ -5,6 +5,7 @@ import javafx.scene.layout.GridPane;
 import logic.GameManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
+import pieces.player.BasePlayerPiece;
 import utils.Config;
 
 public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
@@ -43,6 +44,8 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         if (maxHp == maxHpBuffer) currentHp = maxHp;
         if (maxHp < currentHp) currentHp = maxHp;
     }
+
+    public abstract void attack(BasePlayerPiece playerPiece);
 
     @Override
     public boolean isAlive() {

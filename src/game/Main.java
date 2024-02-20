@@ -87,7 +87,7 @@ public class Main extends Application {
         // Set up the scene and stage
         Scene gameScene = new Scene(root, 1280, 720);
         SceneManager.getInstance().setGameScene(gameScene); // Save this scene for later use
-        gameManager.updateCursor(gameScene, Config.defaultCursor);
+        gameManager.updateCursor(gameScene, Config.DefaultCursor);
         setupMouseEvents();
         setupKeyEvents(gameScene); // Debug Tool
         primaryStage.setResizable(false);
@@ -212,6 +212,9 @@ public class Main extends Application {
         }
         player.decreaseActionPoint(Config.MOVE_ACTIONPOINT);
         guiManager.updateGUI();
+
+        int newDirection = Integer.compare(col, player.getCol());
+        player.changeDirection(newDirection);
 
         // Update player position and move the piece on the board
         GridPane.setRowIndex(player.getTexture(), row);

@@ -11,13 +11,13 @@ public class Config {
     public static final int MOVE_ACTIONPOINT = 1;
 
     // Cursor
-    public static final String defaultCursor = "sprites/cursors/png/cursor_default.png";
-    public static final String unavailableCursor = "";
-    public static final String attackCursor = "";
-    public static final String aimCursor = "";
-    public static final String questionCursor = "";
-    public static final String handCursor = "";
-    public static final String handClickCursor = "";
+    public static final String DefaultCursor = "sprites/cursors/png/cursor_default.png";
+    public static final String UnavailableCursor = "";
+    public static final String AttackCursor = "";
+    public static final String AimCursor = "";
+    public static final String QuestionCursor = "";
+    public static final String HandCursor = "";
+    public static final String HandClickCursor = "";
 
     // Player
     public static String KnightPath = "sprites/player/Knight.png";

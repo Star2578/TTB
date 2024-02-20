@@ -18,6 +18,7 @@ public class Zombie extends BaseMonsterPiece{
     private boolean[][] validMovesCache; // Cache of valid moves for the entire board
     private final int ATTACK_RANGE = 1;
     private final int VISON_RANGE = 3;
+    private final int ATTACK_DAMAGE = 3;
     private Random random;
 
     public Zombie(int row, int col, boolean[][] validMovesCache, int defaultDirection) {
@@ -73,9 +74,14 @@ public class Zombie extends BaseMonsterPiece{
         }
     }
 
-    private void attack(BasePlayerPiece playerPiece) {
+    @Override
+    public void attack(BasePlayerPiece playerPiece) {
         System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
         // TODO : Implement attack method
+
+        int currentHealth = playerPiece.getCurrentHealth();
+        playerPiece.setCurrentHealth(currentHealth - ATTACK_DAMAGE);
+        GameManager.getInstance().guiManager.updateGUI();
     }
 
     private void moveTowardsPlayer() {
