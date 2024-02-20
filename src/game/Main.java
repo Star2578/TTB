@@ -1,23 +1,12 @@
 package game;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import logic.*;
-import pieces.BasePiece;
-import pieces.enemies.*;
-import pieces.player.*;
-import pieces.wall.*;
-import utils.Config;
-import utils.GUIManager;
 
-import java.util.List;
+import utils.Config;
+
 
 public class Main extends Application {
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
