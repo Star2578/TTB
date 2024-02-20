@@ -16,12 +16,13 @@ public class Zombie extends BaseMonsterPiece{
 
     private State currentState;
     private boolean[][] validMovesCache; // Cache of valid moves for the entire board
-    private final int ATTACK_RANGE = 1;
+    private final double ATTACK_RANGE = 1.5; // Why it's .5? Because it's for diagonal
     private final int VISON_RANGE = 3;
+    private final int ATTACK_DAMAGE = 3;
     private Random random;
 
-    public Zombie(int row, int col, boolean[][] validMovesCache) {
-        super(row, col);
+    public Zombie(int row, int col, boolean[][] validMovesCache, int defaultDirection) {
+        super(row, col, defaultDirection);
         setTextureByPath(Config.ZombiePath);
         currentState = State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
         this.validMovesCache = validMovesCache;
@@ -60,8 +61,15 @@ public class Zombie extends BaseMonsterPiece{
         // Calculate the distance between the Zombie and the player
         double distance = Math.sqrt(Math.pow(GameManager.getInstance().player.getRow() - getRow(), 2) + Math.pow(GameManager.getInstance().player.getCol() - getCol(), 2));
 
+        // Get the direction towards the player
+//        int dRow = Integer.compare(GameManager.getInstance().player.getRow(), getRow());
+        int dCol = Integer.compare(GameManager.getInstance().player.getCol(), getCol());
+
         // If the player is within attack range, attempt to attack
         if (distance <= ATTACK_RANGE) {
+            // Turn to face the player
+            changeDirection(dCol);
+
             // Attack the player
             attack(GameManager.getInstance().player);
         } else if (distance <= VISON_RANGE) {
@@ -73,9 +81,13 @@ public class Zombie extends BaseMonsterPiece{
         }
     }
 
-    private void attack(BasePlayerPiece playerPiece) {
+    @Override
+    public void attack(BasePlayerPiece playerPiece) {
         System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
-        // TODO : Implement attack method
+
+        int currentHealth = playerPiece.getCurrentHealth();
+        playerPiece.setCurrentHealth(currentHealth - ATTACK_DAMAGE);
+        GameManager.getInstance().guiManager.updateGUI();
     }
 
     private void moveTowardsPlayer() {
@@ -89,6 +101,9 @@ public class Zombie extends BaseMonsterPiece{
 
         // If the new position is valid, move the Zombie there
         if (isValidMoveSet(newRow, newCol)) {
+            // Determine the new direction and call changeDirection
+            int newDirection = dCol == 1 ? 1 : -1; // Assuming positive direction is right
+            changeDirection(newDirection);
             move(newRow, newCol);
         }
     }
@@ -101,7 +116,17 @@ public class Zombie extends BaseMonsterPiece{
         // If there are valid moves, randomly choose one and move to that position
         if (!validMoves.isEmpty()) {
             int[] randomMove = validMoves.get(random.nextInt(validMoves.size()));
-            move(randomMove[0], randomMove[1]);
+            int newRow = randomMove[0];
+            int newCol = randomMove[1];
+
+            // Determine the direction of movement
+            int newDirection = Integer.compare(newCol, getCol());
+
+            // Call changeDirection with the new direction
+            changeDirection(newDirection);
+
+            // Move the zombie to the new position
+            move(newRow, newCol);
         }
     }
 

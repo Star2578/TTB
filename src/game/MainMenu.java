@@ -120,7 +120,7 @@ public class MainMenu {
 
         //-------------------<put everything on scene>-----------------------------------------
         scene = new Scene(rootPane , 1280 , 720);
-        scene.getStylesheets().add(getClass().getResource("/CSSs/mainMenuSheet.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/style/mainMenuSheet.css").toExternalForm());
 
         rootPane.getChildren().addAll(titleRect1,
                                       titleRect2,

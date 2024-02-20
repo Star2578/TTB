@@ -1,7 +1,8 @@
-package utils;
+package logic;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
@@ -12,10 +13,12 @@ import javafx.scene.text.Text;
 import logic.GameManager;
 import logic.TurnManager;
 import pieces.player.BasePlayerPiece;
+import utils.Config;
 
 public class GUIManager {
     private TurnManager turnManager;
     private BasePlayerPiece player;
+    private ImageScaler imageScaler;
     private VBox turnOrderDisplay;
     private VBox playerOptionsMenu;
     private VBox rightSideUI;
@@ -27,6 +30,7 @@ public class GUIManager {
     public GUIManager(TurnManager turnManager, BasePlayerPiece player) {
         this.turnManager = turnManager;
         this.player = player;
+        this.imageScaler = new ImageScaler();
         initializeTurnOrderDisplay();
         initializePlayerOptionsMenu();
         initializeRightSideUI();
@@ -72,16 +76,19 @@ public class GUIManager {
         playerCharacterFrame.setAlignment(Pos.CENTER_LEFT);
 
         // Player Character Image
-        ImageView playerCharacterImage = new ImageView(new Image(Config.PlaceholderPath));
+        ImageView playerCharacterImage = new ImageView(imageScaler.resample(new Image(Config.KnightPath), 2));
         playerCharacterImage.setFitWidth(80);
         playerCharacterImage.setFitHeight(80);
+//        playerCharacterImage.setPreserveRatio(true);
 
         // HP Bar
         hpBar = new ProgressBar(1);
+        hpBar.setStyle("-fx-accent: green;");
         hpBar.setPrefWidth(200);
 
         // Mana Bar
         manaBar = new ProgressBar(1);
+        manaBar.setStyle("-fx-accent: blue;");
         manaBar.setPrefWidth(200);
 
         playerCharacterFrame.getChildren().addAll(playerCharacterImage, hpBar, manaBar);
@@ -103,9 +110,17 @@ public class GUIManager {
         useSkillsButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:16;");
 
+        Button attackButton = new Button("Attack");
+        attackButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:16;");
+
         Button endTurnButton = new Button("End Turn");
         endTurnButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:16;");
+
+        attackButton.setOnMouseClicked(mouseEvent -> {
+            GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+        });
 
         endTurnButton.setOnMouseClicked(mouseEvent -> {
             turnManager.endPlayerTurn();
@@ -114,9 +129,12 @@ public class GUIManager {
         // Add spacing between buttons
         VBox.setMargin(inventoryButton, new Insets(10, 0, 0, 0));
         VBox.setMargin(useItemButton, new Insets(10, 0, 0, 0));
+        VBox.setMargin(attackButton, new Insets(10, 0, 0, 0));
         VBox.setMargin(useSkillsButton, new Insets(10, 0, 0, 0));
+        VBox.setMargin(displayActionPoint, new Insets(10, 0, 0, 0));
+        VBox.setMargin(endTurnButton, new Insets(10, 0, 0, 0));
 
-        playerOptionsMenu.getChildren().addAll(inventoryButton, useItemButton, useSkillsButton, displayActionPoint, endTurnButton);
+        playerOptionsMenu.getChildren().addAll(inventoryButton, useItemButton, attackButton, useSkillsButton, displayActionPoint, endTurnButton);
 
         playerOptionsMenu.setMinWidth(300);
         playerOptionsMenu.setMaxWidth(300);

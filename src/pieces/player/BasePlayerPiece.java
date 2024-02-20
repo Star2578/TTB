@@ -2,7 +2,8 @@ package pieces.player;
 
 import javafx.scene.image.ImageView;
 import pieces.BasePiece;
-import utils.BaseStatus;
+import pieces.BaseStatus;
+import pieces.enemies.BaseMonsterPiece;
 import utils.Config;
 
 public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
@@ -13,12 +14,17 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private int currentMana;
     private int maxMana;
     private boolean canAct;
+    private int currentDirection;
 
-    public BasePlayerPiece(int row, int col) {
+    public BasePlayerPiece(int row, int col, int defaultDirection) {
         super("Player", new ImageView(Config.PlaceholderPath), row, col);
         maxActionPoint = 10;
         currentActionPoint = maxActionPoint;
         canAct = false;
+        if (defaultDirection == -1) {
+            ImageView imageView = getTexture();
+            imageView.setScaleX(-1); // Flipping the image horizontally
+        }
     }
 
     @Override
@@ -38,6 +44,8 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     public void decreaseActionPoint(int decrease) {
         this.currentActionPoint = Math.max(0, this.currentActionPoint - decrease);
+
+        if (currentActionPoint == 0) setCanAct(false);
     }
 
     public void setCurrentActionPoint(int currentActionPoint) {
@@ -104,4 +112,18 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public abstract void endTurn();
 
     public abstract boolean validMove(int row, int col); // To set valid move for each classes
+    public abstract boolean validAttack(int row, int col); // To set valid attack for each classes
+
+    public void changeDirection(int direction) {
+        if (direction != 1 && direction != -1) {
+            return;
+        }
+        if (currentDirection != direction) {
+            currentDirection = direction;
+            ImageView imageView = getTexture();
+            imageView.setScaleX(direction); // Flipping the image horizontally if direction is -1
+        }
+    }
+
+    public abstract void attack(BaseMonsterPiece monsterPiece); // This will differ for each class of player
 }

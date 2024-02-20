@@ -1,18 +1,23 @@
 package game;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+
+import javafx.util.Duration;
+
 import logic.*;
 import pieces.BasePiece;
 import pieces.enemies.*;
 import pieces.player.*;
 import pieces.wall.*;
 import utils.Config;
-import utils.GUIManager;
 
 import java.util.List;
 
@@ -24,15 +29,18 @@ public class GameScene {
     private GameManager gameManager = GameManager.getInstance();
     private BasePlayerPiece player;
     private GUIManager guiManager;
-    private TurnManager turnManager;
-    private DungeonGenerator dungeonGenerator;
     private GameLoop gameLoop;
+    private TurnManager turnManager;
+    private ImageScaler imageScaler = new ImageScaler();
+    private DungeonGenerator dungeonGenerator;
+    private Timeline autoCycleTurn;
 
     private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE]; // The dungeon floor texture
     private boolean[][] validMovesCache = new boolean[BOARD_SIZE][BOARD_SIZE]; // Valid moves without entity
     private BasePiece[][] pieces = GameManager.getInstance().pieces; // Where each entity locate
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
     private boolean isPieceSelected = false;
+    private boolean autoCycle = false;
 
     //------------<UI>----------------------------------------------------
 
@@ -90,8 +98,6 @@ public class GameScene {
             // Render game graphics
         };
 
-
-
         // Create an instance of GameLoop with the update and render logic
         gameLoop = new GameLoop(updateLogic, renderLogic);
         gameLoop.start();
@@ -110,13 +116,13 @@ public class GameScene {
 
     private void initializeEnvironment() {
         // Add environment pieces (monsters and traps) to the list
-        environmentPieces.add(new Zombie(0, 0, validMovesCache));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
+        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
 
         for (BasePiece entity : environmentPieces) {
             placeEntityRandomly(entity);
@@ -147,7 +153,7 @@ public class GameScene {
                 ImageView square = new ImageView();
                 square.setFitWidth(SQUARE_SIZE);
                 square.setFitHeight(SQUARE_SIZE);
-                square.setImage(new Image(Config.FloorPath)); // Set texture of dungeon floor
+                square.setImage(imageScaler.resample(new Image(Config.FloorPath), 2)); // Set texture of dungeon floor
                 gridPane.add(square, col, row);
                 squares[row][col] = square;
             }
@@ -170,6 +176,7 @@ public class GameScene {
 
     private void placePiece(BasePiece piece) {
         ImageView pieceView = piece.getTexture();
+        pieceView.setImage(imageScaler.resample(piece.getTexture().getImage(), 2));
         pieceView.setFitWidth(SQUARE_SIZE);
         pieceView.setFitHeight(SQUARE_SIZE);
 
@@ -220,6 +227,9 @@ public class GameScene {
         player.decreaseActionPoint(Config.MOVE_ACTIONPOINT);
         guiManager.updateGUI();
 
+        int newDirection = Integer.compare(col, player.getCol());
+        player.changeDirection(newDirection);
+
         // Update player position and move the piece on the board
         GridPane.setRowIndex(player.getTexture(), row);
         GridPane.setColumnIndex(player.getTexture(), col);
@@ -257,7 +267,7 @@ public class GameScene {
                 // Check if the new position is within the board bounds and not the current position
                 if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
                     if (validMovesCache[newRow][newCol] && pieces[newRow][newCol] == null) {
-                        squares[newRow][newCol].setImage(new Image(Config.ValidMovePath)); // Set texture to indicate valid move
+                        squares[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidMovePath), 2)); // Set texture to indicate valid move
                     }
                 }
             }
@@ -338,7 +348,31 @@ public class GameScene {
                             }
                         }
                     }
+                    break;
+                case F4:
+                    autoCycle = !autoCycle;
+                    if (autoCycle) {
+                        startAutoCycle();
+                    } else {
+                        stopAutoCycle();
+                    }
+                    break;
             }
         });
+    }
+
+    private void startAutoCycle() {
+        double delay = 1;
+        autoCycleTurn = new Timeline(new KeyFrame(Duration.seconds(delay), cycle -> {
+            if (turnManager.isPlayerTurn) turnManager.endPlayerTurn();
+        }));
+        autoCycleTurn.setCycleCount(Timeline.INDEFINITE);
+        autoCycleTurn.play();
+    }
+
+    private void stopAutoCycle() {
+        if (autoCycleTurn != null) {
+            autoCycleTurn.stop();
+        }
     }
 }

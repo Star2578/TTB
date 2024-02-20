@@ -1,4 +1,4 @@
-package utils;
+package pieces;
 
 public interface BaseStatus {
     int getCurrentHealth();
