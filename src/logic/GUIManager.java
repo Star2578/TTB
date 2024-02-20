@@ -1,4 +1,4 @@
-package utils;
+package logic;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,6 +12,7 @@ import javafx.scene.text.Text;
 import logic.GameManager;
 import logic.TurnManager;
 import pieces.player.BasePlayerPiece;
+import utils.Config;
 
 public class GUIManager {
     private TurnManager turnManager;

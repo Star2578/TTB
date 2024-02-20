@@ -4,7 +4,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import logic.GameManager;
 import pieces.BasePiece;
-import utils.BaseStatus;
+import pieces.BaseStatus;
 import utils.Config;
 
 public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {

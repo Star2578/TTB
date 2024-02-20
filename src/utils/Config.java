@@ -10,6 +10,15 @@ public class Config {
 
     public static final int MOVE_ACTIONPOINT = 1;
 
+    // Cursor
+    public static final String defaultCursor = "sprites/cursors/png/cursor_default.png";
+    public static final String unavailableCursor = "";
+    public static final String attackCursor = "";
+    public static final String aimCursor = "";
+    public static final String questionCursor = "";
+    public static final String handCursor = "";
+    public static final String handClickCursor = "";
+
     // Player
     public static String KnightPath = "sprites/player/Knight.png";
 

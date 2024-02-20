@@ -14,7 +14,7 @@ import pieces.enemies.*;
 import pieces.player.*;
 import pieces.wall.*;
 import utils.Config;
-import utils.GUIManager;
+import logic.GUIManager;
 
 import java.util.List;
 
@@ -28,6 +28,7 @@ public class Main extends Application {
     private GUIManager guiManager;
     private TurnManager turnManager;
     private DungeonGenerator dungeonGenerator;
+    private ImageScaler imageScaler = new ImageScaler();
     private GridPane boardPane = gameManager.boardPane;
 
     private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE]; // The dungeon floor texture
@@ -86,6 +87,7 @@ public class Main extends Application {
         // Set up the scene and stage
         Scene gameScene = new Scene(root, 1280, 720);
         SceneManager.getInstance().setGameScene(gameScene); // Save this scene for later use
+        gameManager.updateCursor(gameScene, Config.defaultCursor);
         setupMouseEvents();
         setupKeyEvents(gameScene); // Debug Tool
         primaryStage.setResizable(false);
@@ -133,7 +135,7 @@ public class Main extends Application {
                 ImageView square = new ImageView();
                 square.setFitWidth(SQUARE_SIZE);
                 square.setFitHeight(SQUARE_SIZE);
-                square.setImage(new Image(Config.FloorPath)); // Set texture of dungeon floor
+                square.setImage(imageScaler.resample(new Image(Config.FloorPath), 2)); // Set texture of dungeon floor
                 gridPane.add(square, col, row);
                 squares[row][col] = square;
             }
@@ -156,6 +158,7 @@ public class Main extends Application {
 
     private void placePiece(BasePiece piece) {
         ImageView pieceView = piece.getTexture();
+        pieceView.setImage(imageScaler.resample(pieceView.getImage(), 2));
         pieceView.setFitWidth(SQUARE_SIZE);
         pieceView.setFitHeight(SQUARE_SIZE);
 
@@ -179,6 +182,10 @@ public class Main extends Application {
     private void handleSquareClick(int row, int col) {
         System.out.println("Clicked on square (" + row + ", " + col + ")");
         if (!player.canAct()) {
+            if (player.getCurrentActionPoint() == 0) {
+                System.out.println("Out of Action Point");
+                return;
+            }
             System.out.println("Not on your turn");
             return;
         }
@@ -243,7 +250,7 @@ public class Main extends Application {
                 // Check if the new position is within the board bounds and not the current position
                 if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
                     if (validMovesCache[newRow][newCol] && pieces[newRow][newCol] == null) {
-                        squares[newRow][newCol].setImage(new Image(Config.ValidMovePath)); // Set texture to indicate valid move
+                        squares[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidMovePath), 2)); // Set texture to indicate valid move
                     }
                 }
             }

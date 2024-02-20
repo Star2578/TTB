@@ -2,7 +2,7 @@ package pieces.player;
 
 import javafx.scene.image.ImageView;
 import pieces.BasePiece;
-import utils.BaseStatus;
+import pieces.BaseStatus;
 import utils.Config;
 
 public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
@@ -38,6 +38,8 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     public void decreaseActionPoint(int decrease) {
         this.currentActionPoint = Math.max(0, this.currentActionPoint - decrease);
+
+        if (currentActionPoint == 0) setCanAct(false);
     }
 
     public void setCurrentActionPoint(int currentActionPoint) {
