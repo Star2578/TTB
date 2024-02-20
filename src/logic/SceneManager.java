@@ -1,10 +1,13 @@
 package logic;
 
 import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 public class SceneManager {
+
     private static SceneManager instance;
 
+    private Stage stage;
     private Scene menuScene;
     private Scene gameScene;
     private Scene settingsScene;
@@ -31,6 +34,10 @@ public class SceneManager {
     public int getScreenWidth() {
         return screenWidth;
     }
+
+    public Stage getStage(){return stage;}
+
+    public void setStage(Stage stage){this.stage=stage;}
 
     public Scene getGameScene() {
         return gameScene;
