@@ -1,5 +1,7 @@
 package game;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -8,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import logic.*;
 import pieces.BasePiece;
 import pieces.enemies.*;
@@ -29,6 +32,7 @@ public class Main extends Application {
     private TurnManager turnManager;
     private DungeonGenerator dungeonGenerator;
     private ImageScaler imageScaler = new ImageScaler();
+    private Timeline autoCycleTurn;
     private GridPane boardPane = gameManager.boardPane;
 
     private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE]; // The dungeon floor texture
@@ -36,6 +40,7 @@ public class Main extends Application {
     private BasePiece[][] pieces = GameManager.getInstance().pieces; // Where each entity locate
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
     private boolean isPieceSelected = false;
+    private boolean autoCycle = false;
 
     public static void main(String[] args) {
         launch(args);
@@ -334,7 +339,31 @@ public class Main extends Application {
                             }
                         }
                     }
+                    break;
+                case F4:
+                    autoCycle = !autoCycle;
+                    if (autoCycle) {
+                        startAutoCycle();
+                    } else {
+                        stopAutoCycle();
+                    }
+                    break;
             }
         });
+    }
+
+    private void startAutoCycle() {
+        double delay = 1;
+        autoCycleTurn = new Timeline(new KeyFrame(Duration.seconds(delay), cycle -> {
+            if (turnManager.isPlayerTurn) turnManager.endPlayerTurn();
+        }));
+        autoCycleTurn.setCycleCount(Timeline.INDEFINITE);
+        autoCycleTurn.play();
+    }
+
+    private void stopAutoCycle() {
+        if (autoCycleTurn != null) {
+            autoCycleTurn.stop();
+        }
     }
 }

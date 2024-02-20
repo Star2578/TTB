@@ -101,6 +101,7 @@ public class GUIManager {
         Button inventoryButton = new Button("Inventory");
         Button useItemButton = new Button("Use Item");
         Button useSkillsButton = new Button("Use Skills");
+        Button attackButton = new Button("Attack");
         Button endTurnButton = new Button("End Turn");
 
         endTurnButton.setOnMouseClicked(mouseEvent -> {
@@ -110,9 +111,12 @@ public class GUIManager {
         // Add spacing between buttons
         VBox.setMargin(inventoryButton, new Insets(10, 0, 0, 0));
         VBox.setMargin(useItemButton, new Insets(10, 0, 0, 0));
+        VBox.setMargin(attackButton, new Insets(10, 0, 0, 0));
         VBox.setMargin(useSkillsButton, new Insets(10, 0, 0, 0));
+        VBox.setMargin(displayActionPoint, new Insets(10, 0, 0, 0));
+        VBox.setMargin(endTurnButton, new Insets(10, 0, 0, 0));
 
-        playerOptionsMenu.getChildren().addAll(inventoryButton, useItemButton, useSkillsButton, displayActionPoint, endTurnButton);
+        playerOptionsMenu.getChildren().addAll(inventoryButton, useItemButton, attackButton, useSkillsButton, displayActionPoint, endTurnButton);
 
         playerOptionsMenu.setMinWidth(300);
         playerOptionsMenu.setMaxWidth(300);

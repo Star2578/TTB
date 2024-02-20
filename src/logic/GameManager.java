@@ -57,7 +57,7 @@ public class GameManager {
 
         // Schedule a task to restore the original cursor after the delay
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(delay), event -> {
-            currentScene.setCursor(bufferCursor); // Restore the original cursor
+
         }));
         timeline.play();
     }

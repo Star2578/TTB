@@ -3,6 +3,7 @@ package pieces.player;
 import javafx.scene.image.ImageView;
 import pieces.BasePiece;
 import pieces.BaseStatus;
+import pieces.enemies.BaseMonsterPiece;
 import utils.Config;
 
 public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
@@ -122,4 +123,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
             imageView.setScaleX(direction); // Flipping the image horizontally if direction is -1
         }
     }
+
+    public abstract void attack(BaseMonsterPiece monsterPiece); // This will differ for each class of player
 }

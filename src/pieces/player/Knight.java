@@ -1,5 +1,6 @@
 package pieces.player;
 
+import pieces.enemies.BaseMonsterPiece;
 import utils.Config;
 
 public class Knight extends BasePlayerPiece {
@@ -31,5 +32,10 @@ public class Knight extends BasePlayerPiece {
     @Override
     public void endTurn() {
         setCanAct(false);
+    }
+
+    @Override
+    public void attack(BaseMonsterPiece monsterPiece) {
+        // TODO : Implement Player Attack
     }
 }

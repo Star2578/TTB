@@ -13,14 +13,18 @@ public class TurnManager {
     private List<BasePiece> environmentPieces;
     private int currentEnvironmentPieceIndex;
 
+    public boolean isPlayerTurn;
+
     public TurnManager(BasePlayerPiece player, List<BasePiece> environmentPieces) {
         this.player = player;
         this.environmentPieces = environmentPieces;
         this.currentEnvironmentPieceIndex = 0;
+        this.isPlayerTurn = false;
     }
 
     public void startPlayerTurn() {
         // Start the turn for the player
+        this.isPlayerTurn = true;
         player.startTurn();
         player.setCanAct(true);
         GameManager.getInstance().guiManager.updateGUI();
@@ -28,6 +32,7 @@ public class TurnManager {
     }
 
     public void endPlayerTurn() {
+        this.isPlayerTurn = false;
         // End the turn for the player
         player.endTurn();
         player.setCanAct(false);
