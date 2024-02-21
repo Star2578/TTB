@@ -29,6 +29,7 @@ public class Knight extends BasePlayerPiece {
 
     @Override
     public boolean validMove(int row, int col) {
+        
         int currentRow = getRow();
         int currentCol = getCol();
 

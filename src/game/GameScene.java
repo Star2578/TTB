@@ -3,6 +3,8 @@ package game;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
+import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -49,6 +51,7 @@ public class GameScene {
     //------------<UI>----------------------------------------------------
 
     private Scene scene;
+    private Pane animationPane;
     private GridPane boardPane = gameManager.boardPane;
     private BorderPane root;
     private VBox rightPane;
@@ -58,7 +61,6 @@ public class GameScene {
     private Runnable renderLogic;
     private Runnable updateLogic;
 
-    Pane testAnimationPane;
 
     public GameScene() {
 
@@ -66,6 +68,14 @@ public class GameScene {
         root.setStyle("-fx-background-color: #1c0a05;");
         scene = new Scene(root, 1280, 720);
         scene.getStylesheets().add(getClass().getResource("/CSSs/BottomLeftGUI.css").toExternalForm());
+
+
+        //this pane contains all animation-related nodes
+        //it's placed transparently over boardPane
+        animationPane = new Pane();
+        animationPane.setMaxWidth(SQUARE_SIZE*BOARD_SIZE);
+        animationPane.setMaxHeight(SQUARE_SIZE*BOARD_SIZE);
+        animationPane.setDisable(true);
 
         rightPane = new VBox(); // Pane for right area
         rightPane.setBackground(Background.fill(Color.DARKRED));
@@ -80,7 +90,7 @@ public class GameScene {
 
         // Center the game board using a StackPane
         centerPane = new StackPane();
-        centerPane.getChildren().addAll(boardPane);
+        centerPane.getChildren().addAll(boardPane , animationPane);
 
         boardPane.setBackground(Background.fill(Color.GOLD));
         root.setCenter(centerPane);
@@ -190,12 +200,13 @@ public class GameScene {
         if(piece instanceof BasePlayerPiece){
             //TODO this is animation testing
             ImageView pieceView = ((BasePlayerPiece) piece).animationImage;
-            //pieceView.setImage(imageScaler.resample(((BasePlayerPiece) piece).animationImage.getImage(), 1));
             pieceView.setFitWidth(SQUARE_SIZE);
             pieceView.setFitHeight(SQUARE_SIZE);
-            GridPane.setRowIndex(((BasePlayerPiece) piece).animationImage, piece.getRow()); // Set row index
-            GridPane.setColumnIndex(((BasePlayerPiece) piece).animationImage, piece.getCol()); // Set column index
-            boardPane.getChildren().add(((BasePlayerPiece) piece).animationImage);
+            ((BasePlayerPiece) piece).animationImage.setX(piece.getCol()*SQUARE_SIZE);
+            ((BasePlayerPiece) piece).animationImage.setY(piece.getRow()*SQUARE_SIZE);
+            //add player sprite to animation pane
+            animationPane.getChildren().add(((BasePlayerPiece) piece).animationImage);
+            //TODO===============================
         }
         else{
             ImageView pieceView = piece.getTexture();
@@ -218,7 +229,6 @@ public class GameScene {
                 square.setOnMouseClicked(event -> {
                     if(event.getButton() == MouseButton.PRIMARY){
                         //left click for moving & attack
-                        System.out.println("left CLICKED");
                         handleSquareClick(currentRow, currentCol);
 
                     } else if (event.getButton() == MouseButton.SECONDARY) {
@@ -263,10 +273,12 @@ public class GameScene {
             return;
         }
 
-        if (!isPieceSelected && player.getRow() == row && player.getCol() == col) {
-            isPieceSelected = true;
+        if (player.getRow() == row && player.getCol() == col) {
+            // toggle move selection mode by click on player's grid
             // Show valid moves by changing the color of adjacent squares
-            showValidMoves(row, col);
+            isPieceSelected = !isPieceSelected;
+            if(isPieceSelected) showValidMoves(row, col);
+            else resetSelection();
 
         } else if (isPieceSelected) {
             if (validMovesCache[row][col] && player.validMove(row, col) && (pieces[row][col] == null || pieces[row][col] == player)) {
@@ -284,6 +296,7 @@ public class GameScene {
             System.out.println("Not enough Action Point");
             return;
         }
+
         player.decreaseActionPoint(Config.MOVE_ACTIONPOINT);
         guiManager.updateGUI();
 
@@ -294,11 +307,26 @@ public class GameScene {
         GridPane.setRowIndex(player.getTexture(), row);
         GridPane.setColumnIndex(player.getTexture(), col);
 
-
-        //TODO this is animation testing
-        GridPane.setRowIndex(player.animationImage, row);
-        GridPane.setColumnIndex(player.animationImage, col);
-
+        //TODO this is move animation testing
+        player.setCanAct(false);
+        TranslateTransition imageMoving = new TranslateTransition();
+        imageMoving.setNode(player.animationImage);
+        //move to destination grid
+        imageMoving.setToX( (col-player.getCol()) * SQUARE_SIZE);
+        imageMoving.setToY( (row-player.getRow()) * SQUARE_SIZE - 8);
+        imageMoving.setOnFinished(actionEvent->{
+            //move real coordinate to new col,row
+            player.animationImage.setX(col*SQUARE_SIZE);
+            player.animationImage.setY(row*SQUARE_SIZE);
+            //set translateProperty back to default
+            player.animationImage.translateXProperty().set(0);
+            player.animationImage.translateYProperty().set(-8);
+            player.setCanAct(true);
+        });
+        imageMoving.setDuration(Duration.millis(600));
+        imageMoving.setCycleCount(1);
+        imageMoving.play();
+        //TODO====================================
 
         pieces[player.getRow()][player.getCol()] = null;
         pieces[row][col] = player;
