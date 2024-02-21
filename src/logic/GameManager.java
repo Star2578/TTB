@@ -27,6 +27,8 @@ public class GameManager {
     public BasePiece[][] pieces = new BasePiece[Config.BOARD_SIZE][Config.BOARD_SIZE];
     public List<BasePiece> environmentPieces = new ArrayList<>();
 
+    public boolean isInAttackMode = false;
+
     public GameManager() {
         player = new Knight(0, 0, 1);
         boardPane = new GridPane();

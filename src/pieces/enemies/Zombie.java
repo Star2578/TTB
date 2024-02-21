@@ -24,6 +24,8 @@ public class Zombie extends BaseMonsterPiece{
     public Zombie(int row, int col, boolean[][] validMovesCache, int defaultDirection) {
         super(row, col, defaultDirection);
         setTextureByPath(Config.ZombiePath);
+        setMaxHealth(10);
+        setCurrentHealth(getMaxHealth());
         currentState = State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
         this.validMovesCache = validMovesCache;
         random = new Random();

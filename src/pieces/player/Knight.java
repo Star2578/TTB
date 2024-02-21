@@ -13,6 +13,7 @@ public class Knight extends BasePlayerPiece {
         setCurrentHealth(getMaxHealth());
         setTextureByPath(Config.KnightPath);
         setCanAct(false);
+        setAttackDamage(3);
     }
 
     @Override
@@ -46,6 +47,7 @@ public class Knight extends BasePlayerPiece {
 
     @Override
     public void attack(BaseMonsterPiece monsterPiece) {
-        // TODO : Implement Player Attack
+        int currentMonsterHp = monsterPiece.getCurrentHealth();
+        monsterPiece.setCurrentHealth(currentMonsterHp - getAttackDamage());
     }
 }

@@ -96,6 +96,9 @@ public class GameScene {
         // Define render logic
         renderLogic = () -> {
             // Render game graphics
+            if (gameManager.isInAttackMode) {
+                showValidAttackRange(player.getRow(), player.getCol());
+            }
         };
 
         // Create an instance of GameLoop with the update and render logic
@@ -104,6 +107,7 @@ public class GameScene {
 
 
         // Set up the scene and stage
+        gameManager.updateCursor(scene, Config.DefaultCursor);
         SceneManager.getInstance().setGameScene(scene); // Save this scene for later use
         setupMouseEvents();
         setupKeyEvents(scene); // Debug Tool
@@ -125,6 +129,7 @@ public class GameScene {
         environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
 
         for (BasePiece entity : environmentPieces) {
+            entity.getTexture().setOnMouseClicked(mouseEvent -> handleSquareClick(entity.getRow(), entity.getCol()));
             placeEntityRandomly(entity);
         }
     }
@@ -204,6 +209,32 @@ public class GameScene {
             return;
         }
 
+        boolean isInAttackMode = gameManager.isInAttackMode;
+
+        if (isInAttackMode) {
+            System.out.println("Player Prepare to attack");
+            // Check if the clicked square is within valid attack range
+            if (player.validAttack(row, col)) {
+                // Check if there is a monster on the clicked square
+                if (pieces[row][col] instanceof BaseMonsterPiece monsterPiece) {
+                    // Perform the attack on the monster
+                    System.out.println("Player attack " + monsterPiece.getClass().getSimpleName() + " @ " + row + " " + col);
+                    player.attack(monsterPiece);
+                    resetSelection();
+                    gameManager.isInAttackMode = false;
+                    gameManager.updateCursor(scene, Config.DefaultCursor);
+                    System.out.println("Attack success");
+                    if (!monsterPiece.isAlive()) removePiece(monsterPiece);
+                }
+            } else {
+                // Player clicked outside valid attack range, exit attack mode
+                gameManager.isInAttackMode = false;
+                resetSelection();
+            }
+
+            return;
+        }
+
         if (!isPieceSelected && player.getRow() == row && player.getCol() == col) {
             isPieceSelected = true;
             // Show valid moves by changing the color of adjacent squares
@@ -274,6 +305,25 @@ public class GameScene {
         }
     }
 
+    private void showValidAttackRange(int row, int col) {
+        int attackRange = 1; // Change this according to the player's attack range
+
+        for (int dRow = -attackRange; dRow <= attackRange; dRow++) {
+            for (int dCol = -attackRange; dCol <= attackRange; dCol++) {
+                int newRow = row + dRow;
+                int newCol = col + dCol;
+                // Check if the new position is within the board bounds and not the current position
+                if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
+                    // Check if the square is within the attack range using the player's validAttack method
+                    if (player.validAttack(newRow, newCol)) {
+                        // Highlight or mark the square to indicate it's within the attack range
+                        squares[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidAttackPath), 2)); // Set texture to indicate valid attack
+                    }
+                }
+            }
+        }
+    }
+
     private void resetSelection() {
         isPieceSelected = false;
         // Reset the texture of all squares to the default floor texture
@@ -321,6 +371,17 @@ public class GameScene {
             boardPane.getChildren().remove(entity.getTexture());
         }
         boardPane.getChildren().remove(player.getTexture());
+    }
+
+    private void removePiece(BasePiece toRemove) {
+        int row = toRemove.getRow();
+        int col = toRemove.getCol();
+
+        // Remove the piece's ImageView from the boardPane
+        boardPane.getChildren().remove(toRemove.getTexture());
+
+        // Set the corresponding entry in the pieces array to null
+        pieces[row][col] = null;
     }
 
     private void setupKeyEvents(Scene scene) {
