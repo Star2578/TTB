@@ -3,6 +3,7 @@ package game;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,6 +21,7 @@ import pieces.player.*;
 import pieces.wall.*;
 import utils.Config;
 
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 public class GameScene {
@@ -187,7 +189,7 @@ public class GameScene {
         if(piece instanceof BasePlayerPiece){
             //TODO this is animation testing
             ImageView pieceView = ((BasePlayerPiece) piece).animationImage;
-            pieceView.setImage(imageScaler.resample(((BasePlayerPiece) piece).animationImage.getImage(), 1));
+//            pieceView.setImage(imageScaler.resample(((BasePlayerPiece) piece).animationImage.getImage(), 1));
             pieceView.setFitWidth(SQUARE_SIZE);
             pieceView.setFitHeight(SQUARE_SIZE);
             GridPane.setRowIndex(((BasePlayerPiece) piece).animationImage, piece.getRow()); // Set row index
@@ -212,7 +214,16 @@ public class GameScene {
                 final int currentRow = row; // Make row effectively final
                 final int currentCol = col; // Make col effectively final
                 ImageView square = squares[row][col];
-                square.setOnMouseClicked(event -> handleSquareClick(currentRow, currentCol));
+                square.setOnMouseClicked(event -> {
+                    if(event.isPrimaryButtonDown()){
+                        //left click for moving & attack
+                        handleSquareClick(currentRow, currentCol);
+
+                    } else if (event.isSecondaryButtonDown()) {
+                        //TODO : right click to inspect environment
+                    }
+                });
+
             }
         }
     }
@@ -254,6 +265,7 @@ public class GameScene {
             isPieceSelected = true;
             // Show valid moves by changing the color of adjacent squares
             showValidMoves(row, col);
+
         } else if (isPieceSelected) {
             if (validMovesCache[row][col] && player.validMove(row, col) && (pieces[row][col] == null || pieces[row][col] == player)) {
                 System.out.println("Moving player to square (" + row + ", " + col + ")");

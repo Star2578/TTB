@@ -55,6 +55,7 @@ public class MainMenu {
 
         //-------------------<play button>-----------------------------------------
         playBtn= new Button();
+        playBtn.setId("playBtn");
         playBtn.setStyle(
                 "-fx-font-size:24;" +
                 "-fx-border-style:SOLID;" +
@@ -87,6 +88,7 @@ public class MainMenu {
         playBtn.setOnAction(actionEvent -> buttonGetClicked(playBtn , playBtnText));
         //-------------------<setting button>-----------------------------------------
         settingBtn = new Button();
+        settingBtn.setId("settingBtn");
         settingBtn.setStyle(
                 "-fx-font-size:24;" +
                 "-fx-border-style:SOLID;" +
@@ -96,7 +98,6 @@ public class MainMenu {
         settingBtn.setPrefWidth(250);
         settingBtn.setLayoutX(515);
         settingBtn.setLayoutY(453);
-        settingBtn.setId("btn");
 
         settingBtnText = new Text("SETTINGS");
         settingBtnText.setStyle("-fx-font-family:'x8y12pxTheStrongGamer';" +

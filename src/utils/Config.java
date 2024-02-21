@@ -30,8 +30,9 @@ public class Config {
     // Dungeon
     public static String WallPath = "sprites/ground/wall_1.png";
     public static String FloorPath = "sprites/ground/floor_1.png";
-    public static String ValidMovePath = "sprites/ground/floor_2.png";
-    public static String ValidAttackPath = "sprites/ground/floor_4.png";
+
+    public static String ValidMovePath = "sprites/ground/selected_floor_1.png";
+    public static String ValidAttackPath = "sprites/ground/attack_floor_1.png";
 
     //animation
     public enum state{
