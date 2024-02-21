@@ -104,6 +104,7 @@ public class GameScene {
 
 
         // Set up the scene and stage
+        gameManager.updateCursor(scene, Config.DefaultCursor);
         SceneManager.getInstance().setGameScene(scene); // Save this scene for later use
         setupMouseEvents();
         setupKeyEvents(scene); // Debug Tool

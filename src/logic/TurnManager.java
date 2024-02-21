@@ -34,6 +34,8 @@ public class TurnManager {
     }
 
     public void endPlayerTurn() {
+        if (!this.isPlayerTurn) return; // Can't End turn on enemies turn
+
         this.isPlayerTurn = false;
         // End the turn for the player
         player.endTurn();
