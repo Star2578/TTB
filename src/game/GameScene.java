@@ -96,6 +96,9 @@ public class GameScene {
         // Define render logic
         renderLogic = () -> {
             // Render game graphics
+            if (gameManager.isInAttackMode) {
+                showValidAttackRange(player.getRow(), player.getCol());
+            }
         };
 
         // Create an instance of GameLoop with the update and render logic
@@ -126,6 +129,7 @@ public class GameScene {
         environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
 
         for (BasePiece entity : environmentPieces) {
+            entity.getTexture().setOnMouseClicked(mouseEvent -> handleSquareClick(entity.getRow(), entity.getCol()));
             placeEntityRandomly(entity);
         }
     }
@@ -205,6 +209,31 @@ public class GameScene {
             return;
         }
 
+        boolean isInAttackMode = gameManager.isInAttackMode;
+
+        if (isInAttackMode) {
+            System.out.println("Player Prepare to attack");
+            // Check if the clicked square is within valid attack range
+            if (player.validAttack(row, col)) {
+                // Check if there is a monster on the clicked square
+                if (pieces[row][col] instanceof BaseMonsterPiece monsterPiece) {
+                    // Perform the attack on the monster
+                    System.out.println("Player attack " + monsterPiece.getClass().getSimpleName() + " @ " + row + " " + col);
+                    player.attack(monsterPiece);
+                    resetSelection();
+                    gameManager.isInAttackMode = false;
+                    gameManager.updateCursor(scene, Config.DefaultCursor);
+                    System.out.println("Attack success");
+                }
+            } else {
+                // Player clicked outside valid attack range, exit attack mode
+                gameManager.isInAttackMode = false;
+                resetSelection();
+            }
+
+            return;
+        }
+
         if (!isPieceSelected && player.getRow() == row && player.getCol() == col) {
             isPieceSelected = true;
             // Show valid moves by changing the color of adjacent squares
@@ -269,6 +298,25 @@ public class GameScene {
                 if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
                     if (validMovesCache[newRow][newCol] && pieces[newRow][newCol] == null) {
                         squares[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidMovePath), 2)); // Set texture to indicate valid move
+                    }
+                }
+            }
+        }
+    }
+
+    private void showValidAttackRange(int row, int col) {
+        int attackRange = 1; // Change this according to the player's attack range
+
+        for (int dRow = -attackRange; dRow <= attackRange; dRow++) {
+            for (int dCol = -attackRange; dCol <= attackRange; dCol++) {
+                int newRow = row + dRow;
+                int newCol = col + dCol;
+                // Check if the new position is within the board bounds and not the current position
+                if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
+                    // Check if the square is within the attack range using the player's validAttack method
+                    if (player.validAttack(newRow, newCol)) {
+                        // Highlight or mark the square to indicate it's within the attack range
+                        squares[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidAttackPath), 2)); // Set texture to indicate valid attack
                     }
                 }
             }

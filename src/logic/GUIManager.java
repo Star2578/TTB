@@ -120,6 +120,7 @@ public class GUIManager {
 
         attackButton.setOnMouseClicked(mouseEvent -> {
             GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+            GameManager.getInstance().isInAttackMode = !GameManager.getInstance().isInAttackMode;
         });
 
         endTurnButton.setOnMouseClicked(mouseEvent -> {

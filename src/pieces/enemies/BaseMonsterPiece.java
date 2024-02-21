@@ -29,6 +29,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     @Override
     public void setCurrentHealth(int health) {
         this.currentHp = Math.max(health, 0);
+        if (currentHp == 0) onDeath();
     }
 
     @Override
@@ -55,6 +56,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     @Override
     public void onDeath() {
         // To call when this monster died
+        System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
     }
 
     public abstract void performAction(); // To call when it's this monster turn

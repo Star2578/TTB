@@ -15,6 +15,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private int maxMana;
     private boolean canAct;
     private int currentDirection;
+    private int attackDamage;
 
     public BasePlayerPiece(int row, int col, int defaultDirection) {
         super("Player", new ImageView(Config.PlaceholderPath), row, col);
@@ -86,6 +87,14 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     public void setMaxMana(int maxMana) {
         this.maxMana = Math.max(1, maxMana);
+    }
+
+    public int getAttackDamage() {
+        return attackDamage;
+    }
+
+    public void setAttackDamage(int attackDamage) {
+        this.attackDamage = Math.max(attackDamage, 0);
     }
 
     @Override
