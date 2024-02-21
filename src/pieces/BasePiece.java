@@ -1,6 +1,7 @@
 package pieces;
 
 import javafx.scene.image.ImageView;
+import logic.SpriteAnimation;
 
 public class BasePiece {
     private String type;

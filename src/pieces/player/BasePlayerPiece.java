@@ -1,6 +1,8 @@
 package pieces.player;
 
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import logic.SpriteAnimation;
 import pieces.BasePiece;
 import pieces.BaseStatus;
 import pieces.enemies.BaseMonsterPiece;
@@ -17,6 +19,11 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private int currentDirection;
     private int attackDamage;
 
+    //TODO this is animation testing
+    protected SpriteAnimation spriteAnimation;
+    public ImageView animationImage;
+
+
     public BasePlayerPiece(int row, int col, int defaultDirection) {
         super("Player", new ImageView(Config.PlaceholderPath), row, col);
         maxActionPoint = 10;
@@ -26,6 +33,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
             ImageView imageView = getTexture();
             imageView.setScaleX(-1); // Flipping the image horizontally
         }
+
     }
 
     @Override
@@ -124,6 +132,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public abstract boolean validAttack(int row, int col); // To set valid attack for each classes
 
     public void changeDirection(int direction) {
+
         if (direction != 1 && direction != -1) {
             return;
         }

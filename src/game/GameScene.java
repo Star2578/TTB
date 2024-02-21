@@ -5,6 +5,7 @@ import javafx.animation.Timeline;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -54,6 +55,8 @@ public class GameScene {
     private Runnable renderLogic;
     private Runnable updateLogic;
 
+    Pane testAnimationPane;
+
     public GameScene() {
 
         root = new BorderPane();
@@ -74,7 +77,7 @@ public class GameScene {
 
         // Center the game board using a StackPane
         centerPane = new StackPane();
-        centerPane.getChildren().add(boardPane);
+        centerPane.getChildren().addAll(boardPane);
 
         boardPane.setBackground(Background.fill(Color.GOLD));
         root.setCenter(centerPane);
@@ -180,14 +183,26 @@ public class GameScene {
     }
 
     private void placePiece(BasePiece piece) {
-        ImageView pieceView = piece.getTexture();
-        pieceView.setImage(imageScaler.resample(piece.getTexture().getImage(), 2));
-        pieceView.setFitWidth(SQUARE_SIZE);
-        pieceView.setFitHeight(SQUARE_SIZE);
 
-        GridPane.setRowIndex(pieceView, piece.getRow()); // Set row index
-        GridPane.setColumnIndex(pieceView, piece.getCol()); // Set column index
-        boardPane.getChildren().add(pieceView); // Add piece to board
+        if(piece instanceof BasePlayerPiece){
+            //TODO this is animation testing
+            ImageView pieceView = ((BasePlayerPiece) piece).animationImage;
+            pieceView.setImage(imageScaler.resample(((BasePlayerPiece) piece).animationImage.getImage(), 1));
+            pieceView.setFitWidth(SQUARE_SIZE);
+            pieceView.setFitHeight(SQUARE_SIZE);
+            GridPane.setRowIndex(((BasePlayerPiece) piece).animationImage, piece.getRow()); // Set row index
+            GridPane.setColumnIndex(((BasePlayerPiece) piece).animationImage, piece.getCol()); // Set column index
+            boardPane.getChildren().add(((BasePlayerPiece) piece).animationImage);
+        }
+        else{
+            ImageView pieceView = piece.getTexture();
+            pieceView.setImage(imageScaler.resample(piece.getTexture().getImage(), 2));
+            pieceView.setFitWidth(SQUARE_SIZE);
+            pieceView.setFitHeight(SQUARE_SIZE);
+            GridPane.setRowIndex(pieceView, piece.getRow()); // Set row index
+            GridPane.setColumnIndex(pieceView, piece.getCol()); // Set column index
+            boardPane.getChildren().add(pieceView); // Add piece to board
+        }
     }
 
     private void setupMouseEvents() {
@@ -264,6 +279,12 @@ public class GameScene {
         // Update player position and move the piece on the board
         GridPane.setRowIndex(player.getTexture(), row);
         GridPane.setColumnIndex(player.getTexture(), col);
+
+
+        //TODO this is animation testing
+        GridPane.setRowIndex(player.animationImage, row);
+        GridPane.setColumnIndex(player.animationImage, col);
+
 
         pieces[player.getRow()][player.getCol()] = null;
         pieces[row][col] = player;

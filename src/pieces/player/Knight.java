@@ -1,6 +1,9 @@
 package pieces.player;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import logic.GameManager;
+import logic.SpriteAnimation;
 import pieces.enemies.BaseMonsterPiece;
 import utils.Config;
 
@@ -14,6 +17,13 @@ public class Knight extends BasePlayerPiece {
         setTextureByPath(Config.KnightPath);
         setCanAct(false);
         setAttackDamage(3);
+
+        //TODO this is animation testing
+        animationImage = new ImageView(new Image(Config.knightIdlePath));
+        animationImage.setTranslateY(-8);
+        animationImage.setDisable(true);
+        spriteAnimation=new SpriteAnimation(animationImage,4,1,4,16,20,5);
+        spriteAnimation.start();
     }
 
     @Override
