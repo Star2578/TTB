@@ -20,7 +20,8 @@ public class Config {
     public static final String HandClickCursor = "sprites/cursors/png/cursor_select_tap.png";
 
     // Player
-    public static String KnightPath = "sprites/player/Knight.png";
+    public static String KnightPath = "sprites/player/Knight_Small.png";
+    public static String KnightLargePath = "sprites/player/Knight_Large.png";
 
     // Enemies
     public static String ZombiePath = "sprites/enemies/zombie.png";

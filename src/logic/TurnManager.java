@@ -57,6 +57,7 @@ public class TurnManager {
                 if (currentEnvironmentPieceIndex == environmentPieces.size()) {
                     currentEnvironmentPieceIndex = 0;
                     startPlayerTurn();
+                    GameManager.getInstance().guiManager.enableEndTurnButton();
                 } else {
                     startEnvironmentTurn();
                 }

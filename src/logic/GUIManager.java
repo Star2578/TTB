@@ -2,7 +2,6 @@ package logic;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
@@ -10,8 +9,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import logic.GameManager;
-import logic.TurnManager;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 
@@ -24,8 +21,21 @@ public class GUIManager {
     private VBox rightSideUI;
 
     private Text displayActionPoint;
+    private VBox hpBox;
+    private Text hpText;
     private ProgressBar hpBar;
+    private VBox manaBox;
+    private Text manaText;
     private ProgressBar manaBar;
+
+
+    VBox playerOptionButtonBox;
+    private Button inventoryButton;
+    private Button useItemButton;
+    private Button useSkillsButton;
+    private Button endTurnButton;
+    private Button attackButton;
+
 
     public GUIManager(TurnManager turnManager, BasePlayerPiece player) {
         this.turnManager = turnManager;
@@ -57,66 +67,73 @@ public class GUIManager {
 
     private void initializePlayerOptionsMenu() {
         playerOptionsMenu = new VBox();
-        playerOptionsMenu.setBackground(Background.fill(Color.BLACK));
+        playerOptionsMenu.setId("playerOptionMenuBox");
 
-        // Create a border with a specific color and stroke width
-        BorderStroke borderStroke = new BorderStroke(
-                Color.WHITE,                   // Border color
-                BorderStrokeStyle.SOLID,      // Border style
-                CornerRadii.EMPTY,            // Border radii (none in this case)
-                new BorderWidths(5)           // Border widths (adjust the thickness here)
-        );
-        // Set the border with the created border stroke
-        playerOptionsMenu.setBorder(new Border(borderStroke));
+        //apply css to playerOptionButtonBox
+        playerOptionsMenu.getStylesheets().add(getClass().getResource("/CSSs/BottomLeftGUI.css").toExternalForm());
 
         // Player Character Frame
         HBox playerCharacterFrame = new HBox();
         playerCharacterFrame.setPadding(new Insets(10));
         playerCharacterFrame.setSpacing(10);
-        playerCharacterFrame.setAlignment(Pos.CENTER_LEFT);
+        playerCharacterFrame.setAlignment(Pos.CENTER);
 
         // Player Character Image
-        ImageView playerCharacterImage = new ImageView(imageScaler.resample(new Image(Config.KnightPath), 2));
+        ImageView playerCharacterImage = new ImageView(imageScaler.resample(new Image(Config.KnightLargePath), 2));
         playerCharacterImage.setFitWidth(80);
         playerCharacterImage.setFitHeight(80);
-//        playerCharacterImage.setPreserveRatio(true);
+//       playerCharacterImage.setPreserveRatio(true);
 
+        //-------------<player status section>----------------------------------
         // HP Bar
         hpBar = new ProgressBar(1);
-        hpBar.setStyle("-fx-accent: green;");
-        hpBar.setPrefWidth(200);
+        hpBar.setId("hpBar");
+
+
+        hpText = new Text(Integer.toString(player.getCurrentHealth()));
+        hpText.setId("hpText");
+
+        hpBox = new VBox();
+        hpBox.setAlignment(Pos.CENTER_RIGHT);
+        hpBox.getChildren().addAll(hpText , hpBar);
 
         // Mana Bar
         manaBar = new ProgressBar(1);
+        manaBar.setId("manaBar");
         manaBar.setStyle("-fx-accent: blue;");
-        manaBar.setPrefWidth(200);
 
-        playerCharacterFrame.getChildren().addAll(playerCharacterImage, hpBar, manaBar);
-        playerOptionsMenu.getChildren().add(playerCharacterFrame);
+
+        manaText = new Text(Integer.toString(player.getCurrentMana()));
+        manaText.setId("manaText");
+
+        manaBox = new VBox();
+        manaBox.setAlignment(Pos.CENTER_RIGHT);
+        manaBox.getChildren().addAll(manaText , manaBar);
+
+        playerCharacterFrame.getChildren().addAll(playerCharacterImage, hpBox, manaBox);
+
 
         displayActionPoint = new Text("Action Point: " + player.getCurrentActionPoint() + "/" + player.getMaxActionPoint());
-        displayActionPoint.setFill(Color.WHITE);
+        displayActionPoint.setStyle(
+                        "-fx-font-family:x16y32pxGridGazer;" +
+                        "-fx-font-size:16;" +
+                        "-fx-fill:'white';");
+        playerOptionsMenu.getChildren().addAll(playerCharacterFrame , displayActionPoint);
+        VBox.setMargin(displayActionPoint, new Insets(0 , 0 , 20 ,130));
+        //----------------------------------------------------------------------
 
-        // Buttons for Player Options
-        Button inventoryButton = new Button("Inventory");
-        inventoryButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
-                "-fx-font-size:16;");
 
-        Button useItemButton = new Button("Use Item");
-        useItemButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
-                "-fx-font-size:16;");
+        //-------------<player button section>----------------------------------
+        playerOptionButtonBox = new VBox();
+        playerOptionButtonBox.setSpacing(15);
+        playerOptionButtonBox.setAlignment(Pos.CENTER_LEFT);
+        playerOptionButtonBox.setStyle("-fx-padding:0 0 0 20");
 
-        Button useSkillsButton = new Button("Use Skills");
-        useSkillsButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
-                "-fx-font-size:16;");
-
-        Button attackButton = new Button("Attack");
-        attackButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
-                "-fx-font-size:16;");
-
-        Button endTurnButton = new Button("End Turn");
-        endTurnButton.setStyle("-fx-font-family:x16y32pxGridGazer;" +
-                "-fx-font-size:16;");
+        inventoryButton = new Button("Inventory");
+        useItemButton = new Button("Use Item");
+        useSkillsButton = new Button("Use Skills");
+        attackButton = new Button("Attack");
+        endTurnButton = new Button("End Turn");
 
         attackButton.setOnMouseClicked(mouseEvent -> {
             GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
@@ -125,17 +142,13 @@ public class GUIManager {
 
         endTurnButton.setOnMouseClicked(mouseEvent -> {
             turnManager.endPlayerTurn();
+            endTurnButton.setDisable(true);
         });
 
-        // Add spacing between buttons
-        VBox.setMargin(inventoryButton, new Insets(10, 0, 0, 0));
-        VBox.setMargin(useItemButton, new Insets(10, 0, 0, 0));
-        VBox.setMargin(attackButton, new Insets(10, 0, 0, 0));
-        VBox.setMargin(useSkillsButton, new Insets(10, 0, 0, 0));
-        VBox.setMargin(displayActionPoint, new Insets(10, 0, 0, 0));
-        VBox.setMargin(endTurnButton, new Insets(10, 0, 0, 0));
+        playerOptionButtonBox.getChildren().addAll(inventoryButton, useItemButton, attackButton, useSkillsButton, endTurnButton);
+        //----------------------------------------------------------------------
 
-        playerOptionsMenu.getChildren().addAll(inventoryButton, useItemButton, attackButton, useSkillsButton, displayActionPoint, endTurnButton);
+        playerOptionsMenu.getChildren().addAll(playerOptionButtonBox);
 
         playerOptionsMenu.setMinWidth(300);
         playerOptionsMenu.setMaxWidth(300);
@@ -186,11 +199,17 @@ public class GUIManager {
         double hp = (double) player.getCurrentHealth() / player.getMaxHealth();
         double mana = (double) player.getCurrentMana() / player.getMaxMana();
 
+        this.hpText.setText(Integer.toString(player.getCurrentHealth()));
+        this.manaText.setText(Integer.toString(player.getCurrentMana()));
         hpBar.setProgress(hp);
         manaBar.setProgress(mana);
     }
 
     private void updateActionPointDisplay() {
         displayActionPoint.setText("Action Point: " + player.getCurrentActionPoint() + "/" + player.getMaxActionPoint());
+    }
+
+    public void enableEndTurnButton(){
+        endTurnButton.setDisable(false);
     }
 }
