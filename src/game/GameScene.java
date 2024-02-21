@@ -223,13 +223,13 @@ public class GameScene {
                     resetSelection();
                     gameManager.isInAttackMode = false;
                     gameManager.updateCursor(scene, Config.DefaultCursor);
-                    System.out.println("Attack success");
                     if (!monsterPiece.isAlive()) removePiece(monsterPiece);
                 }
             } else {
                 // Player clicked outside valid attack range, exit attack mode
                 gameManager.isInAttackMode = false;
                 resetSelection();
+                gameManager.updateCursor(scene, Config.DefaultCursor);
             }
 
             return;
@@ -256,7 +256,6 @@ public class GameScene {
             return;
         }
         player.decreaseActionPoint(Config.MOVE_ACTIONPOINT);
-        guiManager.updateGUI();
 
         int newDirection = Integer.compare(col, player.getCol());
         player.changeDirection(newDirection);

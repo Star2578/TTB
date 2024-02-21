@@ -47,7 +47,13 @@ public class Knight extends BasePlayerPiece {
 
     @Override
     public void attack(BaseMonsterPiece monsterPiece) {
+        if (ATTACK_COST > getCurrentActionPoint()) {
+            System.out.println("Attack failed: Not enough Action Point");
+            return;
+        }
+        decreaseActionPoint(ATTACK_COST);
         int currentMonsterHp = monsterPiece.getCurrentHealth();
         monsterPiece.setCurrentHealth(currentMonsterHp - getAttackDamage());
+        System.out.println("Attack success");
     }
 }

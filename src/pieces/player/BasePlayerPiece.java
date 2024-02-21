@@ -1,6 +1,7 @@
 package pieces.player;
 
 import javafx.scene.image.ImageView;
+import logic.GameManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
 import pieces.enemies.BaseMonsterPiece;
@@ -16,6 +17,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private boolean canAct;
     private int currentDirection;
     private int attackDamage;
+    protected final int ATTACK_COST = 1;
 
     public BasePlayerPiece(int row, int col, int defaultDirection) {
         super("Player", new ImageView(Config.PlaceholderPath), row, col);
@@ -45,7 +47,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     public void decreaseActionPoint(int decrease) {
         this.currentActionPoint = Math.max(0, this.currentActionPoint - decrease);
-
+        GameManager.getInstance().guiManager.updateGUI();
         if (currentActionPoint == 0) setCanAct(false);
     }
 
