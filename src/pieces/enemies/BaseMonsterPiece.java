@@ -12,6 +12,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     private int currentHp;
     private int maxHp;
     private int currentDirection;
+    private boolean isAlive = true;
 
     public BaseMonsterPiece(int row, int col, int defaultDirection) {
         super("Monster", new ImageView(Config.PlaceholderPath), row, col);
@@ -50,11 +51,12 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
 
     @Override
     public boolean isAlive() {
-        return false;
+        return isAlive;
     }
 
     @Override
     public void onDeath() {
+        isAlive = false;
         // To call when this monster died
         System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
     }

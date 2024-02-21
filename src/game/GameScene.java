@@ -224,6 +224,7 @@ public class GameScene {
                     gameManager.isInAttackMode = false;
                     gameManager.updateCursor(scene, Config.DefaultCursor);
                     System.out.println("Attack success");
+                    if (!monsterPiece.isAlive()) removePiece(monsterPiece);
                 }
             } else {
                 // Player clicked outside valid attack range, exit attack mode
@@ -370,6 +371,17 @@ public class GameScene {
             boardPane.getChildren().remove(entity.getTexture());
         }
         boardPane.getChildren().remove(player.getTexture());
+    }
+
+    private void removePiece(BasePiece toRemove) {
+        int row = toRemove.getRow();
+        int col = toRemove.getCol();
+
+        // Remove the piece's ImageView from the boardPane
+        boardPane.getChildren().remove(toRemove.getTexture());
+
+        // Set the corresponding entry in the pieces array to null
+        pieces[row][col] = null;
     }
 
     private void setupKeyEvents(Scene scene) {
