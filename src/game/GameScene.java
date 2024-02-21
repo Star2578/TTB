@@ -59,7 +59,7 @@ public class GameScene {
         root = new BorderPane();
         root.setStyle("-fx-background-color: #1c0a05;");
         scene = new Scene(root, 1280, 720);
-        scene.getStylesheets().add(getClass().getResource("/CSSs/mainMenuSheet.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/CSSs/BottomLeftGUI.css").toExternalForm());
 
         rightPane = new VBox(); // Pane for right area
         rightPane.setBackground(Background.fill(Color.DARKRED));
