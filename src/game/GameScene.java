@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
@@ -189,7 +190,7 @@ public class GameScene {
         if(piece instanceof BasePlayerPiece){
             //TODO this is animation testing
             ImageView pieceView = ((BasePlayerPiece) piece).animationImage;
-//            pieceView.setImage(imageScaler.resample(((BasePlayerPiece) piece).animationImage.getImage(), 1));
+            //pieceView.setImage(imageScaler.resample(((BasePlayerPiece) piece).animationImage.getImage(), 1));
             pieceView.setFitWidth(SQUARE_SIZE);
             pieceView.setFitHeight(SQUARE_SIZE);
             GridPane.setRowIndex(((BasePlayerPiece) piece).animationImage, piece.getRow()); // Set row index
@@ -215,11 +216,12 @@ public class GameScene {
                 final int currentCol = col; // Make col effectively final
                 ImageView square = squares[row][col];
                 square.setOnMouseClicked(event -> {
-                    if(event.isPrimaryButtonDown()){
+                    if(event.getButton() == MouseButton.PRIMARY){
                         //left click for moving & attack
+                        System.out.println("left CLICKED");
                         handleSquareClick(currentRow, currentCol);
 
-                    } else if (event.isSecondaryButtonDown()) {
+                    } else if (event.getButton() == MouseButton.SECONDARY) {
                         //TODO : right click to inspect environment
                     }
                 });

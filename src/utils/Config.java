@@ -22,7 +22,7 @@ public class Config {
     // Player
     public static String KnightPath = "sprites/player/Knight_Small.png";
     public static String KnightLargePath = "sprites/player/Knight_Large.png";
-    public static String knightIdlePath = "sprites/player/knight_idle.png";
+    public static String knightIdlePath = "sprites/player/knight_idle_new.png";
 
     // Enemies
     public static String ZombiePath = "sprites/enemies/zombie.png";

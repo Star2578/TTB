@@ -20,9 +20,10 @@ public class Knight extends BasePlayerPiece {
 
         //TODO this is animation testing
         animationImage = new ImageView(new Image(Config.knightIdlePath));
+        animationImage.setPreserveRatio(true);
         animationImage.setTranslateY(-8);
         animationImage.setDisable(true);
-        spriteAnimation=new SpriteAnimation(animationImage,4,1,4,16,20,5);
+        spriteAnimation=new SpriteAnimation(animationImage,4,1,4,30,40,5);
         spriteAnimation.start();
     }
 
