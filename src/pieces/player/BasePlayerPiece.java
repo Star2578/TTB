@@ -38,6 +38,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     @Override
     public void setCurrentHealth(int health) {
         this.currentHp = Math.max(health, 0);
+        if (currentHp == 0) onDeath();
     }
 
     @Override
@@ -116,6 +117,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     @Override
     public void onDeath() {
         // TODO: Call Game Over
+        System.out.println("Game Over! You are dead");
     }
 
     public abstract void startTurn();
@@ -124,6 +126,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     public abstract boolean validMove(int row, int col); // To set valid move for each classes
     public abstract boolean validAttack(int row, int col); // To set valid attack for each classes
+
+    public void takeDamage(int damage) {
+        setCurrentHealth(currentHp - damage);
+    }
 
     public void changeDirection(int direction) {
         if (direction != 1 && direction != -1) {

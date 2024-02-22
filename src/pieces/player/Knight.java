@@ -52,8 +52,7 @@ public class Knight extends BasePlayerPiece {
             return;
         }
         decreaseActionPoint(ATTACK_COST);
-        int currentMonsterHp = monsterPiece.getCurrentHealth();
-        monsterPiece.setCurrentHealth(currentMonsterHp - getAttackDamage());
+        monsterPiece.takeDamage(getAttackDamage());
         System.out.println("Attack success");
     }
 }

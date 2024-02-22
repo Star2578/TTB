@@ -87,8 +87,7 @@ public class Zombie extends BaseMonsterPiece{
     public void attack(BasePlayerPiece playerPiece) {
         System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
 
-        int currentHealth = playerPiece.getCurrentHealth();
-        playerPiece.setCurrentHealth(currentHealth - ATTACK_DAMAGE);
+        playerPiece.takeDamage(ATTACK_DAMAGE);
         GameManager.getInstance().guiManager.updateGUI();
     }
 
