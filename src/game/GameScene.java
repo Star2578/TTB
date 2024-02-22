@@ -39,6 +39,8 @@ public class GameScene {
     private boolean[][] validMovesCache = new boolean[BOARD_SIZE][BOARD_SIZE]; // Valid moves without entity
     private BasePiece[][] pieces = GameManager.getInstance().pieces; // Where each entity locate
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
+    private int newDirection = 1;
+    private int bufferDirection = newDirection;
     private boolean isPieceSelected = false;
     private boolean autoCycle = false;
 
@@ -257,8 +259,11 @@ public class GameScene {
         }
         player.decreaseActionPoint(Config.MOVE_ACTIONPOINT);
 
-        int newDirection = Integer.compare(col, player.getCol());
-        player.changeDirection(newDirection);
+        newDirection = Integer.compare(col, player.getCol());
+        if (bufferDirection != newDirection) {
+            player.changeDirection(newDirection);
+            bufferDirection = newDirection;
+        }
 
         // Update player position and move the piece on the board
         GridPane.setRowIndex(player.getTexture(), row);
