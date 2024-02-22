@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import logic.*;
+import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.*;
 import pieces.player.*;
@@ -222,16 +223,12 @@ public class GameScene {
                     // Perform the attack on the monster
                     System.out.println("Player attack " + monsterPiece.getClass().getSimpleName() + " @ " + row + " " + col);
                     player.attack(monsterPiece);
-                    resetSelection();
-                    gameManager.isInAttackMode = false;
-                    gameManager.updateCursor(scene, Config.DefaultCursor);
+                    exitAttackMode();
                     if (!monsterPiece.isAlive()) removePiece(monsterPiece);
                 }
             } else {
                 // Player clicked outside valid attack range, exit attack mode
-                gameManager.isInAttackMode = false;
-                resetSelection();
-                gameManager.updateCursor(scene, Config.DefaultCursor);
+                exitAttackMode();
             }
 
             return;
@@ -439,5 +436,19 @@ public class GameScene {
         if (autoCycleTurn != null) {
             autoCycleTurn.stop();
         }
+    }
+
+    private void exitAttackMode() {
+        gameManager.isInAttackMode = false;
+        resetSelection();
+        gameManager.updateCursor(scene, Config.DefaultCursor);
+    }
+
+    private void exitInventoryMode() {
+        gameManager.isInInventoryMode = false;
+    }
+
+    private void exitSkillMode() {
+        gameManager.isInUseSkillMode = false;
     }
 }

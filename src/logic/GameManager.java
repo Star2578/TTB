@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
+import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
 import pieces.player.Knight;
@@ -28,6 +29,8 @@ public class GameManager {
     public List<BasePiece> environmentPieces = new ArrayList<>();
 
     public boolean isInAttackMode = false;
+    public boolean isInInventoryMode = false;
+    public boolean isInUseSkillMode = false;
 
     public GameManager() {
         player = new Knight(0, 0, 1);
