@@ -1,5 +1,6 @@
 package pieces.player;
 
+import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import logic.SpriteAnimation;
@@ -22,7 +23,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     //TODO this is animation testing
     protected SpriteAnimation spriteAnimation;
     public ImageView animationImage;
-
+    protected TranslateTransition moveTransition;
+    //offset for image
+    protected int offsetX=0;
+    protected int offsetY=0;
 
     public BasePlayerPiece(int row, int col, int defaultDirection) {
         super("Player", new ImageView(Config.PlaceholderPath), row, col);
@@ -124,11 +128,14 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         // TODO: Call Game Over
     }
 
+    public abstract void moveWithTransition(int col , int row);
+
     public abstract void startTurn();
 
     public abstract void endTurn();
 
     public abstract boolean validMove(int row, int col); // To set valid move for each classes
+
     public abstract boolean validAttack(int row, int col); // To set valid attack for each classes
 
     public void changeDirection(int direction) {

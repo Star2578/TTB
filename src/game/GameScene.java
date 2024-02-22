@@ -45,6 +45,8 @@ public class GameScene {
     private boolean[][] validMovesCache = new boolean[BOARD_SIZE][BOARD_SIZE]; // Valid moves without entity
     private BasePiece[][] pieces = GameManager.getInstance().pieces; // Where each entity locate
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
+    private int newDirection = 1;
+    private int bufferDirection = newDirection;
     private boolean isPieceSelected = false;
     private boolean autoCycle = false;
 
@@ -196,17 +198,29 @@ public class GameScene {
     }
 
     private void placePiece(BasePiece piece) {
-
+        //this method is called after generated dungeon
+        //place Piece to the board
         if(piece instanceof BasePlayerPiece){
-            //TODO this is animation testing
+            //setup player image size
             ImageView pieceView = ((BasePlayerPiece) piece).animationImage;
             pieceView.setFitWidth(SQUARE_SIZE);
             pieceView.setFitHeight(SQUARE_SIZE);
+            //set position
             ((BasePlayerPiece) piece).animationImage.setX(piece.getCol()*SQUARE_SIZE);
             ((BasePlayerPiece) piece).animationImage.setY(piece.getRow()*SQUARE_SIZE);
             //add player sprite to animation pane
             animationPane.getChildren().add(((BasePlayerPiece) piece).animationImage);
-            //TODO===============================
+        }
+        else if (piece instanceof BaseMonsterPiece) {
+            //setup monster image size
+            ImageView pieceView = ((BaseMonsterPiece) piece).animationImage;
+            pieceView.setFitWidth(SQUARE_SIZE);
+            pieceView.setFitHeight(SQUARE_SIZE);
+            //set position
+            ((BaseMonsterPiece) piece).animationImage.setX(piece.getCol() * SQUARE_SIZE);
+            ((BaseMonsterPiece) piece).animationImage.setY(piece.getRow() * SQUARE_SIZE);
+            //add monster sprite to animation pane
+            animationPane.getChildren().add(((BaseMonsterPiece) piece).animationImage);
         }
         else{
             ImageView pieceView = piece.getTexture();
@@ -267,6 +281,7 @@ public class GameScene {
             } else {
                 // Player clicked outside valid attack range, exit attack mode
                 gameManager.isInAttackMode = false;
+                gameManager.updateCursor(scene, Config.DefaultCursor);
                 resetSelection();
             }
 
@@ -300,33 +315,16 @@ public class GameScene {
         player.decreaseActionPoint(Config.MOVE_ACTIONPOINT);
         guiManager.updateGUI();
 
-        int newDirection = Integer.compare(col, player.getCol());
-        player.changeDirection(newDirection);
+        newDirection = Integer.compare(col, player.getCol());
+        if (bufferDirection != newDirection) {
+            player.changeDirection(newDirection);
+            bufferDirection = newDirection;
+        }
 
-        // Update player position and move the piece on the board
-        GridPane.setRowIndex(player.getTexture(), row);
-        GridPane.setColumnIndex(player.getTexture(), col);
 
-        //TODO this is move animation testing
-        player.setCanAct(false);
-        TranslateTransition imageMoving = new TranslateTransition();
-        imageMoving.setNode(player.animationImage);
-        //move to destination grid
-        imageMoving.setToX( (col-player.getCol()) * SQUARE_SIZE);
-        imageMoving.setToY( (row-player.getRow()) * SQUARE_SIZE - 8);
-        imageMoving.setOnFinished(actionEvent->{
-            //move real coordinate to new col,row
-            player.animationImage.setX(col*SQUARE_SIZE);
-            player.animationImage.setY(row*SQUARE_SIZE);
-            //set translateProperty back to default
-            player.animationImage.translateXProperty().set(0);
-            player.animationImage.translateYProperty().set(-8);
-            player.setCanAct(true);
-        });
-        imageMoving.setDuration(Duration.millis(600));
-        imageMoving.setCycleCount(1);
-        imageMoving.play();
-        //TODO====================================
+        //move player across tiles
+        player.moveWithTransition(col , row);
+
 
         pieces[player.getRow()][player.getCol()] = null;
         pieces[row][col] = player;

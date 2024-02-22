@@ -1,12 +1,19 @@
 package pieces.enemies;
 
+import javafx.animation.TranslateTransition;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 import logic.GameManager;
+import logic.SpriteAnimation;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static utils.Config.SQUARE_SIZE;
 
 public class Zombie extends BaseMonsterPiece{
     private enum State {
@@ -29,6 +36,25 @@ public class Zombie extends BaseMonsterPiece{
         currentState = State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
         this.validMovesCache = validMovesCache;
         random = new Random();
+
+        //===================<animation section>==========================================
+        offsetX=0;
+        offsetY=-8;
+        //sprite animations for monster
+        animationImage = new ImageView(new Image(Config.zombieIdlePath));
+        animationImage.setPreserveRatio(true);
+        animationImage.setTranslateX(offsetX);
+        animationImage.setTranslateY(offsetY);
+        animationImage.setDisable(true);
+        spriteAnimation=new SpriteAnimation(animationImage,4,1,4,36,36,5);
+        spriteAnimation.start();
+
+        //setup moveTranslate behaviour
+        moveTransition = new TranslateTransition();
+        moveTransition.setNode(animationImage);
+        moveTransition.setDuration(Duration.millis(600));
+        moveTransition.setCycleCount(1);
+        //================================================================================
     }
 
     // Method to update the state of the Zombie based on the player's position
@@ -90,6 +116,25 @@ public class Zombie extends BaseMonsterPiece{
         int currentHealth = playerPiece.getCurrentHealth();
         playerPiece.setCurrentHealth(currentHealth - ATTACK_DAMAGE);
         GameManager.getInstance().guiManager.updateGUI();
+    }
+
+    public void moveWithTransition(int col , int row){
+        //stop monster from do other action
+        //slowly move to target col,row
+        moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
+        moveTransition.setToY( (row-getRow()) * SQUARE_SIZE + offsetY);
+
+        moveTransition.setOnFinished(actionEvent->{
+            //move real coordinate to new col,row
+            animationImage.setX(col*SQUARE_SIZE);
+            animationImage.setY(row*SQUARE_SIZE);
+            //set translateProperty back to default
+            animationImage.translateXProperty().set(offsetX);
+            animationImage.translateYProperty().set(offsetY);
+            //now monster can do actions
+        });
+
+        moveTransition.play();
     }
 
     private void moveTowardsPlayer() {

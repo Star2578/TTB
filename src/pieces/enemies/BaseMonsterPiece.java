@@ -1,8 +1,10 @@
 package pieces.enemies;
 
+import javafx.animation.TranslateTransition;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import logic.GameManager;
+import logic.SpriteAnimation;
 import pieces.BasePiece;
 import pieces.BaseStatus;
 import pieces.player.BasePlayerPiece;
@@ -13,6 +15,15 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     private int maxHp;
     private int currentDirection;
     private boolean isAlive = true;
+
+    //TODO this is animation testing
+    protected SpriteAnimation spriteAnimation;
+    public ImageView animationImage;
+    protected TranslateTransition moveTransition;
+    //offset for image
+    protected int offsetX=0;
+    protected int offsetY=0;
+
 
     public BaseMonsterPiece(int row, int col, int defaultDirection) {
         super("Monster", new ImageView(Config.PlaceholderPath), row, col);
@@ -64,17 +75,20 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     public abstract void performAction(); // To call when it's this monster turn
     public abstract void updateState(int playerRow, int playerCol); // Update the state of monster
     protected abstract boolean isValidMoveSet(int row, int col); // Each monster have unique move set
+    public abstract void moveWithTransition(int col , int row);
 
     protected void move(int newRow, int newCol) {
         if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) return;
 
         // Update the position of the monster on the board
-        GridPane.setRowIndex(getTexture(), newRow);
-        GridPane.setColumnIndex(getTexture(), newCol);
+//        GridPane.setRowIndex(getTexture(), newRow);
+//        GridPane.setColumnIndex(getTexture(), newCol);
+        moveWithTransition(newCol , newRow);
 
         BasePiece[][] pieces = GameManager.getInstance().pieces;
         pieces[getRow()][getCol()] = null;
         pieces[newRow][newCol] = this;
+
         setRow(newRow);
         setCol(newCol);
     }
