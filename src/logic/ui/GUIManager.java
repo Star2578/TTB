@@ -1,4 +1,4 @@
-package logic;
+package logic.ui;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,6 +9,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import logic.GameManager;
+import logic.ImageScaler;
+import logic.SceneManager;
+import logic.TurnManager;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 
@@ -19,6 +23,7 @@ public class GUIManager {
     private VBox turnOrderDisplay;
     private VBox playerOptionsMenu;
     private VBox rightSideUI;
+    private Display currentDisplay;
 
     private Text displayActionPoint;
     private VBox hpBox;
@@ -135,6 +140,10 @@ public class GUIManager {
         attackButton = new Button("Attack");
         endTurnButton = new Button("End Turn");
 
+        inventoryButton.setOnMouseClicked(mouseEvent -> switchToInventoryDisplay());
+        useSkillsButton.setOnMouseClicked(mouseEvent -> switchToSkillSelectDisplay());
+        useItemButton.setOnMouseClicked(mouseEvent -> switchToItemSelectDisplay());
+
         attackButton.setOnMouseClicked(mouseEvent -> {
             GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
             GameManager.getInstance().isInAttackMode = !GameManager.getInstance().isInAttackMode;
@@ -176,6 +185,33 @@ public class GUIManager {
         rightSideUI.setMaxWidth(300);
         rightSideUI.setMinHeight(720);
         rightSideUI.setMaxHeight(720);
+    }
+
+    public void switchToInventoryDisplay() {
+        // Create and set InventoryDisplay as the current display
+        InventoryDisplay inventoryDisplay = new InventoryDisplay();
+        setDisplay(inventoryDisplay);
+    }
+
+    public void switchToSkillSelectDisplay() {
+        SkillSelectDisplay skillSelectDisplay = new SkillSelectDisplay();
+        setDisplay(skillSelectDisplay);
+    }
+
+    public void switchToItemSelectDisplay() {
+        ItemSelectDisplay itemSelectDisplay = new ItemSelectDisplay();
+        setDisplay(itemSelectDisplay);
+    }
+
+    // Implement methods to switch to other displays similarly
+
+    private void setDisplay(Display display) {
+        // Clear previous display
+        rightSideUI.getChildren().clear();
+        // Initialize and set the new display
+        this.currentDisplay = display;
+        this.currentDisplay.initialize();
+        rightSideUI.getChildren().add(this.currentDisplay.getView());
     }
 
     public VBox getTurnOrderDisplay() {

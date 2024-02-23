@@ -93,6 +93,10 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         setCol(newCol);
     }
 
+    public void takeDamage(int damage) {
+        setCurrentHealth(currentHp - damage);
+    }
+
     public void changeDirection(int direction) {
         if (direction != 1 && direction != -1) {
             return;

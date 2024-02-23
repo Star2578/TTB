@@ -9,7 +9,7 @@ public class BasePiece {
     private int row;
     private int col;
 
-    public BasePiece(String type, ImageView texture, int row, int col) {
+    protected BasePiece(String type, ImageView texture, int row, int col) {
         this.type = type;
         this.texture = texture;
         this.row = row;

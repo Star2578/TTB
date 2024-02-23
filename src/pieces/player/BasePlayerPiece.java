@@ -4,6 +4,7 @@ import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import logic.SpriteAnimation;
+import logic.GameManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
 import pieces.enemies.BaseMonsterPiece;
@@ -19,6 +20,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private boolean canAct;
     private int currentDirection;
     private int attackDamage;
+    protected final int ATTACK_COST = 1;
 
     //TODO this is animation testing
     protected SpriteAnimation spriteAnimation;
@@ -48,6 +50,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     @Override
     public void setCurrentHealth(int health) {
         this.currentHp = Math.max(health, 0);
+        if (currentHp == 0) onDeath();
     }
 
     @Override
@@ -57,7 +60,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     public void decreaseActionPoint(int decrease) {
         this.currentActionPoint = Math.max(0, this.currentActionPoint - decrease);
-
+        GameManager.getInstance().guiManager.updateGUI();
         if (currentActionPoint == 0) setCanAct(false);
     }
 
@@ -126,6 +129,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     @Override
     public void onDeath() {
         // TODO: Call Game Over
+        System.out.println("Game Over! You are dead");
     }
 
     public abstract void moveWithTransition(int col , int row);
@@ -137,6 +141,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public abstract boolean validMove(int row, int col); // To set valid move for each classes
 
     public abstract boolean validAttack(int row, int col); // To set valid attack for each classes
+
+    public void takeDamage(int damage) {
+        setCurrentHealth(currentHp - damage);
+    }
 
     public void changeDirection(int direction) {
 

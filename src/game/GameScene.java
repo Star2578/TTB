@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import logic.*;
+import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.*;
 import pieces.player.*;
@@ -272,17 +273,12 @@ public class GameScene {
                     // Perform the attack on the monster
                     System.out.println("Player attack " + monsterPiece.getClass().getSimpleName() + " @ " + row + " " + col);
                     player.attack(monsterPiece);
-                    resetSelection();
-                    gameManager.isInAttackMode = false;
-                    gameManager.updateCursor(scene, Config.DefaultCursor);
-                    System.out.println("Attack success");
+                    exitAttackMode();
                     if (!monsterPiece.isAlive()) removePiece(monsterPiece);
                 }
             } else {
                 // Player clicked outside valid attack range, exit attack mode
-                gameManager.isInAttackMode = false;
-                gameManager.updateCursor(scene, Config.DefaultCursor);
-                resetSelection();
+                exitAttackMode();
             }
 
             return;
@@ -313,15 +309,12 @@ public class GameScene {
         }
 
         player.decreaseActionPoint(Config.MOVE_ACTIONPOINT);
-        guiManager.updateGUI();
 
         newDirection = Integer.compare(col, player.getCol());
         if (bufferDirection != newDirection) {
             player.changeDirection(newDirection);
             bufferDirection = newDirection;
         }
-
-
         //move player across tiles
         player.moveWithTransition(col , row);
 
@@ -496,5 +489,19 @@ public class GameScene {
         if (autoCycleTurn != null) {
             autoCycleTurn.stop();
         }
+    }
+
+    private void exitAttackMode() {
+        gameManager.isInAttackMode = false;
+        resetSelection();
+        gameManager.updateCursor(scene, Config.DefaultCursor);
+    }
+
+    private void exitInventoryMode() {
+        gameManager.isInInventoryMode = false;
+    }
+
+    private void exitSkillMode() {
+        gameManager.isInUseSkillMode = false;
     }
 }
