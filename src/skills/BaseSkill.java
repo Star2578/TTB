@@ -1,10 +1,13 @@
 package skills;
 
+import javafx.scene.image.ImageView;
+
 public abstract class BaseSkill {
     protected String name;
     protected int manaCost;
     protected int actionPointCost;
     protected String description;
+    protected ImageView icon;
 
     protected BaseSkill(String name, int manaCost, int actionPointCost, String description) {
         this.name = name;
@@ -30,5 +33,9 @@ public abstract class BaseSkill {
 
     public String getDescription() {
         return description;
+    }
+
+    public ImageView getIcon() {
+        return icon;
     }
 }

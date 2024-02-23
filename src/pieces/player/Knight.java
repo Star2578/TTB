@@ -4,10 +4,13 @@ import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
-import logic.GameManager;
 import logic.SpriteAnimation;
+import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
+import skills.knight.Slash;
 import utils.Config;
+
+import java.util.ArrayList;
 
 import static utils.Config.SQUARE_SIZE;
 
@@ -21,6 +24,9 @@ public class Knight extends BasePlayerPiece {
         setTextureByPath(Config.KnightPath);
         setCanAct(false);
         setAttackDamage(3);
+
+        skills = new ArrayList<>();
+        skills.add(new Slash<>());
 
         //===================<animation section>==========================================
         offsetX=3;

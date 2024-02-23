@@ -1,17 +1,20 @@
 package skills.knight;
 
+import javafx.scene.image.ImageView;
 import logic.GameManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.Attack;
 import skills.BaseSkill;
 import skills.SingleTargetSkill;
+import utils.Config;
 
 public class Slash<Type extends BasePiece> extends BaseSkill implements Attack, SingleTargetSkill<Type> {
     private Type target;
     private final int DAMAGE = 10;
     public Slash() {
         super("Slash", 3, 2, "A true knight slash doesn't need a sword");
+        icon = new ImageView(Config.SlashPath);
     }
 
     @Override
@@ -34,5 +37,14 @@ public class Slash<Type extends BasePiece> extends BaseSkill implements Attack, 
     @Override
     public void perform() {
         attack();
+    }
+
+    @Override
+    public boolean validRange(int col, int row) {
+        // Valid Range for the skill
+        int currentRow = GameManager.getInstance().player.getRow();
+        int currentCol = GameManager.getInstance().player.getCol();
+
+        return Math.abs(row - currentRow) <= 1 && Math.abs(col - currentCol) <= 1;
     }
 }

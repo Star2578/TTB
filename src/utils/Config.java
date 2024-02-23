@@ -35,6 +35,9 @@ public class Config {
     public static String ValidMovePath = "sprites/ground/selected_floor_1.png";
     public static String ValidAttackPath = "sprites/ground/attack_floor_1.png";
 
+    // Skill Icons
+    public static String SlashPath = "sprites/skills/icons/slash.png";
+
     //animation
     public enum state{
         IDLE,

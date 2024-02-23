@@ -8,7 +8,10 @@ import logic.GameManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
 import pieces.enemies.BaseMonsterPiece;
+import skills.BaseSkill;
 import utils.Config;
+
+import java.util.List;
 
 public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private int currentHp;
@@ -20,6 +23,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private boolean canAct;
     private int currentDirection;
     private int attackDamage;
+    protected List<BaseSkill> skills;
     protected final int ATTACK_COST = 1;
 
     //TODO this is animation testing
@@ -110,6 +114,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     public void setAttackDamage(int attackDamage) {
         this.attackDamage = Math.max(attackDamage, 0);
+    }
+
+    public List<BaseSkill> getSkills() {
+        return skills;
     }
 
     @Override

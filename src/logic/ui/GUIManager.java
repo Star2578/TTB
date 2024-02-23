@@ -210,7 +210,6 @@ public class GUIManager {
         rightSideUI.getChildren().clear();
         // Initialize and set the new display
         this.currentDisplay = display;
-        this.currentDisplay.initialize();
         rightSideUI.getChildren().add(this.currentDisplay.getView());
     }
 

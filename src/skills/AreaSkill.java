@@ -3,5 +3,5 @@ package skills;
 public interface AreaSkill {
     boolean[][] areaShape();
 
-    boolean isInShape(int row, int col);
+    boolean isInRange(int col, int row);
 }

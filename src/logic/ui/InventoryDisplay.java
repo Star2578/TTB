@@ -18,11 +18,6 @@ public class InventoryDisplay implements Display {
     }
 
     @Override
-    public void initialize() {
-        // Implement initialization logic if needed
-    }
-
-    @Override
     public Node getView() {
         return view;
     }
