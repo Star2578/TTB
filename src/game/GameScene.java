@@ -280,7 +280,6 @@ public class GameScene {
                 // Player clicked outside valid attack range, exit attack mode
                 exitAttackMode();
             }
-
             return;
         }
 
@@ -454,13 +453,13 @@ public class GameScene {
         }
     }
 
-    private void exitAttackMode() {
+    public void exitAttackMode() {
         gameManager.isInAttackMode = false;
         resetSelection();
         gameManager.updateCursor(scene, Config.DefaultCursor);
     }
 
-    private void cancelSkillSelection() {
+    public void cancelSkillSelection() {
         resetSelection();
         gameManager.selectedSkill = null;
         gameManager.updateCursor(scene, Config.DefaultCursor);

@@ -1,5 +1,6 @@
 package logic.ui;
 
+import game.GameScene;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -148,6 +149,11 @@ public class GUIManager {
         useItemButton.setOnMouseClicked(mouseEvent -> switchToItemSelectDisplay());
 
         attackButton.setOnMouseClicked(mouseEvent -> {
+            // Cancel skill selection if skill is selected
+            if (GameManager.getInstance().selectedSkill != null) {
+                // TODO: Reset Selection
+                GameManager.getInstance().gameScene.cancelSkillSelection();
+            }
             GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
             GameManager.getInstance().isInAttackMode = true;
         });

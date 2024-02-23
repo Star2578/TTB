@@ -27,6 +27,7 @@ public class Main extends Application {
 
         mainMenu = new MainMenu();
         gameScene = new GameScene();
+        GameManager.getInstance().gameScene = gameScene;
 
         SceneManager.getInstance().setGameScene(gameScene.getScene()); // Save this scene for later use
         SceneManager.getInstance().setMenuScene(mainMenu.getScene());

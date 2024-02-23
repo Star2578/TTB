@@ -1,5 +1,6 @@
 package logic;
 
+import game.GameScene;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
@@ -23,6 +24,7 @@ import java.util.List;
 public class GameManager {
     private static GameManager instance;
 
+    public GameScene gameScene;
     public TurnManager turnManager;
     public GUIManager guiManager;
     public BasePlayerPiece player; // Current player class in the game

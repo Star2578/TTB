@@ -24,6 +24,7 @@ public class Slash extends BaseSkill implements Attack {
             if (target instanceof BaseMonsterPiece monsterPiece) {
                 monsterPiece.takeDamage(DAMAGE);
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
+                GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
             }
         }

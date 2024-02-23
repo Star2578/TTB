@@ -26,10 +26,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     protected List<BaseSkill> skills;
     protected final int ATTACK_COST = 1;
 
-    //TODO this is animation testing
     protected SpriteAnimation spriteAnimation;
     public ImageView animationImage;
     protected TranslateTransition moveTransition;
+
     //offset for image
     protected int offsetX=0;
     protected int offsetY=0;
@@ -55,6 +55,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void setCurrentHealth(int health) {
         this.currentHp = Math.max(health, 0);
         if (currentHp == 0) onDeath();
+    }
+
+    public void takeDamage(int damage) {
+        setCurrentHealth(currentHp - damage);
     }
 
     @Override
@@ -90,6 +94,11 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     public boolean canAct() {
         return canAct;
+    }
+
+    public void decreaseMana(int decrease) {
+        this.currentMana = Math.max(0, this.currentMana - decrease);
+        GameManager.getInstance().guiManager.updateGUI();
     }
 
     public int getCurrentMana() {
@@ -149,10 +158,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public abstract boolean validMove(int row, int col); // To set valid move for each classes
 
     public abstract boolean validAttack(int row, int col); // To set valid attack for each classes
-
-    public void takeDamage(int damage) {
-        setCurrentHealth(currentHp - damage);
-    }
 
     public void changeDirection(int direction) {
 

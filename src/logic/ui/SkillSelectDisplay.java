@@ -74,6 +74,12 @@ public class SkillSelectDisplay implements Display{
         BasePlayerPiece player = GameManager.getInstance().player;
 
         skillFrame.setOnMouseClicked(mouseEvent -> {
+            // Exit attack mode if activated
+            if (GameManager.getInstance().isInAttackMode) {
+                // TODO: Reset Selection
+                GameManager.getInstance().gameScene.exitAttackMode();
+            }
+
             SkillHandler.showValidSkillRange(player.getRow(), player.getCol(), skill);
             GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
             GameManager.getInstance().selectedSkill = skill;
