@@ -33,6 +33,7 @@ public class GameManager {
     public BasePiece[][] piecesPosition = new BasePiece[Config.BOARD_SIZE][Config.BOARD_SIZE]; // Where each entity located
     public List<BasePiece> environmentPieces = new ArrayList<>(); // Where each environment piece i.e. wall, trap located
     public List<BaseSkill> playerSkills; // List of skills player currently have
+    public BaseSkill selectedSkill;
 
     // ----------- UI Status -----------
     public boolean isInAttackMode = false;

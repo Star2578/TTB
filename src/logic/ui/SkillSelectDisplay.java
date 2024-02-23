@@ -12,7 +12,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.ImageScaler;
+import logic.SceneManager;
 import logic.handlers.SkillHandler;
+import pieces.player.BasePlayerPiece;
 import skills.BaseSkill;
 import utils.Config;
 
@@ -69,7 +71,14 @@ public class SkillSelectDisplay implements Display{
         skillFrame.setStyle("-fx-background-color: #34495E;"); // Set frame background color
         skillFrame.getChildren().addAll(new ImageView(skillIcon));
 
-//        skillFrame.setOnMouseClicked(mouseEvent -> );
+        BasePlayerPiece player = GameManager.getInstance().player;
+
+        skillFrame.setOnMouseClicked(mouseEvent -> {
+            SkillHandler.showValidSkillRange(player.getRow(), player.getCol(), skill);
+            GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+            GameManager.getInstance().selectedSkill = skill;
+            System.out.println("Selected " + skill.getName() + " skill");
+        });
 
         return skillFrame;
     }

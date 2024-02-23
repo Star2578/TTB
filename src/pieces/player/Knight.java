@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.SpriteAnimation;
-import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.knight.Slash;
 import utils.Config;
@@ -26,13 +25,13 @@ public class Knight extends BasePlayerPiece {
         setAttackDamage(3);
 
         skills = new ArrayList<>();
-        skills.add(new Slash<>());
+        skills.add(new Slash());
 
         //===================<animation section>==========================================
         offsetX=3;
         offsetY=-8;
         //sprite animations for player
-        animationImage = new ImageView(new Image(Config.knightIdlePath));
+        animationImage = new ImageView(new Image(Config.KnightIdlePath));
         animationImage.setPreserveRatio(true);
         animationImage.setTranslateX(offsetX);
         animationImage.setTranslateY(offsetY);

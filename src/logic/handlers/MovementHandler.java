@@ -24,7 +24,7 @@ public class MovementHandler {
     private static int newDirection = 1;
     private static int bufferDirection = newDirection;
 
-    public static void showValidMoves(int playerCol, int playerRow) {
+    public static void showValidMoves(int playerRow, int playerCol) {
         // Iterate over adjacent squares and update images based on cached valid moves
         for (int dRow = -1; dRow <= 1; dRow++) {
             for (int dCol = -1; dCol <= 1; dCol++) {
@@ -42,7 +42,7 @@ public class MovementHandler {
         }
     }
 
-    public static void movePlayer(int col, int row) {
+    public static void movePlayer(int row, int col) {
         if (Config.MOVE_ACTIONPOINT > player.getCurrentActionPoint()) {
             System.out.println("Not enough Action Point");
             return;
@@ -57,7 +57,7 @@ public class MovementHandler {
         }
 
         //move player across tiles
-        player.moveWithTransition(col , row);
+        player.moveWithTransition(row , col);
 
         piecesPosition[player.getRow()][player.getCol()] = null;
         piecesPosition[row][col] = player;

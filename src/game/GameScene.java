@@ -16,9 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import logic.*;
-import logic.handlers.AttackHandler;
-import logic.handlers.MovementHandler;
-import logic.handlers.SkillHandler;
+import logic.handlers.*;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.*;
@@ -116,10 +114,7 @@ public class GameScene {
         renderLogic = () -> {
             // Render game graphics
             if (gameManager.isInAttackMode) {
-                AttackHandler.showValidAttackRange(player.getCol(), player.getRow());
-            }
-            if (gameManager.isInUseSkillMode) {
-                SkillHandler.showValidSkillRange(player.getCol(), player.getRow(), player.getSkills().get(0));
+                AttackHandler.showValidAttackRange(player.getRow(), player.getCol());
             }
         };
 
@@ -293,9 +288,19 @@ public class GameScene {
 
         boolean isInUseSkillMode = gameManager.isInUseSkillMode;
 
-        if (isInUseSkillMode) {
-            System.out.println("Player prepare to use skill");
-
+        if (isInUseSkillMode && gameManager.selectedSkill != null) {
+            if (gameManager.selectedSkill.validRange(row, col)) {
+                // Check if there is a monster on the clicked square
+                if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
+                    // Perform the attack on the monster
+                    gameManager.selectedSkill.perform(monsterPiece);
+                    cancelSkillSelection();
+                    if (!monsterPiece.isAlive()) removePiece(monsterPiece);
+                }
+            } else {
+                // Cancel skill selection
+                cancelSkillSelection();
+            }
             return;
         }
 
@@ -305,13 +310,13 @@ public class GameScene {
             // toggle move selection mode by click on player's grid
             // Show valid moves by changing the color of adjacent squares
             isPieceSelected = !isPieceSelected;
-            if(isPieceSelected) MovementHandler.showValidMoves(col, row);
+            if(isPieceSelected) MovementHandler.showValidMoves(row, col);
             else resetSelection();
 
         } else if (isPieceSelected) {
             if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
                 System.out.println("Moving player to square (" + row + ", " + col + ")");
-                MovementHandler.movePlayer(col, row);
+                MovementHandler.movePlayer(row, col);
             } else {
                 System.out.println("Invalid move");
             }
@@ -455,11 +460,9 @@ public class GameScene {
         gameManager.updateCursor(scene, Config.DefaultCursor);
     }
 
-    private void exitInventoryMode() {
-        gameManager.isInInventoryMode = false;
-    }
-
-    private void exitSkillMode() {
-        gameManager.isInUseSkillMode = false;
+    private void cancelSkillSelection() {
+        resetSelection();
+        gameManager.selectedSkill = null;
+        gameManager.updateCursor(scene, Config.DefaultCursor);
     }
 }

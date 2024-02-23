@@ -7,36 +7,34 @@ import logic.GameManager;
 import logic.ImageScaler;
 import pieces.BasePiece;
 import skills.BaseSkill;
-import skills.SingleTargetSkill;
 import utils.Config;
 
 import java.util.ArrayList;
 
 public class SkillHandler {
     private static GameManager gameManager = GameManager.getInstance();
-    private static BasePiece[][] piecesPosition = gameManager.piecesPosition;
     private static ImageView[][] dungeonFloor = gameManager.dungeonFloor;
     private static ArrayList<Point2D> selectedTiles = gameManager.selectedTiles;
     private static ImageScaler imageScaler = new ImageScaler();
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
 
-    public static void showValidSkillRange(int playerCol, int playerRow, BaseSkill skillSelected) {
+    public static void showValidSkillRange(int playerRow, int playerCol, BaseSkill skillSelected) {
         int range = skillSelected.getRange();
 
-        if (skillSelected instanceof SingleTargetSkill<?> singleTargetSkill) {
-            for (int dRow = -range; dRow <= range; dRow++) {
-                for (int dCol = -range; dCol <= range; dCol++) {
-                    int newRow = playerCol + dRow;
-                    int newCol = playerRow + dCol;
-                    if (isInBoardPosition(newRow, newCol) && singleTargetSkill.validRange(newRow, newCol) && (newRow != playerRow || newCol != playerCol)) {
-                        selectedTiles.add(new Point2D(newRow, newCol));
-                        // Highlight or mark the square to indicate it's within the skill range
-                        dungeonFloor[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidSkillPath)));
+        for (int dRow = -range; dRow <= range; dRow++) {
+            for (int dCol = -range; dCol <= range; dCol++) {
+                int newRow = playerRow + dRow;
+                int newCol = playerCol + dCol;
+                if (isInBoardPosition(newRow, newCol) && skillSelected.validRange(newRow, newCol)) {
+                    if (!skillSelected.castOnSelf()) {
+                        if ((newRow == playerRow && newCol == playerCol)) continue;
                     }
+                    selectedTiles.add(new Point2D(newRow, newCol));
+                    // Highlight or mark the square to indicate it's within the skill range
+                    dungeonFloor[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidSkillPath), 2)); // Set texture to indicate valid skill
                 }
             }
         }
-
     }
 
     private static boolean isInBoardPosition(int row, int col) {

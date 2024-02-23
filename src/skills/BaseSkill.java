@@ -1,6 +1,7 @@
 package skills;
 
 import javafx.scene.image.ImageView;
+import pieces.BasePiece;
 
 public abstract class BaseSkill {
     protected String name; // Skill name
@@ -9,6 +10,7 @@ public abstract class BaseSkill {
     protected String description; // Skill description
     protected ImageView icon; // Skill icon to display
     protected int range; // Skill range, use to indicate the size of range needed
+    protected boolean[][] areaRange; // For area skill
 
     protected BaseSkill(String name, int manaCost, int actionPointCost, String description) {
         this.name = name;
@@ -18,7 +20,7 @@ public abstract class BaseSkill {
     }
 
     // Abstract method to perform the skill
-    public abstract void perform();
+    public abstract void perform(BasePiece target);
 
     public String getName() {
         return name;
@@ -43,4 +45,9 @@ public abstract class BaseSkill {
     public int getRange() {
         return range;
     }
+
+    public abstract boolean validRange(int row, int col);
+
+    public abstract boolean castOnSelf();
+    public abstract boolean castOnMonster();
 }

@@ -41,7 +41,7 @@ public class Zombie extends BaseMonsterPiece{
         offsetX=0;
         offsetY=-8;
         //sprite animations for monster
-        animationImage = new ImageView(new Image(Config.zombieIdlePath));
+        animationImage = new ImageView(new Image(Config.ZombieIdlePath));
         animationImage.setPreserveRatio(true);
         animationImage.setTranslateX(offsetX);
         animationImage.setTranslateY(offsetY);

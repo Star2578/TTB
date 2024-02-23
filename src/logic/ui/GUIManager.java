@@ -141,12 +141,15 @@ public class GUIManager {
         endTurnButton = new Button("End Turn");
 
         inventoryButton.setOnMouseClicked(mouseEvent -> switchToInventoryDisplay());
-        useSkillsButton.setOnMouseClicked(mouseEvent -> switchToSkillSelectDisplay());
+        useSkillsButton.setOnMouseClicked(mouseEvent -> {
+            switchToSkillSelectDisplay();
+            GameManager.getInstance().isInUseSkillMode = true;
+        });
         useItemButton.setOnMouseClicked(mouseEvent -> switchToItemSelectDisplay());
 
         attackButton.setOnMouseClicked(mouseEvent -> {
             GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
-            GameManager.getInstance().isInAttackMode = !GameManager.getInstance().isInAttackMode;
+            GameManager.getInstance().isInAttackMode = true;
         });
 
         endTurnButton.setOnMouseClicked(mouseEvent -> {
@@ -202,8 +205,6 @@ public class GUIManager {
         ItemSelectDisplay itemSelectDisplay = new ItemSelectDisplay();
         setDisplay(itemSelectDisplay);
     }
-
-    // Implement methods to switch to other displays similarly
 
     private void setDisplay(Display display) {
         // Clear previous display
