@@ -1,5 +1,6 @@
 package logic.ui;
 
+import game.GameScene;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -11,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.ImageScaler;
+import logic.handlers.SkillHandler;
 import skills.BaseSkill;
 import utils.Config;
 
@@ -67,7 +69,7 @@ public class SkillSelectDisplay implements Display{
         skillFrame.setStyle("-fx-background-color: #34495E;"); // Set frame background color
         skillFrame.getChildren().addAll(new ImageView(skillIcon));
 
-//        skillFrame.setOnMouseClicked(mouseEvent -> skill.perform());
+//        skillFrame.setOnMouseClicked(mouseEvent -> );
 
         return skillFrame;
     }

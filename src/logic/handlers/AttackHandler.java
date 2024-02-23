@@ -18,19 +18,19 @@ public class AttackHandler {
     private static ImageScaler imageScaler = new ImageScaler();
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
 
-    public static void showValidAttackRange(int row, int col) {
+    public static void showValidAttackRange(int playerCol, int playerRow) {
         int attackRange = 1; // Change this according to the player's attack range
 
         for (int dRow = -attackRange; dRow <= attackRange; dRow++) {
             for (int dCol = -attackRange; dCol <= attackRange; dCol++) {
-                int newRow = row + dRow;
-                int newCol = col + dCol;
+                int newRow = playerRow + dRow;
+                int newCol = playerCol + dCol;
                 // Check if the new position is within the board bounds and not the current position
-                if (isInBoardPosition(newRow, newCol) && (newRow != row || newCol != col)) {
+                if (isInBoardPosition(newRow, newCol) && (newRow != playerRow || newCol != playerCol)) {
                     // Check if the square is within the attack range using the player's validAttack method
                     if (player.validAttack(newRow, newCol)) {
-                        // Highlight or mark the square to indicate it's within the attack range
                         selectedTiles.add(new Point2D(newRow , newCol));
+                        // Highlight or mark the square to indicate it's within the attack range
                         dungeonFloor[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidAttackPath), 2)); // Set texture to indicate valid attack
                     }
                 }

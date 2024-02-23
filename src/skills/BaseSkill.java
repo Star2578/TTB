@@ -3,11 +3,12 @@ package skills;
 import javafx.scene.image.ImageView;
 
 public abstract class BaseSkill {
-    protected String name;
-    protected int manaCost;
-    protected int actionPointCost;
-    protected String description;
-    protected ImageView icon;
+    protected String name; // Skill name
+    protected int manaCost; // Skill mana cost
+    protected int actionPointCost; // Skill action point cost
+    protected String description; // Skill description
+    protected ImageView icon; // Skill icon to display
+    protected int range; // Skill range, use to indicate the size of range needed
 
     protected BaseSkill(String name, int manaCost, int actionPointCost, String description) {
         this.name = name;
@@ -37,5 +38,9 @@ public abstract class BaseSkill {
 
     public ImageView getIcon() {
         return icon;
+    }
+
+    public int getRange() {
+        return range;
     }
 }

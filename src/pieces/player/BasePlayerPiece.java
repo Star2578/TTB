@@ -140,7 +140,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         System.out.println("Game Over! You are dead");
     }
 
-    public abstract void moveWithTransition(int col , int row);
+    public abstract void moveWithTransition(int row , int col);
 
     public abstract void startTurn();
 

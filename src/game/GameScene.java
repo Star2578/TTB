@@ -18,6 +18,7 @@ import javafx.util.Duration;
 import logic.*;
 import logic.handlers.AttackHandler;
 import logic.handlers.MovementHandler;
+import logic.handlers.SkillHandler;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.*;
@@ -47,8 +48,6 @@ public class GameScene {
     private boolean[][] validMovesCache = gameManager.validMovesCache; // Valid moves without entity
     private BasePiece[][] piecesPosition = GameManager.getInstance().piecesPosition; // Where each entity locate
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
-    private int newDirection = 1;
-    private int bufferDirection = newDirection;
     private boolean isPieceSelected = false;
     private boolean autoCycle = false;
 
@@ -117,7 +116,10 @@ public class GameScene {
         renderLogic = () -> {
             // Render game graphics
             if (gameManager.isInAttackMode) {
-                AttackHandler.showValidAttackRange(player.getRow(), player.getCol());
+                AttackHandler.showValidAttackRange(player.getCol(), player.getRow());
+            }
+            if (gameManager.isInUseSkillMode) {
+                SkillHandler.showValidSkillRange(player.getCol(), player.getRow(), player.getSkills().get(0));
             }
         };
 
@@ -263,6 +265,8 @@ public class GameScene {
             return;
         }
 
+        // ------------------------- Attack Mode -------------------------
+
         boolean isInAttackMode = gameManager.isInAttackMode;
 
         if (isInAttackMode) {
@@ -285,46 +289,34 @@ public class GameScene {
             return;
         }
 
+        // ------------------------- Skill Mode -------------------------
+
+        boolean isInUseSkillMode = gameManager.isInUseSkillMode;
+
+        if (isInUseSkillMode) {
+            System.out.println("Player prepare to use skill");
+
+            return;
+        }
+
+        // ------------------------- Movement Mode -------------------------
+
         if (player.getRow() == row && player.getCol() == col) {
             // toggle move selection mode by click on player's grid
             // Show valid moves by changing the color of adjacent squares
             isPieceSelected = !isPieceSelected;
-            if(isPieceSelected) MovementHandler.showValidMoves(row, col);
+            if(isPieceSelected) MovementHandler.showValidMoves(col, row);
             else resetSelection();
 
         } else if (isPieceSelected) {
             if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
                 System.out.println("Moving player to square (" + row + ", " + col + ")");
-                movePlayer(row, col);
+                MovementHandler.movePlayer(col, row);
             } else {
                 System.out.println("Invalid move");
             }
             resetSelection();
         }
-    }
-
-    private void movePlayer(int row, int col) {
-        if (Config.MOVE_ACTIONPOINT > player.getCurrentActionPoint()) {
-            System.out.println("Not enough Action Point");
-            return;
-        }
-
-        player.decreaseActionPoint(Config.MOVE_ACTIONPOINT);
-
-        newDirection = Integer.compare(col, player.getCol());
-        if (bufferDirection != newDirection) {
-            player.changeDirection(newDirection);
-            bufferDirection = newDirection;
-        }
-
-        //move player across tiles
-        player.moveWithTransition(row , col);
-
-        piecesPosition[player.getRow()][player.getCol()] = null;
-        piecesPosition[row][col] = player;
-
-        player.setRow(row);
-        player.setCol(col);
     }
 
     private boolean isValidMove(int row, int col) {
