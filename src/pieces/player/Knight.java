@@ -43,7 +43,7 @@ public class Knight extends BasePlayerPiece {
         //================================================================================
     }
 
-    public void moveWithTransition(int col , int row){
+    public void moveWithTransition(int row , int col){
         //stop player from do other action
         setCanAct(false);
         //slowly move to target col,row

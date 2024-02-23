@@ -83,7 +83,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         // Update the position of the monster on the board
 //        GridPane.setRowIndex(getTexture(), newRow);
 //        GridPane.setColumnIndex(getTexture(), newCol);
-        moveWithTransition(newCol , newRow);
+        moveWithTransition(newRow , newCol);
 
         BasePiece[][] pieces = GameManager.getInstance().pieces;
         pieces[getRow()][getCol()] = null;

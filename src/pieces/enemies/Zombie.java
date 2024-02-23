@@ -117,7 +117,7 @@ public class Zombie extends BaseMonsterPiece{
         GameManager.getInstance().guiManager.updateGUI();
     }
 
-    public void moveWithTransition(int col , int row){
+    public void moveWithTransition(int row , int col){
         //stop monster from do other action
         //slowly move to target col,row
         moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);

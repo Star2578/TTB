@@ -7,6 +7,7 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -17,6 +18,7 @@ import javafx.scene.paint.Color;
 
 import javafx.util.Duration;
 
+import javafx.util.Pair;
 import logic.*;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
@@ -26,6 +28,7 @@ import pieces.wall.*;
 import utils.Config;
 
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameScene {
@@ -43,6 +46,7 @@ public class GameScene {
     private Timeline autoCycleTurn;
 
     private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE]; // The dungeon floor texture
+    private ArrayList<Point2D> selectedTiles = new ArrayList<>();
     private boolean[][] validMovesCache = new boolean[BOARD_SIZE][BOARD_SIZE]; // Valid moves without entity
     private BasePiece[][] pieces = GameManager.getInstance().pieces; // Where each entity locate
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
@@ -292,7 +296,7 @@ public class GameScene {
             else resetSelection();
 
         } else if (isPieceSelected) {
-            if (validMovesCache[row][col] && player.validMove(row, col) && (pieces[row][col] == null || pieces[row][col] == player)) {
+            if (validMovesCache[row][col] && player.validMove(row, col) && pieces[row][col] == null) {
                 System.out.println("Moving player to square (" + row + ", " + col + ")");
                 movePlayer(row, col);
             } else {
@@ -315,15 +319,15 @@ public class GameScene {
             player.changeDirection(newDirection);
             bufferDirection = newDirection;
         }
-        //move player across tiles
-        player.moveWithTransition(col , row);
 
+        //move player across tiles
+        player.moveWithTransition(row , col);
 
         pieces[player.getRow()][player.getCol()] = null;
         pieces[row][col] = player;
 
-        player.setCol(col);
         player.setRow(row);
+        player.setCol(col);
     }
 
     private boolean isValidMove(int row, int col) {
@@ -352,6 +356,7 @@ public class GameScene {
                 // Check if the new position is within the board bounds and not the current position
                 if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
                     if (validMovesCache[newRow][newCol] && pieces[newRow][newCol] == null) {
+                        selectedTiles.add(new Point2D(newRow , newCol));
                         squares[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidMovePath), 2)); // Set texture to indicate valid move
                     }
                 }
@@ -371,6 +376,7 @@ public class GameScene {
                     // Check if the square is within the attack range using the player's validAttack method
                     if (player.validAttack(newRow, newCol)) {
                         // Highlight or mark the square to indicate it's within the attack range
+                        selectedTiles.add(new Point2D(newRow , newCol));
                         squares[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidAttackPath), 2)); // Set texture to indicate valid attack
                     }
                 }
@@ -380,12 +386,13 @@ public class GameScene {
 
     private void resetSelection() {
         isPieceSelected = false;
+
         // Reset the texture of all squares to the default floor texture
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                squares[row][col].setImage(new Image(Config.FloorPath));
-            }
+        for (int i = 0  ; i < selectedTiles.size() ; i++){
+            squares[(int) selectedTiles.get(i).getX()][(int) selectedTiles.get(i).getY()]
+                    .setImage(new Image(Config.FloorPath));
         }
+        selectedTiles.clear();
     }
 
     private boolean isValidPosition(int row, int col) {
