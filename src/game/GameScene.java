@@ -434,6 +434,10 @@ public class GameScene {
         // Remove the piece's ImageView from the boardPane
         boardPane.getChildren().remove(toRemove.getTexture());
 
+        // Remove the piece's ImageView from the animationPane
+        if (toRemove instanceof BaseMonsterPiece monsterPiece)
+            animationPane.getChildren().remove(monsterPiece.animationImage);
+
         // Set the corresponding entry in the pieces array to null
         pieces[row][col] = null;
     }

@@ -153,7 +153,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         }
         if (currentDirection != direction) {
             currentDirection = direction;
-            ImageView imageView = getTexture();
+            ImageView imageView = animationImage;
             imageView.setScaleX(direction); // Flipping the image horizontally if direction is -1
         }
     }
