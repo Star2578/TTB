@@ -27,6 +27,9 @@ public class MainMenu {
         rootPane = new Pane();
         rootPane.setStyle("-fx-background-color:#645050");
         rootPane.setPrefSize(1280,720);
+        rootPane.getStylesheets().add(getClass().getResource("/CSSs/MainMenu.css").toExternalForm());
+
+        scene = new Scene(rootPane , 1280 , 720);
 
 
         //-------------------<title text>-----------------------------------------
@@ -55,72 +58,43 @@ public class MainMenu {
 
         //-------------------<play button>-----------------------------------------
         playBtn= new Button();
-        playBtn.setStyle(
-                "-fx-font-size:24;" +
-                "-fx-border-style:SOLID;" +
-                "-fx-border-color:BLACK;" +
-                "-fx-border-width:5;" +
-                "-fx-background-color:#843939");
+        playBtn.setId("playBtn");
         playBtn.setPrefWidth(250);
         playBtn.setLayoutX(515);
         playBtn.setLayoutY(360);
 
         playBtnText = new Text("START");
-        playBtnText.setStyle("-fx-font-family:'x8y12pxTheStrongGamer';" +
-                "-fx-font-size:32;");
-        playBtnText.setFill(Color.web("EEEEEE"));
+        playBtnText.setId("playText");
         playBtnText.setX(587);
         playBtnText.setY(368 + 32);
         playBtnText.setDisable(true);
 
-        playBtn.setOnMouseEntered(mouseEvent -> buttonGetHover(playBtn,playBtnText));
-        playBtn.setOnMouseExited(mouseEvent -> buttonSetDefault(playBtn , playBtnText));
 
-        playBtn.setOnMouseClicked(mouseEvent -> {
-            //will do scene event handler on this one
-            buttonGetClicked(playBtn,playBtnText);
+        playBtn.setOnAction(actionEvent -> {
+            //start and switch to the game scene
             SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getGameScene());
-
         });
-        playBtn.setOnMouseReleased(mouseEvent -> buttonSetDefault(playBtn,playBtnText));
 
-        playBtn.setOnAction(actionEvent -> buttonGetClicked(playBtn , playBtnText));
         //-------------------<setting button>-----------------------------------------
         settingBtn = new Button();
-        settingBtn.setStyle(
-                "-fx-font-size:24;" +
-                "-fx-border-style:SOLID;" +
-                "-fx-border-color:BLACK;" +
-                "-fx-border-width:5;" +
-                "-fx-background-color:#843939");
+        settingBtn.setId("settingBtn");
         settingBtn.setPrefWidth(250);
         settingBtn.setLayoutX(515);
         settingBtn.setLayoutY(453);
-        settingBtn.setId("btn");
 
         settingBtnText = new Text("SETTINGS");
-        settingBtnText.setStyle("-fx-font-family:'x8y12pxTheStrongGamer';" +
-                "-fx-font-size:32;");
-        settingBtnText.setFill(Color.web("EEEEEE"));
+        settingBtnText.setId("settingText");
         settingBtnText.setX(555);
         settingBtnText.setY(461 + 32);
         settingBtnText.setDisable(true);
 
-        settingBtn.setOnMouseEntered(mouseEvent -> buttonGetHover(settingBtn,settingBtnText));
-        settingBtn.setOnMouseExited(mouseEvent -> buttonSetDefault(settingBtn , settingBtnText));
 
-        settingBtn.setOnMouseClicked(mouseEvent -> {
+        settingBtn.setOnAction(mouseEvent -> {
             //will do scene event handler on this one
-            buttonGetClicked(settingBtn,settingBtnText);
         });
-        settingBtn.setOnMouseReleased(mouseEvent -> buttonSetDefault(settingBtn,settingBtnText));
-
-        settingBtn.setOnAction(actionEvent -> buttonGetClicked(settingBtn , settingBtnText));
 
 
         //-------------------<put everything on scene>-----------------------------------------
-        scene = new Scene(rootPane , 1280 , 720);
-        scene.getStylesheets().add(getClass().getResource("/style/mainMenuSheet.css").toExternalForm());
 
         rootPane.getChildren().addAll(titleRect1,
                                       titleRect2,
@@ -136,32 +110,5 @@ public class MainMenu {
         return scene;
     }
 
-    public void buttonSetDefault(Button b, Text t){
-        b.setStyle(     "-fx-font-size:24;" +
-                        "-fx-border-style:SOLID;" +
-                        "-fx-border-color:BLACK;" +
-                        "-fx-border-width:5;" +
-                        "-fx-background-color:#843939");
-        t.setFill(Color.web("EEEEEE"));
-    }
 
-    public void buttonGetHover(Button b, Text t){
-        b.setStyle(
-                        "-fx-font-size:24;" +
-                        "-fx-border-style:SOLID;" +
-                        "-fx-border-color:BLACK;" +
-                        "-fx-border-width:5;" +
-                        "-fx-background-color:#733333");
-        t.setFill(Color.web("BBBBBB"));
-    }
-
-    public void buttonGetClicked(Button b, Text t){
-        b.setStyle(
-                        "-fx-font-size:24;" +
-                        "-fx-border-style:SOLID;" +
-                        "-fx-border-color:#461E1E;" +
-                        "-fx-border-width:5;" +
-                        "-fx-background-color:#512525");
-        t.setFill(Color.web("737373"));
-    }
 }

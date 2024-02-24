@@ -1,11 +1,17 @@
 package pieces.player;
 
+import javafx.animation.TranslateTransition;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import logic.SpriteAnimation;
 import logic.GameManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
 import pieces.enemies.BaseMonsterPiece;
+import skills.BaseSkill;
 import utils.Config;
+
+import java.util.List;
 
 public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private int currentHp;
@@ -17,7 +23,16 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private boolean canAct;
     private int currentDirection;
     private int attackDamage;
+    protected List<BaseSkill> skills;
     protected final int ATTACK_COST = 1;
+
+    protected SpriteAnimation spriteAnimation;
+    public ImageView animationImage;
+    protected TranslateTransition moveTransition;
+
+    //offset for image
+    protected int offsetX=0;
+    protected int offsetY=0;
 
     public BasePlayerPiece(int row, int col, int defaultDirection) {
         super("Player", new ImageView(Config.PlaceholderPath), row, col);
@@ -28,6 +43,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
             ImageView imageView = getTexture();
             imageView.setScaleX(-1); // Flipping the image horizontally
         }
+
     }
 
     @Override
@@ -38,6 +54,11 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     @Override
     public void setCurrentHealth(int health) {
         this.currentHp = Math.max(health, 0);
+        if (currentHp == 0) onDeath();
+    }
+
+    public void takeDamage(int damage) {
+        setCurrentHealth(currentHp - damage);
     }
 
     @Override
@@ -75,6 +96,11 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         return canAct;
     }
 
+    public void decreaseMana(int decrease) {
+        this.currentMana = Math.max(0, this.currentMana - decrease);
+        GameManager.getInstance().guiManager.updateGUI();
+    }
+
     public int getCurrentMana() {
         return currentMana;
     }
@@ -99,6 +125,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         this.attackDamage = Math.max(attackDamage, 0);
     }
 
+    public List<BaseSkill> getSkills() {
+        return skills;
+    }
+
     @Override
     public void setMaxHealth(int maxHealth) {
         int maxHpBuffer = maxHp;
@@ -116,22 +146,27 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     @Override
     public void onDeath() {
         // TODO: Call Game Over
+        System.out.println("Game Over! You are dead");
     }
+
+    public abstract void moveWithTransition(int row , int col);
 
     public abstract void startTurn();
 
     public abstract void endTurn();
 
     public abstract boolean validMove(int row, int col); // To set valid move for each classes
+
     public abstract boolean validAttack(int row, int col); // To set valid attack for each classes
 
     public void changeDirection(int direction) {
+
         if (direction != 1 && direction != -1) {
             return;
         }
         if (currentDirection != direction) {
             currentDirection = direction;
-            ImageView imageView = getTexture();
+            ImageView imageView = animationImage;
             imageView.setScaleX(direction); // Flipping the image horizontally if direction is -1
         }
     }
