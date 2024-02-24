@@ -6,11 +6,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import logic.GameManager;
 import logic.SpriteAnimation;
 import logic.ui.GUIManager;
 import pieces.enemies.BaseMonsterPiece;
+import skills.knight.Slash;
 import utils.Config;
+
+import java.util.ArrayList;
 
 import static utils.Config.SQUARE_SIZE;
 
@@ -25,8 +27,13 @@ public class Knight extends BasePlayerPiece {
         setCanAct(false);
         setAttackDamage(3);
 
+        //add skill
+        skills = new ArrayList<>();
+        skills.add(new Slash());
+
         //configs values for animation
         setupAnimation();
+
     }
 
     public void moveWithTransition(int row , int col){
@@ -119,7 +126,7 @@ public class Knight extends BasePlayerPiece {
         offsetX=3;
         offsetY=-8;
         //sprite animations for player
-        animationImage = new ImageView(new Image(Config.knightIdlePath));
+        animationImage = new ImageView(new Image(Config.KnightIdlePath));
         animationImage.setPreserveRatio(true);
         animationImage.setTranslateX(offsetX);
         animationImage.setTranslateY(offsetY);

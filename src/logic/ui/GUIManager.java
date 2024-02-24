@@ -1,5 +1,6 @@
 package logic.ui;
 
+import game.GameScene;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -141,12 +142,20 @@ public class GUIManager {
         endTurnButton = new Button("End Turn");
 
         inventoryButton.setOnMouseClicked(mouseEvent -> switchToInventoryDisplay());
-        useSkillsButton.setOnMouseClicked(mouseEvent -> switchToSkillSelectDisplay());
+        useSkillsButton.setOnMouseClicked(mouseEvent -> {
+            switchToSkillSelectDisplay();
+            GameManager.getInstance().isInUseSkillMode = true;
+        });
         useItemButton.setOnMouseClicked(mouseEvent -> switchToItemSelectDisplay());
 
         attackButton.setOnMouseClicked(mouseEvent -> {
+            // Cancel skill selection if skill is selected
+            if (GameManager.getInstance().selectedSkill != null) {
+                // TODO: Reset Selection
+                GameManager.getInstance().gameScene.resetSelection(2);
+            }
             GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
-            GameManager.getInstance().isInAttackMode = !GameManager.getInstance().isInAttackMode;
+            GameManager.getInstance().isInAttackMode = true;
         });
 
         endTurnButton.setOnMouseClicked(mouseEvent -> {
@@ -203,14 +212,11 @@ public class GUIManager {
         setDisplay(itemSelectDisplay);
     }
 
-    // Implement methods to switch to other displays similarly
-
     private void setDisplay(Display display) {
         // Clear previous display
         rightSideUI.getChildren().clear();
         // Initialize and set the new display
         this.currentDisplay = display;
-        this.currentDisplay.initialize();
         rightSideUI.getChildren().add(this.currentDisplay.getView());
     }
 

@@ -14,10 +14,6 @@ public class ItemSelectDisplay implements Display{
         label.setTextFill(Color.WHITE);
         view.getChildren().add(label);
     }
-    @Override
-    public void initialize() {
-
-    }
 
     @Override
     public Node getView() {

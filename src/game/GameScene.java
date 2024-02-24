@@ -3,13 +3,10 @@ package game;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
-import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
-import javafx.event.Event;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -18,8 +15,8 @@ import javafx.scene.paint.Color;
 
 import javafx.util.Duration;
 
-import javafx.util.Pair;
 import logic.*;
+import logic.handlers.*;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.*;
@@ -27,7 +24,6 @@ import pieces.player.*;
 import pieces.wall.*;
 import utils.Config;
 
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,14 +41,15 @@ public class GameScene {
     private DungeonGenerator dungeonGenerator;
     private Timeline autoCycleTurn;
 
-    private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE]; // The dungeon floor texture
-    private ArrayList<Point2D> selectedAttackTiles = new ArrayList<>();
-    private ArrayList<Point2D> selectedMoveTiles = new ArrayList<>();
-    private boolean[][] validMovesCache = new boolean[BOARD_SIZE][BOARD_SIZE]; // Valid moves without entity
-    private BasePiece[][] pieces = GameManager.getInstance().pieces; // Where each entity locate
+
+
+    private ArrayList<Point2D> selectedAttackTiles = gameManager.selectedAttackTiles;
+    private ArrayList<Point2D> selectedMoveTiles = gameManager.selectedMoveTiles;
+    private ArrayList<Point2D> selectedSkillTiles = gameManager.selectedSkillTiles;
+    private boolean[][] validMovesCache = gameManager.validMovesCache; // Valid moves without entity
+    private ImageView[][] dungeonFloor = gameManager.dungeonFloor; // The dungeon floor texture
+    private BasePiece[][] piecesPosition = GameManager.getInstance().piecesPosition; // Where each entity locate
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
-    private int newDirection = 1;
-    private int bufferDirection = newDirection;
     private boolean isPieceSelected = false;
     private boolean autoCycle = false;
 
@@ -62,9 +59,9 @@ public class GameScene {
     private Pane animationPane = gameManager.animationPane;
     private GridPane boardPane = gameManager.boardPane;
     private BorderPane root;
-    private VBox rightPane;
-    private VBox leftPane;
-    private StackPane centerPane;
+    private VBox rightPane; // Contain right side UI
+    private VBox leftPane; // Contain left side UI
+    private StackPane centerPane; // Contain the game board
 
     private Runnable renderLogic;
     private Runnable updateLogic;
@@ -121,7 +118,7 @@ public class GameScene {
         renderLogic = () -> {
             // Render game graphics
             if (gameManager.isInAttackMode) {
-                showValidAttackRange(player.getRow(), player.getCol());
+                AttackHandler.showValidAttackRange(player.getRow(), player.getCol());
             }
         };
 
@@ -184,7 +181,7 @@ public class GameScene {
                 square.setFitHeight(SQUARE_SIZE);
                 square.setImage(imageScaler.resample(new Image(Config.FloorPath), 2)); // Set texture of dungeon floor
                 gridPane.add(square, col, row);
-                squares[row][col] = square;
+                dungeonFloor[row][col] = square;
             }
         }
     }
@@ -197,7 +194,7 @@ public class GameScene {
                 if (dungeonLayout[row][col] == '#') {
                     BaseWallPiece wall = new BaseWallPiece(row, col);
                     placePiece(wall);
-                    pieces[row][col] = wall;
+                    piecesPosition[row][col] = wall;
                 }
             }
         }
@@ -247,7 +244,7 @@ public class GameScene {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 final int currentRow = row; // Make row effectively final
                 final int currentCol = col; // Make col effectively final
-                ImageView square = squares[row][col];
+                ImageView square = dungeonFloor[row][col];
                 square.setOnMouseClicked(event -> {
                     if(event.getButton() == MouseButton.PRIMARY){
                         //left click for moving & attack
@@ -269,6 +266,8 @@ public class GameScene {
             return;
         }
 
+        // ------------------------- Attack Mode -------------------------
+
         boolean isInAttackMode = gameManager.isInAttackMode;
 
         if (isInAttackMode) {
@@ -276,7 +275,7 @@ public class GameScene {
             // Check if the clicked square is within showValid attack range
             if (player.validAttack(row, col)) {
                 // Check if there is a monster on the clicked square
-                if (pieces[row][col] instanceof BaseMonsterPiece monsterPiece) {
+                if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     // Perform the attack on the monster
                     System.out.println("Player attack " + monsterPiece.getClass().getSimpleName() + " @ " + row + " " + col);
                     player.attack(monsterPiece);
@@ -287,21 +286,45 @@ public class GameScene {
                 // Player clicked outside valid attack range, exit attack mode
                 exitAttackMode();
             }
-
             return;
         }
+
+        // ------------------------- Skill Mode -------------------------
+
+        boolean isInUseSkillMode = gameManager.isInUseSkillMode;
+
+        if (isInUseSkillMode && gameManager.selectedSkill != null) {
+            if (gameManager.selectedSkill.validRange(row, col)) {
+                // Check if there is a monster on the clicked square
+                if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
+                    // Perform the attack on the monster
+                    gameManager.selectedSkill.perform(monsterPiece);
+                    resetSelection(2);
+                    if (!monsterPiece.isAlive()) removePiece(monsterPiece);
+                }
+            } else {
+                // Cancel skill selection
+                resetSelection(2);
+            }
+            return;
+        }
+
+        // ------------------------- Movement Mode -------------------------
 
         if (player.getRow() == row && player.getCol() == col) {
             // toggle move selection mode by click on player's grid
             // Show valid moves by changing the color of adjacent squares
             isPieceSelected = !isPieceSelected;
-            if(isPieceSelected) showValidMoves(row, col);
+            if(isPieceSelected){
+                System.out.println("SHOW VALID MOVE!!!!!!!");
+                MovementHandler.showValidMoves(row, col);
+            }
             else resetSelection(0);
 
         } else if (isPieceSelected) {
-            if (validMovesCache[row][col] && player.validMove(row, col) && pieces[row][col] == null) {
+            if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
                 System.out.println("Moving player to square (" + row + ", " + col + ")");
-                movePlayer(row, col);
+                MovementHandler.movePlayer(row, col);
             } else {
                 System.out.println("Invalid move");
             }
@@ -309,35 +332,10 @@ public class GameScene {
         }
     }
 
-    private void movePlayer(int row, int col) {
-        if (Config.MOVE_ACTIONPOINT > player.getCurrentActionPoint()) {
-            System.out.println("Not enough Action Point");
-            return;
-        }
-
-        player.decreaseActionPoint(Config.MOVE_ACTIONPOINT);
-
-        newDirection = Integer.compare(col, player.getCol());
-        if (bufferDirection != newDirection) {
-            player.changeDirection(newDirection);
-            bufferDirection = newDirection;
-        }
-
-        //move player across tiles
-        player.moveWithTransition(row , col);
-
-        pieces[player.getRow()][player.getCol()] = null;
-        pieces[row][col] = player;
-
-        player.setRow(row);
-        player.setCol(col);
-    }
-
     private boolean isValidMove(int row, int col) {
-        if (pieces[row][col] instanceof BaseWallPiece) {
+        if (piecesPosition[row][col] instanceof BaseWallPiece) {
             return false; // Destination square contains a wall, invalid move
         }
-
         return true;
     }
 
@@ -350,70 +348,38 @@ public class GameScene {
         }
     }
 
-    private void showValidMoves(int row, int col) {
-        // Iterate over adjacent squares and update images based on cached valid moves
-        for (int dRow = -1; dRow <= 1; dRow++) {
-            for (int dCol = -1; dCol <= 1; dCol++) {
-                int newRow = row + dRow;
-                int newCol = col + dCol;
-                // Check if the new position is within the board bounds and not the current position
-                if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
-                    if (validMovesCache[newRow][newCol] && pieces[newRow][newCol] == null) {
-                        selectedMoveTiles.add(new Point2D(newRow , newCol));
-                        squares[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidMovePath), 2)); // Set texture to indicate valid move
-                    }
-                }
-            }
-        }
-    }
-
-    private void showValidAttackRange(int row, int col) {
-        int attackRange = 1; // Change this according to the player's attack range
-
-        for (int dRow = -attackRange; dRow <= attackRange; dRow++) {
-            for (int dCol = -attackRange; dCol <= attackRange; dCol++) {
-                int newRow = row + dRow;
-                int newCol = col + dCol;
-                // Check if the new position is within the board bounds and not the current position
-                if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
-                    // Check if the square is within the attack range using the player's validAttack method
-                    if (player.validAttack(newRow, newCol)) {
-                        // Highlight or mark the square to indicate it's within the attack range
-                        selectedAttackTiles.add(new Point2D(newRow , newCol));
-                        squares[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidAttackPath), 2)); // Set texture to indicate valid attack
-                    }
-                }
-            }
-        }
-    }
-
 
     public void resetSelection(int type) {
-    //reset selection indicator for each type
         isPieceSelected = false;
 
-        if(type == 0){//reset move selection
-            // Reset the texture of all squares to the default floor texture
+        if(type == 0){
+            //reset move Selected Tiles
             for (int i = 0  ; i < selectedMoveTiles.size() ; i++){
-                squares[(int) selectedMoveTiles.get(i).getX()][(int) selectedMoveTiles.get(i).getY()]
+                dungeonFloor[(int) selectedMoveTiles.get(i).getX()][(int) selectedMoveTiles.get(i).getY()]
                         .setImage(new Image(Config.FloorPath));
             }
             selectedMoveTiles.clear();
         }
         else if(type == 1){//reset attack selection
-            // Reset the texture of all squares to the default floor texture
+            //reset attack Selected Tiles
             for (int i = 0  ; i < selectedAttackTiles.size() ; i++){
-                squares[(int) selectedAttackTiles.get(i).getX()][(int) selectedAttackTiles.get(i).getY()]
+                dungeonFloor[(int) selectedAttackTiles.get(i).getX()][(int) selectedAttackTiles.get(i).getY()]
                         .setImage(new Image(Config.FloorPath));
             }
             selectedAttackTiles.clear();
         }
+        else if (type == 2) {
+            //reset skill Selected Tiles
+            for (int i = 0  ; i < selectedSkillTiles.size() ; i++){
+                dungeonFloor[(int) selectedSkillTiles.get(i).getX()][(int) selectedSkillTiles.get(i).getY()]
+                        .setImage(new Image(Config.FloorPath));
+            }
+            selectedSkillTiles.clear();
+            gameManager.selectedSkill = null;
 
-    }
-
-    private boolean isValidPosition(int row, int col) {
-        // Check if the position is inside the board
-        return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE;
+        }
+        //set cursor back to normal
+        gameManager.updateCursor(scene, Config.DefaultCursor);
     }
 
     private void placeEntityRandomly(BasePiece entity) {
@@ -421,7 +387,7 @@ public class GameScene {
         do {
             row = (int) (Math.random() * BOARD_SIZE);
             col = (int) (Math.random() * BOARD_SIZE);
-        } while (!isValidMove(row, col) || pieces[row][col] != null);
+        } while (!isValidMove(row, col) || piecesPosition[row][col] != null);
 
         if (entity instanceof BasePlayerPiece) {
             entity.getTexture().setOnMouseClicked(event -> handleSquareClick(entity.getRow(), entity.getCol()));
@@ -429,7 +395,7 @@ public class GameScene {
 
         entity.setRow(row);
         entity.setCol(col);
-        pieces[row][col] = entity; // Mark the position as occupied
+        piecesPosition[row][col] = entity; // Mark the position as occupied
         placePiece(entity);
     }
 
@@ -438,9 +404,9 @@ public class GameScene {
         // to try re-generate the dungeon
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
-                if (pieces[row][col] != null) {
-                    boardPane.getChildren().remove(pieces[row][col].getTexture());
-                    pieces[row][col] = null;
+                if (piecesPosition[row][col] != null) {
+                    boardPane.getChildren().remove(piecesPosition[row][col].getTexture());
+                    piecesPosition[row][col] = null;
                 }
             }
         }
@@ -463,7 +429,7 @@ public class GameScene {
             animationPane.getChildren().remove(monsterPiece.animationImage);
 
         // Set the corresponding entry in the pieces array to null
-        pieces[row][col] = null;
+        piecesPosition[row][col] = null;
     }
 
     private void setupKeyEvents(Scene scene) {
@@ -486,8 +452,8 @@ public class GameScene {
                 case F3:
                     for (int i = 0; i < Config.BOARD_SIZE; i++) {
                         for (int j = 0; j < Config.BOARD_SIZE; j++) {
-                            if (pieces[i][j] != null && !(pieces[i][j] instanceof BaseWallPiece)) {
-                                System.out.println("There is " + pieces[i][j] + "at " + i + " " + j);
+                            if (piecesPosition[i][j] != null && !(piecesPosition[i][j] instanceof BaseWallPiece)) {
+                                System.out.println("There is " + piecesPosition[i][j] + "at " + i + " " + j);
                             }
                         }
                     }
@@ -519,17 +485,10 @@ public class GameScene {
         }
     }
 
-    private void exitAttackMode() {
+    public void exitAttackMode() {
         gameManager.isInAttackMode = false;
         resetSelection(1);
         gameManager.updateCursor(scene, Config.DefaultCursor);
     }
 
-    private void exitInventoryMode() {
-        gameManager.isInInventoryMode = false;
-    }
-
-    private void exitSkillMode() {
-        gameManager.isInUseSkillMode = false;
-    }
 }

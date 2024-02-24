@@ -9,7 +9,10 @@ import logic.GameManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
 import pieces.enemies.BaseMonsterPiece;
+import skills.BaseSkill;
 import utils.Config;
+
+import java.util.List;
 
 public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private int currentHp;
@@ -21,14 +24,15 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private boolean canAct;
     protected int currentDirection;
     private int attackDamage;
+    protected List<BaseSkill> skills;
     protected final int ATTACK_COST = 1;
 
-    //TODO this is animation testing
     protected SpriteAnimation spriteAnimation;
     public ImageView animationImage;
     protected SpriteAnimation meleeAttackAnimation;
     public ImageView meleeAttackImage;
     protected TranslateTransition moveTransition;
+
     //offset for image
     protected int offsetX=0;
     protected int offsetY=0;
@@ -54,6 +58,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void setCurrentHealth(int health) {
         this.currentHp = Math.max(health, 0);
         if (currentHp == 0) onDeath();
+    }
+
+    public void takeDamage(int damage) {
+        setCurrentHealth(currentHp - damage);
     }
 
     @Override
@@ -91,6 +99,11 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         return canAct;
     }
 
+    public void decreaseMana(int decrease) {
+        this.currentMana = Math.max(0, this.currentMana - decrease);
+        GameManager.getInstance().guiManager.updateGUI();
+    }
+
     public int getCurrentMana() {
         return currentMana;
     }
@@ -115,6 +128,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         this.attackDamage = Math.max(attackDamage, 0);
     }
 
+    public List<BaseSkill> getSkills() {
+        return skills;
+    }
+
     @Override
     public void setMaxHealth(int maxHealth) {
         int maxHpBuffer = maxHp;
@@ -135,7 +152,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         System.out.println("Game Over! You are dead");
     }
 
-    public abstract void moveWithTransition(int col , int row);
+    public abstract void moveWithTransition(int row , int col);
 
     public abstract void startTurn();
 
@@ -144,10 +161,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public abstract boolean validMove(int row, int col); // To set valid move for each classes
 
     public abstract boolean validAttack(int row, int col); // To set valid attack for each classes
-
-    public void takeDamage(int damage) {
-        setCurrentHealth(currentHp - damage);
-    }
 
     public void changeDirection(int direction) {
 

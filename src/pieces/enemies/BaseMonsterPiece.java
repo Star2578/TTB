@@ -2,7 +2,6 @@ package pieces.enemies;
 
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import logic.GameManager;
 import logic.SpriteAnimation;
 import pieces.BasePiece;
@@ -82,7 +81,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
 
         moveWithTransition(newRow , newCol);
 
-        BasePiece[][] pieces = GameManager.getInstance().pieces;
+        BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
         pieces[getRow()][getCol()] = null;
         pieces[newRow][newCol] = this;
 
