@@ -14,6 +14,7 @@ import logic.GameManager;
 import logic.ImageScaler;
 import logic.SceneManager;
 import logic.TurnManager;
+import logic.handlers.AttackHandler;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 
@@ -86,8 +87,8 @@ public class GUIManager {
 
         // Player Character Image
         ImageView playerCharacterImage = new ImageView(imageScaler.resample(new Image(Config.KnightLargePath), 2));
-        playerCharacterImage.setFitWidth(80);
-        playerCharacterImage.setFitHeight(80);
+        playerCharacterImage.setPreserveRatio(true);
+        playerCharacterImage.setFitWidth(70);
 //       playerCharacterImage.setPreserveRatio(true);
 
         //-------------<player status section>----------------------------------
@@ -153,13 +154,16 @@ public class GUIManager {
             if (GameManager.getInstance().selectedSkill != null) {
                 // TODO: Reset Selection
                 GameManager.getInstance().gameScene.resetSelection(2);
+
             }
-            GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
             GameManager.getInstance().isInAttackMode = true;
+            GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+            AttackHandler.showValidAttackRange(GameManager.getInstance().player.getRow() , GameManager.getInstance().player.getCol());
         });
 
         endTurnButton.setOnMouseClicked(mouseEvent -> {
             turnManager.endPlayerTurn();
+            GameManager.getInstance().gameScene.exitAttackMode();
             disableButton();
         });
 

@@ -12,7 +12,9 @@ import utils.Config;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
+import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
 
 public class Zombie extends BaseMonsterPiece{
@@ -103,19 +105,23 @@ public class Zombie extends BaseMonsterPiece{
     }
 
     public void moveWithTransition(int row , int col){
-        //stop monster from do other action
+        spriteAnimation.changeAnimation(4,  1);
+
         //slowly move to target col,row
         moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
         moveTransition.setToY( (row-getRow()) * SQUARE_SIZE + offsetY);
 
         moveTransition.setOnFinished(actionEvent->{
+            //set image layering depend on row
+            animationImage.setViewOrder(BOARD_SIZE - row);
             //move real coordinate to new col,row
-            animationImage.setX(col*SQUARE_SIZE);
-            animationImage.setY(row*SQUARE_SIZE);
+            animationImage.setX(col*SQUARE_SIZE + offsetX);
+            animationImage.setY(row*SQUARE_SIZE + offsetY);
             //set translateProperty back to default
             animationImage.translateXProperty().set(offsetX);
             animationImage.translateYProperty().set(offsetY);
-            //now monster can do actions
+
+            spriteAnimation.changeAnimation(4,  0);
         });
 
         moveTransition.play();
@@ -185,14 +191,14 @@ public class Zombie extends BaseMonsterPiece{
     protected void setupAnimation(){
         //===================<animation section>==========================================
         offsetX=0;
-        offsetY=-8;
+        offsetY=-4;
         //sprite animations for monster
-        animationImage = new ImageView(new Image(Config.ZombieIdlePath));
+        animationImage = new ImageView(new Image(Config.ZombieAnimationPath));
         animationImage.setPreserveRatio(true);
         animationImage.setTranslateX(offsetX);
         animationImage.setTranslateY(offsetY);
         animationImage.setDisable(true);
-        spriteAnimation=new SpriteAnimation(animationImage,4,1,4,36,36,5);
+        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,32,32,5);
         spriteAnimation.start();
 
         //setup moveTranslate behaviour

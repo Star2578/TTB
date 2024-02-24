@@ -29,7 +29,7 @@ public class SpriteAnimation extends AnimationTimer {
         this.imageView = imageView;
         imageView.setViewport(new Rectangle2D(0, 0, frameWidth, frameHeight));
 
-        cols = columns;
+        this.cols = columns;
         this.rows = rows;
         this.totalFrames = totalFrames;
         this.frameWidth = frameWidth;
@@ -42,35 +42,10 @@ public class SpriteAnimation extends AnimationTimer {
     public void handle(long now) {
         int frameJump = (int) Math.floor((now - lastFrame) / (1e9/ fps)); //Determine how many frames we need to advance to maintain frame rate independence
 
-        //Do a bunch of math to determine where the viewport needs to be positioned on the sprite sheet
         if (frameJump >= 1) {
-
-
             lastFrame = now;
-            int addRows = (int) Math.floor((float) frameJump / (float) cols);
-            int frameAdd = frameJump - (addRows * cols);
-
-            if (currentCol + frameAdd >= cols) {
-                //if reach end frame, stop if loop = false
-                if(!loop) stop();
-                currentRow += addRows + 1;
-                currentCol = frameAdd - (cols - currentCol);
-            } else {
-                currentRow += addRows;
-                currentCol += frameAdd;
-            }
-            currentRow = (currentRow >= rows) ? currentRow - ((int) Math.floor((float) currentRow / rows) * rows) : currentRow;
-
-            //The last row may or may not contain the full number of columns
-            if ((currentRow * cols) + currentCol >= totalFrames) {
-                currentRow = 0;
-                currentCol = Math.abs(currentCol - (totalFrames - (int) (Math.floor((float) totalFrames / cols) * cols)));
-            }
-
+            currentCol = (currentCol + 1) % cols;
             imageView.setViewport(new Rectangle2D(currentCol * frameWidth, currentRow * frameHeight, frameWidth, frameHeight));
-
-
-
         }
     }
 
@@ -97,13 +72,13 @@ public class SpriteAnimation extends AnimationTimer {
         this.loop=b;
     }
 
-    public void changeAnimation(int newCols , int newRows ){
+    public void changeAnimation(int totalCols , int targetRows ){
         //in our game Sprite sheet design : new row -> new sprite animation
-        currentCol=0; currentRow=0;
-        this.cols=newCols; this.rows=newRows;
+        this.cols = totalCols;
 
         //go back to first frame
-        imageView.setViewport(new Rectangle2D(currentCol*frameWidth ,currentRow*frameHeight , frameWidth , frameHeight));
+        currentCol = 0; currentRow = targetRows;
 
+        imageView.setViewport(new Rectangle2D(currentCol*frameWidth,currentRow*frameHeight , frameWidth , frameHeight));
     }
 }

@@ -20,8 +20,8 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     public ImageView animationImage;
     protected TranslateTransition moveTransition;
     //offset for image
-    protected int offsetX=0;
-    protected int offsetY=0;
+    public int offsetX=0;
+    public int offsetY=0;
 
 
     public BaseMonsterPiece(int row, int col, int defaultDirection) {

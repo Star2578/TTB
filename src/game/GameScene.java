@@ -117,9 +117,9 @@ public class GameScene {
         // Define render logic
         renderLogic = () -> {
             // Render game graphics
-            if (gameManager.isInAttackMode) {
-                AttackHandler.showValidAttackRange(player.getRow(), player.getCol());
-            }
+//            if (gameManager.isInAttackMode) {
+//                AttackHandler.showValidAttackRange(player.getRow(), player.getCol());
+//            }
         };
 
         // Create an instance of GameLoop with the update and render logic
@@ -205,27 +205,25 @@ public class GameScene {
         //place Piece to the board
         if(piece instanceof BasePlayerPiece){
             //setup player image size
-            ImageView pieceView = ((BasePlayerPiece) piece).animationImage;
-            pieceView.setFitWidth(SQUARE_SIZE);
-            pieceView.setFitHeight(SQUARE_SIZE);
+            BasePlayerPiece p = ((BasePlayerPiece) piece);
+            p.animationImage.setFitWidth(SQUARE_SIZE);
             //set position
-            ((BasePlayerPiece) piece).animationImage.setX(piece.getCol()*SQUARE_SIZE);
-            ((BasePlayerPiece) piece).animationImage.setY(piece.getRow()*SQUARE_SIZE);
+            p.animationImage.setX(piece.getCol()*SQUARE_SIZE + p.offsetX);
+            p.animationImage.setY(piece.getRow()*SQUARE_SIZE + p.offsetY);
             //add player sprite to animation pane
-            animationPane.getChildren().add(((BasePlayerPiece) piece).animationImage);
-            GameManager.getInstance().animationPane.getChildren().add(player.meleeAttackImage);
+            animationPane.getChildren().add(p.animationImage);
 
+            GameManager.getInstance().animationPane.getChildren().add(player.meleeAttackImage);
         }
         else if (piece instanceof BaseMonsterPiece) {
             //setup monster image size
-            ImageView pieceView = ((BaseMonsterPiece) piece).animationImage;
-            pieceView.setFitWidth(SQUARE_SIZE);
-            pieceView.setFitHeight(SQUARE_SIZE);
+            BaseMonsterPiece m = ((BaseMonsterPiece) piece);
+            m.animationImage.setFitWidth(SQUARE_SIZE);
             //set position
-            ((BaseMonsterPiece) piece).animationImage.setX(piece.getCol() * SQUARE_SIZE);
-            ((BaseMonsterPiece) piece).animationImage.setY(piece.getRow() * SQUARE_SIZE);
+            m.animationImage.setX(piece.getCol() * SQUARE_SIZE + m.offsetX);
+            m.animationImage.setY(piece.getRow() * SQUARE_SIZE + m.offsetY);
             //add monster sprite to animation pane
-            animationPane.getChildren().add(((BaseMonsterPiece) piece).animationImage);
+            animationPane.getChildren().add(m.animationImage);
         }
         else{
             ImageView pieceView = piece.getTexture();
@@ -316,7 +314,6 @@ public class GameScene {
             // Show valid moves by changing the color of adjacent squares
             isPieceSelected = !isPieceSelected;
             if(isPieceSelected){
-                System.out.println("SHOW VALID MOVE!!!!!!!");
                 MovementHandler.showValidMoves(row, col);
             }
             else resetSelection(0);
@@ -357,8 +354,10 @@ public class GameScene {
             for (int i = 0  ; i < selectedMoveTiles.size() ; i++){
                 dungeonFloor[(int) selectedMoveTiles.get(i).getX()][(int) selectedMoveTiles.get(i).getY()]
                         .setImage(new Image(Config.FloorPath));
+
             }
             selectedMoveTiles.clear();
+
         }
         else if(type == 1){//reset attack selection
             //reset attack Selected Tiles
@@ -367,6 +366,7 @@ public class GameScene {
                         .setImage(new Image(Config.FloorPath));
             }
             selectedAttackTiles.clear();
+
         }
         else if (type == 2) {
             //reset skill Selected Tiles

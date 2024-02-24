@@ -22,11 +22,11 @@ public class Config {
     // Player
     public static String KnightPath = "sprites/player/Knight_Small.png";
     public static String KnightLargePath = "sprites/player/Knight_Large.png";
-    public static String KnightIdlePath = "sprites/player/knight_idle.png";
+    public static String KnightAnimationPath = "sprites/player/knight_sprite_sheet.png";
 
     // Enemies
     public static String ZombiePath = "sprites/enemies/zombie.png";
-    public static String ZombieIdlePath = "sprites/enemies/zombie_idle.png";
+    public static String ZombieAnimationPath = "sprites/enemies/zombie_sprite_sheet.png";
 
     // Dungeon
     public static String WallPath = "sprites/ground/wall_1.png";

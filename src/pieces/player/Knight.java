@@ -1,19 +1,17 @@
 package pieces.player;
 
-import com.sun.javafx.geom.Vec2d;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import logic.SpriteAnimation;
-import logic.ui.GUIManager;
 import pieces.enemies.BaseMonsterPiece;
 import skills.knight.Slash;
 import utils.Config;
 
 import java.util.ArrayList;
 
+import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
 
 public class Knight extends BasePlayerPiece {
@@ -39,18 +37,22 @@ public class Knight extends BasePlayerPiece {
     public void moveWithTransition(int row , int col){
         //stop player from do other action
         setCanAct(false);
+        spriteAnimation.changeAnimation(4 , 2);
         //slowly move to target col,row
         moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
         moveTransition.setToY( (row-getRow()) * SQUARE_SIZE + offsetY);
 
         moveTransition.setOnFinished(actionEvent->{
+            //set image layering depend on row
+            animationImage.setViewOrder(BOARD_SIZE - row);
             //move real coordinate to new col,row
-            animationImage.setX(col*SQUARE_SIZE);
-            animationImage.setY(row*SQUARE_SIZE);
+            animationImage.setX(col*SQUARE_SIZE + offsetX);
+            animationImage.setY(row*SQUARE_SIZE + offsetY);
             //set translateProperty back to default
             animationImage.translateXProperty().set(offsetX);
             animationImage.translateYProperty().set(offsetY);
             //now player can do actions
+            spriteAnimation.changeAnimation(4 , 0);
             setCanAct(true);
         });
 
@@ -121,17 +123,33 @@ public class Knight extends BasePlayerPiece {
     }
 
     @Override
+    public void takeDamage(int damage) {
+        super.takeDamage(damage);
+
+        //change to hit animation for 0.4 secs
+        spriteAnimation.changeAnimation(1,1);
+        new Thread(()-> {
+            try {
+                Thread.sleep(400);
+                spriteAnimation.changeAnimation(4,0);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();;
+    }
+
+    @Override
     protected void setupAnimation(){
         //===================<animation section>==========================================
-        offsetX=3;
-        offsetY=-8;
-        //sprite animations for player
-        animationImage = new ImageView(new Image(Config.KnightIdlePath));
+        offsetX=0;
+        offsetY=-15;
+        //idle sprite animations for player
+        animationImage = new ImageView(new Image(Config.KnightAnimationPath));
         animationImage.setPreserveRatio(true);
         animationImage.setTranslateX(offsetX);
         animationImage.setTranslateY(offsetY);
         animationImage.setDisable(true);
-        spriteAnimation=new SpriteAnimation(animationImage,4,1,4,30,40,5);
+        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,32,56,6);
         spriteAnimation.start();
 
         //attack animation for player

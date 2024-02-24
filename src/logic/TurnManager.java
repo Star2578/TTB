@@ -41,6 +41,9 @@ public class TurnManager {
         // End the turn for the player
         player.setCanAct(false);
         System.out.println("Player Turn End");
+        GameManager.getInstance().gameScene.resetSelection(0);
+        GameManager.getInstance().gameScene.resetSelection(1);
+        GameManager.getInstance().gameScene.resetSelection(2);
         startEnvironmentTurn();
     }
 

@@ -34,8 +34,8 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     protected TranslateTransition moveTransition;
 
     //offset for image
-    protected int offsetX=0;
-    protected int offsetY=0;
+    public int offsetX=0;
+    public int offsetY=0;
 
     public BasePlayerPiece(int row, int col, int defaultDirection) {
         super("Player", new ImageView(Config.PlaceholderPath), row, col);
