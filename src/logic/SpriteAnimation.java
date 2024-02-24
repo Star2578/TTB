@@ -11,8 +11,8 @@ public class SpriteAnimation extends AnimationTimer {
     private final int totalFrames; //Total number of frames in the sequence
     private final float fps; //frames per second I.E. 24
 
-    private final int cols; //Number of columns on the sprite sheet
-    private final int rows; //Number of rows on the sprite sheet
+    private int cols; //Number of columns on the sprite sheet
+    private int rows; //Number of rows on the sprite sheet
 
     private final int frameWidth; //Width of an individual frame
     private final int frameHeight; //Height of an individual frame
@@ -44,11 +44,15 @@ public class SpriteAnimation extends AnimationTimer {
 
         //Do a bunch of math to determine where the viewport needs to be positioned on the sprite sheet
         if (frameJump >= 1) {
+
+
             lastFrame = now;
             int addRows = (int) Math.floor((float) frameJump / (float) cols);
             int frameAdd = frameJump - (addRows * cols);
 
             if (currentCol + frameAdd >= cols) {
+                //if reach end frame, stop if loop = false
+                if(!loop) stop();
                 currentRow += addRows + 1;
                 currentCol = frameAdd - (cols - currentCol);
             } else {
@@ -65,8 +69,7 @@ public class SpriteAnimation extends AnimationTimer {
 
             imageView.setViewport(new Rectangle2D(currentCol * frameWidth, currentRow * frameHeight, frameWidth, frameHeight));
 
-            //stop when done & reset from start (only when loop set to true)
-            if(!loop && currentCol>=totalFrames-1) stop();
+
 
         }
     }
@@ -74,19 +77,19 @@ public class SpriteAnimation extends AnimationTimer {
     @Override
     public void stop(){
         if(!this.isPause){
+            imageView.setVisible(false);
             super.stop();
             this.isPause=true;
             currentCol=0;
-            imageView.setVisible(false);
         }
     }
 
     @Override
     public void start(){
         if(this.isPause) {
+            imageView.setVisible(true);
             super.start();
             this.isPause=false;
-            imageView.setVisible(true);
         }
     }
 
@@ -94,4 +97,13 @@ public class SpriteAnimation extends AnimationTimer {
         this.loop=b;
     }
 
+    public void changeAnimation(int newCols , int newRows ){
+        //in our game Sprite sheet design : new row -> new sprite animation
+        currentCol=0; currentRow=0;
+        this.cols=newCols; this.rows=newRows;
+
+        //go back to first frame
+        imageView.setViewport(new Rectangle2D(currentCol*frameWidth ,currentRow*frameHeight , frameWidth , frameHeight));
+
+    }
 }

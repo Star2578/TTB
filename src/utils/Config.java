@@ -35,11 +35,15 @@ public class Config {
     public static String ValidMovePath = "sprites/ground/selected_floor_1.png";
     public static String ValidAttackPath = "sprites/ground/attack_floor_1.png";
 
+    // Attacks animation
+    public static String meleeAttackPath = "sprites/attacks/testLocation.png";
+
     //animation
     public enum state{
         IDLE,
         MOVE,
         ATTACK
     }
+
 
 }

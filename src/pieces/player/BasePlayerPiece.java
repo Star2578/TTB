@@ -1,6 +1,7 @@
 package pieces.player;
 
 import javafx.animation.TranslateTransition;
+import javafx.beans.Observable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import logic.SpriteAnimation;
@@ -18,13 +19,15 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private int currentMana;
     private int maxMana;
     private boolean canAct;
-    private int currentDirection;
+    protected int currentDirection;
     private int attackDamage;
     protected final int ATTACK_COST = 1;
 
     //TODO this is animation testing
     protected SpriteAnimation spriteAnimation;
     public ImageView animationImage;
+    protected SpriteAnimation meleeAttackAnimation;
+    public ImageView meleeAttackImage;
     protected TranslateTransition moveTransition;
     //offset for image
     protected int offsetX=0;
@@ -159,4 +162,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     }
 
     public abstract void attack(BaseMonsterPiece monsterPiece); // This will differ for each class of player
+
+    protected abstract void setupAnimation();
 }

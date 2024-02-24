@@ -1,5 +1,6 @@
 package logic;
 
+import game.GameScene;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Cursor;
@@ -7,6 +8,7 @@ import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
@@ -24,6 +26,7 @@ public class GameManager {
     public GUIManager guiManager;
     public BasePlayerPiece player;
     public GridPane boardPane;
+    public Pane animationPane;
 
     public BasePiece[][] pieces = new BasePiece[Config.BOARD_SIZE][Config.BOARD_SIZE];
     public List<BasePiece> environmentPieces = new ArrayList<>();
@@ -35,6 +38,7 @@ public class GameManager {
     public GameManager() {
         player = new Knight(0, 0, 1);
         boardPane = new GridPane();
+        animationPane = new Pane();
         turnManager = new TurnManager(player, environmentPieces);
         guiManager = new GUIManager(turnManager, player);
     }

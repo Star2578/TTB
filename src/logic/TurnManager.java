@@ -1,5 +1,6 @@
 package logic;
 
+import game.GameScene;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -38,7 +39,6 @@ public class TurnManager {
 
         this.isPlayerTurn = false;
         // End the turn for the player
-        player.endTurn();
         player.setCanAct(false);
         System.out.println("Player Turn End");
         startEnvironmentTurn();
@@ -57,7 +57,7 @@ public class TurnManager {
                 if (currentEnvironmentPieceIndex == environmentPieces.size()) {
                     currentEnvironmentPieceIndex = 0;
                     startPlayerTurn();
-                    GameManager.getInstance().guiManager.enableEndTurnButton();
+                    GameManager.getInstance().guiManager.enableButton();
                 } else {
                     startEnvironmentTurn();
                 }

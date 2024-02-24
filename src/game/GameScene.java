@@ -46,7 +46,8 @@ public class GameScene {
     private Timeline autoCycleTurn;
 
     private ImageView[][] squares = new ImageView[BOARD_SIZE][BOARD_SIZE]; // The dungeon floor texture
-    private ArrayList<Point2D> selectedTiles = new ArrayList<>();
+    private ArrayList<Point2D> selectedAttackTiles = new ArrayList<>();
+    private ArrayList<Point2D> selectedMoveTiles = new ArrayList<>();
     private boolean[][] validMovesCache = new boolean[BOARD_SIZE][BOARD_SIZE]; // Valid moves without entity
     private BasePiece[][] pieces = GameManager.getInstance().pieces; // Where each entity locate
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
@@ -58,7 +59,7 @@ public class GameScene {
     //------------<UI>----------------------------------------------------
 
     private Scene scene;
-    private Pane animationPane;
+    private Pane animationPane = gameManager.animationPane;
     private GridPane boardPane = gameManager.boardPane;
     private BorderPane root;
     private VBox rightPane;
@@ -79,10 +80,10 @@ public class GameScene {
 
         //this pane contains all animation-related nodes
         //it's placed transparently over boardPane
-        animationPane = new Pane();
         animationPane.setMaxWidth(SQUARE_SIZE*BOARD_SIZE);
         animationPane.setMaxHeight(SQUARE_SIZE*BOARD_SIZE);
         animationPane.setDisable(true);
+
 
         rightPane = new VBox(); // Pane for right area
         rightPane.setBackground(Background.fill(Color.DARKRED));
@@ -215,6 +216,8 @@ public class GameScene {
             ((BasePlayerPiece) piece).animationImage.setY(piece.getRow()*SQUARE_SIZE);
             //add player sprite to animation pane
             animationPane.getChildren().add(((BasePlayerPiece) piece).animationImage);
+            GameManager.getInstance().animationPane.getChildren().add(player.meleeAttackImage);
+
         }
         else if (piece instanceof BaseMonsterPiece) {
             //setup monster image size
@@ -270,7 +273,7 @@ public class GameScene {
 
         if (isInAttackMode) {
             System.out.println("Player Prepare to attack");
-            // Check if the clicked square is within valid attack range
+            // Check if the clicked square is within showValid attack range
             if (player.validAttack(row, col)) {
                 // Check if there is a monster on the clicked square
                 if (pieces[row][col] instanceof BaseMonsterPiece monsterPiece) {
@@ -293,7 +296,7 @@ public class GameScene {
             // Show valid moves by changing the color of adjacent squares
             isPieceSelected = !isPieceSelected;
             if(isPieceSelected) showValidMoves(row, col);
-            else resetSelection();
+            else resetSelection(0);
 
         } else if (isPieceSelected) {
             if (validMovesCache[row][col] && player.validMove(row, col) && pieces[row][col] == null) {
@@ -302,7 +305,7 @@ public class GameScene {
             } else {
                 System.out.println("Invalid move");
             }
-            resetSelection();
+            resetSelection(0);
         }
     }
 
@@ -356,7 +359,7 @@ public class GameScene {
                 // Check if the new position is within the board bounds and not the current position
                 if (isValidPosition(newRow, newCol) && (newRow != row || newCol != col)) {
                     if (validMovesCache[newRow][newCol] && pieces[newRow][newCol] == null) {
-                        selectedTiles.add(new Point2D(newRow , newCol));
+                        selectedMoveTiles.add(new Point2D(newRow , newCol));
                         squares[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidMovePath), 2)); // Set texture to indicate valid move
                     }
                 }
@@ -376,7 +379,7 @@ public class GameScene {
                     // Check if the square is within the attack range using the player's validAttack method
                     if (player.validAttack(newRow, newCol)) {
                         // Highlight or mark the square to indicate it's within the attack range
-                        selectedTiles.add(new Point2D(newRow , newCol));
+                        selectedAttackTiles.add(new Point2D(newRow , newCol));
                         squares[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidAttackPath), 2)); // Set texture to indicate valid attack
                     }
                 }
@@ -384,15 +387,28 @@ public class GameScene {
         }
     }
 
-    private void resetSelection() {
+
+    public void resetSelection(int type) {
+    //reset selection indicator for each type
         isPieceSelected = false;
 
-        // Reset the texture of all squares to the default floor texture
-        for (int i = 0  ; i < selectedTiles.size() ; i++){
-            squares[(int) selectedTiles.get(i).getX()][(int) selectedTiles.get(i).getY()]
-                    .setImage(new Image(Config.FloorPath));
+        if(type == 0){//reset move selection
+            // Reset the texture of all squares to the default floor texture
+            for (int i = 0  ; i < selectedMoveTiles.size() ; i++){
+                squares[(int) selectedMoveTiles.get(i).getX()][(int) selectedMoveTiles.get(i).getY()]
+                        .setImage(new Image(Config.FloorPath));
+            }
+            selectedMoveTiles.clear();
         }
-        selectedTiles.clear();
+        else if(type == 1){//reset attack selection
+            // Reset the texture of all squares to the default floor texture
+            for (int i = 0  ; i < selectedAttackTiles.size() ; i++){
+                squares[(int) selectedAttackTiles.get(i).getX()][(int) selectedAttackTiles.get(i).getY()]
+                        .setImage(new Image(Config.FloorPath));
+            }
+            selectedAttackTiles.clear();
+        }
+
     }
 
     private boolean isValidPosition(int row, int col) {
@@ -432,6 +448,7 @@ public class GameScene {
             boardPane.getChildren().remove(entity.getTexture());
         }
         boardPane.getChildren().remove(player.getTexture());
+        animationPane.getChildren().clear();
     }
 
     private void removePiece(BasePiece toRemove) {
@@ -504,7 +521,7 @@ public class GameScene {
 
     private void exitAttackMode() {
         gameManager.isInAttackMode = false;
-        resetSelection();
+        resetSelection(1);
         gameManager.updateCursor(scene, Config.DefaultCursor);
     }
 

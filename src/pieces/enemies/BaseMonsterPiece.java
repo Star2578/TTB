@@ -80,9 +80,6 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     protected void move(int newRow, int newCol) {
         if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) return;
 
-        // Update the position of the monster on the board
-//        GridPane.setRowIndex(getTexture(), newRow);
-//        GridPane.setColumnIndex(getTexture(), newCol);
         moveWithTransition(newRow , newCol);
 
         BasePiece[][] pieces = GameManager.getInstance().pieces;
@@ -107,4 +104,6 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
             imageView.setScaleX(direction); // Flipping the image horizontally if direction is -1
         }
     }
+
+    protected abstract void setupAnimation();
 }

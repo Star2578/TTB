@@ -1,11 +1,14 @@
 package pieces.player;
 
+import com.sun.javafx.geom.Vec2d;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
+import logic.ui.GUIManager;
 import pieces.enemies.BaseMonsterPiece;
 import utils.Config;
 
@@ -22,25 +25,8 @@ public class Knight extends BasePlayerPiece {
         setCanAct(false);
         setAttackDamage(3);
 
-        //===================<animation section>==========================================
-        offsetX=3;
-        offsetY=-8;
-        //sprite animations for player
-        animationImage = new ImageView(new Image(Config.knightIdlePath));
-        animationImage.setPreserveRatio(true);
-        animationImage.setTranslateX(offsetX);
-        animationImage.setTranslateY(offsetY);
-        animationImage.setDisable(true);
-        spriteAnimation=new SpriteAnimation(animationImage,4,1,4,30,40,5);
-        spriteAnimation.start();
-
-        //setup moveTranslate behaviour
-
-        moveTransition = new TranslateTransition();
-        moveTransition.setNode(animationImage);
-        moveTransition.setDuration(Duration.millis(600));
-        moveTransition.setCycleCount(1);
-        //================================================================================
+        //configs values for animation
+        setupAnimation();
     }
 
     public void moveWithTransition(int row , int col){
@@ -100,8 +86,61 @@ public class Knight extends BasePlayerPiece {
             System.out.println("Attack failed: Not enough Action Point");
             return;
         }
+
         decreaseActionPoint(ATTACK_COST);
         monsterPiece.takeDamage(getAttackDamage());
+
+        //make player face to target
+        changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
+        if(currentDirection == -1)meleeAttackImage.setScaleX(-1);
+            else meleeAttackImage.setScaleX(1);
+
+//        //rotate effect to target direction
+//        double xDist = monsterPiece.getCol() - getCol();
+//        double yDist = monsterPiece.getRow() - getRow();
+//        double degree = (Math.acos( xDist / Math.sqrt( xDist*xDist + yDist*yDist) )) * (180.0 / Math.PI);
+//        degree = yDist>0? degree*-1 : degree;
+//        meleeAttackImage.setRotate( yDist<0? 360-degree : -degree);
+
+        //play effect on monster position
+        meleeAttackImage.setX( ( getCol() * SQUARE_SIZE) - (SQUARE_SIZE / 2) - (meleeAttackImage.getFitWidth() / 2) );
+        meleeAttackImage.setY( ( getRow() * SQUARE_SIZE) - (SQUARE_SIZE / 2) - (meleeAttackImage.getFitHeight() / 2) );
+        meleeAttackImage.toFront();
+        //meleeAttackAnimation.start();
+        //TODO=================================
+
+
         System.out.println("Attack success");
+    }
+
+    @Override
+    protected void setupAnimation(){
+        //===================<animation section>==========================================
+        offsetX=3;
+        offsetY=-8;
+        //sprite animations for player
+        animationImage = new ImageView(new Image(Config.knightIdlePath));
+        animationImage.setPreserveRatio(true);
+        animationImage.setTranslateX(offsetX);
+        animationImage.setTranslateY(offsetY);
+        animationImage.setDisable(true);
+        spriteAnimation=new SpriteAnimation(animationImage,4,1,4,30,40,5);
+        spriteAnimation.start();
+
+        //attack animation for player
+        meleeAttackImage = new ImageView(new Image(Config.meleeAttackPath));
+        meleeAttackImage.setPreserveRatio(true);
+        meleeAttackImage.setFitWidth(50);
+        meleeAttackImage.setDisable(true);
+        meleeAttackImage.setVisible(true);
+        meleeAttackAnimation = new SpriteAnimation(meleeAttackImage , 5 , 1 , 5 , 37 , 32 , 8);
+        meleeAttackAnimation.setLoop(false);
+
+        //setup moveTranslate behaviour
+        moveTransition = new TranslateTransition();
+        moveTransition.setNode(animationImage);
+        moveTransition.setDuration(Duration.millis(600));
+        moveTransition.setCycleCount(1);
+        //================================================================================
     }
 }

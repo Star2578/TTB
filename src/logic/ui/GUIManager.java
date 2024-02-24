@@ -151,7 +151,7 @@ public class GUIManager {
 
         endTurnButton.setOnMouseClicked(mouseEvent -> {
             turnManager.endPlayerTurn();
-            endTurnButton.setDisable(true);
+            disableButton();
         });
 
         playerOptionButtonBox.getChildren().addAll(inventoryButton, useItemButton, attackButton, useSkillsButton, endTurnButton);
@@ -245,7 +245,17 @@ public class GUIManager {
         displayActionPoint.setText("Action Point: " + player.getCurrentActionPoint() + "/" + player.getMaxActionPoint());
     }
 
-    public void enableEndTurnButton(){
+    public void enableButton(){
+        useItemButton.setDisable(false);
+        useSkillsButton.setDisable(false);
+        attackButton.setDisable(false);
         endTurnButton.setDisable(false);
+    }
+
+    public void disableButton(){
+        useItemButton.setDisable(true);
+        useSkillsButton.setDisable(true);
+        attackButton.setDisable(true);
+        endTurnButton.setDisable(true);
     }
 }

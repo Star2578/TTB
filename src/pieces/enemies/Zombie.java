@@ -37,24 +37,8 @@ public class Zombie extends BaseMonsterPiece{
         this.validMovesCache = validMovesCache;
         random = new Random();
 
-        //===================<animation section>==========================================
-        offsetX=0;
-        offsetY=-8;
-        //sprite animations for monster
-        animationImage = new ImageView(new Image(Config.zombieIdlePath));
-        animationImage.setPreserveRatio(true);
-        animationImage.setTranslateX(offsetX);
-        animationImage.setTranslateY(offsetY);
-        animationImage.setDisable(true);
-        spriteAnimation=new SpriteAnimation(animationImage,4,1,4,36,36,5);
-        spriteAnimation.start();
-
-        //setup moveTranslate behaviour
-        moveTransition = new TranslateTransition();
-        moveTransition.setNode(animationImage);
-        moveTransition.setDuration(Duration.millis(600));
-        moveTransition.setCycleCount(1);
-        //================================================================================
+        //configs values for animation
+        setupAnimation();
     }
 
     // Method to update the state of the Zombie based on the player's position
@@ -195,5 +179,26 @@ public class Zombie extends BaseMonsterPiece{
     @Override
     public boolean isValidMoveSet(int row, int col) {
         return row >= 0 && row < validMovesCache.length && col >= 0 && col < validMovesCache[0].length;
+    }
+
+    protected void setupAnimation(){
+        //===================<animation section>==========================================
+        offsetX=0;
+        offsetY=-8;
+        //sprite animations for monster
+        animationImage = new ImageView(new Image(Config.zombieIdlePath));
+        animationImage.setPreserveRatio(true);
+        animationImage.setTranslateX(offsetX);
+        animationImage.setTranslateY(offsetY);
+        animationImage.setDisable(true);
+        spriteAnimation=new SpriteAnimation(animationImage,4,1,4,36,36,5);
+        spriteAnimation.start();
+
+        //setup moveTranslate behaviour
+        moveTransition = new TranslateTransition();
+        moveTransition.setNode(animationImage);
+        moveTransition.setDuration(Duration.millis(600));
+        moveTransition.setCycleCount(1);
+        //================================================================================
     }
 }
