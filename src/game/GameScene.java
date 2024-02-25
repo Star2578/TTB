@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -52,12 +53,14 @@ public class GameScene {
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
     private boolean isPieceSelected = false;
     private boolean autoCycle = false;
+    private TileMap wallOnFloorTileMap;
 
     //------------<UI>----------------------------------------------------
 
     private Scene scene;
     private Pane animationPane = gameManager.animationPane;
     private GridPane boardPane = gameManager.boardPane;
+    private GridPane wallPane = new GridPane();
     private BorderPane root;
     private VBox rightPane; // Contain right side UI
     private VBox leftPane; // Contain left side UI
@@ -74,6 +77,17 @@ public class GameScene {
         scene = new Scene(root, 1280, 720);
         scene.getStylesheets().add(getClass().getResource("/CSSs/BottomLeftGUI.css").toExternalForm());
 
+
+        //TODO: test auto-tiling tilemap
+        wallOnFloorTileMap = new TileMap(new Image(Config.WallOnFloorPath),4,8,32,32);
+        wallPane.setMinSize(GAME_SIZE,GAME_SIZE);
+        wallPane.setMaxSize(GAME_SIZE,GAME_SIZE);
+        wallPane.setDisable(true);
+        for(int i = 0 ; i < 20 ; i++){
+            wallPane.getColumnConstraints().add(new ColumnConstraints(32));
+            wallPane.getRowConstraints().add(new RowConstraints(32));
+        }
+        //TODO============================
 
         //this pane contains all animation-related nodes
         //it's placed transparently over boardPane
@@ -95,7 +109,7 @@ public class GameScene {
 
         // Center the game board using a StackPane
         centerPane = new StackPane();
-        centerPane.getChildren().addAll(boardPane , animationPane);
+        centerPane.getChildren().addAll(boardPane , animationPane , wallPane);
 
         boardPane.setBackground(Background.fill(Color.GOLD));
         root.setCenter(centerPane);
@@ -196,6 +210,16 @@ public class GameScene {
                     placePiece(wall);
                     piecesPosition[row][col] = wall;
                 }
+                //TODO: test auto-tiling tilemap
+                else if (dungeonLayout[row][col] == '.'){
+                    int bitMask = 0;
+                    if(row>0 && dungeonLayout[row-1][col]== '.') bitMask+=1;
+                    if(col>0 && dungeonLayout[row][col-1]== '.') bitMask+=2;
+                    if(col<dungeonLayout[0].length-1 && dungeonLayout[row][col+1]== '.') bitMask+=4;
+                    if(row<dungeonLayout.length-1 && dungeonLayout[row+1][col]== '.') bitMask+=8;
+                    wallPane.add(wallOnFloorTileMap.getTileAt(bitMask/4,bitMask%4) , col , row);
+                }
+                //TODO=================================
             }
         }
     }
@@ -265,7 +289,6 @@ public class GameScene {
         }
 
         // ------------------------- Attack Mode -------------------------
-
         boolean isInAttackMode = gameManager.isInAttackMode;
 
         if (isInAttackMode) {
@@ -344,7 +367,6 @@ public class GameScene {
             }
         }
     }
-
 
     public void resetSelection(int type) {
         isPieceSelected = false;
