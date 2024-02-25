@@ -6,7 +6,6 @@ import javafx.animation.Timeline;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -60,7 +59,7 @@ public class GameScene {
     private Scene scene;
     private Pane animationPane = gameManager.animationPane;
     private GridPane boardPane = gameManager.boardPane;
-    private GridPane wallPane = new GridPane();
+    private GridPane tilePane = new GridPane();
     private BorderPane root;
     private VBox rightPane; // Contain right side UI
     private VBox leftPane; // Contain left side UI
@@ -80,12 +79,13 @@ public class GameScene {
 
         //TODO: test auto-tiling tilemap
         wallOnFloorTileMap = new TileMap(new Image(Config.WallOnFloorPath),4,8,32,32);
-        wallPane.setMinSize(GAME_SIZE,GAME_SIZE);
-        wallPane.setMaxSize(GAME_SIZE,GAME_SIZE);
-        wallPane.setDisable(true);
+        tilePane.setMinSize(GAME_SIZE,GAME_SIZE);
+        tilePane.setMaxSize(GAME_SIZE,GAME_SIZE);
+        tilePane.setDisable(true);
         for(int i = 0 ; i < 20 ; i++){
-            wallPane.getColumnConstraints().add(new ColumnConstraints(32));
-            wallPane.getRowConstraints().add(new RowConstraints(32));
+            //init grid size for tilePane
+            tilePane.getColumnConstraints().add(new ColumnConstraints(32));
+            tilePane.getRowConstraints().add(new RowConstraints(32));
         }
         //TODO============================
 
@@ -103,13 +103,13 @@ public class GameScene {
         leftPane.setBackground(Background.fill(Color.DARKCYAN));
 
         // Create the main game area
-        initGrid(boardPane);
+        initFloor(boardPane);
         boardPane.setMinSize(GAME_SIZE, GAME_SIZE);
         boardPane.setMaxSize(GAME_SIZE, GAME_SIZE);
 
         // Center the game board using a StackPane
         centerPane = new StackPane();
-        centerPane.getChildren().addAll(boardPane , animationPane , wallPane);
+        centerPane.getChildren().addAll(boardPane , tilePane , animationPane);
 
         boardPane.setBackground(Background.fill(Color.GOLD));
         root.setCenter(centerPane);
@@ -186,16 +186,16 @@ public class GameScene {
         turnManager.startPlayerTurn();
     }
 
-    private void initGrid(GridPane gridPane) {
+    private void initFloor(GridPane gridPane) {
         // Generate the dungeon floor according to BOARD_SIZE
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
-                ImageView square = new ImageView();
-                square.setFitWidth(SQUARE_SIZE);
-                square.setFitHeight(SQUARE_SIZE);
-                square.setImage(imageScaler.resample(new Image(Config.FloorPath), 2)); // Set texture of dungeon floor
-                gridPane.add(square, col, row);
-                dungeonFloor[row][col] = square;
+                ImageView floor = new ImageView();
+                floor.setFitWidth(SQUARE_SIZE);
+                floor.setFitHeight(SQUARE_SIZE);
+                floor.setImage(imageScaler.resample(new Image(Config.FloorPath), 2)); // Set texture of dungeon floor
+                gridPane.add(floor, col, row);
+                dungeonFloor[row][col] = floor;
             }
         }
     }
@@ -203,25 +203,51 @@ public class GameScene {
     private void placeDungeon() {
         // Place the walls according to dungeon generated
         char[][] dungeonLayout = dungeonGenerator.getDungeonLayout();
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                if (dungeonLayout[row][col] == '#') {
-                    BaseWallPiece wall = new BaseWallPiece(row, col);
-                    placePiece(wall);
-                    piecesPosition[row][col] = wall;
+        //make duplicate dungeonLayout of size + 1 , to take account of null border
+        char[][] expandedLayout = new char[BOARD_SIZE+2][BOARD_SIZE+2];
+        for(int i = 0 ; i < expandedLayout.length ; i++){
+            for(int j = 0 ; j < expandedLayout[0].length ; j++){
+                if(i==0 || i==expandedLayout.length-1 || j==0 || j==expandedLayout[0].length-1){
+                    expandedLayout[i][j] = '#';
                 }
-                //TODO: test auto-tiling tilemap
-                else if (dungeonLayout[row][col] == '.'){
-                    int bitMask = 0;
-                    if(row>0 && dungeonLayout[row-1][col]== '.') bitMask+=1;
-                    if(col>0 && dungeonLayout[row][col-1]== '.') bitMask+=2;
-                    if(col<dungeonLayout[0].length-1 && dungeonLayout[row][col+1]== '.') bitMask+=4;
-                    if(row<dungeonLayout.length-1 && dungeonLayout[row+1][col]== '.') bitMask+=8;
-                    wallPane.add(wallOnFloorTileMap.getTileAt(bitMask/4,bitMask%4) , col , row);
+                else{
+                    expandedLayout[i][j] = dungeonLayout[i-1][j-1];
                 }
-                //TODO=================================
             }
         }
+
+        for (int row = 1; row < expandedLayout.length-1 ; row++) {
+            for (int col = 1; col < expandedLayout[0].length-1 ; col++) {
+                if (expandedLayout[row][col] == '#') {
+                    //assign new wall object to piecesPosition & add texture to tilePane
+                    piecesPosition[row-1][col-1] = new BaseWallPiece(row-1, col-1);
+                    // |1|1|2| - tile around has its bit value
+                    // |2|X|4| - bitMask1 -> adjacent
+                    // |4|8|8| - bitMask2 -> corner
+                    int bitMask1 = 0;
+                    if(expandedLayout[row-1][col]== '#') bitMask1+=1;
+                    if(expandedLayout[row][col-1]== '#') bitMask1+=2;
+                    if(expandedLayout[row][col+1]== '#') bitMask1+=4;
+                    if(expandedLayout[row+1][col]== '#') bitMask1+=8;
+
+                    if(bitMask1 == 15){ //all adjacent is wall now check corner
+                        int bitMask2 = 0;
+                        if(expandedLayout[row-1][col-1] == '#')
+                            bitMask2+=1;
+                        if(expandedLayout[row-1][col+1]== '#')
+                            bitMask2+=2;
+                        if(expandedLayout[row+1][col-1]== '#')
+                            bitMask2+=4;
+                        if(expandedLayout[row+1][col+1]== '#')
+                            bitMask2+=8;
+                        tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt(bitMask2/4 , 4 + bitMask2%4 ) , col-1 , row-1);
+                        continue;
+                    }
+                    tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt(bitMask1/4 , bitMask1%4) , col-1 , row-1);
+                }
+            }
+        }
+
     }
 
     private void placePiece(BasePiece piece) {
@@ -249,15 +275,8 @@ public class GameScene {
             //add monster sprite to animation pane
             animationPane.getChildren().add(m.animationImage);
         }
-        else{
-            ImageView pieceView = piece.getTexture();
-            pieceView.setImage(imageScaler.resample(piece.getTexture().getImage(), 2));
-            pieceView.setFitWidth(SQUARE_SIZE);
-            pieceView.setFitHeight(SQUARE_SIZE);
-            GridPane.setRowIndex(pieceView, piece.getRow()); // Set row index
-            GridPane.setColumnIndex(pieceView, piece.getCol()); // Set column index
-            boardPane.getChildren().add(pieceView); // Add piece to board
-        }
+        //TODO: if piece an instance of Object
+
     }
 
     private void setupMouseEvents() {
@@ -278,6 +297,25 @@ public class GameScene {
                 });
 
             }
+        }
+
+        for(int i = 0 ; i < BOARD_SIZE; i++){
+            for(int j = 0 ; j < BOARD_SIZE ; j++){
+                if(piecesPosition[i][j] == null){
+                    System.out.print(". ");
+                }
+                else if( piecesPosition[i][j] instanceof BaseWallPiece){
+                    System.out.print("U ");
+                }
+                else if( piecesPosition[i][j] instanceof BasePlayerPiece){
+                    System.out.print("P ");
+                }
+                else if( piecesPosition[i][j] instanceof BaseMonsterPiece){
+                    System.out.print("M ");
+                }
+
+            }
+            System.out.println();
         }
     }
 
@@ -336,10 +374,8 @@ public class GameScene {
             // toggle move selection mode by click on player's grid
             // Show valid moves by changing the color of adjacent squares
             isPieceSelected = !isPieceSelected;
-            if(isPieceSelected){
-                MovementHandler.showValidMoves(row, col);
-            }
-            else resetSelection(0);
+            if(isPieceSelected) MovementHandler.showValidMoves(row, col);
+                else resetSelection(0);
 
         } else if (isPieceSelected) {
             if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
@@ -436,6 +472,7 @@ public class GameScene {
             boardPane.getChildren().remove(entity.getTexture());
         }
         boardPane.getChildren().remove(player.getTexture());
+        tilePane.getChildren().clear();
         animationPane.getChildren().clear();
     }
 

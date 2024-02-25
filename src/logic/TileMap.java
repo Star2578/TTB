@@ -11,6 +11,8 @@ public class TileMap {
     private int tileWidth;
     private int tileHeight;
     private Image tileMapImage;
+    private int realCols;
+    private int realRows;
 
     public TileMap(Image tileMapImage ,int rows , int cols , int tileWidth , int tileHeight){
         this.cols=cols;
@@ -18,10 +20,12 @@ public class TileMap {
         this.tileWidth=tileWidth;
         this.tileHeight=tileHeight;
         this.tileMapImage=tileMapImage;
+        this.realCols = (int) (tileMapImage.getWidth()/tileWidth);
+        this.realRows = (int) (tileMapImage.getHeight()/tileHeight);
 
-        tileMapGrids = new Rectangle2D[rows][cols];
-        for(int row = 0 ; row < rows ; row++){
-            for(int col = 0 ; col < cols ; col++){
+        tileMapGrids = new Rectangle2D[realRows][realCols];
+        for(int row = 0 ; row < realRows ; row++){
+            for(int col = 0 ; col < realCols ; col++){
                 tileMapGrids[row][col] = new Rectangle2D(col*tileWidth , row*tileHeight , tileWidth , tileHeight);
             }
         }
