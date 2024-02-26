@@ -165,9 +165,9 @@ public class GameScene {
         precomputeValidMoves();
         initializeEnvironment();
 
-        turnManager = gameManager.turnManager;
+        turnManager = TurnManager.getInstance();
 
-        guiManager = gameManager.guiManager;
+        guiManager = GUIManager.getInstance();
 
         turnManager.startPlayerTurn();
     }

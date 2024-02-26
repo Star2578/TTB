@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
+import logic.ui.GUIManager;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 
@@ -101,7 +102,7 @@ public class Zombie extends BaseMonsterPiece{
         System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
 
         playerPiece.takeDamage(ATTACK_DAMAGE);
-        GameManager.getInstance().guiManager.updateGUI();
+        GUIManager.getInstance().updateGUI();
     }
 
     public void moveWithTransition(int row , int col){

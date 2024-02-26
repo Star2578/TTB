@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import logic.SpriteAnimation;
 import logic.GameManager;
+import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
 import pieces.enemies.BaseMonsterPiece;
@@ -71,7 +72,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     public void decreaseActionPoint(int decrease) {
         this.currentActionPoint = Math.max(0, this.currentActionPoint - decrease);
-        GameManager.getInstance().guiManager.updateGUI();
+        GUIManager.getInstance().updateGUI();
         if (currentActionPoint == 0) setCanAct(false);
     }
 
@@ -101,7 +102,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     public void decreaseMana(int decrease) {
         this.currentMana = Math.max(0, this.currentMana - decrease);
-        GameManager.getInstance().guiManager.updateGUI();
+        GUIManager.getInstance().updateGUI();
     }
 
     public int getCurrentMana() {

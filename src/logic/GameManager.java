@@ -28,8 +28,6 @@ public class GameManager {
     private static GameManager instance;
 
     public GameScene gameScene;
-    public TurnManager turnManager;
-    public GUIManager guiManager;
     public Pane animationPane;
 
     public BasePlayerPiece player; // Current player class in the game
@@ -70,8 +68,6 @@ public class GameManager {
         }
         boardPane = new GridPane();
         animationPane = new Pane();
-        turnManager = new TurnManager(player, environmentPieces);
-        guiManager = new GUIManager(turnManager, player);
     }
 
     public static GameManager getInstance() {

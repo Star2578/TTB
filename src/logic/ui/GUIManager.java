@@ -19,6 +19,9 @@ import pieces.player.BasePlayerPiece;
 import utils.Config;
 
 public class GUIManager {
+
+    public static GUIManager instance;
+
     private TurnManager turnManager;
     private BasePlayerPiece player;
     private ImageScaler imageScaler;
@@ -44,13 +47,20 @@ public class GUIManager {
     private Button attackButton;
 
 
-    public GUIManager(TurnManager turnManager, BasePlayerPiece player) {
-        this.turnManager = turnManager;
-        this.player = player;
+    public GUIManager() {
+        this.turnManager = TurnManager.getInstance();
+        this.player = GameManager.getInstance().player;
         this.imageScaler = new ImageScaler();
         initializeTurnOrderDisplay();
         initializePlayerOptionsMenu();
         initializeRightSideUI();
+    }
+
+    public static GUIManager getInstance() {
+        if (instance == null) {
+            instance = new GUIManager();
+        }
+        return instance;
     }
 
     private void initializeTurnOrderDisplay() {
