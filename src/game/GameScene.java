@@ -278,7 +278,10 @@ public class GameScene {
                     System.out.println("Player attack " + monsterPiece.getClass().getSimpleName() + " @ " + row + " " + col);
                     player.attack(monsterPiece);
                     exitAttackMode();
-                    if (!monsterPiece.isAlive()) removePiece(monsterPiece);
+                    if (!monsterPiece.isAlive()) {
+                        removePiece(monsterPiece);
+                        environmentPieces.remove(monsterPiece);
+                    }
                 }
             } else {
                 // Player clicked outside valid attack range, exit attack mode
@@ -298,7 +301,10 @@ public class GameScene {
                     // Perform the attack on the monster
                     gameManager.selectedSkill.perform(monsterPiece);
                     resetSelection(2);
-                    if (!monsterPiece.isAlive()) removePiece(monsterPiece);
+                    if (!monsterPiece.isAlive()) {
+                        removePiece(monsterPiece);
+                        environmentPieces.remove(monsterPiece);
+                    }
                 }
             } else {
                 // Cancel skill selection

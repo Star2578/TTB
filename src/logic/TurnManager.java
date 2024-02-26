@@ -60,21 +60,30 @@ public class TurnManager {
         // Start the turn for the current environment piece
         BasePiece currentPiece = environmentPieces.get(currentEnvironmentPieceIndex);
         System.out.println("Environment Turn Start for " + currentEnvironmentPieceIndex + " " + currentPiece.getClass().getSimpleName());
+
         if (currentPiece instanceof Zombie) {
+
             ((Zombie) currentPiece).updateState(player.getRow(), player.getCol());
             Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(DELAY_BETWEEN_ENVIRONMENT), event -> {
                 ((Zombie) currentPiece).performAction(); // Perform action for monsters after a delay of 1 second
                 // Move to the next environment piece
-                currentEnvironmentPieceIndex++;
-                if (currentEnvironmentPieceIndex == environmentPieces.size()) {
-                    currentEnvironmentPieceIndex = 0;
-                    startPlayerTurn();
-                    GUIManager.getInstance().enableButton();
-                } else {
-                    startEnvironmentTurn();
-                }
+                cycleNextEnvironment();
             }));
+
             timeline.play();
+
+        }
+    }
+
+    private void cycleNextEnvironment() {
+        // Move to the next environment piece
+        currentEnvironmentPieceIndex++;
+        if (currentEnvironmentPieceIndex == environmentPieces.size()) {
+            currentEnvironmentPieceIndex = 0;
+            startPlayerTurn();
+            GUIManager.getInstance().enableButton();
+        } else {
+            startEnvironmentTurn();
         }
     }
 }
