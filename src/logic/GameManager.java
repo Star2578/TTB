@@ -17,6 +17,8 @@ import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
 import pieces.player.Knight;
 import skills.BaseSkill;
+import skills.EmptySlot;
+import skills.LockedSlot;
 import utils.Config;
 
 import java.util.ArrayList;
@@ -41,7 +43,11 @@ public class GameManager {
     public boolean[][] validMovesCache = new boolean[Config.BOARD_SIZE][Config.BOARD_SIZE];
     public BasePiece[][] piecesPosition = new BasePiece[Config.BOARD_SIZE][Config.BOARD_SIZE]; // Where each entity located
     public List<BasePiece> environmentPieces = new ArrayList<>(); // Where each environment piece i.e. wall, trap located
-    public List<BaseSkill> playerSkills; // List of skills player currently have
+
+    // ----------- Skill -----------
+    public final int SKILL_SLOTS = 8;
+    public int unlockedSlots = 4;
+    public BaseSkill[] playerSkills; // List of skills player currently have
     public BaseSkill selectedSkill;
 
 
@@ -53,6 +59,15 @@ public class GameManager {
     public GameManager() {
         player = new Knight(0, 0, 1);
         playerSkills = player.getSkills();
+        for (int i = 0; i < SKILL_SLOTS; i++) {
+            if (playerSkills[i] == null) {
+                if (i < unlockedSlots) {
+                    playerSkills[i] = new EmptySlot();
+                } else {
+                    playerSkills[i] = new LockedSlot();
+                }
+            }
+        }
         boardPane = new GridPane();
         animationPane = new Pane();
         turnManager = new TurnManager(player, environmentPieces);

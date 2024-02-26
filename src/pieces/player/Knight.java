@@ -26,8 +26,7 @@ public class Knight extends BasePlayerPiece {
         setAttackDamage(3);
 
         //add skill
-        skills = new ArrayList<>();
-        skills.add(new Slash());
+        skills[0] = new Slash();
 
         //configs values for animation
         setupAnimation();

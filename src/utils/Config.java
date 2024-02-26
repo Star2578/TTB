@@ -37,6 +37,8 @@ public class Config {
     public static String ValidSkillPath = "sprites/ground/skill_floor_1.png";
 
     // Skill Icons
+    public static String LockedSkillIconPath = "sprites/skills/icons/skill_placeholder_locked.png";
+    public static String UnlockedSkillIconPath = "sprites/skills/icons/skill_placeholder_unlocked.png";
     public static String SlashPath = "sprites/skills/icons/slash.png";
 
     // Attacks animation

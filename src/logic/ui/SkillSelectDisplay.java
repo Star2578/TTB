@@ -1,13 +1,12 @@
 package logic.ui;
 
-import game.GameScene;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import logic.GameManager;
@@ -24,7 +23,7 @@ public class SkillSelectDisplay implements Display{
     private VBox view;
 
     private VBox skillInfoBox;
-    private HBox skillSelectorBox;
+    private GridPane skillSelectorGrid;
     private ImageScaler imageScaler = new ImageScaler();
 
     public SkillSelectDisplay() {
@@ -42,20 +41,28 @@ public class SkillSelectDisplay implements Display{
         skillInfoBox.getChildren().add(titleLabel);
 
         // Initialize skill selector box
-        skillSelectorBox = new HBox();
-        skillSelectorBox.setAlignment(Pos.CENTER);
-        skillSelectorBox.setSpacing(5);
+        skillSelectorGrid = new GridPane();
+        skillSelectorGrid.setAlignment(Pos.CENTER);
+        skillSelectorGrid.setHgap(5);
+        skillSelectorGrid.setVgap(5);
 
-        List<BaseSkill> skills = GameManager.getInstance().playerSkills;
+        BaseSkill[] skills = GameManager.getInstance().playerSkills;
 
-        // Add skill frames (example)
-        for (int i = 0; i < 4; i++) {
-            VBox skillFrame = createSkillFrame(skills.get(0));
-            skillSelectorBox.getChildren().add(skillFrame);
+        // Add skill frames
+        int row = 0;
+        int col = 0;
+        for (int i = 0; i < GameManager.getInstance().SKILL_SLOTS; i++) {
+            VBox skillFrame = createSkillFrame(skills[i]);;
+            skillSelectorGrid.add(skillFrame, col, row); // Add to the grid
+            col++;
+            if (col == 4) { // Adjust column count as needed
+                col = 0;
+                row++;
+            }
         }
 
         // Add skill info box and skill selector box to main view
-        view.getChildren().addAll(skillInfoBox, skillSelectorBox);
+        view.getChildren().addAll(skillInfoBox, skillSelectorGrid);
     }
 
     // This method create the skill frame from skill in parameter

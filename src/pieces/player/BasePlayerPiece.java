@@ -24,7 +24,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     private boolean canAct;
     protected int currentDirection;
     private int attackDamage;
-    protected List<BaseSkill> skills;
+    protected BaseSkill[] skills;
     protected final int ATTACK_COST = 1;
 
     protected SpriteAnimation spriteAnimation;
@@ -46,7 +46,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
             ImageView imageView = getTexture();
             imageView.setScaleX(-1); // Flipping the image horizontally
         }
-
+        skills = new BaseSkill[8];
     }
 
     @Override
@@ -128,7 +128,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         this.attackDamage = Math.max(attackDamage, 0);
     }
 
-    public List<BaseSkill> getSkills() {
+    public BaseSkill[] getSkills() {
         return skills;
     }
 
