@@ -1,8 +1,13 @@
 package logic.ui;
 
 import game.GameScene;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
@@ -10,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import logic.GameManager;
 import logic.ImageScaler;
 import logic.SceneManager;
@@ -19,6 +25,9 @@ import pieces.player.BasePlayerPiece;
 import utils.Config;
 
 public class GUIManager {
+
+    public static GUIManager instance;
+
     private TurnManager turnManager;
     private BasePlayerPiece player;
     private ImageScaler imageScaler;
@@ -43,14 +52,33 @@ public class GUIManager {
     private Button endTurnButton;
     private Button attackButton;
 
+    public InventoryDisplay inventoryDisplay;
+    public SkillSelectDisplay skillSelectDisplay;
+    public ItemSelectDisplay itemSelectDisplay;
 
-    public GUIManager(TurnManager turnManager, BasePlayerPiece player) {
-        this.turnManager = turnManager;
-        this.player = player;
+    // ----------- UI Status -----------
+    public boolean isInAttackMode = false;
+    public boolean isInInventoryMode = false;
+    public boolean isInUseSkillMode = false;
+
+
+    public GUIManager() {
+        this.turnManager = TurnManager.getInstance();
+        this.player = GameManager.getInstance().player;
         this.imageScaler = new ImageScaler();
+        inventoryDisplay = new InventoryDisplay();
+        skillSelectDisplay = new SkillSelectDisplay();
+        itemSelectDisplay = new ItemSelectDisplay();
         initializeTurnOrderDisplay();
         initializePlayerOptionsMenu();
         initializeRightSideUI();
+    }
+
+    public static GUIManager getInstance() {
+        if (instance == null) {
+            instance = new GUIManager();
+        }
+        return instance;
     }
 
     private void initializeTurnOrderDisplay() {
@@ -145,7 +173,7 @@ public class GUIManager {
         inventoryButton.setOnMouseClicked(mouseEvent -> switchToInventoryDisplay());
         useSkillsButton.setOnMouseClicked(mouseEvent -> {
             switchToSkillSelectDisplay();
-            GameManager.getInstance().isInUseSkillMode = true;
+            isInUseSkillMode = true;
         });
         useItemButton.setOnMouseClicked(mouseEvent -> switchToItemSelectDisplay());
 
@@ -156,8 +184,8 @@ public class GUIManager {
                 GameManager.getInstance().gameScene.resetSelection(2);
 
             }
-            GameManager.getInstance().isInAttackMode = true;
-            GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+            isInAttackMode = true;
+            updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
             AttackHandler.showValidAttackRange(GameManager.getInstance().player.getRow() , GameManager.getInstance().player.getCol());
         });
 
@@ -201,18 +229,17 @@ public class GUIManager {
     }
 
     public void switchToInventoryDisplay() {
-        // Create and set InventoryDisplay as the current display
-        InventoryDisplay inventoryDisplay = new InventoryDisplay();
+        // set InventoryDisplay as the current display
         setDisplay(inventoryDisplay);
     }
 
     public void switchToSkillSelectDisplay() {
-        SkillSelectDisplay skillSelectDisplay = new SkillSelectDisplay();
+        // set SkillSelectDisplay as the current display
         setDisplay(skillSelectDisplay);
     }
 
     public void switchToItemSelectDisplay() {
-        ItemSelectDisplay itemSelectDisplay = new ItemSelectDisplay();
+        // set ItemSelectDisplay as the current display
         setDisplay(itemSelectDisplay);
     }
 
@@ -253,6 +280,23 @@ public class GUIManager {
 
     private void updateActionPointDisplay() {
         displayActionPoint.setText("Action Point: " + player.getCurrentActionPoint() + "/" + player.getMaxActionPoint());
+    }
+
+    public void updateCursor(Scene currentScene, String cursorPath) {
+        Image cursorImage = new Image(cursorPath);
+        currentScene.setCursor(new ImageCursor(cursorImage));
+    }
+    public void updateCursor(Scene currentScene, String cursorPath, double delay) {
+        Cursor bufferCursor = currentScene.getCursor();
+
+        Image cursorImage = new Image(cursorPath);
+        currentScene.setCursor(new ImageCursor(cursorImage));
+
+        // Schedule a task to restore the original cursor after the delay
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(delay), event -> {
+            currentScene.setCursor(bufferCursor);
+        }));
+        timeline.play();
     }
 
     public void enableButton(){

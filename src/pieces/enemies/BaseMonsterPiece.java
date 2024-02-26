@@ -15,7 +15,6 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     private int currentDirection;
     private boolean isAlive = true;
 
-    //TODO this is animation testing
     protected SpriteAnimation spriteAnimation;
     public ImageView animationImage;
     protected TranslateTransition moveTransition;

@@ -131,9 +131,6 @@ public class GameScene {
         // Define render logic
         renderLogic = () -> {
             // Render game graphics
-//            if (gameManager.isInAttackMode) {
-//                AttackHandler.showValidAttackRange(player.getRow(), player.getCol());
-//            }
         };
 
         // Create an instance of GameLoop with the update and render logic
@@ -142,7 +139,7 @@ public class GameScene {
 
 
         // Set up the scene and stage
-        gameManager.updateCursor(scene, Config.DefaultCursor);
+        GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
         SceneManager.getInstance().setGameScene(scene); // Save this scene for later use
         setupMouseEvents();
         setupKeyEvents(scene); // Debug Tool
@@ -179,9 +176,9 @@ public class GameScene {
         precomputeValidMoves();
         initializeEnvironment();
 
-        turnManager = gameManager.turnManager;
+        turnManager = TurnManager.getInstance();
 
-        guiManager = gameManager.guiManager;
+        guiManager = GUIManager.getInstance();
 
         turnManager.startPlayerTurn();
     }
@@ -327,7 +324,8 @@ public class GameScene {
         }
 
         // ------------------------- Attack Mode -------------------------
-        boolean isInAttackMode = gameManager.isInAttackMode;
+
+        boolean isInAttackMode = GUIManager.getInstance().isInAttackMode;
 
         if (isInAttackMode) {
             System.out.println("Player Prepare to attack");
@@ -339,7 +337,10 @@ public class GameScene {
                     System.out.println("Player attack " + monsterPiece.getClass().getSimpleName() + " @ " + row + " " + col);
                     player.attack(monsterPiece);
                     exitAttackMode();
-                    if (!monsterPiece.isAlive()) removePiece(monsterPiece);
+                    if (!monsterPiece.isAlive()) {
+                        removePiece(monsterPiece);
+                        environmentPieces.remove(monsterPiece);
+                    }
                 }
             } else {
                 // Player clicked outside valid attack range, exit attack mode
@@ -350,7 +351,7 @@ public class GameScene {
 
         // ------------------------- Skill Mode -------------------------
 
-        boolean isInUseSkillMode = gameManager.isInUseSkillMode;
+        boolean isInUseSkillMode = GUIManager.getInstance().isInUseSkillMode;
 
         if (isInUseSkillMode && gameManager.selectedSkill != null) {
             if (gameManager.selectedSkill.validRange(row, col)) {
@@ -359,11 +360,16 @@ public class GameScene {
                     // Perform the attack on the monster
                     gameManager.selectedSkill.perform(monsterPiece);
                     resetSelection(2);
-                    if (!monsterPiece.isAlive()) removePiece(monsterPiece);
+                    GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
+                    if (!monsterPiece.isAlive()) {
+                        removePiece(monsterPiece);
+                        environmentPieces.remove(monsterPiece);
+                    }
                 }
             } else {
                 // Cancel skill selection
                 resetSelection(2);
+                GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
             }
             return;
         }
@@ -437,7 +443,7 @@ public class GameScene {
 
         }
         //set cursor back to normal
-        gameManager.updateCursor(scene, Config.DefaultCursor);
+        GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
     }
 
     private void placeEntityRandomly(BasePiece entity) {
@@ -545,9 +551,9 @@ public class GameScene {
     }
 
     public void exitAttackMode() {
-        gameManager.isInAttackMode = false;
+        GUIManager.getInstance().isInAttackMode = false;
         resetSelection(1);
-        gameManager.updateCursor(scene, Config.DefaultCursor);
+        GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
     }
 
 }
