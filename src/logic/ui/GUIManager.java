@@ -52,6 +52,10 @@ public class GUIManager {
     private Button endTurnButton;
     private Button attackButton;
 
+    public InventoryDisplay inventoryDisplay;
+    public SkillSelectDisplay skillSelectDisplay;
+    public ItemSelectDisplay itemSelectDisplay;
+
     // ----------- UI Status -----------
     public boolean isInAttackMode = false;
     public boolean isInInventoryMode = false;
@@ -62,6 +66,9 @@ public class GUIManager {
         this.turnManager = TurnManager.getInstance();
         this.player = GameManager.getInstance().player;
         this.imageScaler = new ImageScaler();
+        inventoryDisplay = new InventoryDisplay();
+        skillSelectDisplay = new SkillSelectDisplay();
+        itemSelectDisplay = new ItemSelectDisplay();
         initializeTurnOrderDisplay();
         initializePlayerOptionsMenu();
         initializeRightSideUI();
@@ -222,18 +229,17 @@ public class GUIManager {
     }
 
     public void switchToInventoryDisplay() {
-        // Create and set InventoryDisplay as the current display
-        InventoryDisplay inventoryDisplay = new InventoryDisplay();
+        // set InventoryDisplay as the current display
         setDisplay(inventoryDisplay);
     }
 
     public void switchToSkillSelectDisplay() {
-        SkillSelectDisplay skillSelectDisplay = new SkillSelectDisplay();
+        // set SkillSelectDisplay as the current display
         setDisplay(skillSelectDisplay);
     }
 
     public void switchToItemSelectDisplay() {
-        ItemSelectDisplay itemSelectDisplay = new ItemSelectDisplay();
+        // set ItemSelectDisplay as the current display
         setDisplay(itemSelectDisplay);
     }
 

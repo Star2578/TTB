@@ -117,9 +117,6 @@ public class GameScene {
         // Define render logic
         renderLogic = () -> {
             // Render game graphics
-//            if (gameManager.isInAttackMode) {
-//                AttackHandler.showValidAttackRange(player.getRow(), player.getCol());
-//            }
         };
 
         // Create an instance of GameLoop with the update and render logic
@@ -301,6 +298,7 @@ public class GameScene {
                     // Perform the attack on the monster
                     gameManager.selectedSkill.perform(monsterPiece);
                     resetSelection(2);
+                    GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
                     if (!monsterPiece.isAlive()) {
                         removePiece(monsterPiece);
                         environmentPieces.remove(monsterPiece);
@@ -309,6 +307,7 @@ public class GameScene {
             } else {
                 // Cancel skill selection
                 resetSelection(2);
+                GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
             }
             return;
         }
