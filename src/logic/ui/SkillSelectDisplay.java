@@ -15,6 +15,8 @@ import logic.SceneManager;
 import logic.handlers.SkillHandler;
 import pieces.player.BasePlayerPiece;
 import skills.BaseSkill;
+import skills.EmptySlot;
+import skills.LockedSlot;
 import utils.Config;
 
 import java.util.List;
@@ -80,20 +82,36 @@ public class SkillSelectDisplay implements Display{
 
         BasePlayerPiece player = GameManager.getInstance().player;
 
-        skillFrame.setOnMouseClicked(mouseEvent -> {
-            // Exit attack mode if activated
-            if (GameManager.getInstance().isInAttackMode) {
-                // TODO: Reset Selection
-                GameManager.getInstance().gameScene.exitAttackMode();
-            }
+        // Make EmptySlot & Locked Slot can't be select
+        if (!(skill instanceof EmptySlot) && !(skill instanceof LockedSlot)) {
+            skillFrame.setOnMouseClicked(mouseEvent -> {
+                // Exit attack mode if activated
+                if (GameManager.getInstance().isInAttackMode) {
+                    // TODO: Reset Selection
+                    GameManager.getInstance().gameScene.exitAttackMode();
+                }
 
-            SkillHandler.showValidSkillRange(player.getRow(), player.getCol(), skill);
-            GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
-            GameManager.getInstance().selectedSkill = skill;
-            System.out.println("Selected " + skill.getName() + " skill");
-        });
+                SkillHandler.showValidSkillRange(player.getRow(), player.getCol(), skill);
+                GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+                GameManager.getInstance().selectedSkill = skill;
+                System.out.println("Selected " + skill.getName() + " skill");
+            });
+        }
 
         return skillFrame;
+    }
+
+    // Method to update skill frame into other skill
+    public void updateSkillFrame(int index, BaseSkill newSkill) {
+        VBox skillFrame = createSkillFrame(newSkill);
+
+        int skillCols = 4; // 4 columns
+
+        // Update the skill frame in the grid
+        int row = index / skillCols;
+        int col = index % skillCols;
+        skillSelectorGrid.getChildren().remove(index); // Remove the old skill frame
+        skillSelectorGrid.add(skillFrame, col, row); // Add the updated skill frame
     }
 
     @Override
