@@ -36,6 +36,8 @@ public class GameManager {
     public GridPane boardPane; // The board pane to create the game's grid system
     public ImageView[][] dungeonFloor = new ImageView[Config.BOARD_SIZE][Config.BOARD_SIZE]; // Contain dungeon floor textures
 
+    public TileMap wallTileMap = new TileMap(new Image(Config.WallTileMapPath) , 4 , 4,32,32);;
+
     public ArrayList<Point2D> selectedMoveTiles = new ArrayList<>(); // Contain the selected move tile
     public ArrayList<Point2D> selectedAttackTiles = new ArrayList<>(); // Contain the selected attack tile
     public ArrayList<Point2D> selectedSkillTiles = new ArrayList<>(); // Contain the selected skill tile

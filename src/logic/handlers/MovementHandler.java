@@ -33,6 +33,7 @@ public class MovementHandler {
                 // Check if the new position is within the board bounds and not the current position
                 if (isInBoardPosition(newRow, newCol) && (newRow != playerRow || newCol != playerCol)) {
                     if (validMovesCache[newRow][newCol] && piecesPosition[newRow][newCol] == null) {
+                        //add tile pos to be remove later to a list
                         selectedTiles.add(new Point2D(newRow , newCol));
                         // Highlight or mark the square to indicate it's within the movement range
                         dungeonFloor[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidMovePath), 2)); // Set texture to indicate valid move
