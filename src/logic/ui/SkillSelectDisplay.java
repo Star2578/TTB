@@ -161,13 +161,13 @@ public class SkillSelectDisplay implements Display{
         if (!(skill instanceof EmptySlot) && !(skill instanceof LockedSlot)) {
             skillFrame.setOnMouseClicked(mouseEvent -> {
                 // Exit attack mode if activated
-                if (GameManager.getInstance().isInAttackMode) {
+                if (GUIManager.getInstance().isInAttackMode) {
                     // TODO: Reset Selection
                     GameManager.getInstance().gameScene.exitAttackMode();
                 }
 
                 SkillHandler.showValidSkillRange(player.getRow(), player.getCol(), skill);
-                GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+                GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
                 GameManager.getInstance().selectedSkill = skill;
                 updateSelectedSkillInfo();
                 System.out.println("Selected " + skill.getName() + " skill");

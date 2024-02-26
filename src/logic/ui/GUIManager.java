@@ -1,8 +1,13 @@
 package logic.ui;
 
 import game.GameScene;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
@@ -10,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import logic.GameManager;
 import logic.ImageScaler;
 import logic.SceneManager;
@@ -45,6 +51,11 @@ public class GUIManager {
     private Button useSkillsButton;
     private Button endTurnButton;
     private Button attackButton;
+
+    // ----------- UI Status -----------
+    public boolean isInAttackMode = false;
+    public boolean isInInventoryMode = false;
+    public boolean isInUseSkillMode = false;
 
 
     public GUIManager() {
@@ -155,7 +166,7 @@ public class GUIManager {
         inventoryButton.setOnMouseClicked(mouseEvent -> switchToInventoryDisplay());
         useSkillsButton.setOnMouseClicked(mouseEvent -> {
             switchToSkillSelectDisplay();
-            GameManager.getInstance().isInUseSkillMode = true;
+            isInUseSkillMode = true;
         });
         useItemButton.setOnMouseClicked(mouseEvent -> switchToItemSelectDisplay());
 
@@ -166,8 +177,8 @@ public class GUIManager {
                 GameManager.getInstance().gameScene.resetSelection(2);
 
             }
-            GameManager.getInstance().isInAttackMode = true;
-            GameManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+            isInAttackMode = true;
+            updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
             AttackHandler.showValidAttackRange(GameManager.getInstance().player.getRow() , GameManager.getInstance().player.getCol());
         });
 
@@ -263,6 +274,23 @@ public class GUIManager {
 
     private void updateActionPointDisplay() {
         displayActionPoint.setText("Action Point: " + player.getCurrentActionPoint() + "/" + player.getMaxActionPoint());
+    }
+
+    public void updateCursor(Scene currentScene, String cursorPath) {
+        Image cursorImage = new Image(cursorPath);
+        currentScene.setCursor(new ImageCursor(cursorImage));
+    }
+    public void updateCursor(Scene currentScene, String cursorPath, double delay) {
+        Cursor bufferCursor = currentScene.getCursor();
+
+        Image cursorImage = new Image(cursorPath);
+        currentScene.setCursor(new ImageCursor(cursorImage));
+
+        // Schedule a task to restore the original cursor after the delay
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(delay), event -> {
+            currentScene.setCursor(bufferCursor);
+        }));
+        timeline.play();
     }
 
     public void enableButton(){

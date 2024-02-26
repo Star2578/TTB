@@ -49,11 +49,6 @@ public class GameManager {
     public BaseSkill selectedSkill;
 
 
-    // ----------- UI Status -----------
-    public boolean isInAttackMode = false;
-    public boolean isInInventoryMode = false;
-    public boolean isInUseSkillMode = false;
-
     public GameManager() {
         player = new Knight(0, 0, 1);
         playerSkills = player.getSkills();
@@ -79,23 +74,6 @@ public class GameManager {
 
     public boolean isEmptySquare(int row, int col) {
         return piecesPosition[row][col] == null;
-    }
-
-    public void updateCursor(Scene currentScene, String cursorPath) {
-        Image cursorImage = new Image(cursorPath);
-        currentScene.setCursor(new ImageCursor(cursorImage));
-    }
-    public void updateCursor(Scene currentScene, String cursorPath, double delay) {
-        Cursor bufferCursor = currentScene.getCursor();
-
-        Image cursorImage = new Image(cursorPath);
-        currentScene.setCursor(new ImageCursor(cursorImage));
-
-        // Schedule a task to restore the original cursor after the delay
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(delay), event -> {
-            currentScene.setCursor(bufferCursor);
-        }));
-        timeline.play();
     }
     // TODO: Implement Save & Load System in here
 }

@@ -128,7 +128,7 @@ public class GameScene {
 
 
         // Set up the scene and stage
-        gameManager.updateCursor(scene, Config.DefaultCursor);
+        GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
         SceneManager.getInstance().setGameScene(scene); // Save this scene for later use
         setupMouseEvents();
         setupKeyEvents(scene); // Debug Tool
@@ -266,7 +266,7 @@ public class GameScene {
 
         // ------------------------- Attack Mode -------------------------
 
-        boolean isInAttackMode = gameManager.isInAttackMode;
+        boolean isInAttackMode = GUIManager.getInstance().isInAttackMode;
 
         if (isInAttackMode) {
             System.out.println("Player Prepare to attack");
@@ -289,7 +289,7 @@ public class GameScene {
 
         // ------------------------- Skill Mode -------------------------
 
-        boolean isInUseSkillMode = gameManager.isInUseSkillMode;
+        boolean isInUseSkillMode = GUIManager.getInstance().isInUseSkillMode;
 
         if (isInUseSkillMode && gameManager.selectedSkill != null) {
             if (gameManager.selectedSkill.validRange(row, col)) {
@@ -379,7 +379,7 @@ public class GameScene {
 
         }
         //set cursor back to normal
-        gameManager.updateCursor(scene, Config.DefaultCursor);
+        GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
     }
 
     private void placeEntityRandomly(BasePiece entity) {
@@ -486,9 +486,9 @@ public class GameScene {
     }
 
     public void exitAttackMode() {
-        gameManager.isInAttackMode = false;
+        GUIManager.getInstance().isInAttackMode = false;
         resetSelection(1);
-        gameManager.updateCursor(scene, Config.DefaultCursor);
+        GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
     }
 
 }
