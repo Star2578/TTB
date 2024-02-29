@@ -51,6 +51,7 @@ public class GameManager {
     public int unlockedSlots = 4;
     public BaseSkill[] playerSkills; // List of skills player currently have
     public BaseSkill selectedSkill;
+    public BaseItem selectedItem;
 
     // -------------- Inventory --------------
     public List<BaseItem> inventory = new ArrayList<>();

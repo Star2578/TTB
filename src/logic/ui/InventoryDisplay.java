@@ -110,13 +110,21 @@ public class InventoryDisplay implements Display {
         StackPane itemFrame = new StackPane();
 
         Image itemIcon = imageScaler.resample(baseItem.getIcon().getImage(), 2);
-        Image frame = imageScaler.resample(new Image(Config.FramePath), 2);
+        ImageView frameView = baseItem.getFrame();
 
         itemFrame.setAlignment(Pos.CENTER);
         itemFrame.setPrefWidth(64);
         itemFrame.setPrefHeight(64);
         itemFrame.setStyle("-fx-background-color: #34495E;");
-        itemFrame.getChildren().addAll(new ImageView(itemIcon), new ImageView(frame));
+        itemFrame.getChildren().addAll(new ImageView(itemIcon), frameView);
+
+        itemFrame.setOnMouseClicked(mouseEvent -> {
+            if (GameManager.getInstance().selectedItem != null) {
+                GameManager.getInstance().gameScene.resetSelection(3);
+            }
+            baseItem.getFrame().setImage(imageScaler.resample(new Image(Config.FrameSelectedPath), 2));
+            GameManager.getInstance().selectedItem = baseItem;
+        });
 
         return itemFrame;
     }

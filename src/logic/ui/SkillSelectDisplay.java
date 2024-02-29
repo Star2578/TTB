@@ -35,6 +35,7 @@ public class SkillSelectDisplay implements Display{
     private VBox skillInfoBox;
     private GridPane skillSelectorGrid;
     private ImageScaler imageScaler = new ImageScaler();
+    private ImageView frameView;
 
     private Text skillName;
     private Text skillManaCost;
@@ -147,13 +148,13 @@ public class SkillSelectDisplay implements Display{
 
         // Scale Skill Icon
         Image skillIcon = imageScaler.resample(skill.getIcon().getImage(), 2);
-        Image frame = imageScaler.resample(new Image(Config.FramePath), 2);
+        frameView = skill.getFrame();
 
         skillFrame.setAlignment(Pos.CENTER);
         skillFrame.setPrefWidth(64);
         skillFrame.setPrefHeight(64);
         skillFrame.setStyle("-fx-background-color: #34495E;"); // Set frame background color
-        skillFrame.getChildren().addAll(new ImageView(skillIcon), new ImageView(frame));
+        skillFrame.getChildren().addAll(new ImageView(skillIcon), frameView);
 
         BasePlayerPiece player = GameManager.getInstance().player;
 
@@ -173,6 +174,7 @@ public class SkillSelectDisplay implements Display{
                 GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
                 GameManager.getInstance().selectedSkill = skill;
                 updateSelectedSkillInfo();
+                skill.getFrame().setImage(imageScaler.resample(new Image(Config.FrameSelectedPath), 2));
                 System.out.println("Selected " + skill.getName() + " skill");
             });
         }

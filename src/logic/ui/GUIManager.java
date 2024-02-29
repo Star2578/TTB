@@ -304,4 +304,8 @@ public class GUIManager {
         attackButton.setDisable(true);
         endTurnButton.setDisable(true);
     }
+
+    public void deselectFrame(ImageView frameView) {
+        frameView.setImage(imageScaler.resample(new Image(Config.FramePath), 2));
+    }
 }

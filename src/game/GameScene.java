@@ -424,6 +424,7 @@ public class GameScene {
         *   0 = vanilla remove selected tiles
         *   1 = exit attack remove selected tiles
         *   2 = deselected skill remove selected tiles
+        *   3 = reset item selection
         */
 
         if(type == 0){
@@ -452,8 +453,12 @@ public class GameScene {
                         .setImage(new Image(Config.FloorPath));
             }
             selectedSkillTiles.clear();
+            guiManager.deselectFrame(gameManager.selectedSkill.getFrame());
             gameManager.selectedSkill = null;
-
+        } else if (type == 3) {
+            // reset item selection
+            guiManager.deselectFrame(gameManager.selectedItem.getFrame());
+            gameManager.selectedItem = null;
         }
         //set cursor back to normal
         GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
