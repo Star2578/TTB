@@ -1,6 +1,7 @@
 package logic.ui;
 
 import items.BaseItem;
+import items.EmptyFrame;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -9,11 +10,14 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.ImageScaler;
 import utils.Config;
+
+import java.util.Stack;
 
 public class InventoryDisplay implements Display {
     private VBox view;
@@ -50,6 +54,9 @@ public class InventoryDisplay implements Display {
         scrollPane.setPrefViewportHeight(720);
         scrollPane.setStyle("-fx-background: transparent;");
         view.setFillWidth(true);
+        view.setMaxWidth(300);
+        view.setMinHeight(710);
+        view.setMaxHeight(720);
     }
 
     private VBox createSection(String sectionTitle, Config.ITEM_TYPE type) {
@@ -62,7 +69,7 @@ public class InventoryDisplay implements Display {
         titleLabel.setTextFill(Color.WHITE);
         section.getChildren().add(titleLabel);
 
-        // Add HBox to hold item frames
+        // Add GridPane to hold item frames
         GridPane itemRow = new GridPane();
         itemRow.setAlignment(Pos.CENTER);
         itemRow.setHgap(5);
@@ -71,18 +78,26 @@ public class InventoryDisplay implements Display {
         int row = 0;
         int col = 0;
         // Add item frames to the item row
-        for (int i = 0; i < GameManager.getInstance().inventory.size(); i++) {
-            BaseItem item = GameManager.getInstance().inventory.get(i);
+        for (int i = 0; i < 4; i++) {
+            BaseItem item;
 
-            // check if it's the same type as the label
-            if (item.getItemType() == type) {
-                VBox itemFrame = createItemFrame(item);
-                itemRow.getChildren().add(itemFrame);
-                col++;
-                if (col == 4) {
-                    col = 0;
-                    row++;
+            if (i >= GameManager.getInstance().inventory.size()) {
+                item = new EmptyFrame();
+                item.setItemType(type);
+            } else {
+                item = GameManager.getInstance().inventory.get(i);
+                if (item.getItemType() != type) {
+                    item = new EmptyFrame();
+                    item.setItemType(type);
                 }
+            }
+
+            StackPane itemFrame = createItemFrame(item);
+            itemRow.add(itemFrame, col, row);
+            col++;
+            if (col == 4) {
+                col = 0;
+                row++;
             }
         }
 
@@ -91,16 +106,17 @@ public class InventoryDisplay implements Display {
         return section;
     }
 
-    private VBox createItemFrame(BaseItem baseItem) {
-        VBox itemFrame = new VBox();
+    private StackPane createItemFrame(BaseItem baseItem) {
+        StackPane itemFrame = new StackPane();
 
         Image itemIcon = imageScaler.resample(baseItem.getIcon().getImage(), 2);
+        Image frame = imageScaler.resample(new Image(Config.FramePath), 2);
 
         itemFrame.setAlignment(Pos.CENTER);
         itemFrame.setPrefWidth(64);
         itemFrame.setPrefHeight(64);
         itemFrame.setStyle("-fx-background-color: #34495E;");
-        itemFrame.getChildren().addAll(new ImageView(itemIcon));
+        itemFrame.getChildren().addAll(new ImageView(itemIcon), new ImageView(frame));
 
         return itemFrame;
     }

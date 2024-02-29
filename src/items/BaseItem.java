@@ -38,5 +38,7 @@ public class BaseItem {
     public void setIconByPath(String iconPath) {
         this.icon = new ImageView(iconPath);
     }
-
+    public void setItemType(Config.ITEM_TYPE itemType) {
+        this.itemType = itemType;
+    }
 }

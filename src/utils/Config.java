@@ -2,6 +2,8 @@ package utils;
 
 public class Config {
     public static String PlaceholderPath = "sprites/placeholder.png";
+    public static String FramePath = "sprites/frame.png";
+    public static String FrameSelectedPath = "sprites/frame_selected.png";
 
     // Game
     public static final int BOARD_SIZE = 20;
