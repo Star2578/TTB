@@ -165,6 +165,10 @@ public class SkillSelectDisplay implements Display{
                     // TODO: Reset Selection
                     GameManager.getInstance().gameScene.exitAttackMode();
                 }
+                // Reset selection if other skill are selected
+                if (GameManager.getInstance().selectedSkill != null) {
+                    GameManager.getInstance().gameScene.resetSelection(2);
+                }
 
                 SkillHandler.showValidSkillRange(player.getRow(), player.getCol(), skill);
                 GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
