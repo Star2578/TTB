@@ -49,7 +49,6 @@ public class GUIManager {
     // Buttons
     VBox playerOptionButtonBox;
     private Button inventoryButton;
-    private Button useItemButton;
     private Button useSkillsButton;
     private Button endTurnButton;
     private Button attackButton;
@@ -57,7 +56,6 @@ public class GUIManager {
     // Displays for each use
     public InventoryDisplay inventoryDisplay;
     public SkillSelectDisplay skillSelectDisplay;
-    public ItemSelectDisplay itemSelectDisplay;
 
     // ----------- UI Status -----------
     public boolean isInAttackMode = false;
@@ -72,7 +70,6 @@ public class GUIManager {
 
         inventoryDisplay = new InventoryDisplay();
         skillSelectDisplay = new SkillSelectDisplay();
-        itemSelectDisplay = new ItemSelectDisplay();
 
         initializeTurnOrderDisplay();
         initializePlayerOptionsMenu();
@@ -170,7 +167,6 @@ public class GUIManager {
         playerOptionButtonBox.setStyle("-fx-padding:0 0 0 20");
 
         inventoryButton = new Button("Inventory");
-        useItemButton = new Button("Use Item");
         useSkillsButton = new Button("Use Skills");
         attackButton = new Button("Attack");
         endTurnButton = new Button("End Turn");
@@ -180,7 +176,6 @@ public class GUIManager {
             switchToSkillSelectDisplay();
             isInUseSkillMode = true;
         });
-        useItemButton.setOnMouseClicked(mouseEvent -> switchToItemSelectDisplay());
 
         attackButton.setOnMouseClicked(mouseEvent -> {
             // Cancel skill selection if skill is selected
@@ -199,7 +194,7 @@ public class GUIManager {
             disableButton();
         });
 
-        playerOptionButtonBox.getChildren().addAll(inventoryButton, useItemButton, attackButton, useSkillsButton, endTurnButton);
+        playerOptionButtonBox.getChildren().addAll(inventoryButton, attackButton, useSkillsButton, endTurnButton);
         //----------------------------------------------------------------------
 
         playerOptionsMenu.getChildren().addAll(playerOptionButtonBox);
@@ -240,11 +235,6 @@ public class GUIManager {
     public void switchToSkillSelectDisplay() {
         // set SkillSelectDisplay as the current display
         setDisplay(skillSelectDisplay);
-    }
-
-    public void switchToItemSelectDisplay() {
-        // set ItemSelectDisplay as the current display
-        setDisplay(itemSelectDisplay);
     }
 
     private void setDisplay(Display display) {
@@ -304,14 +294,12 @@ public class GUIManager {
     }
 
     public void enableButton(){
-        useItemButton.setDisable(false);
         useSkillsButton.setDisable(false);
         attackButton.setDisable(false);
         endTurnButton.setDisable(false);
     }
 
     public void disableButton(){
-        useItemButton.setDisable(true);
         useSkillsButton.setDisable(true);
         attackButton.setDisable(true);
         endTurnButton.setDisable(true);
