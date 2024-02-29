@@ -63,6 +63,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
 
     // ----------------------- Health -----------------------
+    @Override
     public void takeDamage(int damage) {
         setCurrentHealth(currentHp - damage);
     }

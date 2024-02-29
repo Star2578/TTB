@@ -88,6 +88,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         setCol(newCol);
     }
 
+    @Override
     public void takeDamage(int damage) {
         setCurrentHealth(currentHp - damage);
     }
