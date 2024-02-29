@@ -18,13 +18,20 @@ import static utils.Config.SQUARE_SIZE;
 public class Knight extends BasePlayerPiece {
     public Knight(int row, int col, int defaultDirection) {
         super(row, col, defaultDirection);
-        setMaxMana(10);
-        setCurrentMana(getMaxMana());
-        setMaxHealth(20);
-        setCurrentHealth(getMaxHealth());
+
+        maxActionPoint = 10;
+        currentActionPoint = maxActionPoint;
+
+        maxMana = 10;
+        currentMana = maxMana;
+
+        maxHp = 20;
+        currentHp = maxHp;
+
+        attackDamage = 3; // Base attack for player
+
+
         setTextureByPath(Config.KnightPath);
-        setCanAct(false);
-        setAttackDamage(3);
 
         //add skill
         skills[0] = new Slash();

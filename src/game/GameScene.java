@@ -50,12 +50,13 @@ public class GameScene {
     private ImageView[][] dungeonFloor = gameManager.dungeonFloor; // The dungeon floor texture
     private BasePiece[][] piecesPosition = GameManager.getInstance().piecesPosition; // Where each entity locate
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
-    private boolean isPieceSelected = false;
+    private boolean isPlayerPieceSelected = false;
     private boolean autoCycle = false;
     private TileMap wallOnFloorTileMap;
 
-    //------------<UI>----------------------------------------------------
 
+
+    //------------<UI>----------------------------------------------------
     private Scene scene;
     private Pane animationPane = gameManager.animationPane;
     private GridPane boardPane = gameManager.boardPane;
@@ -188,8 +189,11 @@ public class GameScene {
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 ImageView floor = new ImageView();
+
+                // set floor image into square size
                 floor.setFitWidth(SQUARE_SIZE);
                 floor.setFitHeight(SQUARE_SIZE);
+
                 floor.setImage(imageScaler.resample(new Image(Config.FloorPath), 2)); // Set texture of dungeon floor
                 gridPane.add(floor, col, row);
                 dungeonFloor[row][col] = floor;
@@ -244,33 +248,30 @@ public class GameScene {
                 }
             }
         }
-
     }
 
     private void placePiece(BasePiece piece) {
         //this method is called after generated dungeon
         //place Piece to the board
-        if(piece instanceof BasePlayerPiece){
+        if(piece instanceof BasePlayerPiece playerPiece){
             //setup player image size
-            BasePlayerPiece p = ((BasePlayerPiece) piece);
-            p.animationImage.setFitWidth(SQUARE_SIZE);
+            playerPiece.animationImage.setFitWidth(SQUARE_SIZE);
             //set position
-            p.animationImage.setX(piece.getCol()*SQUARE_SIZE + p.offsetX);
-            p.animationImage.setY(piece.getRow()*SQUARE_SIZE + p.offsetY);
+            playerPiece.animationImage.setX(piece.getCol()*SQUARE_SIZE + playerPiece.offsetX);
+            playerPiece.animationImage.setY(piece.getRow()*SQUARE_SIZE + playerPiece.offsetY);
             //add player sprite to animation pane
-            animationPane.getChildren().add(p.animationImage);
+            animationPane.getChildren().add(playerPiece.animationImage);
 
-            GameManager.getInstance().animationPane.getChildren().add(player.meleeAttackImage);
+            GameManager.getInstance().animationPane.getChildren().add(this.player.meleeAttackImage);
         }
-        else if (piece instanceof BaseMonsterPiece) {
+        else if (piece instanceof BaseMonsterPiece monsterPiece) {
             //setup monster image size
-            BaseMonsterPiece m = ((BaseMonsterPiece) piece);
-            m.animationImage.setFitWidth(SQUARE_SIZE);
+            monsterPiece.animationImage.setFitWidth(SQUARE_SIZE);
             //set position
-            m.animationImage.setX(piece.getCol() * SQUARE_SIZE + m.offsetX);
-            m.animationImage.setY(piece.getRow() * SQUARE_SIZE + m.offsetY);
+            monsterPiece.animationImage.setX(piece.getCol() * SQUARE_SIZE + monsterPiece.offsetX);
+            monsterPiece.animationImage.setY(piece.getRow() * SQUARE_SIZE + monsterPiece.offsetY);
             //add monster sprite to animation pane
-            animationPane.getChildren().add(m.animationImage);
+            animationPane.getChildren().add(monsterPiece.animationImage);
         }
         //TODO: if piece an instance of Object
 
@@ -292,7 +293,6 @@ public class GameScene {
                         //TODO : right click to inspect environment
                     }
                 });
-
             }
         }
 
@@ -310,7 +310,6 @@ public class GameScene {
                 else if( piecesPosition[i][j] instanceof BaseMonsterPiece){
                     System.out.print("M ");
                 }
-
             }
             System.out.println();
         }
@@ -385,11 +384,11 @@ public class GameScene {
         if (player.getRow() == row && player.getCol() == col) {
             // toggle move selection mode by click on player's grid
             // Show valid moves by changing the color of adjacent squares
-            isPieceSelected = !isPieceSelected;
-            if(isPieceSelected) MovementHandler.showValidMoves(row, col);
+            isPlayerPieceSelected = !isPlayerPieceSelected;
+            if(isPlayerPieceSelected) MovementHandler.showValidMoves(row, col);
                 else resetSelection(0);
 
-        } else if (isPieceSelected) {
+        } else if (isPlayerPieceSelected) {
             if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
                 System.out.println("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
@@ -417,7 +416,15 @@ public class GameScene {
     }
 
     public void resetSelection(int type) {
-        isPieceSelected = false;
+        isPlayerPieceSelected = false;
+
+        /*
+        *   type manual
+        *
+        *   0 = vanilla remove selected tiles
+        *   1 = exit attack remove selected tiles
+        *   2 = deselected skill remove selected tiles
+        */
 
         if(type == 0){
             //reset move Selected Tiles
@@ -498,6 +505,8 @@ public class GameScene {
         // Remove the piece's ImageView from the animationPane
         if (toRemove instanceof BaseMonsterPiece monsterPiece)
             animationPane.getChildren().remove(monsterPiece.animationImage);
+
+        // TODO: When there are more types this may have to be added
 
         // Set the corresponding entry in the pieces array to null
         piecesPosition[row][col] = null;

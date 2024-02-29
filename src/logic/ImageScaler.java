@@ -6,7 +6,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
 public class ImageScaler {
-    private static final int SCALE_FACTOR = 6;
+    private static final int SCALE_FACTOR = 1;
 
     public Image resample(Image input, int scaleFactor) {
         final int W = (int) input.getWidth();

@@ -51,8 +51,6 @@ public class SkillSelectDisplay implements Display{
         skillInfoBox.setAlignment(Pos.CENTER);
         skillInfoBox.setSpacing(10);
 
-        // TODO: Implement CSS so the fonts are works
-
         // Initialize titles
         Label nameTitle = new Label("Name: ");
         nameTitle.setStyle(
@@ -162,7 +160,6 @@ public class SkillSelectDisplay implements Display{
             skillFrame.setOnMouseClicked(mouseEvent -> {
                 // Exit attack mode if activated
                 if (GUIManager.getInstance().isInAttackMode) {
-                    // TODO: Reset Selection
                     GameManager.getInstance().gameScene.exitAttackMode();
                 }
                 // Reset selection if other skill are selected

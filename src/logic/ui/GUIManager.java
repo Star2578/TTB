@@ -36,6 +36,7 @@ public class GUIManager {
     private VBox rightSideUI;
     private Display currentDisplay;
 
+    // Status Display
     private Text displayActionPoint;
     private VBox hpBox;
     private Text hpText;
@@ -45,6 +46,7 @@ public class GUIManager {
     private ProgressBar manaBar;
 
 
+    // Buttons
     VBox playerOptionButtonBox;
     private Button inventoryButton;
     private Button useItemButton;
@@ -52,6 +54,7 @@ public class GUIManager {
     private Button endTurnButton;
     private Button attackButton;
 
+    // Displays for each use
     public InventoryDisplay inventoryDisplay;
     public SkillSelectDisplay skillSelectDisplay;
     public ItemSelectDisplay itemSelectDisplay;
@@ -66,9 +69,11 @@ public class GUIManager {
         this.turnManager = TurnManager.getInstance();
         this.player = GameManager.getInstance().player;
         this.imageScaler = new ImageScaler();
+
         inventoryDisplay = new InventoryDisplay();
         skillSelectDisplay = new SkillSelectDisplay();
         itemSelectDisplay = new ItemSelectDisplay();
+
         initializeTurnOrderDisplay();
         initializePlayerOptionsMenu();
         initializeRightSideUI();
@@ -180,10 +185,9 @@ public class GUIManager {
         attackButton.setOnMouseClicked(mouseEvent -> {
             // Cancel skill selection if skill is selected
             if (GameManager.getInstance().selectedSkill != null) {
-                // TODO: Reset Selection
                 GameManager.getInstance().gameScene.resetSelection(2);
-
             }
+
             isInAttackMode = true;
             updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
             AttackHandler.showValidAttackRange(GameManager.getInstance().player.getRow() , GameManager.getInstance().player.getCol());
