@@ -453,11 +453,13 @@ public class GameScene {
                         .setImage(new Image(Config.FloorPath));
             }
             selectedSkillTiles.clear();
-            guiManager.deselectFrame(gameManager.selectedSkill.getFrame());
+            if (gameManager.selectedSkill != null)
+                guiManager.deselectFrame(gameManager.selectedSkill.getFrame());
             gameManager.selectedSkill = null;
         } else if (type == 3) {
             // reset item selection
-            guiManager.deselectFrame(gameManager.selectedItem.getFrame());
+            if (gameManager.selectedItem != null)
+                guiManager.deselectFrame(gameManager.selectedItem.getFrame());
             gameManager.selectedItem = null;
         }
         //set cursor back to normal
