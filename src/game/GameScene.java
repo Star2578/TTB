@@ -303,6 +303,12 @@ public class GameScene {
                         removePiece(monsterPiece);
                         environmentPieces.remove(monsterPiece);
                     }
+                } else if (piecesPosition[row][col] instanceof BasePlayerPiece playerPiece) {
+                    if (gameManager.selectedSkill.castOnSelf()) {
+                        gameManager.selectedSkill.perform(playerPiece);
+                        resetSelection(2);
+                        GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
+                    }
                 }
             } else {
                 // Cancel skill selection

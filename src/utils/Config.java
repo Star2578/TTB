@@ -40,6 +40,7 @@ public class Config {
     public static String LockedSkillIconPath = "sprites/skills/icons/skill_placeholder_locked.png";
     public static String UnlockedSkillIconPath = "sprites/skills/icons/skill_placeholder_unlocked.png";
     public static String SlashPath = "sprites/skills/icons/slash.png";
+    public static String HealPath = "sprites/skills/icons/heal.png";
 
     // Attacks animation
     public static String meleeAttackPath = "sprites/attacks/testLocation.png";

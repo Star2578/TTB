@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.SpriteAnimation;
 import pieces.enemies.BaseMonsterPiece;
+import skills.knight.Heal;
 import skills.knight.Slash;
 import utils.Config;
 
@@ -27,6 +28,7 @@ public class Knight extends BasePlayerPiece {
 
         //add skill
         skills[0] = new Slash();
+        skills[1] = new Heal();
 
         //configs values for animation
         setupAnimation();

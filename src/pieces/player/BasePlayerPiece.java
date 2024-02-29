@@ -58,6 +58,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     @Override
     public void setCurrentHealth(int health) {
         this.currentHp = Math.max(health, 0);
+        this.currentHp = Math.min(getMaxHealth(), currentHp);
         if (currentHp == 0) onDeath();
     }
 
@@ -78,6 +79,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     public void setCurrentActionPoint(int currentActionPoint) {
         this.currentActionPoint = Math.max(currentActionPoint, 0);
+        this.currentActionPoint = Math.min(this.currentActionPoint, getMaxActionPoint());
     }
 
     public int getCurrentActionPoint() {
@@ -111,6 +113,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     public void setCurrentMana(int currentMana) {
         this.currentMana = Math.max(currentMana, 0);
+        this.currentMana = Math.min(this.currentMana, getMaxMana());
     }
 
     public int getMaxMana() {
