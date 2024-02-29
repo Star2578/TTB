@@ -1,6 +1,7 @@
 package logic;
 
 import game.GameScene;
+import items.BaseItem;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
@@ -49,6 +50,9 @@ public class GameManager {
     public int unlockedSlots = 4;
     public BaseSkill[] playerSkills; // List of skills player currently have
     public BaseSkill selectedSkill;
+
+    // -------------- Inventory --------------
+    public List<BaseItem> inventory = new ArrayList<>();
 
 
     public GameManager() {

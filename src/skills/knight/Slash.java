@@ -4,7 +4,7 @@ import javafx.scene.image.ImageView;
 import logic.GameManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
-import skills.Attack;
+import utils.Attack;
 import skills.BaseSkill;
 import utils.Config;
 

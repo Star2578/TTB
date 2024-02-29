@@ -5,7 +5,7 @@ import logic.GameManager;
 import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
 import skills.BaseSkill;
-import skills.Healing;
+import utils.Healing;
 import utils.Config;
 
 public class Heal extends BaseSkill implements Healing {

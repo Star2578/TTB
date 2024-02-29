@@ -1,4 +1,4 @@
-package skills;
+package utils;
 
 public interface Buff {
     void applyBuff();

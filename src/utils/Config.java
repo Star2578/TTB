@@ -44,6 +44,9 @@ public class Config {
     public static String SlashPath = "sprites/skills/icons/slash.png";
     public static String HealPath = "sprites/skills/icons/heal.png";
 
+    // Potion Icons
+    public static String BluePotionPath = "sprites/potions/blue_potion.png";
+
     // Attacks animation
     public static String meleeAttackPath = "sprites/attacks/testLocation.png";
 
