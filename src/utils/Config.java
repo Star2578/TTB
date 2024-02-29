@@ -51,11 +51,24 @@ public class Config {
     public static String meleeAttackPath = "sprites/attacks/testLocation.png";
 
     //animation
-    public enum state{
+    public enum STATE{
         IDLE,
         MOVE,
         ATTACK
     }
 
+    public static enum ITEM_TYPE {
+        ARMOR,
+        USABLE,
+        DROPS,
+        KEY_ITEM
+    }
 
+    public static enum ENTITY_TYPE {
+        PLAYER,
+        MONSTER,
+        TRAP,
+        NPC,
+        WALL
+    }
 }

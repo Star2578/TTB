@@ -24,7 +24,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
 
 
     public BaseMonsterPiece(int row, int col, int defaultDirection) {
-        super("Monster", new ImageView(Config.PlaceholderPath), row, col);
+        super(Config.ENTITY_TYPE.MONSTER, new ImageView(Config.PlaceholderPath), row, col);
         if (defaultDirection == -1) {
             ImageView imageView = getTexture();
             imageView.setScaleX(-1); // Flipping the image horizontally

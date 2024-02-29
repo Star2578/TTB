@@ -2,6 +2,7 @@ package logic;
 
 import game.GameScene;
 import items.BaseItem;
+import items.potions.BluePotion;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
@@ -69,6 +70,7 @@ public class GameManager {
         }
         boardPane = new GridPane();
         animationPane = new Pane();
+        inventory.add(new BluePotion());
     }
 
     public static GameManager getInstance() {

@@ -11,13 +11,13 @@ public class BluePotion extends BasePotion implements RefillMana {
     private BasePiece target;
 
     public BluePotion() {
-        super("Blue Potion", Config.BluePotionPath, "Help replenish mana");
+        super("Blue Potion", Config.BluePotionPath, Config.ITEM_TYPE.USABLE, "Help replenish mana");
     }
 
     @Override
     public void usePotion(BasePiece target) {
         this.target = target;
-
+        refillMana();
     }
 
     @Override

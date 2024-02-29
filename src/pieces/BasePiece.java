@@ -2,14 +2,15 @@ package pieces;
 
 import javafx.scene.image.ImageView;
 import logic.SpriteAnimation;
+import utils.Config;
 
 public class BasePiece {
-    private String type;
-    private ImageView texture;
-    private int row;
-    private int col;
+    protected Config.ENTITY_TYPE type;
+    protected ImageView texture;
+    protected int row;
+    protected int col;
 
-    protected BasePiece(String type, ImageView texture, int row, int col) {
+    protected BasePiece(Config.ENTITY_TYPE type, ImageView texture, int row, int col) {
         this.type = type;
         this.texture = texture;
         this.row = row;
@@ -17,12 +18,8 @@ public class BasePiece {
     }
 
     // Getters and setters
-    public String getType() {
+    public Config.ENTITY_TYPE getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public ImageView getTexture() {

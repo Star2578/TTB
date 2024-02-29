@@ -1,16 +1,23 @@
 package logic.ui;
 
+import items.BaseItem;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import logic.GameManager;
+import logic.ImageScaler;
+import utils.Config;
 
 public class InventoryDisplay implements Display {
     private VBox view;
+    private ImageScaler imageScaler = new ImageScaler();
     private VBox armorSection;
     private VBox monsterDropsSection;
     private VBox keyItemsSection;
@@ -24,10 +31,10 @@ public class InventoryDisplay implements Display {
         view.setPadding(new Insets(10));
 
         // Create sections for different types of items
-        armorSection = createSection("Armor");
-        monsterDropsSection = createSection("Monster Drops");
-        keyItemsSection = createSection("Key Items");
-        usableItemsSection = createSection("Usable Items");
+        armorSection = createSection("Armor", Config.ITEM_TYPE.ARMOR);
+        monsterDropsSection = createSection("Monster Drops", Config.ITEM_TYPE.DROPS);
+        keyItemsSection = createSection("Key Items", Config.ITEM_TYPE.KEY_ITEM);
+        usableItemsSection = createSection("Usable Items", Config.ITEM_TYPE.USABLE);
 
         // Add sections to the main layout
         view.getChildren().addAll(
@@ -45,7 +52,7 @@ public class InventoryDisplay implements Display {
         view.setFillWidth(true);
     }
 
-    private VBox createSection(String sectionTitle) {
+    private VBox createSection(String sectionTitle, Config.ITEM_TYPE type) {
         VBox section = new VBox();
         section.setAlignment(Pos.CENTER);
         section.setSpacing(10);
@@ -64,14 +71,18 @@ public class InventoryDisplay implements Display {
         int row = 0;
         int col = 0;
         // Add item frames to the item row
-        for (int i = 0; i < 4; i++) {
-            // Replace ItemFrame with your custom item frame class
-            VBox itemFrame = createItemFrame(); // You need to implement this class
-            itemRow.getChildren().add(itemFrame);
-            col++;
-            if (col == 4) {
-                col = 0;
-                row++;
+        for (int i = 0; i < GameManager.getInstance().inventory.size(); i++) {
+            BaseItem item = GameManager.getInstance().inventory.get(i);
+
+            // check if it's the same type as the label
+            if (item.getItemType() == type) {
+                VBox itemFrame = createItemFrame(item);
+                itemRow.getChildren().add(itemFrame);
+                col++;
+                if (col == 4) {
+                    col = 0;
+                    row++;
+                }
             }
         }
 
@@ -80,8 +91,18 @@ public class InventoryDisplay implements Display {
         return section;
     }
 
-    private VBox createItemFrame() {
-        return new VBox();
+    private VBox createItemFrame(BaseItem baseItem) {
+        VBox itemFrame = new VBox();
+
+        Image itemIcon = imageScaler.resample(baseItem.getIcon().getImage(), 2);
+
+        itemFrame.setAlignment(Pos.CENTER);
+        itemFrame.setPrefWidth(64);
+        itemFrame.setPrefHeight(64);
+        itemFrame.setStyle("-fx-background-color: #34495E;");
+        itemFrame.getChildren().addAll(new ImageView(itemIcon));
+
+        return itemFrame;
     }
 
     @Override

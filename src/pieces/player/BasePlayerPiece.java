@@ -39,7 +39,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public int offsetY=0;
 
     public BasePlayerPiece(int row, int col, int defaultDirection) {
-        super("Player", new ImageView(Config.PlaceholderPath), row, col);
+        super(Config.ENTITY_TYPE.PLAYER, new ImageView(Config.PlaceholderPath), row, col);
         maxActionPoint = 10;
         currentActionPoint = maxActionPoint;
         canAct = false;
