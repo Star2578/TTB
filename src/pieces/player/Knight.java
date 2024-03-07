@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.SpriteAnimation;
 import pieces.enemies.BaseMonsterPiece;
+import skills.knight.Heal;
 import skills.knight.Slash;
 import utils.Config;
 
@@ -17,16 +18,24 @@ import static utils.Config.SQUARE_SIZE;
 public class Knight extends BasePlayerPiece {
     public Knight(int row, int col, int defaultDirection) {
         super(row, col, defaultDirection);
-        setMaxMana(10);
-        setCurrentMana(getMaxMana());
-        setMaxHealth(20);
-        setCurrentHealth(getMaxHealth());
+
+        maxActionPoint = 10;
+        currentActionPoint = maxActionPoint;
+
+        maxMana = 10;
+        currentMana = maxMana;
+
+        maxHp = 20;
+        currentHp = maxHp;
+
+        attackDamage = 3; // Base attack for player
+
+
         setTextureByPath(Config.KnightPath);
-        setCanAct(false);
-        setAttackDamage(3);
 
         //add skill
         skills[0] = new Slash();
+        skills[1] = new Heal();
 
         //configs values for animation
         setupAnimation();
@@ -79,7 +88,7 @@ public class Knight extends BasePlayerPiece {
     @Override
     public void startTurn() {
         setCanAct(true);
-        setCurrentMana(getMaxMana());
+        setCurrentMana(getCurrentMana() + 1); // Knight restore 1 mana every turn
         setCurrentActionPoint(getMaxActionPoint());
     }
 

@@ -2,6 +2,8 @@ package utils;
 
 public class Config {
     public static String PlaceholderPath = "sprites/placeholder.png";
+    public static String FramePath = "sprites/frame.png";
+    public static String FrameSelectedPath = "sprites/frame_selected.png";
 
     // Game
     public static final int BOARD_SIZE = 20;
@@ -42,16 +44,33 @@ public class Config {
     public static String LockedSkillIconPath = "sprites/skills/icons/skill_placeholder_locked.png";
     public static String UnlockedSkillIconPath = "sprites/skills/icons/skill_placeholder_unlocked.png";
     public static String SlashPath = "sprites/skills/icons/slash.png";
+    public static String HealPath = "sprites/skills/icons/heal.png";
+
+    // Potion Icons
+    public static String BluePotionPath = "sprites/potions/blue_potion.png";
 
     // Attacks animation
     public static String meleeAttackPath = "sprites/attacks/testLocation.png";
 
     //animation
-    public enum state{
+    public enum STATE{
         IDLE,
         MOVE,
         ATTACK
     }
 
+    public enum ITEM_TYPE {
+        ARMOR,
+        USABLE,
+        DROPS,
+        KEY_ITEM
+    }
 
+    public enum ENTITY_TYPE {
+        PLAYER,
+        MONSTER,
+        TRAP,
+        NPC,
+        WALL
+    }
 }

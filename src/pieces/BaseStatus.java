@@ -7,6 +7,8 @@ public interface BaseStatus {
     int getMaxHealth();
     void setMaxHealth(int maxHealth);
 
+    void takeDamage(int damage);
+
     boolean isAlive();
     void onDeath();
 }

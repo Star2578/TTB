@@ -27,6 +27,7 @@ import skills.LockedSlot;
 import utils.Config;
 
 import java.util.List;
+import java.util.Stack;
 
 public class SkillSelectDisplay implements Display{
     private VBox view;
@@ -34,6 +35,7 @@ public class SkillSelectDisplay implements Display{
     private VBox skillInfoBox;
     private GridPane skillSelectorGrid;
     private ImageScaler imageScaler = new ImageScaler();
+    private ImageView frameView;
 
     private Text skillName;
     private Text skillManaCost;
@@ -50,8 +52,6 @@ public class SkillSelectDisplay implements Display{
         skillInfoBox = new VBox();
         skillInfoBox.setAlignment(Pos.CENTER);
         skillInfoBox.setSpacing(10);
-
-        // TODO: Implement CSS so the fonts are works
 
         // Initialize titles
         Label nameTitle = new Label("Name: ");
@@ -124,7 +124,7 @@ public class SkillSelectDisplay implements Display{
         int row = 0;
         int col = 0;
         for (int i = 0; i < GameManager.getInstance().SKILL_SLOTS; i++) {
-            VBox skillFrame = createSkillFrame(skills[i]);;
+            StackPane skillFrame = createSkillFrame(skills[i]);;
             skillSelectorGrid.add(skillFrame, col, row); // Add to the grid
             col++;
             if (col == 4) { // Adjust column count as needed
@@ -143,17 +143,18 @@ public class SkillSelectDisplay implements Display{
     }
 
     // This method create the skill frame from skill in parameter
-    private VBox createSkillFrame(BaseSkill skill) {
-        VBox skillFrame = new VBox();
+    private StackPane createSkillFrame(BaseSkill skill) {
+        StackPane skillFrame = new StackPane();
 
         // Scale Skill Icon
         Image skillIcon = imageScaler.resample(skill.getIcon().getImage(), 2);
+        frameView = skill.getFrame();
 
         skillFrame.setAlignment(Pos.CENTER);
         skillFrame.setPrefWidth(64);
         skillFrame.setPrefHeight(64);
         skillFrame.setStyle("-fx-background-color: #34495E;"); // Set frame background color
-        skillFrame.getChildren().addAll(new ImageView(skillIcon));
+        skillFrame.getChildren().addAll(new ImageView(skillIcon), frameView);
 
         BasePlayerPiece player = GameManager.getInstance().player;
 
@@ -162,14 +163,18 @@ public class SkillSelectDisplay implements Display{
             skillFrame.setOnMouseClicked(mouseEvent -> {
                 // Exit attack mode if activated
                 if (GUIManager.getInstance().isInAttackMode) {
-                    // TODO: Reset Selection
                     GameManager.getInstance().gameScene.exitAttackMode();
+                }
+                // Reset selection if other skill are selected
+                if (GameManager.getInstance().selectedSkill != null) {
+                    GameManager.getInstance().gameScene.resetSelection(2);
                 }
 
                 SkillHandler.showValidSkillRange(player.getRow(), player.getCol(), skill);
                 GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
                 GameManager.getInstance().selectedSkill = skill;
                 updateSelectedSkillInfo();
+                skill.getFrame().setImage(imageScaler.resample(new Image(Config.FrameSelectedPath), 2));
                 System.out.println("Selected " + skill.getName() + " skill");
             });
         }
@@ -201,7 +206,7 @@ public class SkillSelectDisplay implements Display{
 
     // Method to update skill frame into other skill
     public void updateSkillFrame(int index, BaseSkill newSkill) {
-        VBox skillFrame = createSkillFrame(newSkill);
+        StackPane skillFrame = createSkillFrame(newSkill);
 
         int skillCols = 4; // 4 columns
 

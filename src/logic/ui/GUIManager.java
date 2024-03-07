@@ -36,6 +36,7 @@ public class GUIManager {
     private VBox rightSideUI;
     private Display currentDisplay;
 
+    // Status Display
     private Text displayActionPoint;
     private VBox hpBox;
     private Text hpText;
@@ -45,16 +46,16 @@ public class GUIManager {
     private ProgressBar manaBar;
 
 
+    // Buttons
     VBox playerOptionButtonBox;
     private Button inventoryButton;
-    private Button useItemButton;
     private Button useSkillsButton;
     private Button endTurnButton;
     private Button attackButton;
 
+    // Displays for each use
     public InventoryDisplay inventoryDisplay;
     public SkillSelectDisplay skillSelectDisplay;
-    public ItemSelectDisplay itemSelectDisplay;
 
     // ----------- UI Status -----------
     public boolean isInAttackMode = false;
@@ -66,9 +67,10 @@ public class GUIManager {
         this.turnManager = TurnManager.getInstance();
         this.player = GameManager.getInstance().player;
         this.imageScaler = new ImageScaler();
+
         inventoryDisplay = new InventoryDisplay();
         skillSelectDisplay = new SkillSelectDisplay();
-        itemSelectDisplay = new ItemSelectDisplay();
+
         initializeTurnOrderDisplay();
         initializePlayerOptionsMenu();
         initializeRightSideUI();
@@ -165,7 +167,6 @@ public class GUIManager {
         playerOptionButtonBox.setStyle("-fx-padding:0 0 0 20");
 
         inventoryButton = new Button("Inventory");
-        useItemButton = new Button("Use Item");
         useSkillsButton = new Button("Use Skills");
         attackButton = new Button("Attack");
         endTurnButton = new Button("End Turn");
@@ -175,15 +176,13 @@ public class GUIManager {
             switchToSkillSelectDisplay();
             isInUseSkillMode = true;
         });
-        useItemButton.setOnMouseClicked(mouseEvent -> switchToItemSelectDisplay());
 
         attackButton.setOnMouseClicked(mouseEvent -> {
             // Cancel skill selection if skill is selected
             if (GameManager.getInstance().selectedSkill != null) {
-                // TODO: Reset Selection
                 GameManager.getInstance().gameScene.resetSelection(2);
-
             }
+
             isInAttackMode = true;
             updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
             AttackHandler.showValidAttackRange(GameManager.getInstance().player.getRow() , GameManager.getInstance().player.getCol());
@@ -195,7 +194,7 @@ public class GUIManager {
             disableButton();
         });
 
-        playerOptionButtonBox.getChildren().addAll(inventoryButton, useItemButton, attackButton, useSkillsButton, endTurnButton);
+        playerOptionButtonBox.getChildren().addAll(inventoryButton, attackButton, useSkillsButton, endTurnButton);
         //----------------------------------------------------------------------
 
         playerOptionsMenu.getChildren().addAll(playerOptionButtonBox);
@@ -236,11 +235,6 @@ public class GUIManager {
     public void switchToSkillSelectDisplay() {
         // set SkillSelectDisplay as the current display
         setDisplay(skillSelectDisplay);
-    }
-
-    public void switchToItemSelectDisplay() {
-        // set ItemSelectDisplay as the current display
-        setDisplay(itemSelectDisplay);
     }
 
     private void setDisplay(Display display) {
@@ -300,16 +294,18 @@ public class GUIManager {
     }
 
     public void enableButton(){
-        useItemButton.setDisable(false);
         useSkillsButton.setDisable(false);
         attackButton.setDisable(false);
         endTurnButton.setDisable(false);
     }
 
     public void disableButton(){
-        useItemButton.setDisable(true);
         useSkillsButton.setDisable(true);
         attackButton.setDisable(true);
         endTurnButton.setDisable(true);
+    }
+
+    public void deselectFrame(ImageView frameView) {
+        frameView.setImage(imageScaler.resample(new Image(Config.FramePath), 2));
     }
 }

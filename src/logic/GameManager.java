@@ -1,6 +1,8 @@
 package logic;
 
 import game.GameScene;
+import items.BaseItem;
+import items.potions.BluePotion;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
@@ -39,6 +41,7 @@ public class GameManager {
     public ArrayList<Point2D> selectedMoveTiles = new ArrayList<>(); // Contain the selected move tile
     public ArrayList<Point2D> selectedAttackTiles = new ArrayList<>(); // Contain the selected attack tile
     public ArrayList<Point2D> selectedSkillTiles = new ArrayList<>(); // Contain the selected skill tile
+    public ArrayList<Point2D> selectedItemTiles = new ArrayList<>(); // Contain the selected item tile
 
     public boolean[][] validMovesCache = new boolean[Config.BOARD_SIZE][Config.BOARD_SIZE];
     public BasePiece[][] piecesPosition = new BasePiece[Config.BOARD_SIZE][Config.BOARD_SIZE]; // Where each entity located
@@ -49,6 +52,10 @@ public class GameManager {
     public int unlockedSlots = 4;
     public BaseSkill[] playerSkills; // List of skills player currently have
     public BaseSkill selectedSkill;
+    public BaseItem selectedItem;
+
+    // -------------- Inventory --------------
+    public List<BaseItem> inventory = new ArrayList<>();
 
 
     public GameManager() {
@@ -65,6 +72,11 @@ public class GameManager {
         }
         boardPane = new GridPane();
         animationPane = new Pane();
+        inventory.add(new BluePotion());
+        inventory.add(new BluePotion());
+        inventory.add(new BluePotion());
+        inventory.add(new BluePotion());
+        inventory.add(new BluePotion());
     }
 
     public static GameManager getInstance() {

@@ -1,5 +1,7 @@
 package game;
 
+import items.BaseItem;
+import items.EmptyFrame;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
@@ -23,6 +25,7 @@ import pieces.enemies.*;
 import pieces.player.*;
 import pieces.wall.*;
 import utils.Config;
+import utils.Usable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,16 +49,18 @@ public class GameScene {
     private ArrayList<Point2D> selectedAttackTiles = gameManager.selectedAttackTiles;
     private ArrayList<Point2D> selectedMoveTiles = gameManager.selectedMoveTiles;
     private ArrayList<Point2D> selectedSkillTiles = gameManager.selectedSkillTiles;
+    private ArrayList<Point2D> selectedItemTiles = gameManager.selectedItemTiles;
     private boolean[][] validMovesCache = gameManager.validMovesCache; // Valid moves without entity
     private ImageView[][] dungeonFloor = gameManager.dungeonFloor; // The dungeon floor texture
     private BasePiece[][] piecesPosition = GameManager.getInstance().piecesPosition; // Where each entity locate
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
-    private boolean isPieceSelected = false;
+    private boolean isPlayerPieceSelected = false;
     private boolean autoCycle = false;
     private TileMap wallOnFloorTileMap;
 
-    //------------<UI>----------------------------------------------------
 
+
+    //------------<UI>----------------------------------------------------
     private Scene scene;
     private Pane animationPane = gameManager.animationPane;
     private GridPane boardPane = gameManager.boardPane;
@@ -188,8 +193,11 @@ public class GameScene {
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 ImageView floor = new ImageView();
+
+                // set floor image into square size
                 floor.setFitWidth(SQUARE_SIZE);
                 floor.setFitHeight(SQUARE_SIZE);
+
                 floor.setImage(imageScaler.resample(new Image(Config.FloorPath), 2)); // Set texture of dungeon floor
                 gridPane.add(floor, col, row);
                 dungeonFloor[row][col] = floor;
@@ -244,33 +252,30 @@ public class GameScene {
                 }
             }
         }
-
     }
 
     private void placePiece(BasePiece piece) {
         //this method is called after generated dungeon
         //place Piece to the board
-        if(piece instanceof BasePlayerPiece){
+        if(piece instanceof BasePlayerPiece playerPiece){
             //setup player image size
-            BasePlayerPiece p = ((BasePlayerPiece) piece);
-            p.animationImage.setFitWidth(SQUARE_SIZE);
+            playerPiece.animationImage.setFitWidth(SQUARE_SIZE);
             //set position
-            p.animationImage.setX(piece.getCol()*SQUARE_SIZE + p.offsetX);
-            p.animationImage.setY(piece.getRow()*SQUARE_SIZE + p.offsetY);
+            playerPiece.animationImage.setX(piece.getCol()*SQUARE_SIZE + playerPiece.offsetX);
+            playerPiece.animationImage.setY(piece.getRow()*SQUARE_SIZE + playerPiece.offsetY);
             //add player sprite to animation pane
-            animationPane.getChildren().add(p.animationImage);
+            animationPane.getChildren().add(playerPiece.animationImage);
 
-            GameManager.getInstance().animationPane.getChildren().add(player.meleeAttackImage);
+            GameManager.getInstance().animationPane.getChildren().add(this.player.meleeAttackImage);
         }
-        else if (piece instanceof BaseMonsterPiece) {
+        else if (piece instanceof BaseMonsterPiece monsterPiece) {
             //setup monster image size
-            BaseMonsterPiece m = ((BaseMonsterPiece) piece);
-            m.animationImage.setFitWidth(SQUARE_SIZE);
+            monsterPiece.animationImage.setFitWidth(SQUARE_SIZE);
             //set position
-            m.animationImage.setX(piece.getCol() * SQUARE_SIZE + m.offsetX);
-            m.animationImage.setY(piece.getRow() * SQUARE_SIZE + m.offsetY);
+            monsterPiece.animationImage.setX(piece.getCol() * SQUARE_SIZE + monsterPiece.offsetX);
+            monsterPiece.animationImage.setY(piece.getRow() * SQUARE_SIZE + monsterPiece.offsetY);
             //add monster sprite to animation pane
-            animationPane.getChildren().add(m.animationImage);
+            animationPane.getChildren().add(monsterPiece.animationImage);
         }
         //TODO: if piece an instance of Object
 
@@ -292,7 +297,6 @@ public class GameScene {
                         //TODO : right click to inspect environment
                     }
                 });
-
             }
         }
 
@@ -310,7 +314,6 @@ public class GameScene {
                 else if( piecesPosition[i][j] instanceof BaseMonsterPiece){
                     System.out.print("M ");
                 }
-
             }
             System.out.println();
         }
@@ -320,6 +323,12 @@ public class GameScene {
         System.out.println("Clicked on square (" + row + ", " + col + ")");
         if (!player.canAct()) {
             System.out.println("Not on your turn");
+            if (GUIManager.getInstance().isInAttackMode)
+                resetSelection(1);
+            if (GameManager.getInstance().selectedSkill != null)
+                resetSelection(2);
+            if (GameManager.getInstance().selectedItem != null)
+                resetSelection(3);
             return;
         }
 
@@ -365,6 +374,19 @@ public class GameScene {
                         removePiece(monsterPiece);
                         environmentPieces.remove(monsterPiece);
                     }
+                } else if (piecesPosition[row][col] instanceof BasePlayerPiece playerPiece) {
+                    if (gameManager.selectedSkill.castOnSelf()) {
+                        boolean enoughMana = playerPiece.getCurrentMana() >= gameManager.selectedSkill.getManaCost();
+                        boolean enoughActionPoint = playerPiece.getCurrentActionPoint() >= gameManager.selectedSkill.getActionPointCost();
+
+                        if (enoughMana && enoughActionPoint) {
+                            gameManager.selectedSkill.perform(playerPiece);
+                        } else {
+                            System.out.println("Not enough mana or action point");
+                        }
+                        resetSelection(2);
+                        GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
+                    }
                 }
             } else {
                 // Cancel skill selection
@@ -374,16 +396,56 @@ public class GameScene {
             return;
         }
 
+        // ----------------------- Handle Item -----------------------
+
+        BaseItem item = GameManager.getInstance().selectedItem;
+        if (item != null && !(item instanceof EmptyFrame)) {
+            if (item instanceof Usable usableItem) {
+                if (usableItem.validRange(row, col)) {
+                    BasePiece target = piecesPosition[row][col];
+
+                    if (target instanceof BaseMonsterPiece monsterPiece) {
+                        // use item on monster
+                        if (((Usable) item).castOnMonster()) {
+
+                            usableItem.useItem(monsterPiece);
+                            resetSelection(3);
+
+                            // throw away after use
+                            GUIManager.getInstance().inventoryDisplay.throwAwayItem(item);
+                        }
+                    } else if (target instanceof BasePlayerPiece playerPiece) {
+                        // use item on player
+                        if (((Usable) item).castOnSelf()) {
+
+                            usableItem.useItem(playerPiece);
+                            resetSelection(3);
+                            // throw away after use
+                            GUIManager.getInstance().inventoryDisplay.throwAwayItem(item);
+                        }
+                    } else {
+                        // cancel selection
+                        resetSelection(3);
+                    }
+                } else {
+                    // reset selection when not in valid range
+                    resetSelection(3);
+                }
+            }
+
+            return;
+        }
+
         // ------------------------- Movement Mode -------------------------
 
         if (player.getRow() == row && player.getCol() == col) {
             // toggle move selection mode by click on player's grid
             // Show valid moves by changing the color of adjacent squares
-            isPieceSelected = !isPieceSelected;
-            if(isPieceSelected) MovementHandler.showValidMoves(row, col);
+            isPlayerPieceSelected = !isPlayerPieceSelected;
+            if(isPlayerPieceSelected) MovementHandler.showValidMoves(row, col);
                 else resetSelection(0);
 
-        } else if (isPieceSelected) {
+        } else if (isPlayerPieceSelected) {
             if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
                 System.out.println("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
@@ -411,7 +473,16 @@ public class GameScene {
     }
 
     public void resetSelection(int type) {
-        isPieceSelected = false;
+        isPlayerPieceSelected = false;
+
+        /*
+        *   type manual
+        *
+        *   0 = vanilla remove selected tiles
+        *   1 = exit attack remove selected tiles
+        *   2 = deselected skill remove selected tiles
+        *   3 = reset item selection
+        */
 
         if(type == 0){
             //reset move Selected Tiles
@@ -439,8 +510,19 @@ public class GameScene {
                         .setImage(new Image(Config.FloorPath));
             }
             selectedSkillTiles.clear();
+            if (gameManager.selectedSkill != null)
+                guiManager.deselectFrame(gameManager.selectedSkill.getFrame());
             gameManager.selectedSkill = null;
-
+        } else if (type == 3) {
+            //reset item Selected Tiles
+            for (int i = 0  ; i < selectedItemTiles.size() ; i++){
+                dungeonFloor[(int) selectedItemTiles.get(i).getX()][(int) selectedItemTiles.get(i).getY()]
+                        .setImage(new Image(Config.FloorPath));
+            }
+            // reset item selection
+            if (gameManager.selectedItem != null)
+                guiManager.deselectFrame(gameManager.selectedItem.getFrame());
+            gameManager.selectedItem = null;
         }
         //set cursor back to normal
         GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
@@ -493,6 +575,8 @@ public class GameScene {
         if (toRemove instanceof BaseMonsterPiece monsterPiece)
             animationPane.getChildren().remove(monsterPiece.animationImage);
 
+        // TODO: When there are more types this may have to be added
+
         // Set the corresponding entry in the pieces array to null
         piecesPosition[row][col] = null;
     }
@@ -529,6 +613,11 @@ public class GameScene {
                         startAutoCycle();
                     } else {
                         stopAutoCycle();
+                    }
+                    break;
+                case F5:
+                    for (int i = 0; i < gameManager.inventory.size(); i++) {
+                        System.out.println("Inventory[" + i + "] is " + gameManager.inventory.get(i).getName());
                     }
                     break;
             }

@@ -19,7 +19,7 @@ public class AttackHandler {
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
 
     public static void showValidAttackRange(int playerRow, int playerCol) {
-        int attackRange = 1; // Change this according to the player's attack range
+        int attackRange = player.getAttackRange(); // Change this according to the player's attack range
 
         for (int dRow = -attackRange; dRow <= attackRange; dRow++) {
             for (int dCol = -attackRange; dCol <= attackRange; dCol++) {
