@@ -411,7 +411,8 @@ public class GameScene {
                             usableItem.useItem(monsterPiece);
                             resetSelection(3);
 
-                            // TODO : implement throw away after use
+                            // throw away after use
+                            GUIManager.getInstance().inventoryDisplay.throwAwayItem(item);
                         }
                     } else if (target instanceof BasePlayerPiece playerPiece) {
                         // use item on player
@@ -419,7 +420,8 @@ public class GameScene {
 
                             usableItem.useItem(playerPiece);
                             resetSelection(3);
-                            // TODO : implement throw away after use
+                            // throw away after use
+                            GUIManager.getInstance().inventoryDisplay.throwAwayItem(item);
                         }
                     } else {
                         // cancel selection
@@ -611,6 +613,11 @@ public class GameScene {
                         startAutoCycle();
                     } else {
                         stopAutoCycle();
+                    }
+                    break;
+                case F5:
+                    for (int i = 0; i < gameManager.inventory.size(); i++) {
+                        System.out.println("Inventory[" + i + "] is " + gameManager.inventory.get(i).getName());
                     }
                     break;
             }

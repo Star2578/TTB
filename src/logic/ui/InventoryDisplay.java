@@ -95,9 +95,8 @@ public class InventoryDisplay implements Display {
 
         throwAwayItem.setOnMouseClicked(mouseEvent -> {
             BaseItem currentItem = GameManager.getInstance().selectedItem;
-            if (currentItem != null && !(currentItem instanceof EmptyFrame)) {
-                System.out.println("Throw " + currentItem.getName() + " away");
-            }
+            // throw item away
+            throwAwayItem(currentItem);
         });
 
         HBox buttonContainer = new HBox();
@@ -171,8 +170,12 @@ public class InventoryDisplay implements Display {
             }
         }
 
-        // Add empty frames to fill the remaining space in the last row
+        // Calculate the number of empty frames to add
         int emptyFrames = itemsPerRow - (totalItems % itemsPerRow);
+        if (totalItems % itemsPerRow == 0 && totalItems > 0) {
+            emptyFrames = 0;
+        }
+
         for (int i = 0; i < emptyFrames; i++) {
             StackPane emptyFrame = createItemFrame(new EmptyFrame());
             int row = totalItems / itemsPerRow;
@@ -235,6 +238,35 @@ public class InventoryDisplay implements Display {
         BaseItem selectedItem = GameManager.getInstance().selectedItem;
         updateSelectedItemInfo(selectedItem);
     }
+
+    public void updateInventoryUI() {
+        System.out.println("update inventory ui");
+        armorSection.getChildren().clear();
+        monsterDropsSection.getChildren().clear();
+        keyItemsSection.getChildren().clear();
+        usableItemsSection.getChildren().clear();
+
+        armorSection.getChildren().add(createSection("Armor", Config.ITEM_TYPE.ARMOR));
+        monsterDropsSection.getChildren().add(createSection("Monster Drops", Config.ITEM_TYPE.DROPS));
+        keyItemsSection.getChildren().add(createSection("Key Items", Config.ITEM_TYPE.KEY_ITEM));
+        usableItemsSection.getChildren().add(createSection("Usable Items", Config.ITEM_TYPE.USABLE));
+    }
+
+    public void throwAwayItem(BaseItem toThrow) {
+        if (toThrow != null && !(toThrow instanceof EmptyFrame)) {
+            System.out.println("Throw " + toThrow.getName() + " away");
+
+            // remove item from inventory
+            GameManager.getInstance().inventory.remove(toThrow);
+
+            // update info
+            updateSelectedItemInfo();
+
+            // update inventory ui
+            updateInventoryUI();
+        }
+    }
+
 
     @Override
     public Node getView() {

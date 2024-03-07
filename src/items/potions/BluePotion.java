@@ -29,9 +29,6 @@ public class BluePotion extends BasePotion implements RefillMana {
 
                 playerPiece.setCurrentMana(currentMana + MANA_REFILL);
                 GUIManager.getInstance().updateGUI();
-
-                // remove this item out of player's inventory
-                GameManager.getInstance().inventory.remove(this);
             }
         }
     }
