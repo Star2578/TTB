@@ -41,6 +41,7 @@ public class GameManager {
     public ArrayList<Point2D> selectedMoveTiles = new ArrayList<>(); // Contain the selected move tile
     public ArrayList<Point2D> selectedAttackTiles = new ArrayList<>(); // Contain the selected attack tile
     public ArrayList<Point2D> selectedSkillTiles = new ArrayList<>(); // Contain the selected skill tile
+    public ArrayList<Point2D> selectedItemTiles = new ArrayList<>(); // Contain the selected item tile
 
     public boolean[][] validMovesCache = new boolean[Config.BOARD_SIZE][Config.BOARD_SIZE];
     public BasePiece[][] piecesPosition = new BasePiece[Config.BOARD_SIZE][Config.BOARD_SIZE]; // Where each entity located

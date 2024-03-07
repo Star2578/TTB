@@ -88,7 +88,7 @@ public class Knight extends BasePlayerPiece {
     @Override
     public void startTurn() {
         setCanAct(true);
-        setCurrentMana(getMaxMana());
+        setCurrentMana(getCurrentMana() + 1); // Knight restore 1 mana every turn
         setCurrentActionPoint(getMaxActionPoint());
     }
 

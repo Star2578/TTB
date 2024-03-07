@@ -131,7 +131,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void decreaseActionPoint(int decrease) {
         this.currentActionPoint = Math.max(0, this.currentActionPoint - decrease);
         GUIManager.getInstance().updateGUI();
-        if (currentActionPoint == 0) setCanAct(false);
+//        if (currentActionPoint == 0) setCanAct(false);
     }
     public void setCurrentActionPoint(int currentActionPoint) {
         this.currentActionPoint = Math.max(currentActionPoint, 0);

@@ -1,5 +1,7 @@
 package game;
 
+import items.BaseItem;
+import items.EmptyFrame;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
@@ -23,6 +25,7 @@ import pieces.enemies.*;
 import pieces.player.*;
 import pieces.wall.*;
 import utils.Config;
+import utils.Usable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +49,7 @@ public class GameScene {
     private ArrayList<Point2D> selectedAttackTiles = gameManager.selectedAttackTiles;
     private ArrayList<Point2D> selectedMoveTiles = gameManager.selectedMoveTiles;
     private ArrayList<Point2D> selectedSkillTiles = gameManager.selectedSkillTiles;
+    private ArrayList<Point2D> selectedItemTiles = gameManager.selectedItemTiles;
     private boolean[][] validMovesCache = gameManager.validMovesCache; // Valid moves without entity
     private ImageView[][] dungeonFloor = gameManager.dungeonFloor; // The dungeon floor texture
     private BasePiece[][] piecesPosition = GameManager.getInstance().piecesPosition; // Where each entity locate
@@ -319,6 +323,12 @@ public class GameScene {
         System.out.println("Clicked on square (" + row + ", " + col + ")");
         if (!player.canAct()) {
             System.out.println("Not on your turn");
+            if (GUIManager.getInstance().isInAttackMode)
+                resetSelection(1);
+            if (GameManager.getInstance().selectedSkill != null)
+                resetSelection(2);
+            if (GameManager.getInstance().selectedItem != null)
+                resetSelection(3);
             return;
         }
 
@@ -366,7 +376,14 @@ public class GameScene {
                     }
                 } else if (piecesPosition[row][col] instanceof BasePlayerPiece playerPiece) {
                     if (gameManager.selectedSkill.castOnSelf()) {
-                        gameManager.selectedSkill.perform(playerPiece);
+                        boolean enoughMana = playerPiece.getCurrentMana() >= gameManager.selectedSkill.getManaCost();
+                        boolean enoughActionPoint = playerPiece.getCurrentActionPoint() >= gameManager.selectedSkill.getActionPointCost();
+
+                        if (enoughMana && enoughActionPoint) {
+                            gameManager.selectedSkill.perform(playerPiece);
+                        } else {
+                            System.out.println("Not enough mana or action point");
+                        }
                         resetSelection(2);
                         GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
                     }
@@ -376,6 +393,44 @@ public class GameScene {
                 resetSelection(2);
                 GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
             }
+            return;
+        }
+
+        // ----------------------- Handle Item -----------------------
+
+        BaseItem item = GameManager.getInstance().selectedItem;
+        if (item != null && !(item instanceof EmptyFrame)) {
+            if (item instanceof Usable usableItem) {
+                if (usableItem.validRange(row, col)) {
+                    BasePiece target = piecesPosition[row][col];
+
+                    if (target instanceof BaseMonsterPiece monsterPiece) {
+                        // use item on monster
+                        if (((Usable) item).castOnMonster()) {
+
+                            usableItem.useItem(monsterPiece);
+                            resetSelection(3);
+
+                            // TODO : implement throw away after use
+                        }
+                    } else if (target instanceof BasePlayerPiece playerPiece) {
+                        // use item on player
+                        if (((Usable) item).castOnSelf()) {
+
+                            usableItem.useItem(playerPiece);
+                            resetSelection(3);
+                            // TODO : implement throw away after use
+                        }
+                    } else {
+                        // cancel selection
+                        resetSelection(3);
+                    }
+                } else {
+                    // reset selection when not in valid range
+                    resetSelection(3);
+                }
+            }
+
             return;
         }
 
@@ -457,6 +512,11 @@ public class GameScene {
                 guiManager.deselectFrame(gameManager.selectedSkill.getFrame());
             gameManager.selectedSkill = null;
         } else if (type == 3) {
+            //reset item Selected Tiles
+            for (int i = 0  ; i < selectedItemTiles.size() ; i++){
+                dungeonFloor[(int) selectedItemTiles.get(i).getX()][(int) selectedItemTiles.get(i).getY()]
+                        .setImage(new Image(Config.FloorPath));
+            }
             // reset item selection
             if (gameManager.selectedItem != null)
                 guiManager.deselectFrame(gameManager.selectedItem.getFrame());

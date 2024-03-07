@@ -27,7 +27,7 @@ public class Heal extends BaseSkill implements Healing {
         // Only valid at player's square
         BasePlayerPiece player = GameManager.getInstance().player;
 
-        return player.getRow() == row && player.getCol() == col ;
+        return player.getRow() == row && player.getCol() == col;
     }
 
     @Override

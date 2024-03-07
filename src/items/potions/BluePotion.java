@@ -1,6 +1,7 @@
 package items.potions;
 
 import logic.GameManager;
+import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
@@ -27,6 +28,7 @@ public class BluePotion extends BasePotion implements RefillMana {
                 int currentMana = playerPiece.getCurrentMana();
 
                 playerPiece.setCurrentMana(currentMana + MANA_REFILL);
+                GUIManager.getInstance().updateGUI();
 
                 // remove this item out of player's inventory
                 GameManager.getInstance().inventory.remove(this);
@@ -42,5 +44,23 @@ public class BluePotion extends BasePotion implements RefillMana {
     @Override
     public boolean castOnMonster() {
         return false;
+    }
+
+    @Override
+    public int getRange() {
+        return 1;
+    }
+
+    @Override
+    public boolean validRange(int row, int col) {
+        // Only valid at player's square
+        BasePlayerPiece player = GameManager.getInstance().player;
+
+        return player.getRow() == row && player.getCol() == col;
+    }
+
+    @Override
+    public void useItem(BasePiece on) {
+        usePotion(on);
     }
 }

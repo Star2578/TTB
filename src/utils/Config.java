@@ -59,14 +59,14 @@ public class Config {
         ATTACK
     }
 
-    public static enum ITEM_TYPE {
+    public enum ITEM_TYPE {
         ARMOR,
         USABLE,
         DROPS,
         KEY_ITEM
     }
 
-    public static enum ENTITY_TYPE {
+    public enum ENTITY_TYPE {
         PLAYER,
         MONSTER,
         TRAP,

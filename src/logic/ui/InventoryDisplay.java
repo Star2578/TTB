@@ -10,15 +10,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import logic.GameManager;
 import logic.ImageScaler;
+import logic.SceneManager;
+import logic.handlers.ItemHandler;
+import logic.handlers.SkillHandler;
+import pieces.player.BasePlayerPiece;
 import utils.Config;
 
 import java.util.Stack;
@@ -70,6 +71,40 @@ public class InventoryDisplay implements Display {
         useItem = new Button("Use Item");
         throwAwayItem = new Button("Throw Away");
 
+
+        useItem.setOnMouseClicked(mouseEvent -> {
+            BaseItem currentItem = GameManager.getInstance().selectedItem;
+            if (currentItem != null && !(currentItem instanceof EmptyFrame)) {
+                System.out.println("Use " + currentItem.getName());
+                // Exit attack mode if activated
+                if (GUIManager.getInstance().isInAttackMode) {
+                    GameManager.getInstance().gameScene.exitAttackMode();
+                }
+                // Reset selection if other skill are selected
+                if (GameManager.getInstance().selectedSkill != null) {
+                    GameManager.getInstance().gameScene.resetSelection(2);
+                }
+
+                BasePlayerPiece player = GameManager.getInstance().player;
+
+                ItemHandler.showValidItemRange(player.getRow(), player.getCol(), currentItem);
+                GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+                updateSelectedItemInfo();
+            }
+        });
+
+        throwAwayItem.setOnMouseClicked(mouseEvent -> {
+            BaseItem currentItem = GameManager.getInstance().selectedItem;
+            if (currentItem != null && !(currentItem instanceof EmptyFrame)) {
+                System.out.println("Throw " + currentItem.getName() + " away");
+            }
+        });
+
+        HBox buttonContainer = new HBox();
+        buttonContainer.setAlignment(Pos.CENTER);
+        buttonContainer.setSpacing(10);
+        buttonContainer.getChildren().addAll(useItem, throwAwayItem);
+
         itemName = new Text();
         itemName.setWrappingWidth(280);
         itemName.setTextAlignment(TextAlignment.CENTER);
@@ -92,7 +127,7 @@ public class InventoryDisplay implements Display {
         itemInfoBox.setPadding(new Insets(10, 0, 0, 0));
 
         itemInfoBox.getChildren().addAll(
-                nameTitle, itemName, descriptionTitle, itemDescription, useItem, throwAwayItem
+                nameTitle, itemName, descriptionTitle, itemDescription, buttonContainer
         );
         view.getChildren().add(itemInfoBox);
 
@@ -109,7 +144,10 @@ public class InventoryDisplay implements Display {
 
         // Add section title
         Label titleLabel = new Label(sectionTitle);
-        titleLabel.setTextFill(Color.WHITE);
+        titleLabel.setStyle(
+                "-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:16;" +
+                "-fx-text-fill:'white';");
         section.getChildren().add(titleLabel);
 
         // Create a GridPane to hold item frames
