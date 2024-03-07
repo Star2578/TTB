@@ -72,6 +72,10 @@ public class GameManager {
         boardPane = new GridPane();
         animationPane = new Pane();
         inventory.add(new BluePotion());
+        inventory.add(new BluePotion());
+        inventory.add(new BluePotion());
+        inventory.add(new BluePotion());
+        inventory.add(new BluePotion());
     }
 
     public static GameManager getInstance() {
