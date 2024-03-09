@@ -122,6 +122,9 @@ public class Zombie extends BaseMonsterPiece{
             animationImage.translateYProperty().set(offsetY);
 
             spriteAnimation.changeAnimation(4,  0);
+
+            setRow(row);
+            setCol(col);
         });
 
         moveTransition.play();

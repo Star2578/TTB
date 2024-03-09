@@ -86,9 +86,6 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
         pieces[getRow()][getCol()] = null;
         pieces[newRow][newCol] = this;
-
-        setRow(newRow);
-        setCol(newCol);
     }
 
     @Override
