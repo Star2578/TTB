@@ -1,5 +1,6 @@
 package logic;
 
+import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import pieces.BasePiece;
@@ -42,8 +43,7 @@ public class SpawnerManager {
             // Door spawn successful
             System.out.println("Door spawned at row " + row + ", col " + col);
             dungeonFloor[row][col].setImage(imageScaler.resample(new Image(Config.DoorPath), 2));
-
-            // TODO : If player step on door, go to next floor
+            gameManager.doorAt = new Point2D(row, col);
         } else {
             System.out.println("Door spawn failed at row " + row + ", col " + col);
             increaseDoorChance();

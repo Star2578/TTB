@@ -48,6 +48,8 @@ public class GameManager {
     // -------------- Inventory --------------
     public List<BaseItem> inventory = new ArrayList<>();
 
+    public Point2D doorAt = null; // use to store where the door is at
+
 
     public GameManager() {
         player = new Knight(0, 0, 1);

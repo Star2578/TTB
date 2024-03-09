@@ -62,8 +62,9 @@ public class Knight extends BasePlayerPiece {
             //now player can do actions
             spriteAnimation.changeAnimation(4 , 0);
             setCanAct(true);
+            setRow(row);
+            setCol(col);
         });
-
         moveTransition.play();
     }
 

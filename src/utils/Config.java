@@ -40,6 +40,7 @@ public class Config {
     public static String ValidMovePath = "sprites/ground/selected_floor_1.png";
     public static String ValidAttackPath = "sprites/ground/attack_floor_1.png";
     public static String ValidSkillPath = "sprites/ground/skill_floor_1.png";
+    public static String ValidItemPath = "sprites/ground/item_floor_1.png";
 
     // Skill Icons
     public static String LockedSkillIconPath = "sprites/skills/icons/skill_placeholder_locked.png";

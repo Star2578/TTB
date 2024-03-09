@@ -132,6 +132,14 @@ public class GameScene {
         // Define update logic
         updateLogic = () -> {
             // Update game state
+            if (gameManager.doorAt != null) {
+                if (player.getRow() == gameManager.doorAt.getX() && player.getCol() == gameManager.doorAt.getY()) {
+                    System.out.println("New Floor");
+                    generateNewFloor();
+                    dungeonFloor[(int) gameManager.doorAt.getX()][(int) gameManager.doorAt.getY()]
+                            .setImage(new Image(Config.FloorPath));
+                }
+            }
         };
 
         // Define render logic
@@ -604,14 +612,7 @@ public class GameScene {
                     removeElements();
                     break;
                 case F2:
-                    removeElements();
-                    dungeonGenerator.generateDungeon();
-                    placeDungeon();
-                    placeEntityRandomly(player);
-                    precomputeValidMoves();
-                    for (BasePiece entity : environmentPieces) {
-                        placeEntityRandomly(entity);
-                    }
+                    generateNewFloor();
                     break;
                 case F3:
                     for (int i = 0; i < Config.BOARD_SIZE; i++) {
@@ -637,6 +638,15 @@ public class GameScene {
                     break;
             }
         });
+    }
+
+    private void generateNewFloor() {
+        removeElements();
+        dungeonGenerator.generateDungeon();
+        placeDungeon();
+        placeEntityRandomly(player);
+        precomputeValidMoves();
+        initializeEnvironment();
     }
 
     private void startAutoCycle() {
