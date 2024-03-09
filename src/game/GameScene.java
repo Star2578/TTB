@@ -52,6 +52,7 @@ public class GameScene {
     private ArrayList<Point2D> selectedItemTiles = gameManager.selectedItemTiles;
     private boolean[][] validMovesCache = gameManager.validMovesCache; // Valid moves without entity
     private ImageView[][] dungeonFloor = gameManager.dungeonFloor; // The dungeon floor texture
+    private ImageView[][] selectionFloor = gameManager.selectionFloor; // The selection floor texture
     private BasePiece[][] piecesPosition = GameManager.getInstance().piecesPosition; // Where each entity locate
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
     private boolean isPlayerPieceSelected = false;
@@ -157,13 +158,15 @@ public class GameScene {
 
     private void initializeEnvironment() {
         // Add environment pieces (monsters and traps) to the list
-        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
-        environmentPieces.add(new Zombie(0, 0, validMovesCache, 1));
+        BaseMonsterPiece[] monsterPool1 = SpawnerManager.getInstance().monsterPool_1;
+
+        // clear environmentPieces
+        environmentPieces.clear();
+
+        // reset monsterCount = 0 every time we got to new floor
+        SpawnerManager.getInstance().monsterCount = 0;
+
+        SpawnerManager.getInstance().randomMonsterSpawnFromPool(monsterPool1, environmentPieces, 1);
 
         for (BasePiece entity : environmentPieces) {
             entity.getTexture().setOnMouseClicked(mouseEvent -> handleSquareClick(entity.getRow(), entity.getCol()));
@@ -201,6 +204,16 @@ public class GameScene {
                 floor.setImage(imageScaler.resample(new Image(Config.FloorPath), 2)); // Set texture of dungeon floor
                 gridPane.add(floor, col, row);
                 dungeonFloor[row][col] = floor;
+
+                // second layer for selector tile
+                ImageView selectionFloorLayer = new ImageView();
+
+                selectionFloorLayer.setFitWidth(SQUARE_SIZE);
+                selectionFloorLayer.setFitHeight(SQUARE_SIZE);
+                selectionFloorLayer.setMouseTransparent(true); // make mouse event ignore this image
+                gridPane.add(selectionFloorLayer, col, row);
+
+                selectionFloor[row][col] = selectionFloorLayer;
             }
         }
     }
@@ -464,10 +477,12 @@ public class GameScene {
     }
 
     private void precomputeValidMoves() {
+        SpawnerManager.getInstance().freeSquareCount = 0;
         // Iterate over all squares to compute valid moves and cache them
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 validMovesCache[row][col] = isValidMove(row, col);
+                if (validMovesCache[row][col]) SpawnerManager.getInstance().freeSquareCount++;
             }
         }
     }
@@ -487,8 +502,8 @@ public class GameScene {
         if(type == 0){
             //reset move Selected Tiles
             for (int i = 0  ; i < selectedMoveTiles.size() ; i++){
-                dungeonFloor[(int) selectedMoveTiles.get(i).getX()][(int) selectedMoveTiles.get(i).getY()]
-                        .setImage(new Image(Config.FloorPath));
+                selectionFloor[(int) selectedMoveTiles.get(i).getX()][(int) selectedMoveTiles.get(i).getY()]
+                        .setImage(null);
 
             }
             selectedMoveTiles.clear();
@@ -497,8 +512,8 @@ public class GameScene {
         else if(type == 1){//reset attack selection
             //reset attack Selected Tiles
             for (int i = 0  ; i < selectedAttackTiles.size() ; i++){
-                dungeonFloor[(int) selectedAttackTiles.get(i).getX()][(int) selectedAttackTiles.get(i).getY()]
-                        .setImage(new Image(Config.FloorPath));
+                selectionFloor[(int) selectedAttackTiles.get(i).getX()][(int) selectedAttackTiles.get(i).getY()]
+                        .setImage(null);
             }
             selectedAttackTiles.clear();
 
@@ -506,8 +521,8 @@ public class GameScene {
         else if (type == 2) {
             //reset skill Selected Tiles
             for (int i = 0  ; i < selectedSkillTiles.size() ; i++){
-                dungeonFloor[(int) selectedSkillTiles.get(i).getX()][(int) selectedSkillTiles.get(i).getY()]
-                        .setImage(new Image(Config.FloorPath));
+                selectionFloor[(int) selectedSkillTiles.get(i).getX()][(int) selectedSkillTiles.get(i).getY()]
+                        .setImage(null);
             }
             selectedSkillTiles.clear();
             if (gameManager.selectedSkill != null)
@@ -516,8 +531,8 @@ public class GameScene {
         } else if (type == 3) {
             //reset item Selected Tiles
             for (int i = 0  ; i < selectedItemTiles.size() ; i++){
-                dungeonFloor[(int) selectedItemTiles.get(i).getX()][(int) selectedItemTiles.get(i).getY()]
-                        .setImage(new Image(Config.FloorPath));
+                selectionFloor[(int) selectedItemTiles.get(i).getX()][(int) selectedItemTiles.get(i).getY()]
+                        .setImage(null);
             }
             // reset item selection
             if (gameManager.selectedItem != null)

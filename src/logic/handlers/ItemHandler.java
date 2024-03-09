@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class ItemHandler {
     private static GameManager gameManager = GameManager.getInstance();
-    private static ImageView[][] dungeonFloor = gameManager.dungeonFloor;
+    private static ImageView[][] selectionFloor = gameManager.selectionFloor;
     private static ArrayList<Point2D> selectedTiles = gameManager.selectedItemTiles;
     private static ImageScaler imageScaler = new ImageScaler();
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
@@ -31,7 +31,7 @@ public class ItemHandler {
                         }
                         selectedTiles.add(new Point2D(newRow, newCol));
                         // Highlight or mark the square to indicate it's within the skill range
-                        dungeonFloor[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidSkillPath), 2)); // Set texture to indicate valid skill
+                        selectionFloor[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidSkillPath), 2)); // Set texture to indicate valid skill
                     }
                 }
             }

@@ -1,12 +1,11 @@
 package logic;
 
-import game.GameScene;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
-import pieces.enemies.Zombie;
+import pieces.enemies.Tear;
 import pieces.player.BasePlayerPiece;
 
 import java.util.List;
@@ -61,11 +60,11 @@ public class TurnManager {
         BasePiece currentPiece = environmentPieces.get(currentEnvironmentPieceIndex);
         System.out.println("Environment Turn Start for " + currentEnvironmentPieceIndex + " " + currentPiece.getClass().getSimpleName());
 
-        if (currentPiece instanceof Zombie) {
+        if (currentPiece instanceof Tear) {
 
-            ((Zombie) currentPiece).updateState(player.getRow(), player.getCol());
+            ((Tear) currentPiece).updateState(player.getRow(), player.getCol());
             Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(DELAY_BETWEEN_ENVIRONMENT), event -> {
-                ((Zombie) currentPiece).performAction(); // Perform action for monsters after a delay of 1 second
+                ((Tear) currentPiece).performAction(); // Perform action for monsters after a delay of 1 second
                 // Move to the next environment piece
                 cycleNextEnvironment();
             }));

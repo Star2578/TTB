@@ -13,12 +13,11 @@ import utils.Config;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 
 import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
 
-public class Zombie extends BaseMonsterPiece{
+public class Tear extends BaseMonsterPiece{
     private enum State {
         NEUTRAL_ROAMING, // State when not actively chasing the player
         AGGRESSIVE // State when actively chasing the player
@@ -31,13 +30,13 @@ public class Zombie extends BaseMonsterPiece{
     private final int ATTACK_DAMAGE = 3;
     private Random random;
 
-    public Zombie(int row, int col, boolean[][] validMovesCache, int defaultDirection) {
-        super(row, col, defaultDirection);
-        setTextureByPath(Config.ZombiePath);
+    public Tear() {
+        super(0, 0, 1);
+        setTextureByPath(Config.TearPath);
         setMaxHealth(10);
         setCurrentHealth(getMaxHealth());
         currentState = State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
-        this.validMovesCache = validMovesCache;
+        this.validMovesCache = GameManager.getInstance().validMovesCache;
         random = new Random();
 
 
@@ -194,7 +193,7 @@ public class Zombie extends BaseMonsterPiece{
         offsetX=0;
         offsetY=-4;
         //sprite animations for monster
-        animationImage = new ImageView(new Image(Config.ZombieAnimationPath));
+        animationImage = new ImageView(new Image(Config.TearAnimationPath));
         animationImage.setPreserveRatio(true);
         animationImage.setTranslateX(offsetX);
         animationImage.setTranslateY(offsetY);

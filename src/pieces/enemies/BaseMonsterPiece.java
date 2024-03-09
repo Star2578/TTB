@@ -3,6 +3,7 @@ package pieces.enemies;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.ImageView;
 import logic.GameManager;
+import logic.SpawnerManager;
 import logic.SpriteAnimation;
 import pieces.BasePiece;
 import pieces.BaseStatus;
@@ -66,6 +67,8 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     @Override
     public void onDeath() {
         isAlive = false;
+        SpawnerManager.getInstance().monsterCount--;
+        SpawnerManager.getInstance().trySpawnDoor(getRow(), getCol());
         // To call when this monster died
         System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
     }
