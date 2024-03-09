@@ -164,8 +164,8 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     }
     @Override
     public void onDeath() {
-        // TODO: Call Game Over
-        System.out.println("Game Over! You are dead");
+        System.out.println("Game Over! You are dead!");
+        GameManager.getInstance().GameOver();
     }
 
 

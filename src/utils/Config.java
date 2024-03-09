@@ -27,8 +27,11 @@ public class Config {
     public static String KnightAnimationPath = "sprites/player/knight_sprite_sheet.png";
 
     // Enemies
-    public static String TearPath = "sprites/enemies/tear.png";
-    public static String TearAnimationPath = "sprites/enemies/tear_sprite_sheet.png";
+    public static String TinyPath = "sprites/enemies/tiny/tiny.png";
+    public static String TinyAnimationPath = "sprites/enemies/tiny/tiny_sprite_sheet.png";
+
+    public static String ZombiePath = "sprites/enemies/zombie/zombie.png";
+    public static String ZombieAnimationPath = "sprites/enemies/zombie/zombie_sprite_sheet.png";
 
     // Dungeon
     public static String WallPath = "sprites/ground/wall_1.png";

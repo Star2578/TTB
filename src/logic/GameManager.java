@@ -82,5 +82,13 @@ public class GameManager {
     public boolean isEmptySquare(int row, int col) {
         return piecesPosition[row][col] == null;
     }
+
+    public void GameOver() {
+        // TODO : Improve this function in the future
+        
+        // Send player back to main menu scene
+        SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getMenuScene());
+    }
+
     // TODO: Implement Save & Load System in here
 }

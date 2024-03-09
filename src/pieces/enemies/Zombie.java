@@ -17,7 +17,7 @@ import java.util.Random;
 import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
 
-public class Tear extends BaseMonsterPiece{
+public class Zombie extends BaseMonsterPiece{
     private enum State {
         NEUTRAL_ROAMING, // State when not actively chasing the player
         AGGRESSIVE // State when actively chasing the player
@@ -26,13 +26,13 @@ public class Tear extends BaseMonsterPiece{
     private State currentState;
     private boolean[][] validMovesCache; // Cache of valid moves for the entire board
     private final double ATTACK_RANGE = 1.5; // Why it's .5? Because it's for diagonal
-    private final int VISON_RANGE = 3;
-    private final int ATTACK_DAMAGE = 3;
+    private final int VISON_RANGE = 5;
+    private final int ATTACK_DAMAGE = 5;
     private Random random;
 
-    public Tear() {
+    public Zombie() {
         super(0, 0, 1);
-        setTextureByPath(Config.TearPath);
+        setTextureByPath(Config.ZombiePath);
         setMaxHealth(10);
         setCurrentHealth(getMaxHealth());
         currentState = State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
@@ -193,7 +193,7 @@ public class Tear extends BaseMonsterPiece{
         offsetX=0;
         offsetY=-4;
         //sprite animations for monster
-        animationImage = new ImageView(new Image(Config.TearAnimationPath));
+        animationImage = new ImageView(new Image(Config.ZombieAnimationPath));
         animationImage.setPreserveRatio(true);
         animationImage.setTranslateX(offsetX);
         animationImage.setTranslateY(offsetY);
