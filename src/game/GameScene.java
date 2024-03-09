@@ -136,8 +136,13 @@ public class GameScene {
                 if (player.getRow() == gameManager.doorAt.getX() && player.getCol() == gameManager.doorAt.getY()) {
                     System.out.println("New Floor");
                     generateNewFloor();
+
+                    // switch the floor back to normal
                     dungeonFloor[(int) gameManager.doorAt.getX()][(int) gameManager.doorAt.getY()]
                             .setImage(new Image(Config.FloorPath));
+
+                    // reset doorAt to null
+                    gameManager.doorAt = null;
                 }
             }
         };
