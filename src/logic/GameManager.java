@@ -3,24 +3,14 @@ package logic;
 import game.GameScene;
 import items.BaseItem;
 import items.potions.BluePotion;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
-import javafx.scene.Cursor;
-import javafx.scene.ImageCursor;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
-import logic.ui.GUIManager;
 import pieces.BasePiece;
-import pieces.player.BasePlayerPiece;
-import pieces.player.Knight;
-import skills.BaseSkill;
-import skills.EmptySlot;
-import skills.LockedSlot;
+import pieces.player.*;
+import skills.*;
 import utils.Config;
 
 import java.util.ArrayList;
@@ -35,6 +25,7 @@ public class GameManager {
     public BasePlayerPiece player; // Current player class in the game
     public GridPane boardPane; // The board pane to create the game's grid system
     public ImageView[][] dungeonFloor = new ImageView[Config.BOARD_SIZE][Config.BOARD_SIZE]; // Contain dungeon floor textures
+    public ImageView[][] selectionFloor = new ImageView[Config.BOARD_SIZE][Config.BOARD_SIZE]; // Contain selection floor separate to dungeonFloor
 
     public TileMap wallTileMap = new TileMap(new Image(Config.WallTileMapPath) , 4 , 4,32,32);;
 
@@ -56,6 +47,8 @@ public class GameManager {
 
     // -------------- Inventory --------------
     public List<BaseItem> inventory = new ArrayList<>();
+
+    public Point2D doorAt = null; // use to store where the door is at
 
 
     public GameManager() {
@@ -89,5 +82,13 @@ public class GameManager {
     public boolean isEmptySquare(int row, int col) {
         return piecesPosition[row][col] == null;
     }
+
+    public void GameOver() {
+        // TODO : Improve this function in the future
+        
+        // Send player back to main menu scene
+        SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getMenuScene());
+    }
+
     // TODO: Implement Save & Load System in here
 }

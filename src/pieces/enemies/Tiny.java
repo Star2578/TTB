@@ -17,7 +17,7 @@ import java.util.Random;
 import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
 
-public class Zombie extends BaseMonsterPiece{
+public class Tiny extends BaseMonsterPiece{
     private enum State {
         NEUTRAL_ROAMING, // State when not actively chasing the player
         AGGRESSIVE // State when actively chasing the player
@@ -26,13 +26,13 @@ public class Zombie extends BaseMonsterPiece{
     private State currentState;
     private boolean[][] validMovesCache; // Cache of valid moves for the entire board
     private final double ATTACK_RANGE = 1.5; // Why it's .5? Because it's for diagonal
-    private final int VISON_RANGE = 5;
-    private final int ATTACK_DAMAGE = 5;
+    private final int VISON_RANGE = 3;
+    private final int ATTACK_DAMAGE = 3;
     private Random random;
 
-    public Zombie() {
+    public Tiny() {
         super(0, 0, 1);
-        setTextureByPath(Config.ZombiePath);
+        setTextureByPath(Config.TinyPath);
         setMaxHealth(10);
         setCurrentHealth(getMaxHealth());
         currentState = State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
@@ -44,10 +44,10 @@ public class Zombie extends BaseMonsterPiece{
         setupAnimation();
     }
 
-    // Method to update the state of the Zombie based on the player's position
+    // Method to update the state of the Tiny Zombie based on the player's position
     @Override
     public void updateState(int playerRow, int playerCol) {
-        // Calculate the distance between the Zombie and the player
+        // Calculate the distance between the Tiny Zombie and the player
         double distance = Math.sqrt(Math.pow(playerRow - getRow(), 2) + Math.pow(playerCol - getCol(), 2));
 
         // Check if the player is within the attack range
@@ -57,7 +57,7 @@ public class Zombie extends BaseMonsterPiece{
             currentState = State.NEUTRAL_ROAMING; // Transition back to the Neutral/Roaming State
         }
 
-        System.out.println("Zombie is in " + currentState);
+        System.out.println("Tiny is in " + currentState);
     }
 
     // Method to perform actions based on the current state
@@ -73,7 +73,7 @@ public class Zombie extends BaseMonsterPiece{
     }
 
     private void chasePlayer() {
-        // Calculate the distance between the Zombie and the player
+        // Calculate the distance between the Tiny Zombie and the player
         double distance = Math.sqrt(Math.pow(GameManager.getInstance().player.getRow() - getRow(), 2) + Math.pow(GameManager.getInstance().player.getCol() - getCol(), 2));
 
         // Get the direction towards the player
@@ -139,7 +139,7 @@ public class Zombie extends BaseMonsterPiece{
         int newRow = getRow() + dRow;
         int newCol = getCol() + dCol;
 
-        // If the new position is valid, move the Zombie there
+        // If the new position is valid, move the Tiny Zombie there
         if (isValidMoveSet(newRow, newCol)) {
             // Determine the new direction and call changeDirection
             int newDirection = dCol == 1 ? 1 : -1; // Assuming positive direction is right
@@ -196,7 +196,7 @@ public class Zombie extends BaseMonsterPiece{
         offsetX=0;
         offsetY=-4;
         //sprite animations for monster
-        animationImage = new ImageView(new Image(Config.ZombieAnimationPath));
+        animationImage = new ImageView(new Image(Config.TinyAnimationPath));
         animationImage.setPreserveRatio(true);
         animationImage.setTranslateX(offsetX);
         animationImage.setTranslateY(offsetY);

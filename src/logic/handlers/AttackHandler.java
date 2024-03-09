@@ -14,7 +14,7 @@ public class AttackHandler {
     private static GameManager gameManager = GameManager.getInstance();
     private static BasePlayerPiece player = gameManager.player;
     private static ArrayList<Point2D> selectedTiles = gameManager.selectedAttackTiles;
-    private static ImageView[][] dungeonFloor = gameManager.dungeonFloor;
+    private static ImageView[][] selectionFloor = gameManager.selectionFloor;
     private static ImageScaler imageScaler = new ImageScaler();
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
 
@@ -31,7 +31,7 @@ public class AttackHandler {
                     if (player.validAttack(newRow, newCol)) {
                         selectedTiles.add(new Point2D(newRow , newCol));
                         // Highlight or mark the square to indicate it's within the attack range
-                        dungeonFloor[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidAttackPath), 2)); // Set texture to indicate valid attack
+                        selectionFloor[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidAttackPath), 2)); // Set texture to indicate valid attack
                     }
                 }
             }
