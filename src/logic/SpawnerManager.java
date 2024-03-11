@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
+import pieces.enemies.Bomber;
 import pieces.enemies.Tiny;
 import pieces.enemies.Zombie;
 import utils.Config;
@@ -24,7 +25,7 @@ public class SpawnerManager {
 
     public SpawnerManager() {
         monsterPool_1 = new BaseMonsterPiece[]{
-                new Tiny(), new Zombie()
+                new Tiny(), new Zombie(), new Bomber()
         };
     }
 

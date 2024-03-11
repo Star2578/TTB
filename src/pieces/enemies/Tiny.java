@@ -26,7 +26,7 @@ public class Tiny extends BaseMonsterPiece{
     private State currentState;
     private boolean[][] validMovesCache; // Cache of valid moves for the entire board
     private final double ATTACK_RANGE = 1.5; // Why it's .5? Because it's for diagonal
-    private final int VISON_RANGE = 3;
+    private final int VISION_RANGE = 3;
     private final int ATTACK_DAMAGE = 3;
     private Random random;
 
@@ -46,12 +46,15 @@ public class Tiny extends BaseMonsterPiece{
 
     // Method to update the state of the Tiny Zombie based on the player's position
     @Override
-    public void updateState(int playerRow, int playerCol) {
+    public void updateState() {
+        int playerRow = GameManager.getInstance().player.getRow();
+        int playerCol = GameManager.getInstance().player.getCol();
+
         // Calculate the distance between the Tiny Zombie and the player
         double distance = Math.sqrt(Math.pow(playerRow - getRow(), 2) + Math.pow(playerCol - getCol(), 2));
 
         // Check if the player is within the attack range
-        if (distance <= VISON_RANGE) {
+        if (distance <= VISION_RANGE) {
             currentState = State.AGGRESSIVE; // Transition to the Aggressive State
         } else {
             currentState = State.NEUTRAL_ROAMING; // Transition back to the Neutral/Roaming State
@@ -62,6 +65,7 @@ public class Tiny extends BaseMonsterPiece{
 
     // Method to perform actions based on the current state
     public void performAction() {
+        updateState();
         switch (currentState) {
             case NEUTRAL_ROAMING:
                 roamRandomly();
@@ -87,7 +91,7 @@ public class Tiny extends BaseMonsterPiece{
 
             // Attack the player
             attack(GameManager.getInstance().player);
-        } else if (distance <= VISON_RANGE) {
+        } else if (distance <= VISION_RANGE) {
             // If the player is within vision range but not attack range, move towards the player
             moveTowardsPlayer();
         } else {

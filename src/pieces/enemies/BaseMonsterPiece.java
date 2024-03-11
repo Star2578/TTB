@@ -74,9 +74,9 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     }
 
     public abstract void performAction(); // To call when it's this monster turn
-    public abstract void updateState(int playerRow, int playerCol); // Update the state of monster
+    public abstract void updateState(); // Update the state of monster
     protected abstract boolean isValidMoveSet(int row, int col); // Each monster have unique move set
-    public abstract void moveWithTransition(int col , int row);
+    public abstract void moveWithTransition(int row , int col);
 
     protected void move(int newRow, int newCol) {
         if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) return;
