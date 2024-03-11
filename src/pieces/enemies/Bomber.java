@@ -1,5 +1,7 @@
 package pieces.enemies;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -50,6 +52,8 @@ public class Bomber extends BaseMonsterPiece{
 
     @Override
     public void performAction() {
+        endAction = false;
+        updateState();
         switch (currentState) {
             case NEUTRAL_ROAMING:
                     roamRandomly();
@@ -96,54 +100,78 @@ public class Bomber extends BaseMonsterPiece{
         }
     }
 
-    // Method to run away from player
-    private void runAwayFromPlayer() {
-        System.out.println("Running Away from Player!!");
-
-        int playerRow = GameManager.getInstance().player.getRow();
-        int playerCol = GameManager.getInstance().player.getCol();
-
-        // Calculate the direction in which the bomber should run away
-        int deltaRow = getRow() - playerRow;
-        int deltaCol = getCol() - playerCol;
-
-        int newRow = getRow();
-        int newCol = getCol();
-
-        // Determine the new row and column based on the direction from the player
-        if (Math.abs(deltaRow) > Math.abs(deltaCol)) {
-            newRow = getRow() + (deltaRow > 0 ? 1 : -1);
-        } else {
-            newCol = getCol() + (deltaCol > 0 ? 1 : -1);
-        }
-
-        // Move the bomber to the new position if it's valid
-        if (isValidMoveSet(newRow, newCol) && validMovesCache[newRow][newCol] && GameManager.getInstance().isEmptySquare(newRow, newCol)) {
-            move(newRow, newCol);
-        }
-    }
-
-    // Method to roam around randomly
     private void roamRandomly() {
-        // Get the list of valid moves from the cache
-        List<int[]> validMoves = getValidMoves(getRow(), getCol());
+        Timeline timeline = new Timeline();
+        for (int i = 0; i < MOVE; i++) {
+            KeyFrame keyFrame = new KeyFrame(Duration.seconds(i), e -> {
+                // Get the list of valid moves from the cache
+                List<int[]> validMoves = getValidMoves(getRow(), getCol());
 
-        // If there are valid moves, randomly choose one and move to that position
-        if (!validMoves.isEmpty()) {
-            int[] randomMove = validMoves.get(random.nextInt(validMoves.size()));
-            int newRow = randomMove[0];
-            int newCol = randomMove[1];
+                // If there are valid moves, randomly choose one and move to that position
+                if (!validMoves.isEmpty()) {
+                    int[] randomMove = validMoves.get(random.nextInt(validMoves.size()));
+                    int newRow = randomMove[0];
+                    int newCol = randomMove[1];
 
-            // Determine the direction of movement
-            int newDirection = Integer.compare(newCol, getCol());
+                    // Determine the direction of movement
+                    int newDirection = Integer.compare(newCol, getCol());
 
-            // Call changeDirection with the new direction
-            changeDirection(newDirection);
+                    // Call changeDirection with the new direction
+                    changeDirection(newDirection);
 
-            // Move the zombie to the new position
-            move(newRow, newCol);
+                    // Move the bomber to the new position
+                    move(newRow, newCol);
+                }
+            });
+            timeline.getKeyFrames().add(keyFrame);
         }
+        timeline.setCycleCount(1);
+        timeline.play();
+
+        // finished
+        timeline.setOnFinished(actionEvent -> {
+            endAction = true;
+        });
     }
+
+    private void runAwayFromPlayer() {
+        Timeline timeline = new Timeline();
+        for (int i = 0; i < MOVE; i++) {
+            KeyFrame keyFrame = new KeyFrame(Duration.seconds(i), e -> {
+                System.out.println("Running Away from Player!!");
+                int playerRow = GameManager.getInstance().player.getRow();
+                int playerCol = GameManager.getInstance().player.getCol();
+
+                // Calculate the direction in which the bomber should run away
+                int deltaRow = getRow() - playerRow;
+                int deltaCol = getCol() - playerCol;
+
+                int newRow = getRow();
+                int newCol = getCol();
+
+                // Determine the new row and column based on the direction from the player
+                if (Math.abs(deltaRow) > Math.abs(deltaCol)) {
+                    newRow = getRow() + (deltaRow > 0 ? 1 : -1);
+                } else {
+                    newCol = getCol() + (deltaCol > 0 ? 1 : -1);
+                }
+
+                // Move the bomber to the new position if it's valid
+                if (isValidMoveSet(newRow, newCol) && validMovesCache[newRow][newCol] && GameManager.getInstance().isEmptySquare(newRow, newCol)) {
+                    move(newRow, newCol);
+                }
+            });
+            timeline.getKeyFrames().add(keyFrame);
+        }
+        timeline.setCycleCount(1);
+        timeline.play();
+
+        // end action of this piece
+        timeline.setOnFinished(actionEvent -> {
+            endAction = true;
+        });
+    }
+
 
     // Method to get the list of valid moves from the cache
     private List<int[]> getValidMoves(int row, int col) {

@@ -65,6 +65,7 @@ public class Zombie extends BaseMonsterPiece{
 
     // Method to perform actions based on the current state
     public void performAction() {
+        endAction = false;
         updateState();
         switch (currentState) {
             case NEUTRAL_ROAMING:
@@ -129,6 +130,7 @@ public class Zombie extends BaseMonsterPiece{
 
             setRow(row);
             setCol(col);
+            endAction = true;
         });
 
         moveTransition.play();

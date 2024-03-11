@@ -15,6 +15,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     private int maxHp;
     private int currentDirection;
     private boolean isAlive = true;
+    protected boolean endAction = false;
 
     protected SpriteAnimation spriteAnimation;
     public ImageView animationImage;
@@ -71,6 +72,10 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         SpawnerManager.getInstance().trySpawnDoor(getRow(), getCol());
         // To call when this monster died
         System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
+    }
+
+    public boolean isEndAction() {
+        return endAction;
     }
 
     public abstract void performAction(); // To call when it's this monster turn

@@ -17,6 +17,7 @@ public class TurnManager {
     private BasePlayerPiece player;
     private List<BasePiece> environmentPieces;
     private int currentEnvironmentPieceIndex;
+    private Timeline waitTimeline;
 
     public boolean isPlayerTurn;
     private final double DELAY_BETWEEN_ENVIRONMENT = 0.25;
@@ -64,9 +65,19 @@ public class TurnManager {
 
         if (currentPiece instanceof BaseMonsterPiece) {
             Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(DELAY_BETWEEN_ENVIRONMENT), event -> {
-                ((BaseMonsterPiece) currentPiece).performAction(); // Perform action for monsters after a delay of 1 second
-                // Move to the next environment piece
-                cycleNextEnvironment();
+                ((BaseMonsterPiece) currentPiece).performAction(); // Perform action for monsters after a delay
+
+                // waiting for the currentPiece to finished it actions
+                waitTimeline = new Timeline(new KeyFrame(Duration.millis(100), evt -> {
+                    if (!((BaseMonsterPiece) currentPiece).isEndAction()) {
+                        // Continue waiting
+                        return;
+                    }
+                    // Move to the next environment piece
+                    cycleNextEnvironment();
+                }));
+                waitTimeline.setCycleCount(Timeline.INDEFINITE);
+                waitTimeline.play();
             }));
 
             timeline.play();
@@ -74,6 +85,9 @@ public class TurnManager {
     }
 
     private void cycleNextEnvironment() {
+        // stop waitTimeline from checking
+        waitTimeline.stop();
+
         // Move to the next environment piece
         currentEnvironmentPieceIndex++;
         if (currentEnvironmentPieceIndex == environmentPieces.size()) {
