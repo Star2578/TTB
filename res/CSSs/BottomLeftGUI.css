@@ -1,0 +1,57 @@
+@font-face {
+    font-family: "x8y12pxTheStrongGamer";
+    src: url("/font/x8y12pxTheStrongGamer.ttf");
+}
+
+@font-face {
+    font-family: "x12y16pxSolidLinker";
+    src: url("/font/x12y16pxSolidLinker.ttf");
+}
+
+@font-face {
+    font-family: "x16y32pxGridGazer";
+    src: url("/font/x16y32pxGridGazer.ttf");
+}
+
+.button{
+    -fx-font-family:x16y32pxGridGazer;
+    -fx-font-size:16;
+    -fx-pref-width:100;
+    -fx-background-color:#DFDFDF;
+    -fx-border-width:3;
+    -fx-border-style:solid outside;
+    -fx-border-color:#323232;
+    -fx-border-radius:1;
+    -fx-focus-color:transparent;
+
+}
+.button:hover{
+    -fx-background-color:#9E9E9E;
+}
+.button:pressed{
+    -fx-text-fill:#610202;
+    -fx-background-color:#747277;
+    -fx-border-color:#212121;
+}
+
+#playerOptionMenuBox{
+    -fx-background-color:#434343;
+    -fx-border-color:'white';
+    -fx-border-width:5;
+    -fx-border-style:solid;
+}
+
+#hpText , #manaText{
+    -fx-font-family:x16y32pxGridGazer;
+    -fx-fill:'white';
+    -fx-font-size:20;
+}
+
+#hpBar{
+    -fx-accent:#aa1111;
+    -fx-pref-width:200;
+}
+#manaBar{
+    -fx-accent:blue;
+    -fx-pref-width:200;
+}
