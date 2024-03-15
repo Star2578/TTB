@@ -56,10 +56,10 @@ public class Bomber extends BaseMonsterPiece{
         updateState();
         switch (currentState) {
             case NEUTRAL_ROAMING:
-                    roamRandomly();
+                roamRandomly();
                 break;
             case RUNNING_AWAY:
-                    runAwayFromPlayer();
+                runAwayFromPlayer();
                 break;
         }
     }
@@ -96,7 +96,17 @@ public class Bomber extends BaseMonsterPiece{
 
         if (counter % BOMB_EVERY == 0) {
             System.out.println("Place bomb at " + bufferRow + " " + bufferCol);
-            // TODO: Implement place bomb here
+            Bomb bomb = new Bomb();
+
+            GameManager.getInstance().piecesPosition[bufferRow][bufferCol] = bomb;
+
+            bomb.animationImage.setFitWidth(SQUARE_SIZE);
+            bomb.animationImage.setX(bufferCol * SQUARE_SIZE + bomb.offsetX);
+            bomb.animationImage.setY(bufferRow * SQUARE_SIZE + bomb.offsetY);
+
+            GameManager.getInstance().environmentPieces.add(bomb); // Add the bomb to environment so it can take turn too
+
+            GameManager.getInstance().animationPane.getChildren().add(bomb.animationImage);
         }
     }
 

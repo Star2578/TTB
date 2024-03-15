@@ -36,6 +36,9 @@ public class Config {
     public static String BomberPath = "sprites/enemies/bomber/bomber.png";
     public static String BomberAnimationPath = "sprites/enemies/bomber/bomber_sprite_sheet.png";
 
+    public static String BombPath = "sprites/objects/bomb/bomb_f0.png";
+    public static String BombAnimationPath = "sprites/objects/bomb/bomb_f0.png";
+
     // Dungeon
     public static String WallPath = "sprites/ground/wall_1.png";
     public static String WallOnFloorPath = "sprites/ground/wall_onfloor_tile_map.png";
