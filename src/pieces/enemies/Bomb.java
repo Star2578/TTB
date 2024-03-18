@@ -86,7 +86,7 @@ public class Bomb extends BaseMonsterPiece{
     }
 
     @Override
-    public void moveWithTransition(int col, int row) {
+    public void moveWithTransition(int row, int col) {
 
     }
 

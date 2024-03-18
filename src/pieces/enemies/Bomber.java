@@ -98,6 +98,8 @@ public class Bomber extends BaseMonsterPiece{
             System.out.println("Place bomb at " + bufferRow + " " + bufferCol);
             Bomb bomb = new Bomb();
 
+            bomb.setRow(bufferRow);
+            bomb.setCol(bufferCol);
             GameManager.getInstance().piecesPosition[bufferRow][bufferCol] = bomb;
 
             bomb.animationImage.setFitWidth(SQUARE_SIZE);
@@ -169,6 +171,19 @@ public class Bomber extends BaseMonsterPiece{
                 // Move the bomber to the new position if it's valid
                 if (isValidMoveSet(newRow, newCol) && validMovesCache[newRow][newCol] && GameManager.getInstance().isEmptySquare(newRow, newCol)) {
                     move(newRow, newCol);
+                } else {
+                    // If the new position is not valid, try to find a valid move
+                    List<int[]> validMoves = getValidMoves(getRow(), getCol());
+                    if (!validMoves.isEmpty()) {
+                        // Randomly choose one of the valid moves and move to that position
+                        int[] randomMove = validMoves.get(random.nextInt(validMoves.size()));
+                        newRow = randomMove[0];
+                        newCol = randomMove[1];
+                        move(newRow, newCol);
+                    } else {
+                        // If there are no valid moves, the bomber cannot move and must stay in place
+                        System.out.println("No valid moves for the bomber!");
+                    }
                 }
             });
             timeline.getKeyFrames().add(keyFrame);

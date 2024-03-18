@@ -179,7 +179,7 @@ public class GameScene {
         // reset monsterCount = 0 every time we got to new floor
         SpawnerManager.getInstance().monsterCount = 0;
 
-        SpawnerManager.getInstance().randomMonsterSpawnFromPool(monsterPool1, environmentPieces, 1);
+        SpawnerManager.getInstance().randomMonsterSpawnFromPool(monsterPool1, environmentPieces, 5);
 
         for (BasePiece entity : environmentPieces) {
             entity.getTexture().setOnMouseClicked(mouseEvent -> handleSquareClick(entity.getRow(), entity.getCol()));
