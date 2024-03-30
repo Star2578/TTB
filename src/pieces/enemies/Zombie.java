@@ -37,7 +37,7 @@ public class Zombie extends BaseMonsterPiece{
         currentState = State.NEUTRAL_ROAMING;
 
         //configs values for animation
-        setupAnimation(0, -4, 32, 32);
+        setupAnimation(Config.ZombieAnimationPath, 0, -4, 32, 32);
     }
 
     // Method to update the state of the Zombie based on the player's position
@@ -95,6 +95,8 @@ public class Zombie extends BaseMonsterPiece{
             // If the player is out of vision range, transition back to roaming state
             currentState = State.NEUTRAL_ROAMING;
         }
+
+        endAction = true;
     }
 
     @Override
@@ -119,28 +121,6 @@ public class Zombie extends BaseMonsterPiece{
             // Determine the new direction and call changeDirection
             int newDirection = dCol == 1 ? 1 : -1; // Assuming positive direction is right
             changeDirection(newDirection);
-            move(newRow, newCol);
-        }
-    }
-
-    // Method to roam around randomly
-    protected void roamRandomly() {
-        // Get the list of valid moves from the cache
-        List<int[]> validMoves = getValidMoves(getRow(), getCol());
-
-        // If there are valid moves, randomly choose one and move to that position
-        if (!validMoves.isEmpty()) {
-            int[] randomMove = validMoves.get(random.nextInt(validMoves.size()));
-            int newRow = randomMove[0];
-            int newCol = randomMove[1];
-
-            // Determine the direction of movement
-            int newDirection = Integer.compare(newCol, getCol());
-
-            // Call changeDirection with the new direction
-            changeDirection(newDirection);
-
-            // Move the zombie to the new position
             move(newRow, newCol);
         }
     }

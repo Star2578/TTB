@@ -36,7 +36,7 @@ public class Tiny extends BaseMonsterPiece{
         currentState = State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
 
         //configs values for animation
-        setupAnimation(0, -4, 32, 32);
+        setupAnimation(Config.TinyAnimationPath, 0, -4, 32, 32);
     }
 
     // Method to update the state of the Tiny Zombie based on the player's position
@@ -94,6 +94,8 @@ public class Tiny extends BaseMonsterPiece{
             // If the player is out of vision range, transition back to roaming state
             currentState = State.NEUTRAL_ROAMING;
         }
+
+        endAction = true;
     }
 
     @Override

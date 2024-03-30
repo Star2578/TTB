@@ -38,7 +38,7 @@ public class Bomber extends BaseMonsterPiece{
         currentState = Bomber.State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
 
         //configs values for animation
-        setupAnimation(0, -10, 32, 46);
+        setupAnimation(Config.BomberAnimationPath, 0, -10, 32, 46);
     }
     @Override
     public void attack(BasePlayerPiece playerPiece) {

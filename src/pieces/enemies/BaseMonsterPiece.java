@@ -56,6 +56,119 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     public abstract void updateState(); // Update the state of monster
     public abstract void attack(BasePlayerPiece playerPiece);
 
+    /******************************************
+     *                  Utils
+     ******************************************/
+    protected void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height) {
+        //===================<animation section>==========================================
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+        //sprite animations for monster
+        animationImage = new ImageView(new Image(imgPath));
+        animationImage.setPreserveRatio(true);
+        animationImage.setTranslateX(offsetX);
+        animationImage.setTranslateY(offsetY);
+        animationImage.setDisable(true);
+        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,width,height,5);
+        spriteAnimation.start();
+
+        //setup moveTranslate behaviour
+        moveTransition = new TranslateTransition();
+        moveTransition.setNode(animationImage);
+        moveTransition.setDuration(Duration.millis(600));
+        moveTransition.setCycleCount(1);
+        //================================================================================
+    }
+    private void moveWithTransition(int row, int col) {
+        spriteAnimation.changeAnimation(4,  1);
+
+        //slowly move to target col,row
+        moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
+        moveTransition.setToY( (row-getRow()) * SQUARE_SIZE + offsetY);
+
+        moveTransition.setOnFinished(actionEvent->{
+            //set image layering depend on row
+            animationImage.setViewOrder(BOARD_SIZE - row);
+            //move real coordinate to new col,row
+            animationImage.setX(col*SQUARE_SIZE + offsetX);
+            animationImage.setY(row*SQUARE_SIZE + offsetY);
+            //set translateProperty back to default
+            animationImage.translateXProperty().set(offsetX);
+            animationImage.translateYProperty().set(offsetY);
+
+            spriteAnimation.changeAnimation(4,  0);
+
+            setRow(row);
+            setCol(col);
+        });
+
+        moveTransition.play();
+    }
+    protected void move(int newRow, int newCol) {
+        if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) return;
+
+        moveWithTransition(newRow , newCol);
+
+        BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
+        pieces[getRow()][getCol()] = null;
+        pieces[newRow][newCol] = this;
+    }
+    @Override
+    public void takeDamage(int damage) {
+        setCurrentHealth(currentHp - damage);
+    }
+    public void changeDirection(int direction) {
+        if (direction != 1 && direction != -1) {
+            return;
+        }
+        if (currentDirection != direction) {
+            currentDirection = direction;
+            ImageView imageView = animationImage;
+            imageView.setScaleX(direction); // Flipping the image horizontally if direction is -1
+        }
+    }
+    // Method to roam around randomly
+    protected void roamRandomly() {
+        // Get the list of valid moves from the cache
+        List<int[]> validMoves = getValidMoves(getRow(), getCol());
+
+        // If there are valid moves, randomly choose one and move to that position
+        if (!validMoves.isEmpty()) {
+            int[] randomMove = validMoves.get(random.nextInt(validMoves.size()));
+            int newRow = randomMove[0];
+            int newCol = randomMove[1];
+
+            // Determine the direction of movement
+            int newDirection = Integer.compare(newCol, getCol());
+
+            // Call changeDirection with the new direction
+            changeDirection(newDirection);
+
+            // Move the zombie to the new position
+            move(newRow, newCol);
+        }
+
+        endAction = true;
+    }
+    // Get valid moves by checking for empty squares, no other entity, no wall and isValidMoveSet
+    protected List<int[]> getValidMoves(int row, int col) {
+        List<int[]> validMoves = new ArrayList<>();
+        for (int dRow = -1; dRow <= 1; dRow++) {
+            for (int dCol = -1; dCol <= 1; dCol++) {
+                int newRow = row + dRow;
+                int newCol = col + dCol;
+                if (isValidMoveSet(newRow, newCol) && validMovesCache[newRow][newCol] && GameManager.getInstance().isEmptySquare(newRow, newCol)) {
+                    validMoves.add(new int[]{newRow, newCol});
+                }
+            }
+        }
+        return validMoves;
+    }
+
+    // Default valid moves are 8 directions around the monster
+    protected boolean isValidMoveSet(int row, int col) {
+        return row >= 0 && row < validMovesCache.length && col >= 0 && col < validMovesCache[0].length;
+    }
 
     /******************************************
      *             getter setter
@@ -101,123 +214,5 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     }
     public boolean isEndAction() {
         return endAction;
-    }
-
-    /******************************************
-     *                  Utils
-     ******************************************/
-    protected void setupAnimation(int offsetX, int offsetY, int width, int height) {
-        //===================<animation section>==========================================
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
-        //sprite animations for monster
-        animationImage = new ImageView(new Image(Config.BomberAnimationPath));
-        animationImage.setPreserveRatio(true);
-        animationImage.setTranslateX(offsetX);
-        animationImage.setTranslateY(offsetY);
-        animationImage.setDisable(true);
-        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,width,height,5);
-        spriteAnimation.start();
-
-        //setup moveTranslate behaviour
-        moveTransition = new TranslateTransition();
-        moveTransition.setNode(animationImage);
-        moveTransition.setDuration(Duration.millis(600));
-        moveTransition.setCycleCount(1);
-        //================================================================================
-    }
-
-    private void moveWithTransition(int row, int col) {
-        spriteAnimation.changeAnimation(4,  1);
-
-        //slowly move to target col,row
-        moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
-        moveTransition.setToY( (row-getRow()) * SQUARE_SIZE + offsetY);
-
-        moveTransition.setOnFinished(actionEvent->{
-            //set image layering depend on row
-            animationImage.setViewOrder(BOARD_SIZE - row);
-            //move real coordinate to new col,row
-            animationImage.setX(col*SQUARE_SIZE + offsetX);
-            animationImage.setY(row*SQUARE_SIZE + offsetY);
-            //set translateProperty back to default
-            animationImage.translateXProperty().set(offsetX);
-            animationImage.translateYProperty().set(offsetY);
-
-            spriteAnimation.changeAnimation(4,  0);
-
-            setRow(row);
-            setCol(col);
-        });
-
-        moveTransition.play();
-    }
-
-    protected void move(int newRow, int newCol) {
-        if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) return;
-
-        moveWithTransition(newRow , newCol);
-
-        BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
-        pieces[getRow()][getCol()] = null;
-        pieces[newRow][newCol] = this;
-    }
-
-    @Override
-    public void takeDamage(int damage) {
-        setCurrentHealth(currentHp - damage);
-    }
-
-    public void changeDirection(int direction) {
-        if (direction != 1 && direction != -1) {
-            return;
-        }
-        if (currentDirection != direction) {
-            currentDirection = direction;
-            ImageView imageView = animationImage;
-            imageView.setScaleX(direction); // Flipping the image horizontally if direction is -1
-        }
-    }
-
-    // Method to roam around randomly
-    protected void roamRandomly() {
-        // Get the list of valid moves from the cache
-        List<int[]> validMoves = getValidMoves(getRow(), getCol());
-
-        // If there are valid moves, randomly choose one and move to that position
-        if (!validMoves.isEmpty()) {
-            int[] randomMove = validMoves.get(random.nextInt(validMoves.size()));
-            int newRow = randomMove[0];
-            int newCol = randomMove[1];
-
-            // Determine the direction of movement
-            int newDirection = Integer.compare(newCol, getCol());
-
-            // Call changeDirection with the new direction
-            changeDirection(newDirection);
-
-            // Move the zombie to the new position
-            move(newRow, newCol);
-        }
-    }
-
-    // Get valid moves by checking for empty squares, no other entity, no wall and isValidMoveSet
-    protected List<int[]> getValidMoves(int row, int col) {
-        List<int[]> validMoves = new ArrayList<>();
-        for (int dRow = -1; dRow <= 1; dRow++) {
-            for (int dCol = -1; dCol <= 1; dCol++) {
-                int newRow = row + dRow;
-                int newCol = col + dCol;
-                if (isValidMoveSet(newRow, newCol) && validMovesCache[newRow][newCol] && GameManager.getInstance().isEmptySquare(newRow, newCol)) {
-                    validMoves.add(new int[]{newRow, newCol});
-                }
-            }
-        }
-        return validMoves;
-    }
-
-    // Default valid moves are 8 directions around the monster
-    protected boolean isValidMoveSet(int row, int col) {
-        return row >= 0 && row < validMovesCache.length && col >= 0 && col < validMovesCache[0].length;
     }
 }

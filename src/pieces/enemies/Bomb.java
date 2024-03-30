@@ -26,7 +26,7 @@ public class Bomb extends BaseMonsterPiece{
         currentState = State.COUNTDOWN; // Initially in the Neutral/Roaming State
 
         //configs values for animation
-        setupAnimation(0, 0, 16, 16);
+        setupAnimation(Config.BombPath, 0, 0, 16, 16);
     }
 
     @Override
