@@ -25,25 +25,20 @@ public class Bomber extends BaseMonsterPiece{
         RUNNING_AWAY // State when it placed the bomb, it will running away from the position
     }
     private Bomber.State currentState;
-    private boolean[][] validMovesCache; // Cache of valid moves for the entire board
     private final int VISION_RANGE = 5; // How far this monster could spot player
     private final int MOVE = 3; // How far this monster could walk per turn
     private final int BOMB_EVERY = 2;
     private int counter = 0; // Counter for when to place bomb
-    private Random random;
 
     public Bomber() {
         super(0, 0, 1);
-        setTextureByPath(Config.BomberPath);
         setMaxHealth(10);
         setCurrentHealth(getMaxHealth());
-        currentState = Bomber.State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
-        this.validMovesCache = GameManager.getInstance().validMovesCache;
-        random = new Random();
 
+        currentState = Bomber.State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
 
         //configs values for animation
-        setupAnimation();
+        setupAnimation(0, -10, 32, 46);
     }
     @Override
     public void attack(BasePlayerPiece playerPiece) {
@@ -112,7 +107,8 @@ public class Bomber extends BaseMonsterPiece{
         }
     }
 
-    private void roamRandomly() {
+    @Override
+    protected void roamRandomly() {
         Timeline timeline = new Timeline();
         for (int i = 0; i < MOVE; i++) {
             KeyFrame keyFrame = new KeyFrame(Duration.seconds(i), e -> {
@@ -195,75 +191,5 @@ public class Bomber extends BaseMonsterPiece{
         timeline.setOnFinished(actionEvent -> {
             endAction = true;
         });
-    }
-
-
-    // Method to get the list of valid moves from the cache
-    private List<int[]> getValidMoves(int row, int col) {
-        List<int[]> validMoves = new ArrayList<>();
-        for (int dRow = -1; dRow <= 1; dRow++) {
-            for (int dCol = -1; dCol <= 1; dCol++) {
-                int newRow = row + dRow;
-                int newCol = col + dCol;
-                if (isValidMoveSet(newRow, newCol) && validMovesCache[newRow][newCol] && GameManager.getInstance().isEmptySquare(newRow, newCol)) {
-                    validMoves.add(new int[]{newRow, newCol});
-                }
-            }
-        }
-        return validMoves;
-    }
-
-    @Override
-    protected boolean isValidMoveSet(int row, int col) {
-        return row >= 0 && row < validMovesCache.length && col >= 0 && col < validMovesCache[0].length;
-    }
-
-    @Override
-    public void moveWithTransition(int row, int col) {
-        spriteAnimation.changeAnimation(4,  1);
-
-        //slowly move to target col,row
-        moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
-        moveTransition.setToY( (row-getRow()) * SQUARE_SIZE + offsetY);
-
-        moveTransition.setOnFinished(actionEvent->{
-            //set image layering depend on row
-            animationImage.setViewOrder(BOARD_SIZE - row);
-            //move real coordinate to new col,row
-            animationImage.setX(col*SQUARE_SIZE + offsetX);
-            animationImage.setY(row*SQUARE_SIZE + offsetY);
-            //set translateProperty back to default
-            animationImage.translateXProperty().set(offsetX);
-            animationImage.translateYProperty().set(offsetY);
-
-            spriteAnimation.changeAnimation(4,  0);
-
-            setRow(row);
-            setCol(col);
-        });
-
-        moveTransition.play();
-    }
-
-    @Override
-    protected void setupAnimation() {
-        //===================<animation section>==========================================
-        offsetX=0;
-        offsetY=-10;
-        //sprite animations for monster
-        animationImage = new ImageView(new Image(Config.BomberAnimationPath));
-        animationImage.setPreserveRatio(true);
-        animationImage.setTranslateX(offsetX);
-        animationImage.setTranslateY(offsetY);
-        animationImage.setDisable(true);
-        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,32,46,5);
-        spriteAnimation.start();
-
-        //setup moveTranslate behaviour
-        moveTransition = new TranslateTransition();
-        moveTransition.setNode(animationImage);
-        moveTransition.setDuration(Duration.millis(600));
-        moveTransition.setCycleCount(1);
-        //================================================================================
     }
 }

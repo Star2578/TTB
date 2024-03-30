@@ -298,8 +298,8 @@ public class GameScene {
             //setup monster image size
             monsterPiece.animationImage.setFitWidth(SQUARE_SIZE);
             //set position
-            monsterPiece.animationImage.setX(piece.getCol() * SQUARE_SIZE + monsterPiece.offsetX);
-            monsterPiece.animationImage.setY(piece.getRow() * SQUARE_SIZE + monsterPiece.offsetY);
+            monsterPiece.animationImage.setX(piece.getCol() * SQUARE_SIZE + monsterPiece.getOffsetX());
+            monsterPiece.animationImage.setY(piece.getRow() * SQUARE_SIZE + monsterPiece.getOffsetY());
             //add monster sprite to animation pane
             animationPane.getChildren().add(monsterPiece.animationImage);
         }

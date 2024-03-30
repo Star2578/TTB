@@ -24,24 +24,19 @@ public class Tiny extends BaseMonsterPiece{
     }
 
     private State currentState;
-    private boolean[][] validMovesCache; // Cache of valid moves for the entire board
     private final double ATTACK_RANGE = 1.5; // Why it's .5? Because it's for diagonal
     private final int VISION_RANGE = 3;
     private final int ATTACK_DAMAGE = 3;
-    private Random random;
 
     public Tiny() {
         super(0, 0, 1);
-        setTextureByPath(Config.TinyPath);
         setMaxHealth(10);
         setCurrentHealth(getMaxHealth());
-        currentState = State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
-        this.validMovesCache = GameManager.getInstance().validMovesCache;
-        random = new Random();
 
+        currentState = State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
 
         //configs values for animation
-        setupAnimation();
+        setupAnimation(0, -4, 32, 32);
     }
 
     // Method to update the state of the Tiny Zombie based on the player's position
@@ -109,33 +104,6 @@ public class Tiny extends BaseMonsterPiece{
         GUIManager.getInstance().updateGUI();
     }
 
-    public void moveWithTransition(int row , int col){
-        spriteAnimation.changeAnimation(4,  1);
-
-        //slowly move to target col,row
-        moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
-        moveTransition.setToY( (row-getRow()) * SQUARE_SIZE + offsetY);
-
-        moveTransition.setOnFinished(actionEvent->{
-            //set image layering depend on row
-            animationImage.setViewOrder(BOARD_SIZE - row);
-            //move real coordinate to new col,row
-            animationImage.setX(col*SQUARE_SIZE + offsetX);
-            animationImage.setY(row*SQUARE_SIZE + offsetY);
-            //set translateProperty back to default
-            animationImage.translateXProperty().set(offsetX);
-            animationImage.translateYProperty().set(offsetY);
-
-            spriteAnimation.changeAnimation(4,  0);
-
-            setRow(row);
-            setCol(col);
-            endAction = true;
-        });
-
-        moveTransition.play();
-    }
-
     private void moveTowardsPlayer() {
         // Get the direction towards the player
         int dRow = Integer.compare(GameManager.getInstance().player.getRow(), getRow());
@@ -152,69 +120,5 @@ public class Tiny extends BaseMonsterPiece{
             changeDirection(newDirection);
             move(newRow, newCol);
         }
-    }
-
-    // Method to roam around randomly
-    private void roamRandomly() {
-        // Get the list of valid moves from the cache
-        List<int[]> validMoves = getValidMoves(getRow(), getCol());
-
-        // If there are valid moves, randomly choose one and move to that position
-        if (!validMoves.isEmpty()) {
-            int[] randomMove = validMoves.get(random.nextInt(validMoves.size()));
-            int newRow = randomMove[0];
-            int newCol = randomMove[1];
-
-            // Determine the direction of movement
-            int newDirection = Integer.compare(newCol, getCol());
-
-            // Call changeDirection with the new direction
-            changeDirection(newDirection);
-
-            // Move the zombie to the new position
-            move(newRow, newCol);
-        }
-    }
-
-    // Method to get the list of valid moves from the cache
-    private List<int[]> getValidMoves(int row, int col) {
-        List<int[]> validMoves = new ArrayList<>();
-        for (int dRow = -1; dRow <= 1; dRow++) {
-            for (int dCol = -1; dCol <= 1; dCol++) {
-                int newRow = row + dRow;
-                int newCol = col + dCol;
-                if (isValidMoveSet(newRow, newCol) && validMovesCache[newRow][newCol] && GameManager.getInstance().isEmptySquare(newRow, newCol)) {
-                    validMoves.add(new int[]{newRow, newCol});
-                }
-            }
-        }
-        return validMoves;
-    }
-
-    // Method to check if a position is valid on the board
-    @Override
-    public boolean isValidMoveSet(int row, int col) {
-        return row >= 0 && row < validMovesCache.length && col >= 0 && col < validMovesCache[0].length;
-    }
-
-    protected void setupAnimation(){
-        //===================<animation section>==========================================
-        offsetX=0;
-        offsetY=-4;
-        //sprite animations for monster
-        animationImage = new ImageView(new Image(Config.TinyAnimationPath));
-        animationImage.setPreserveRatio(true);
-        animationImage.setTranslateX(offsetX);
-        animationImage.setTranslateY(offsetY);
-        animationImage.setDisable(true);
-        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,32,32,5);
-        spriteAnimation.start();
-
-        //setup moveTranslate behaviour
-        moveTransition = new TranslateTransition();
-        moveTransition.setNode(animationImage);
-        moveTransition.setDuration(Duration.millis(600));
-        moveTransition.setCycleCount(1);
-        //================================================================================
     }
 }

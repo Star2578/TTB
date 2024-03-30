@@ -1,7 +1,9 @@
 package pieces.enemies;
 
 import javafx.animation.TranslateTransition;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpawnerManager;
 import logic.SpriteAnimation;
@@ -10,45 +12,67 @@ import pieces.BaseStatus;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import static utils.Config.BOARD_SIZE;
+import static utils.Config.SQUARE_SIZE;
+
 public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     private int currentHp;
     private int maxHp;
     private int currentDirection;
     private boolean isAlive = true;
     protected boolean endAction = false;
+    protected boolean[][] validMovesCache; // Cache of valid moves for the entire board
+    protected Random random;
 
     protected SpriteAnimation spriteAnimation;
     public ImageView animationImage;
     protected TranslateTransition moveTransition;
     //offset for image
-    public int offsetX=0;
-    public int offsetY=0;
+    protected int offsetX=0;
+    protected int offsetY=0;
 
 
     public BaseMonsterPiece(int row, int col, int defaultDirection) {
         super(Config.ENTITY_TYPE.MONSTER, new ImageView(Config.PlaceholderPath), row, col);
+        this.validMovesCache = GameManager.getInstance().validMovesCache;
+        this.random = new Random();
+
+        // insert 1 as default (image facing right)
+        // insert -1 to flip
         if (defaultDirection == -1) {
             ImageView imageView = getTexture();
             imageView.setScaleX(-1); // Flipping the image horizontally
         }
     }
 
+    /******************************************
+    *             Abstract fields
+    ******************************************/
+    public abstract void performAction(); // To call when it's this monster turn (in TurnManager)
+    public abstract void updateState(); // Update the state of monster
+    public abstract void attack(BasePlayerPiece playerPiece);
+
+
+    /******************************************
+     *             getter setter
+     ******************************************/
     @Override
     public int getCurrentHealth() {
         return currentHp;
     }
-
     @Override
     public void setCurrentHealth(int health) {
         this.currentHp = Math.max(health, 0);
         if (currentHp == 0) onDeath();
     }
-
     @Override
     public int getMaxHealth() {
         return maxHp;
     }
-
     @Override
     public void setMaxHealth(int maxHealth) {
         int maxHpBuffer = maxHp;
@@ -57,14 +81,16 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         if (maxHp == maxHpBuffer) currentHp = maxHp;
         if (maxHp < currentHp) currentHp = maxHp;
     }
-
-    public abstract void attack(BasePlayerPiece playerPiece);
-
+    public int getOffsetX() {
+        return offsetX;
+    }
+    public int getOffsetY() {
+        return offsetY;
+    }
     @Override
     public boolean isAlive() {
         return isAlive;
     }
-
     @Override
     public void onDeath() {
         isAlive = false;
@@ -73,15 +99,59 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         // To call when this monster died
         System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
     }
-
     public boolean isEndAction() {
         return endAction;
     }
 
-    public abstract void performAction(); // To call when it's this monster turn
-    public abstract void updateState(); // Update the state of monster
-    protected abstract boolean isValidMoveSet(int row, int col); // Each monster have unique move set
-    public abstract void moveWithTransition(int row , int col);
+    /******************************************
+     *                  Utils
+     ******************************************/
+    protected void setupAnimation(int offsetX, int offsetY, int width, int height) {
+        //===================<animation section>==========================================
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+        //sprite animations for monster
+        animationImage = new ImageView(new Image(Config.BomberAnimationPath));
+        animationImage.setPreserveRatio(true);
+        animationImage.setTranslateX(offsetX);
+        animationImage.setTranslateY(offsetY);
+        animationImage.setDisable(true);
+        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,width,height,5);
+        spriteAnimation.start();
+
+        //setup moveTranslate behaviour
+        moveTransition = new TranslateTransition();
+        moveTransition.setNode(animationImage);
+        moveTransition.setDuration(Duration.millis(600));
+        moveTransition.setCycleCount(1);
+        //================================================================================
+    }
+
+    private void moveWithTransition(int row, int col) {
+        spriteAnimation.changeAnimation(4,  1);
+
+        //slowly move to target col,row
+        moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
+        moveTransition.setToY( (row-getRow()) * SQUARE_SIZE + offsetY);
+
+        moveTransition.setOnFinished(actionEvent->{
+            //set image layering depend on row
+            animationImage.setViewOrder(BOARD_SIZE - row);
+            //move real coordinate to new col,row
+            animationImage.setX(col*SQUARE_SIZE + offsetX);
+            animationImage.setY(row*SQUARE_SIZE + offsetY);
+            //set translateProperty back to default
+            animationImage.translateXProperty().set(offsetX);
+            animationImage.translateYProperty().set(offsetY);
+
+            spriteAnimation.changeAnimation(4,  0);
+
+            setRow(row);
+            setCol(col);
+        });
+
+        moveTransition.play();
+    }
 
     protected void move(int newRow, int newCol) {
         if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) return;
@@ -109,5 +179,45 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         }
     }
 
-    protected abstract void setupAnimation();
+    // Method to roam around randomly
+    protected void roamRandomly() {
+        // Get the list of valid moves from the cache
+        List<int[]> validMoves = getValidMoves(getRow(), getCol());
+
+        // If there are valid moves, randomly choose one and move to that position
+        if (!validMoves.isEmpty()) {
+            int[] randomMove = validMoves.get(random.nextInt(validMoves.size()));
+            int newRow = randomMove[0];
+            int newCol = randomMove[1];
+
+            // Determine the direction of movement
+            int newDirection = Integer.compare(newCol, getCol());
+
+            // Call changeDirection with the new direction
+            changeDirection(newDirection);
+
+            // Move the zombie to the new position
+            move(newRow, newCol);
+        }
+    }
+
+    // Get valid moves by checking for empty squares, no other entity, no wall and isValidMoveSet
+    protected List<int[]> getValidMoves(int row, int col) {
+        List<int[]> validMoves = new ArrayList<>();
+        for (int dRow = -1; dRow <= 1; dRow++) {
+            for (int dCol = -1; dCol <= 1; dCol++) {
+                int newRow = row + dRow;
+                int newCol = col + dCol;
+                if (isValidMoveSet(newRow, newCol) && validMovesCache[newRow][newCol] && GameManager.getInstance().isEmptySquare(newRow, newCol)) {
+                    validMoves.add(new int[]{newRow, newCol});
+                }
+            }
+        }
+        return validMoves;
+    }
+
+    // Default valid moves are 8 directions around the monster
+    protected boolean isValidMoveSet(int row, int col) {
+        return row >= 0 && row < validMovesCache.length && col >= 0 && col < validMovesCache[0].length;
+    }
 }
