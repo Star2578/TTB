@@ -27,16 +27,12 @@ public class Config {
     public static String KnightAnimationPath = "sprites/player/knight_sprite_sheet.png";
 
     // Enemies
-    public static String TinyPath = "sprites/enemies/tiny/tiny.png";
     public static String TinyAnimationPath = "sprites/enemies/tiny/tiny_sprite_sheet.png";
 
-    public static String ZombiePath = "sprites/enemies/zombie/zombie.png";
     public static String ZombieAnimationPath = "sprites/enemies/zombie/zombie_sprite_sheet.png";
 
-    public static String BomberPath = "sprites/enemies/bomber/bomber.png";
     public static String BomberAnimationPath = "sprites/enemies/bomber/bomber_sprite_sheet.png";
 
-    public static String BombPath = "sprites/objects/bomb/bomb_f0.png";
     public static String BombAnimationPath = "sprites/objects/bomb/bomb_f0.png";
 
     // Dungeon
@@ -62,13 +58,6 @@ public class Config {
 
     // Attacks animation
     public static String meleeAttackPath = "sprites/attacks/testLocation.png";
-
-    //animation
-    public enum STATE{
-        IDLE,
-        MOVE,
-        ATTACK
-    }
 
     public enum ITEM_TYPE {
         ARMOR,

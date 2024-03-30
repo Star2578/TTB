@@ -364,6 +364,8 @@ public class GameScene {
 
         if (isInAttackMode) {
             System.out.println("Player Prepare to attack");
+            boolean enoughActionPoint = player.getCurrentActionPoint() >= gameManager.selectedSkill.getActionPointCost();
+
             // Check if the clicked square is within showValid attack range
             if (player.validAttack(row, col)) {
                 // Check if there is a monster on the clicked square
@@ -389,11 +391,18 @@ public class GameScene {
         boolean isInUseSkillMode = GUIManager.getInstance().isInUseSkillMode;
 
         if (isInUseSkillMode && gameManager.selectedSkill != null) {
+            boolean enoughMana = player.getCurrentMana() >= gameManager.selectedSkill.getManaCost();
+            boolean enoughActionPoint = player.getCurrentActionPoint() >= gameManager.selectedSkill.getActionPointCost();
+
             if (gameManager.selectedSkill.validRange(row, col)) {
                 // Check if there is a monster on the clicked square
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     // Perform the attack on the monster
-                    gameManager.selectedSkill.perform(monsterPiece);
+                    if (enoughMana && enoughActionPoint) {
+                        gameManager.selectedSkill.perform(monsterPiece);
+                    } else {
+                        System.out.println("Not enough mana or action point");
+                    }
                     resetSelection(2);
                     GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
                     if (!monsterPiece.isAlive()) {
@@ -402,8 +411,6 @@ public class GameScene {
                     }
                 } else if (piecesPosition[row][col] instanceof BasePlayerPiece playerPiece) {
                     if (gameManager.selectedSkill.castOnSelf()) {
-                        boolean enoughMana = playerPiece.getCurrentMana() >= gameManager.selectedSkill.getManaCost();
-                        boolean enoughActionPoint = playerPiece.getCurrentActionPoint() >= gameManager.selectedSkill.getActionPointCost();
 
                         if (enoughMana && enoughActionPoint) {
                             gameManager.selectedSkill.perform(playerPiece);
@@ -503,14 +510,13 @@ public class GameScene {
     public void resetSelection(int type) {
         isPlayerPieceSelected = false;
 
-        /*
+        /**************************************************
         *   type manual
-        *
-        *   0 = vanilla remove selected tiles
-        *   1 = exit attack remove selected tiles
-        *   2 = deselected skill remove selected tiles
-        *   3 = reset item selection
-        */
+        *   0 = movement remove selected tiles
+        *   1 = attack remove selected tiles
+        *   2 = skill remove selected tiles
+        *   3 = item remove selected tiles
+        ***************************************************/
 
         if(type == 0){
             //reset move Selected Tiles
@@ -522,7 +528,7 @@ public class GameScene {
             selectedMoveTiles.clear();
 
         }
-        else if(type == 1){//reset attack selection
+        else if(type == 1){
             //reset attack Selected Tiles
             for (int i = 0  ; i < selectedAttackTiles.size() ; i++){
                 selectionFloor[(int) selectedAttackTiles.get(i).getX()][(int) selectedAttackTiles.get(i).getY()]

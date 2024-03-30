@@ -26,9 +26,18 @@ public abstract class BaseSkill {
         this.frame = new ImageView(imageScaler.resample(new Image(Config.FramePath), 2));
     }
 
-    // Abstract method to perform the skill
+    /******************************************
+     *             Abstract fields
+     ******************************************/
     public abstract void perform(BasePiece target);
+    public abstract boolean validRange(int row, int col);
+    public abstract boolean castOnSelf();
+    public abstract boolean castOnMonster();
 
+
+    /******************************************
+     *             getter setter
+     ******************************************/
     public String getName() {
         return name;
     }
@@ -50,15 +59,7 @@ public abstract class BaseSkill {
     public ImageView getFrame() {
         return frame;
     }
-
-
     public void setFrame(ImageView frame) {
         this.frame = frame;
     }
-
-
-    public abstract boolean validRange(int row, int col);
-
-    public abstract boolean castOnSelf();
-    public abstract boolean castOnMonster();
 }
