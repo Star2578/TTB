@@ -98,8 +98,8 @@ public class Bomber extends BaseMonsterPiece{
             GameManager.getInstance().piecesPosition[bufferRow][bufferCol] = bomb;
 
             bomb.animationImage.setFitWidth(SQUARE_SIZE);
-            bomb.animationImage.setX(bufferCol * SQUARE_SIZE + bomb.offsetX);
-            bomb.animationImage.setY(bufferRow * SQUARE_SIZE + bomb.offsetY);
+            bomb.animationImage.setX(bufferCol * SQUARE_SIZE + bomb.getOffsetX());
+            bomb.animationImage.setY(bufferRow * SQUARE_SIZE + bomb.getOffsetX());
 
             GameManager.getInstance().environmentPieces.add(bomb); // Add the bomb to environment so it can take turn too
 

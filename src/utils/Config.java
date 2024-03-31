@@ -27,13 +27,13 @@ public class Config {
     public static String KnightAnimationPath = "sprites/player/knight_sprite_sheet.png";
 
     // Enemies
-    public static String TinyAnimationPath = "sprites/enemies/tiny/tiny_sprite_sheet.png";
-
-    public static String ZombieAnimationPath = "sprites/enemies/zombie/zombie_sprite_sheet.png";
-
-    public static String BomberAnimationPath = "sprites/enemies/bomber/bomber_sprite_sheet.png";
-
+    public static String TinyAnimationPath = "sprites/enemies/tiny_sprite_sheet.png";
+    public static String ZombieAnimationPath = "sprites/enemies/zombie_sprite_sheet.png";
+    public static String BomberAnimationPath = "sprites/enemies/bomber_sprite_sheet.png";
     public static String BombAnimationPath = "sprites/objects/bomb/bomb_f0.png";
+
+    // NPC
+    public static String DealerAnimationPath = "sprites/npc/dealer_sprite_sheet.png";
 
     // Dungeon
     public static String WallPath = "sprites/ground/wall_1.png";

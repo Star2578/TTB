@@ -1,0 +1,15 @@
+{
+  "greetings": {
+    "hello": "Hello there!",
+    "good_morning": "Good morning! How can I help you today?"
+  },
+  "questions": {
+    "name": "I am Aatrox, the World Ender.. WAS the World Ender.",
+    "age": "More than thousand years old.",
+    "location": "In the dungeon, foolish human."
+  },
+  "farewells": {
+    "goodbye": "Goodbye! Have a great day!",
+    "see_you": "See you later!"
+  }
+}

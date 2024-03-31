@@ -28,14 +28,6 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     protected boolean[][] validMovesCache; // Cache of valid moves for the entire board
     protected Random random;
 
-    protected SpriteAnimation spriteAnimation;
-    public ImageView animationImage;
-    protected TranslateTransition moveTransition;
-    //offset for image
-    protected int offsetX=0;
-    protected int offsetY=0;
-
-
     public BaseMonsterPiece(int row, int col, int defaultDirection) {
         super(Config.ENTITY_TYPE.MONSTER, new ImageView(Config.PlaceholderPath), row, col);
         this.validMovesCache = GameManager.getInstance().validMovesCache;
@@ -59,51 +51,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     /******************************************
      *                  Utils
      ******************************************/
-    protected void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height) {
-        //===================<animation section>==========================================
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
-        //sprite animations for monster
-        animationImage = new ImageView(new Image(imgPath));
-        animationImage.setPreserveRatio(true);
-        animationImage.setTranslateX(offsetX);
-        animationImage.setTranslateY(offsetY);
-        animationImage.setDisable(true);
-        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,width,height,5);
-        spriteAnimation.start();
 
-        //setup moveTranslate behaviour
-        moveTransition = new TranslateTransition();
-        moveTransition.setNode(animationImage);
-        moveTransition.setDuration(Duration.millis(600));
-        moveTransition.setCycleCount(1);
-        //================================================================================
-    }
-    private void moveWithTransition(int row, int col) {
-        spriteAnimation.changeAnimation(4,  1);
-
-        //slowly move to target col,row
-        moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
-        moveTransition.setToY( (row-getRow()) * SQUARE_SIZE + offsetY);
-
-        moveTransition.setOnFinished(actionEvent->{
-            //set image layering depend on row
-            animationImage.setViewOrder(BOARD_SIZE - row);
-            //move real coordinate to new col,row
-            animationImage.setX(col*SQUARE_SIZE + offsetX);
-            animationImage.setY(row*SQUARE_SIZE + offsetY);
-            //set translateProperty back to default
-            animationImage.translateXProperty().set(offsetX);
-            animationImage.translateYProperty().set(offsetY);
-
-            spriteAnimation.changeAnimation(4,  0);
-
-            setRow(row);
-            setCol(col);
-        });
-
-        moveTransition.play();
-    }
     protected void move(int newRow, int newCol) {
         if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) return;
 
@@ -193,12 +141,6 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
 
         if (maxHp == maxHpBuffer) currentHp = maxHp;
         if (maxHp < currentHp) currentHp = maxHp;
-    }
-    public int getOffsetX() {
-        return offsetX;
-    }
-    public int getOffsetY() {
-        return offsetY;
     }
     @Override
     public boolean isAlive() {

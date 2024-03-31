@@ -22,6 +22,8 @@ import logic.handlers.*;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.*;
+import pieces.npcs.BaseNpcPiece;
+import pieces.npcs.Dealer;
 import pieces.player.*;
 import pieces.wall.*;
 import utils.Config;
@@ -185,6 +187,8 @@ public class GameScene {
             entity.getTexture().setOnMouseClicked(mouseEvent -> handleSquareClick(entity.getRow(), entity.getCol()));
             placeEntityRandomly(entity);
         }
+
+        placeEntityRandomly(new Dealer());
     }
 
     private void gameStart() {
@@ -283,6 +287,7 @@ public class GameScene {
     private void placePiece(BasePiece piece) {
         //this method is called after generated dungeon
         //place Piece to the board
+
         if(piece instanceof BasePlayerPiece playerPiece){
             //setup player image size
             playerPiece.animationImage.setFitWidth(SQUARE_SIZE);
@@ -302,6 +307,14 @@ public class GameScene {
             monsterPiece.animationImage.setY(piece.getRow() * SQUARE_SIZE + monsterPiece.getOffsetY());
             //add monster sprite to animation pane
             animationPane.getChildren().add(monsterPiece.animationImage);
+        } else if (piece instanceof BaseNpcPiece npcPiece) {
+            //setup npc image size
+            npcPiece.animationImage.setFitWidth(SQUARE_SIZE);
+            //set position
+            npcPiece.animationImage.setX(piece.getCol() * SQUARE_SIZE + npcPiece.getOffsetX());
+            npcPiece.animationImage.setY(piece.getRow() * SQUARE_SIZE + npcPiece.getOffsetY());
+            //add npc sprite to animation pane
+            animationPane.getChildren().add(npcPiece.animationImage);
         }
         //TODO: if piece an instance of Object
 

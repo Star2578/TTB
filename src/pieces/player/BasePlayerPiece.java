@@ -69,6 +69,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public abstract void attack(BaseMonsterPiece monsterPiece); // This will differ for each class of player
     public abstract void moveWithTransition(int row , int col);
     public abstract boolean validMove(int row, int col); // To set valid move for each classes
+    @Override
     protected void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height){
         //===================<animation section>==========================================
         this.offsetX=offsetX;
