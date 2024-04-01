@@ -53,6 +53,7 @@ public class GUIManager {
     // Displays for each use
     public InventoryDisplay inventoryDisplay;
     public SkillSelectDisplay skillSelectDisplay;
+    public EventLogDisplay eventLogDisplay;
 
     // ----------- UI Status -----------
     public boolean isInAttackMode = false;
@@ -65,6 +66,7 @@ public class GUIManager {
 
         inventoryDisplay = new InventoryDisplay();
         skillSelectDisplay = new SkillSelectDisplay();
+        eventLogDisplay = new EventLogDisplay();
 
         initializePlayerOptionsMenu();
         initializeRightSideUI();
@@ -94,7 +96,6 @@ public class GUIManager {
         ImageView playerCharacterImage = new ImageView(imageScaler.resample(new Image(Config.KnightLargePath), 2));
         playerCharacterImage.setPreserveRatio(true);
         playerCharacterImage.setFitWidth(70);
-//       playerCharacterImage.setPreserveRatio(true);
 
         //-------------<player status section>----------------------------------
         // HP Bar
@@ -193,6 +194,8 @@ public class GUIManager {
         // Set the border with the created border stroke
         rightSideUI.setBorder(new Border(borderStroke));
 
+        switchToEventLog();
+
         // Set the minimum width and height of the VBox
         rightSideUI.setMinWidth(300);
         rightSideUI.setMaxWidth(300);
@@ -250,6 +253,10 @@ public class GUIManager {
             currentScene.setCursor(bufferCursor);
         }));
         timeline.play();
+    }
+
+    public void switchToEventLog() {
+        setDisplay(eventLogDisplay);
     }
 
     public void enableButton(){

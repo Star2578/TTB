@@ -142,7 +142,7 @@ public class InventoryDisplay implements Display {
         ScrollPane scrollPane = new ScrollPane(itemGrid);
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
-        scrollPane.setPrefViewportHeight(64);
+//        scrollPane.setPrefViewportHeight(64);
         scrollPane.setStyle("-fx-background-color: #434343;");
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 

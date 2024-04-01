@@ -644,7 +644,8 @@ public class GameScene {
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case F1:
-                    removeElements();
+//                    removeElements();
+                    GUIManager.getInstance().eventLogDisplay.addLog("Hello World!");
                     break;
                 case F2:
                     generateNewFloor();
