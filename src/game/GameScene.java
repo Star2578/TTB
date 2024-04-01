@@ -148,7 +148,20 @@ public class GameScene {
                 }
             }
         };
-
+        // Right click anywhere in the scene to cancel/deselect anything
+        scene.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+                if (GUIManager.getInstance().isInAttackMode) {
+                    resetSelection(1);
+                } else if (gameManager.selectedSkill != null) {
+                    resetSelection(2);
+                } else if (gameManager.selectedItem != null) {
+                    resetSelection(3);
+                } else {
+                    resetSelection(0);
+                }
+            }
+        });
         // Define render logic
         renderLogic = () -> {
             // Render game graphics
@@ -440,7 +453,7 @@ public class GameScene {
         // ----------------------- Handle Item -----------------------
 
         BaseItem item = GameManager.getInstance().selectedItem;
-        if (item != null && !(item instanceof EmptyFrame)) {
+        if (item != null) {
             if (item instanceof Usable usableItem) {
                 if (usableItem.validRange(row, col)) {
                     BasePiece target = piecesPosition[row][col];
@@ -472,6 +485,9 @@ public class GameScene {
                     // reset selection when not in valid range
                     resetSelection(3);
                 }
+            } else {
+                // reset selection when clicked outside for other
+                resetSelection(3);
             }
 
             return;

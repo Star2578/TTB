@@ -200,16 +200,6 @@ public class GUIManager {
         rightSideUI.setMaxHeight(720);
     }
 
-    public void switchToInventoryDisplay() {
-        // set InventoryDisplay as the current display
-        setDisplay(inventoryDisplay);
-    }
-
-    public void switchToSkillSelectDisplay() {
-        // set SkillSelectDisplay as the current display
-        setDisplay(skillSelectDisplay);
-    }
-
     private void setDisplay(Display display) {
         // Clear previous display
         rightSideUI.getChildren().clear();
