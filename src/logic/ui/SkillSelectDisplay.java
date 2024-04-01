@@ -32,85 +32,15 @@ import java.util.Stack;
 public class SkillSelectDisplay implements Display{
     private VBox view;
 
-    private VBox skillInfoBox;
     private GridPane skillSelectorGrid;
     private ImageScaler imageScaler = new ImageScaler();
     private ImageView frameView;
 
-    private Text skillName;
-    private Text skillManaCost;
-    private Text skillActionPointCost;
-    private Text skillDescription;
 
     public SkillSelectDisplay() {
         view = new VBox();
         view.setPadding(new Insets(5));
         view.setAlignment(Pos.CENTER);
-        view.setStyle("-fx-background-color: #2C3E50;"); // Set background color
-
-        // Initialize skill info box
-        skillInfoBox = new VBox();
-        skillInfoBox.setAlignment(Pos.CENTER);
-        skillInfoBox.setSpacing(10);
-
-        // Initialize titles
-        Label nameTitle = new Label("Name: ");
-        nameTitle.setStyle(
-                "-fx-font-family:x16y32pxGridGazer;" +
-                "-fx-font-size:18;" +
-                "-fx-text-fill:'white';");
-        Label descriptionTitle = new Label("Description: ");
-        descriptionTitle.setStyle(
-                "-fx-font-family:x16y32pxGridGazer;" +
-                "-fx-font-size:18;" +
-                "-fx-text-fill:'white';");
-        Label manaTitle = new Label("Mana Cost: ");
-        manaTitle.setStyle(
-                "-fx-font-family:x16y32pxGridGazer;" +
-                "-fx-font-size:18;" +
-                "-fx-text-fill:'white';");
-        Label actionPointTitle = new Label("Action Point Cost: ");
-        actionPointTitle.setStyle(
-                "-fx-font-family:x16y32pxGridGazer;" +
-                "-fx-font-size:18;" +
-                "-fx-text-fill:'white';");
-
-        // Initialize skill info elements
-        skillName = new Text();
-        skillName.setWrappingWidth(280);
-        skillName.setTextAlignment(TextAlignment.CENTER);
-        skillName.setStyle(
-                "-fx-font-family:x16y32pxGridGazer;" +
-                "-fx-font-size:16;" +
-                "-fx-fill:'white';");
-        skillManaCost = new Text();
-        skillManaCost.setWrappingWidth(280);
-        skillManaCost.setTextAlignment(TextAlignment.CENTER);
-        skillManaCost.setStyle(
-                "-fx-font-family:x16y32pxGridGazer;" +
-                        "-fx-font-size:16;" +
-                        "-fx-fill:'white';");
-        skillActionPointCost = new Text();
-        skillActionPointCost.setWrappingWidth(280);
-        skillActionPointCost.setTextAlignment(TextAlignment.CENTER);
-        skillActionPointCost.setStyle(
-                "-fx-font-family:x16y32pxGridGazer;" +
-                        "-fx-font-size:16;" +
-                        "-fx-fill:'white';");
-        skillDescription = new Text();
-        skillDescription.setWrappingWidth(280);
-        skillDescription.setTextAlignment(TextAlignment.CENTER);
-        skillDescription.setStyle(
-                "-fx-font-family:x16y32pxGridGazer;" +
-                        "-fx-font-size:16;" +
-                        "-fx-fill:'white';");
-
-
-        // Add skill info elements to the skill info box
-        skillInfoBox.getChildren().addAll(
-                nameTitle, skillName, manaTitle, skillManaCost, actionPointTitle, skillActionPointCost, descriptionTitle, skillDescription
-        );
-        skillInfoBox.setPadding(new Insets(0, 0, 50, 0));
 
         // Initialize skill selector box
         skillSelectorGrid = new GridPane();
@@ -133,13 +63,9 @@ public class SkillSelectDisplay implements Display{
             }
         }
 
-        skillInfoBox.setAlignment(Pos.TOP_CENTER);
         skillSelectorGrid.setAlignment(Pos.BOTTOM_CENTER);
         // Add skill info box and skill selector box to main view
-        view.getChildren().addAll(skillInfoBox, skillSelectorGrid);
-        view.setMaxWidth(300);
-        view.setMinHeight(710);
-        view.setMaxHeight(720);
+        view.getChildren().addAll(skillSelectorGrid);
     }
 
     // This method create the skill frame from skill in parameter
@@ -153,7 +79,6 @@ public class SkillSelectDisplay implements Display{
         skillFrame.setAlignment(Pos.CENTER);
         skillFrame.setPrefWidth(64);
         skillFrame.setPrefHeight(64);
-        skillFrame.setStyle("-fx-background-color: #34495E;"); // Set frame background color
         skillFrame.getChildren().addAll(new ImageView(skillIcon), frameView);
 
         BasePlayerPiece player = GameManager.getInstance().player;
@@ -173,35 +98,12 @@ public class SkillSelectDisplay implements Display{
                 SkillHandler.showValidSkillRange(player.getRow(), player.getCol(), skill);
                 GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
                 GameManager.getInstance().selectedSkill = skill;
-                updateSelectedSkillInfo();
                 skill.getFrame().setImage(imageScaler.resample(new Image(Config.FrameSelectedPath), 2));
                 System.out.println("Selected " + skill.getName() + " skill");
             });
         }
 
         return skillFrame;
-    }
-
-    // Method to update the selected skill information
-    private void updateSelectedSkillInfo(BaseSkill skill) {
-        if (skill != null) {
-            skillName.setText(skill.getName());
-            skillManaCost.setText(String.valueOf(skill.getManaCost()));
-            skillActionPointCost.setText(String.valueOf(skill.getActionPointCost()));
-            skillDescription.setText(skill.getDescription());
-        } else {
-            // Clear the skill info if no skill is selected
-            skillName.setText("");
-            skillManaCost.setText("");
-            skillActionPointCost.setText("");
-            skillDescription.setText("");
-        }
-    }
-
-    // Update method to update the selected skill information
-    public void updateSelectedSkillInfo() {
-        BaseSkill selectedSkill = GameManager.getInstance().selectedSkill;
-        updateSelectedSkillInfo(selectedSkill);
     }
 
     // Method to update skill frame into other skill

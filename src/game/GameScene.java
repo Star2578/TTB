@@ -128,7 +128,7 @@ public class GameScene {
         rightPane.getChildren().add(guiManager.getRightSideUI());
 
         root.setLeft(leftPane);
-        leftPane.getChildren().addAll(guiManager.getTurnOrderDisplay(), guiManager.getPlayerOptionsMenu());
+        leftPane.getChildren().addAll(guiManager.getPlayerOptionsMenu());
         leftPane.setPadding(new Insets(10));
 
         // Define update logic
@@ -401,9 +401,7 @@ public class GameScene {
 
         // ------------------------- Skill Mode -------------------------
 
-        boolean isInUseSkillMode = GUIManager.getInstance().isInUseSkillMode;
-
-        if (isInUseSkillMode && gameManager.selectedSkill != null) {
+        if (gameManager.selectedSkill != null) {
             boolean enoughMana = player.getCurrentMana() >= gameManager.selectedSkill.getManaCost();
             boolean enoughActionPoint = player.getCurrentActionPoint() >= gameManager.selectedSkill.getActionPointCost();
 
@@ -417,7 +415,6 @@ public class GameScene {
                         System.out.println("Not enough mana or action point");
                     }
                     resetSelection(2);
-                    GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
                     if (!monsterPiece.isAlive()) {
                         removePiece(monsterPiece);
                         environmentPieces.remove(monsterPiece);
@@ -431,13 +428,11 @@ public class GameScene {
                             System.out.println("Not enough mana or action point");
                         }
                         resetSelection(2);
-                        GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
                     }
                 }
             } else {
                 // Cancel skill selection
                 resetSelection(2);
-                GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
             }
             return;
         }

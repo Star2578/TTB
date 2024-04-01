@@ -31,7 +31,6 @@ public class GUIManager {
     private TurnManager turnManager;
     private BasePlayerPiece player;
     private ImageScaler imageScaler;
-    private VBox turnOrderDisplay;
     private VBox playerOptionsMenu;
     private VBox rightSideUI;
     private Display currentDisplay;
@@ -48,8 +47,6 @@ public class GUIManager {
 
     // Buttons
     VBox playerOptionButtonBox;
-    private Button inventoryButton;
-    private Button useSkillsButton;
     private Button endTurnButton;
     private Button attackButton;
 
@@ -59,8 +56,6 @@ public class GUIManager {
 
     // ----------- UI Status -----------
     public boolean isInAttackMode = false;
-    public boolean isInInventoryMode = false;
-    public boolean isInUseSkillMode = false;
 
 
     public GUIManager() {
@@ -71,7 +66,6 @@ public class GUIManager {
         inventoryDisplay = new InventoryDisplay();
         skillSelectDisplay = new SkillSelectDisplay();
 
-        initializeTurnOrderDisplay();
         initializePlayerOptionsMenu();
         initializeRightSideUI();
     }
@@ -81,25 +75,6 @@ public class GUIManager {
             instance = new GUIManager();
         }
         return instance;
-    }
-
-    private void initializeTurnOrderDisplay() {
-        turnOrderDisplay = new VBox();
-
-        // Create a border with a specific color and stroke width
-        BorderStroke borderStroke = new BorderStroke(
-                Color.WHITE,                   // Border color
-                BorderStrokeStyle.SOLID,      // Border style
-                CornerRadii.EMPTY,            // Border radii (none in this case)
-                new BorderWidths(5)           // Border widths (adjust the thickness here)
-        );
-        // Set the border with the created border stroke
-        turnOrderDisplay.setBorder(new Border(borderStroke));
-
-        turnOrderDisplay.setMinWidth(300);
-        turnOrderDisplay.setMaxWidth(300);
-        turnOrderDisplay.setMinHeight(300);
-        turnOrderDisplay.setMaxHeight(300);
     }
 
     private void initializePlayerOptionsMenu() {
@@ -163,19 +138,12 @@ public class GUIManager {
         //-------------<player button section>----------------------------------
         playerOptionButtonBox = new VBox();
         playerOptionButtonBox.setSpacing(15);
-        playerOptionButtonBox.setAlignment(Pos.CENTER_LEFT);
+        playerOptionButtonBox.setAlignment(Pos.CENTER);
         playerOptionButtonBox.setStyle("-fx-padding:0 0 0 20");
 
-        inventoryButton = new Button("Inventory");
-        useSkillsButton = new Button("Use Skills");
+
         attackButton = new Button("Attack");
         endTurnButton = new Button("End Turn");
-
-        inventoryButton.setOnMouseClicked(mouseEvent -> switchToInventoryDisplay());
-        useSkillsButton.setOnMouseClicked(mouseEvent -> {
-            switchToSkillSelectDisplay();
-            isInUseSkillMode = true;
-        });
 
         attackButton.setOnMouseClicked(mouseEvent -> {
             // Cancel skill selection if skill is selected
@@ -194,15 +162,20 @@ public class GUIManager {
             disableButton();
         });
 
-        playerOptionButtonBox.getChildren().addAll(inventoryButton, attackButton, useSkillsButton, endTurnButton);
+        HBox buttonContainer = new HBox(attackButton, endTurnButton);
+        buttonContainer.setSpacing(50);
+
+        playerOptionButtonBox.getChildren().addAll(buttonContainer);
         //----------------------------------------------------------------------
 
-        playerOptionsMenu.getChildren().addAll(playerOptionButtonBox);
+        playerOptionsMenu.getChildren().addAll(inventoryDisplay.getView(), skillSelectDisplay.getView(), playerOptionButtonBox);
+
+        playerOptionsMenu.setSpacing(30);
 
         playerOptionsMenu.setMinWidth(300);
         playerOptionsMenu.setMaxWidth(300);
-        playerOptionsMenu.setMinHeight(400);
-        playerOptionsMenu.setMaxHeight(400);
+        playerOptionsMenu.setMinHeight(700);
+        playerOptionsMenu.setMaxHeight(700);
     }
 
     private void initializeRightSideUI() {
@@ -243,10 +216,6 @@ public class GUIManager {
         // Initialize and set the new display
         this.currentDisplay = display;
         rightSideUI.getChildren().add(this.currentDisplay.getView());
-    }
-
-    public VBox getTurnOrderDisplay() {
-        return turnOrderDisplay;
     }
 
     public VBox getPlayerOptionsMenu() {
@@ -294,13 +263,11 @@ public class GUIManager {
     }
 
     public void enableButton(){
-        useSkillsButton.setDisable(false);
         attackButton.setDisable(false);
         endTurnButton.setDisable(false);
     }
 
     public void disableButton(){
-        useSkillsButton.setDisable(true);
         attackButton.setDisable(true);
         endTurnButton.setDisable(true);
     }

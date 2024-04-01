@@ -41,6 +41,7 @@ public class GameManager {
     // ----------- Skill -----------
     public final int SKILL_SLOTS = 8;
     public int unlockedSlots = 4;
+    public int itemSlots = 4;
     public BaseSkill[] playerSkills; // List of skills player currently have
     public BaseSkill selectedSkill;
     public BaseItem selectedItem;
@@ -65,10 +66,6 @@ public class GameManager {
         }
         boardPane = new GridPane();
         animationPane = new Pane();
-        inventory.add(new BluePotion());
-        inventory.add(new BluePotion());
-        inventory.add(new BluePotion());
-        inventory.add(new BluePotion());
         inventory.add(new BluePotion());
     }
 
