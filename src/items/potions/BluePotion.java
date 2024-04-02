@@ -60,4 +60,9 @@ public class BluePotion extends BasePotion implements RefillMana {
     public void useItem(BasePiece on) {
         usePotion(on);
     }
+
+    @Override
+    public int getRefill() {
+        return MANA_REFILL;
+    }
 }

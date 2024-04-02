@@ -1,6 +1,5 @@
 package logic.ui;
 
-import game.GameScene;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
@@ -21,6 +20,10 @@ import logic.ImageScaler;
 import logic.SceneManager;
 import logic.TurnManager;
 import logic.handlers.AttackHandler;
+import logic.ui.display.Display;
+import logic.ui.display.EventLogDisplay;
+import logic.ui.display.InventoryDisplay;
+import logic.ui.display.SkillSelectDisplay;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 

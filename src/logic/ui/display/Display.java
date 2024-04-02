@@ -1,4 +1,4 @@
-package logic.ui;
+package logic.ui.display;
 
 import javafx.scene.Node;
 

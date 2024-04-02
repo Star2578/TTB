@@ -127,7 +127,14 @@ public class GameScene {
         root.setRight(rightPane);
         rightPane.getChildren().add(guiManager.getRightSideUI());
 
-        root.setLeft(leftPane);
+        StackPane test = new StackPane();
+        root.setLeft(test);
+        test.getChildren().addAll(leftPane, GameManager.getInstance().infoOverlay.getView());
+
+        test.setOnMouseMoved(event -> {
+            // Update the position of the BoxOverlay to follow the mouse
+            GameManager.getInstance().infoOverlay.updatePosition(event.getX(), event.getY());
+        });
         leftPane.getChildren().addAll(guiManager.getPlayerOptionsMenu());
         leftPane.setPadding(new Insets(10));
 
@@ -177,7 +184,6 @@ public class GameScene {
         SceneManager.getInstance().setGameScene(scene); // Save this scene for later use
         setupMouseEvents();
         setupKeyEvents(scene); // Debug Tool
-
     }
 
     public Scene getScene(){
@@ -705,5 +711,4 @@ public class GameScene {
         resetSelection(1);
         GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
     }
-
 }

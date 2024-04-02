@@ -1,4 +1,4 @@
-package logic.ui;
+package logic.ui.display;
 
 import items.BaseItem;
 import items.EmptyFrame;
@@ -11,18 +11,13 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import logic.GameManager;
 import logic.ImageScaler;
 import logic.SceneManager;
 import logic.handlers.ItemHandler;
-import logic.handlers.SkillHandler;
+import logic.ui.GUIManager;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
-
-import java.util.Stack;
 
 public class InventoryDisplay implements Display {
     private VBox view;

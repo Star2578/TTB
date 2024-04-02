@@ -2,12 +2,14 @@ package skills;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import logic.ImageScaler;
 import pieces.BasePiece;
 import utils.Config;
 
 public abstract class BaseSkill {
     protected String name; // Skill name
+    protected Color nameColor; // Skill name's color
     protected int manaCost; // Skill mana cost
     protected int actionPointCost; // Skill action point cost
     protected String description; // Skill description
@@ -16,10 +18,11 @@ public abstract class BaseSkill {
     protected int range; // Skill range, use to indicate the size of range needed
     protected boolean[][] areaRange; // For area skill
 
-    protected BaseSkill(String name, int manaCost, int actionPointCost, String description) {
+    protected BaseSkill(String name, Color nameColor, int manaCost, int actionPointCost, String description) {
         ImageScaler imageScaler = new ImageScaler();
 
         this.name = name;
+        this.nameColor = nameColor;
         this.manaCost = manaCost;
         this.actionPointCost = actionPointCost;
         this.description = description;
@@ -40,6 +43,9 @@ public abstract class BaseSkill {
      ******************************************/
     public String getName() {
         return name;
+    }
+    public Color getNameColor() {
+        return nameColor;
     }
     public int getManaCost() {
         return manaCost;

@@ -1,4 +1,4 @@
-package logic.ui;
+package logic.ui.display;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

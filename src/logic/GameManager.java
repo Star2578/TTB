@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import logic.ui.overlay.SkillInfoOverlay;
 import pieces.BasePiece;
 import pieces.player.*;
 import skills.*;
@@ -50,7 +51,7 @@ public class GameManager {
     public List<BaseItem> inventory = new ArrayList<>();
 
     public Point2D doorAt = null; // use to store where the door is at
-
+    public SkillInfoOverlay infoOverlay;
 
     public GameManager() {
         player = new Knight(0, 0, 1);
@@ -67,6 +68,7 @@ public class GameManager {
         boardPane = new GridPane();
         animationPane = new Pane();
         inventory.add(new BluePotion());
+        infoOverlay = new SkillInfoOverlay();
     }
 
     public static GameManager getInstance() {

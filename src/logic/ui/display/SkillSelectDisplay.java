@@ -1,4 +1,4 @@
-package logic.ui;
+package logic.ui.display;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -6,20 +6,21 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.ImageScaler;
 import logic.SceneManager;
 import logic.handlers.SkillHandler;
+import logic.ui.GUIManager;
+import logic.ui.overlay.SkillInfoOverlay;
 import pieces.player.BasePlayerPiece;
 import skills.BaseSkill;
 import skills.EmptySlot;
 import skills.LockedSlot;
-import utils.Config;
-
-import java.util.List;
-import java.util.Stack;
+import utils.*;
 
 public class SkillSelectDisplay implements Display{
     private VBox view;
@@ -92,6 +93,37 @@ public class SkillSelectDisplay implements Display{
                 GameManager.getInstance().selectedSkill = skill;
                 skill.getFrame().setImage(imageScaler.resample(new Image(Config.FrameSelectedPath), 2));
                 System.out.println("Selected " + skill.getName() + " skill");
+            });
+
+            skillFrame.setOnMouseEntered(mouseEvent -> {
+                System.out.println("Mouse Entered");
+                SkillInfoOverlay skillInfoOverlay = GameManager.getInstance().infoOverlay;
+
+                skillInfoOverlay.getView().setVisible(true);
+                skillInfoOverlay.getView().toFront();
+
+                // Update overlay info
+                skillInfoOverlay.getTitle().setText(skill.getName());
+                skillInfoOverlay.getTitle().setTextFill(skill.getNameColor());
+                skillInfoOverlay.getDesc().setText(skill.getDescription());
+
+                skillInfoOverlay.getDataContainer().getChildren().clear();
+                skillInfoOverlay.newInfo("Mana", Color.DARKBLUE, String.valueOf(skill.getManaCost()));
+                skillInfoOverlay.newInfo("Action Point", Color.ORANGE, String.valueOf(skill.getActionPointCost()));
+
+                // Other skill info base on type
+                if (skill instanceof Attack a) {
+                    skillInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(a.getAttack()));
+                }if (skill instanceof Healing h) {
+                    skillInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(h.getHeal()));
+                }if (skill instanceof RefillMana r) {
+                    skillInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+                }
+            });
+
+            skillFrame.setOnMouseExited(mouseEvent -> {
+                System.out.println("Mouse Exit");
+                GameManager.getInstance().infoOverlay.getView().setVisible(false);
             });
         }
 
