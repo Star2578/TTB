@@ -1,13 +1,14 @@
 package items.potions;
 
 import items.BaseItem;
+import javafx.scene.paint.Color;
 import pieces.BasePiece;
 import utils.Config;
 import utils.Usable;
 
 public abstract class BasePotion extends BaseItem implements Usable {
-    public BasePotion(String name, String iconPath, String description) {
-        super(name, iconPath, description);
+    public BasePotion(String name, Color nameColor, String iconPath, String description) {
+        super(name, nameColor, iconPath, description);
     }
 
     public abstract void usePotion(BasePiece target);

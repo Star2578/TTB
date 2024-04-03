@@ -11,13 +11,16 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.ImageScaler;
 import logic.SceneManager;
 import logic.handlers.ItemHandler;
 import logic.ui.GUIManager;
+import logic.ui.overlay.ItemInfoOverlay;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
+import utils.RefillMana;
 
 public class InventoryDisplay implements Display {
     private VBox view;
@@ -145,25 +148,46 @@ public class InventoryDisplay implements Display {
         return section;
     }
 
-    private StackPane createItemFrame(BaseItem baseItem) {
+    private StackPane createItemFrame(BaseItem item) {
         StackPane itemFrame = new StackPane();
 
-        Image itemIcon = imageScaler.resample(baseItem.getIcon().getImage(), 2);
-        ImageView frameView = baseItem.getFrame();
+        Image itemIcon = imageScaler.resample(item.getIcon().getImage(), 2);
+        ImageView frameView = item.getFrame();
 
         itemFrame.setAlignment(Pos.CENTER);
         itemFrame.setPrefWidth(64);
         itemFrame.setPrefHeight(64);
-//        itemFrame.setStyle("-fx-background-color: #34495E;");
         itemFrame.getChildren().addAll(new ImageView(itemIcon), frameView);
 
-        itemFrame.setOnMouseClicked(mouseEvent -> {
-            if (GameManager.getInstance().selectedItem != null) {
-                GameManager.getInstance().gameScene.resetSelection(3);
-            }
-            baseItem.getFrame().setImage(imageScaler.resample(new Image(Config.FrameSelectedPath), 2));
-            GameManager.getInstance().selectedItem = baseItem;
-        });
+        if (!(item instanceof EmptyFrame)) {
+            itemFrame.setOnMouseClicked(mouseEvent -> {
+                if (GameManager.getInstance().selectedItem != null) {
+                    GameManager.getInstance().gameScene.resetSelection(3);
+                }
+                item.getFrame().setImage(imageScaler.resample(new Image(Config.FrameSelectedPath), 2));
+                GameManager.getInstance().selectedItem = item;
+            });
+
+            ItemInfoOverlay itemInfoOverlay = GameManager.getInstance().itemInfoOverlay;
+
+            itemFrame.setOnMouseEntered(mouseEvent -> {
+                itemInfoOverlay.getView().setVisible(true);
+
+                // setup info
+                itemInfoOverlay.getTitle().setText(item.getName());
+                itemInfoOverlay.getTitle().setTextFill(item.getNameColor());
+                itemInfoOverlay.getDesc().setText(item.getDescription());
+
+                itemInfoOverlay.getDataContainer().getChildren().clear();
+                if (item instanceof RefillMana r) {
+                    itemInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+                }
+            });
+
+            itemFrame.setOnMouseExited(mouseEvent -> {
+                itemInfoOverlay.getView().setVisible(false);
+            });
+        }
 
         return itemFrame;
     }

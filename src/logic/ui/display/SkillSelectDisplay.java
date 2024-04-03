@@ -6,7 +6,6 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -95,10 +94,9 @@ public class SkillSelectDisplay implements Display{
                 System.out.println("Selected " + skill.getName() + " skill");
             });
 
-            skillFrame.setOnMouseEntered(mouseEvent -> {
-                System.out.println("Mouse Entered");
-                SkillInfoOverlay skillInfoOverlay = GameManager.getInstance().infoOverlay;
+            SkillInfoOverlay skillInfoOverlay = GameManager.getInstance().skillInfoOverlay;
 
+            skillFrame.setOnMouseEntered(mouseEvent -> {
                 skillInfoOverlay.getView().setVisible(true);
                 skillInfoOverlay.getView().toFront();
 
@@ -122,8 +120,7 @@ public class SkillSelectDisplay implements Display{
             });
 
             skillFrame.setOnMouseExited(mouseEvent -> {
-                System.out.println("Mouse Exit");
-                GameManager.getInstance().infoOverlay.getView().setVisible(false);
+                GameManager.getInstance().skillInfoOverlay.getView().setVisible(false);
             });
         }
 

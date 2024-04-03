@@ -1,7 +1,6 @@
 package game;
 
 import items.BaseItem;
-import items.EmptyFrame;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
@@ -127,13 +126,14 @@ public class GameScene {
         root.setRight(rightPane);
         rightPane.getChildren().add(guiManager.getRightSideUI());
 
-        StackPane test = new StackPane();
-        root.setLeft(test);
-        test.getChildren().addAll(leftPane, GameManager.getInstance().infoOverlay.getView());
+        StackPane stackOverlay = new StackPane();
+        root.setLeft(stackOverlay);
+        stackOverlay.getChildren().addAll(leftPane, GameManager.getInstance().skillInfoOverlay.getView(), GameManager.getInstance().itemInfoOverlay.getView());
 
-        test.setOnMouseMoved(event -> {
+        stackOverlay.setOnMouseMoved(event -> {
             // Update the position of the BoxOverlay to follow the mouse
-            GameManager.getInstance().infoOverlay.updatePosition(event.getX(), event.getY());
+            GameManager.getInstance().skillInfoOverlay.updatePosition(event.getX(), event.getY());
+            GameManager.getInstance().itemInfoOverlay.updatePosition(event.getX(), event.getY());
         });
         leftPane.getChildren().addAll(guiManager.getPlayerOptionsMenu());
         leftPane.setPadding(new Insets(10));

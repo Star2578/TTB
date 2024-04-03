@@ -2,19 +2,22 @@ package items;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import logic.ImageScaler;
 import utils.Config;
 
 public class BaseItem {
     protected String name;
+    protected Color nameColor;
     protected ImageView icon;
     protected ImageView frame;
     protected String description;
 
-    protected BaseItem(String name, String iconPath, String description) {
+    protected BaseItem(String name, Color nameColor, String iconPath, String description) {
         ImageScaler imageScaler = new ImageScaler();
 
         this.name = name;
+        this.nameColor = nameColor;
         this.icon = new ImageView(iconPath);
         this.frame = new ImageView(imageScaler.resample(new Image(Config.FramePath), 2));
         this.description = description;
@@ -22,6 +25,9 @@ public class BaseItem {
 
     public String getName() {
         return name;
+    }
+    public Color getNameColor() {
+        return nameColor;
     }
     public ImageView getIcon() {
         return icon;
