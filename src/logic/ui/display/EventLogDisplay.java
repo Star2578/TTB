@@ -36,7 +36,7 @@ public class EventLogDisplay implements Display{
         scrollPane = new ScrollPane(logContainer);
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
-        scrollPane.setStyle("-fx-background-color: black;");
+        scrollPane.setStyle("-fx-background-color: transparent;");
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 

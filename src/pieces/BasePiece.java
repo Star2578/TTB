@@ -37,12 +37,6 @@ public class BasePiece {
     public ImageView getTexture() {
         return texture;
     }
-    public void setTexture(ImageView texture) {
-        this.texture = texture;
-    }
-    public void setTextureByPath(String path) {
-        this.texture = new ImageView(path);
-    }
     public int getRow() {
         return row;
     }

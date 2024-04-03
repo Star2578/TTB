@@ -20,10 +20,8 @@ import logic.ImageScaler;
 import logic.SceneManager;
 import logic.TurnManager;
 import logic.handlers.AttackHandler;
-import logic.ui.display.Display;
-import logic.ui.display.EventLogDisplay;
-import logic.ui.display.InventoryDisplay;
-import logic.ui.display.SkillSelectDisplay;
+import logic.ui.display.*;
+import logic.ui.overlay.ItemInfoOverlay;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 
@@ -56,6 +54,7 @@ public class GUIManager {
     // Displays for each use
     public InventoryDisplay inventoryDisplay;
     public SkillSelectDisplay skillSelectDisplay;
+    public NpcDisplay npcDisplay;
     public EventLogDisplay eventLogDisplay;
 
     // ----------- UI Status -----------
@@ -70,6 +69,7 @@ public class GUIManager {
         inventoryDisplay = new InventoryDisplay();
         skillSelectDisplay = new SkillSelectDisplay();
         eventLogDisplay = new EventLogDisplay();
+        npcDisplay = new NpcDisplay();
 
         initializePlayerOptionsMenu();
         initializeRightSideUI();
@@ -142,9 +142,8 @@ public class GUIManager {
         //-------------<player button section>----------------------------------
         playerOptionButtonBox = new VBox();
         playerOptionButtonBox.setSpacing(15);
-        playerOptionButtonBox.setAlignment(Pos.CENTER);
-        playerOptionButtonBox.setStyle("-fx-padding:0 0 0 20");
-
+        playerOptionButtonBox.setAlignment(Pos.BOTTOM_CENTER);
+        playerOptionButtonBox.setStyle("-fx-padding:0 0 20 20");
 
         attackButton = new Button("Attack");
         endTurnButton = new Button("End Turn");
@@ -168,6 +167,7 @@ public class GUIManager {
 
         HBox buttonContainer = new HBox(attackButton, endTurnButton);
         buttonContainer.setSpacing(50);
+        VBox.setVgrow(playerOptionButtonBox, Priority.ALWAYS);
 
         playerOptionButtonBox.getChildren().addAll(buttonContainer);
         //----------------------------------------------------------------------
@@ -261,17 +261,22 @@ public class GUIManager {
     public void switchToEventLog() {
         setDisplay(eventLogDisplay);
     }
+    public void switchToNpcDisplay() {
+        setDisplay(npcDisplay);
+    }
+
+    public NpcDisplay getNpcDisplay() {
+        return npcDisplay;
+    }
 
     public void enableButton(){
         attackButton.setDisable(false);
         endTurnButton.setDisable(false);
     }
-
     public void disableButton(){
         attackButton.setDisable(true);
         endTurnButton.setDisable(true);
     }
-
     public void deselectFrame(ImageView frameView) {
         frameView.setImage(imageScaler.resample(new Image(Config.FramePath), 2));
     }

@@ -32,6 +32,7 @@ public class Config {
     public static String BombAnimationPath = "sprites/objects/bomb/bomb_f0.png";
 
     // NPC
+    public static String DealerPortraitPath = "sprites/npc/dealer_portrait.png";
     public static String DealerAnimationPath = "sprites/npc/dealer_sprite_sheet.png";
 
     // Dungeon

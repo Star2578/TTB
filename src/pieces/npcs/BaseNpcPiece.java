@@ -17,10 +17,15 @@ import java.util.Map;
 import java.util.Random;
 
 public class BaseNpcPiece extends BasePiece {
+    private String name;
+    private Image portrait;
     private Map<String, Object> dialogues;
 
-    public BaseNpcPiece(int defaultDirection) {
+    public BaseNpcPiece(String name, String portraitPath, int defaultDirection) {
         super(Config.ENTITY_TYPE.NPC, new ImageView(Config.PlaceholderPath), 0, 0);
+
+        this.name = name;
+        this.portrait = new Image(portraitPath);
 
         // insert 1 as default (image facing right)
         // insert -1 to flip
@@ -80,5 +85,16 @@ public class BaseNpcPiece extends BasePiece {
         animationImage.setDisable(true);
         spriteAnimation=new SpriteAnimation(animationImage,4,0,4,width,height,5);
         spriteAnimation.start();
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Image getPortrait() {
+        return portrait;
+    }
+    public String getName() {
+        return name;
     }
 }

@@ -19,6 +19,7 @@ import javafx.util.Duration;
 import logic.*;
 import logic.handlers.*;
 import logic.ui.GUIManager;
+import logic.ui.display.NpcDisplay;
 import pieces.BasePiece;
 import pieces.enemies.*;
 import pieces.npcs.BaseNpcPiece;
@@ -204,7 +205,6 @@ public class GameScene {
         SpawnerManager.getInstance().randomMonsterSpawnFromPool(monsterPool1, environmentPieces, 5);
 
         for (BasePiece entity : environmentPieces) {
-            entity.getTexture().setOnMouseClicked(mouseEvent -> handleSquareClick(entity.getRow(), entity.getCol()));
             placeEntityRandomly(entity);
         }
 
@@ -317,8 +317,6 @@ public class GameScene {
         if(piece instanceof BasePlayerPiece){
             GameManager.getInstance().animationPane.getChildren().add(this.player.meleeAttackImage);
         }
-        //TODO: if piece an instance of Object
-
     }
 
     private void setupMouseEvents() {
@@ -378,19 +376,13 @@ public class GameScene {
 
         if (isInAttackMode) {
             System.out.println("Player Prepare to attack");
-            boolean enoughActionPoint = player.getCurrentActionPoint() >= gameManager.selectedSkill.getActionPointCost();
 
             // Check if the clicked square is within showValid attack range
             if (player.validAttack(row, col)) {
                 // Check if there is a monster on the clicked square
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     // Perform the attack on the monster
-                    if (enoughActionPoint) {
-                        System.out.println("Player attack " + monsterPiece.getClass().getSimpleName() + " @ " + row + " " + col);
-                            player.attack(monsterPiece);
-                    } else {
-                        System.out.println("Not action point");
-                    }
+                    player.attack(monsterPiece);
                     exitAttackMode();
                     if (!monsterPiece.isAlive()) {
                         removePiece(monsterPiece);
@@ -486,6 +478,41 @@ public class GameScene {
             return;
         }
 
+        NpcDisplay npcDisplay = GUIManager.getInstance().getNpcDisplay();
+        // ------------------------- NPC Interact -------------------------
+        if (piecesPosition[row][col] instanceof BaseNpcPiece npc) {
+            System.out.println("Talk to NPC");
+            GUIManager.getInstance().switchToNpcDisplay();
+            npcDisplay.setNpcPortrait(npc.getPortrait());
+            npcDisplay.getNpcName().setText(npc.getName());
+
+            npcDisplay.clearDialogueOption(); // clear all options before adding new ones
+            npcDisplay.addDialogueOption("Who are you?", new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("Test");
+                }
+            });
+            npcDisplay.addDialogueOption("About the Dungeon", new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("Test");
+                }
+            });
+            npcDisplay.addDialogueOption("Ask for discount", new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("Test");
+                }
+            });
+            npcDisplay.addDialogueOption("Shop", new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("Test");
+                }
+            });
+        }
+
         // ------------------------- Movement Mode -------------------------
 
         if (player.getRow() == row && player.getCol() == col) {
@@ -509,10 +536,7 @@ public class GameScene {
     }
 
     private boolean isValidMove(int row, int col) {
-        if (piecesPosition[row][col] instanceof BaseWallPiece) {
-            return false; // Destination square contains a wall, invalid move
-        }
-        return true;
+        return !(piecesPosition[row][col] instanceof BaseWallPiece); // Destination square contains a wall, invalid move
     }
 
     private void precomputeValidMoves() {
@@ -539,8 +563,8 @@ public class GameScene {
 
         if(type == 0){
             //reset move Selected Tiles
-            for (int i = 0  ; i < selectedMoveTiles.size() ; i++){
-                selectionFloor[(int) selectedMoveTiles.get(i).getX()][(int) selectedMoveTiles.get(i).getY()]
+            for (Point2D selectedMoveTile : selectedMoveTiles) {
+                selectionFloor[(int) selectedMoveTile.getX()][(int) selectedMoveTile.getY()]
                         .setImage(null);
 
             }
@@ -549,8 +573,8 @@ public class GameScene {
         }
         else if(type == 1){
             //reset attack Selected Tiles
-            for (int i = 0  ; i < selectedAttackTiles.size() ; i++){
-                selectionFloor[(int) selectedAttackTiles.get(i).getX()][(int) selectedAttackTiles.get(i).getY()]
+            for (Point2D selectedAttackTile : selectedAttackTiles) {
+                selectionFloor[(int) selectedAttackTile.getX()][(int) selectedAttackTile.getY()]
                         .setImage(null);
             }
             selectedAttackTiles.clear();
@@ -558,8 +582,8 @@ public class GameScene {
         }
         else if (type == 2) {
             //reset skill Selected Tiles
-            for (int i = 0  ; i < selectedSkillTiles.size() ; i++){
-                selectionFloor[(int) selectedSkillTiles.get(i).getX()][(int) selectedSkillTiles.get(i).getY()]
+            for (Point2D selectedSkillTile : selectedSkillTiles) {
+                selectionFloor[(int) selectedSkillTile.getX()][(int) selectedSkillTile.getY()]
                         .setImage(null);
             }
             selectedSkillTiles.clear();
@@ -568,8 +592,8 @@ public class GameScene {
             gameManager.selectedSkill = null;
         } else if (type == 3) {
             //reset item Selected Tiles
-            for (int i = 0  ; i < selectedItemTiles.size() ; i++){
-                selectionFloor[(int) selectedItemTiles.get(i).getX()][(int) selectedItemTiles.get(i).getY()]
+            for (Point2D selectedItemTile : selectedItemTiles) {
+                selectionFloor[(int) selectedItemTile.getX()][(int) selectedItemTile.getY()]
                         .setImage(null);
             }
             // reset item selection
@@ -587,10 +611,6 @@ public class GameScene {
             row = (int) (Math.random() * BOARD_SIZE);
             col = (int) (Math.random() * BOARD_SIZE);
         } while (!isValidMove(row, col) || piecesPosition[row][col] != null);
-
-        if (entity instanceof BasePlayerPiece) {
-            entity.getTexture().setOnMouseClicked(event -> handleSquareClick(entity.getRow(), entity.getCol()));
-        }
 
         entity.setRow(row);
         entity.setCol(col);
@@ -627,8 +647,6 @@ public class GameScene {
         // Remove the piece's ImageView from the animationPane
         if (toRemove instanceof BaseMonsterPiece monsterPiece)
             animationPane.getChildren().remove(monsterPiece.animationImage);
-
-        // TODO: When there are more types this may have to be added
 
         // Set the corresponding entry in the pieces array to null
         piecesPosition[row][col] = null;
