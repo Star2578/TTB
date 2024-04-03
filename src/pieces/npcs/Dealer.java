@@ -11,6 +11,6 @@ public class Dealer extends BaseNpcPiece {
         talk("greetings", "hello");
         talk("greetings");
 
-        setupAnimation(Config.DealerAnimationPath, 0, -20, 32, 48);
+        setupAnimation(Config.DealerAnimationPath, 0, -10, 32, 48);
     }
 }

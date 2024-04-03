@@ -22,7 +22,6 @@ public class Config {
     public static String HandClickCursor = "sprites/cursors/png/cursor_select_tap.png";
 
     // Player
-    public static String KnightPath = "sprites/player/Knight_Small.png";
     public static String KnightLargePath = "sprites/player/Knight_Large.png";
     public static String KnightAnimationPath = "sprites/player/knight_sprite_sheet.png";
 

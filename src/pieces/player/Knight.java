@@ -30,9 +30,6 @@ public class Knight extends BasePlayerPiece {
 
         attackDamage = 3; // Base attack for player
 
-
-        setTextureByPath(Config.KnightPath);
-
         //add skill
         skills[0] = new Slash();
         skills[1] = new Heal();
@@ -41,6 +38,7 @@ public class Knight extends BasePlayerPiece {
         setupAnimation(Config.KnightAnimationPath, 0, -15, 32, 56);
     }
 
+    @Override
     public void moveWithTransition(int row , int col){
         //stop player from do other action
         setCanAct(false);

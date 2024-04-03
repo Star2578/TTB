@@ -17,10 +17,6 @@ import java.util.Map;
 import java.util.Random;
 
 public class BaseNpcPiece extends BasePiece {
-    protected int offsetX=0;
-    protected int offsetY=0;
-    protected SpriteAnimation spriteAnimation;
-    public ImageView animationImage;
     private Map<String, Object> dialogues;
 
     public BaseNpcPiece(int defaultDirection) {
@@ -73,10 +69,10 @@ public class BaseNpcPiece extends BasePiece {
     }
 
 
-    protected void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height) {
+    @Override
+    public void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
-        //sprite animations for monster
         animationImage = new ImageView(new Image(imgPath));
         animationImage.setPreserveRatio(true);
         animationImage.setTranslateX(offsetX);
