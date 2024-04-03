@@ -1,6 +1,7 @@
 package skills.knight;
 
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import logic.GameManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
@@ -12,7 +13,7 @@ public class Slash extends BaseSkill implements Attack {
     private BasePiece target;
     private final int DAMAGE = 10;
     public Slash() {
-        super("Slash", 2, 2, "A true knight slash doesn't need a sword");
+        super("Slash", Color.DARKRED, 2, 2, "A true knight slash doesn't need a sword");
         icon = new ImageView(Config.SlashPath);
         range = 1;
     }
@@ -53,5 +54,10 @@ public class Slash extends BaseSkill implements Attack {
     @Override
     public boolean castOnMonster() {
         return true;
+    }
+
+    @Override
+    public int getAttack() {
+        return DAMAGE;
     }
 }

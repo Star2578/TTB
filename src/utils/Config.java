@@ -22,7 +22,6 @@ public class Config {
     public static String HandClickCursor = "sprites/cursors/png/cursor_select_tap.png";
 
     // Player
-    public static String KnightPath = "sprites/player/Knight_Small.png";
     public static String KnightLargePath = "sprites/player/Knight_Large.png";
     public static String KnightAnimationPath = "sprites/player/knight_sprite_sheet.png";
 
@@ -62,13 +61,6 @@ public class Config {
 
     // Attacks animation
     public static String meleeAttackPath = "sprites/attacks/testLocation.png";
-
-    public enum ITEM_TYPE {
-        ARMOR,
-        USABLE,
-        DROPS,
-        KEY_ITEM
-    }
 
     public enum ENTITY_TYPE {
         PLAYER,

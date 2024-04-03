@@ -26,6 +26,8 @@ public class BasePiece {
         this.texture = texture;
         this.row = row;
         this.col = col;
+//        test
+        this.animationImage = new ImageView();
     }
 
     // Getters and setters
@@ -63,7 +65,7 @@ public class BasePiece {
         //===================<animation section>==========================================
         this.offsetX = offsetX;
         this.offsetY = offsetY;
-        //sprite animations for monster
+        //sprite animations for piece
         animationImage = new ImageView(new Image(imgPath));
         animationImage.setPreserveRatio(true);
         animationImage.setTranslateX(offsetX);
@@ -79,7 +81,7 @@ public class BasePiece {
         moveTransition.setCycleCount(1);
         //================================================================================
     }
-    protected void moveWithTransition(int row, int col) {
+    public void moveWithTransition(int row, int col) {
         spriteAnimation.changeAnimation(4,  1);
 
         //slowly move to target col,row

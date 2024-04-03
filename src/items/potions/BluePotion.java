@@ -1,5 +1,6 @@
 package items.potions;
 
+import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
@@ -12,7 +13,7 @@ public class BluePotion extends BasePotion implements RefillMana {
     private BasePiece target;
 
     public BluePotion() {
-        super("Blue Potion", Config.BluePotionPath, Config.ITEM_TYPE.USABLE, "Help replenish mana");
+        super("Blue Potion", Color.AQUAMARINE, Config.BluePotionPath, "Help replenish mana");
     }
 
     @Override
@@ -59,5 +60,10 @@ public class BluePotion extends BasePotion implements RefillMana {
     @Override
     public void useItem(BasePiece on) {
         usePotion(on);
+    }
+
+    @Override
+    public int getRefill() {
+        return MANA_REFILL;
     }
 }

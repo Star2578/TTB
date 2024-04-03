@@ -34,15 +34,8 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     // Animations
     protected int currentDirection;
-    protected SpriteAnimation spriteAnimation;
-    public ImageView animationImage;
     protected SpriteAnimation meleeAttackAnimation;
     public ImageView meleeAttackImage;
-    protected TranslateTransition moveTransition;
-
-    //offset for image
-    public int offsetX=0;
-    public int offsetY=0;
 
     public BasePlayerPiece(int row, int col, int defaultDirection) {
         super(Config.ENTITY_TYPE.PLAYER, new ImageView(Config.PlaceholderPath), row, col);
@@ -67,7 +60,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
      ******************************************/
     public abstract boolean validAttack(int row, int col); // To set valid attack for each classes
     public abstract void attack(BaseMonsterPiece monsterPiece); // This will differ for each class of player
-    public abstract void moveWithTransition(int row , int col);
     public abstract boolean validMove(int row, int col); // To set valid move for each classes
     @Override
     protected void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height){

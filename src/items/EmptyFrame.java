@@ -1,9 +1,10 @@
 package items;
 
+import javafx.scene.paint.Color;
 import utils.Config;
 
 public class EmptyFrame extends BaseItem {
     public EmptyFrame() {
-        super("", Config.FramePath, Config.ITEM_TYPE.KEY_ITEM, "");
+        super("", Color.DARKGRAY, Config.FramePath, "");
     }
 }

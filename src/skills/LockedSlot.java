@@ -1,13 +1,14 @@
 package skills;
 
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import pieces.BasePiece;
 import utils.Config;
 
 public class LockedSlot extends BaseSkill{
 
     public LockedSlot() {
-        super("Locked", 0, 0, "");
+        super("Locked", Color.ALICEBLUE, 0, 0, "");
         icon = new ImageView(Config.LockedSkillIconPath);
     }
 
