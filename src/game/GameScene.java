@@ -483,34 +483,21 @@ public class GameScene {
         if (piecesPosition[row][col] instanceof BaseNpcPiece npc) {
             System.out.println("Talk to NPC");
             GUIManager.getInstance().switchToNpcDisplay();
-            npcDisplay.setNpcPortrait(npc.getPortrait());
-            npcDisplay.getNpcName().setText(npc.getName());
+
+            npcDisplay.setNpcPortrait(npc.getPortrait()); // get npc portrait
+            npcDisplay.getNpcName().setText(npc.getName()); // get npc name
+            npcDisplay.setDialogueText(npc.getCurrentDialogue()); // set initial dialogue
 
             npcDisplay.clearDialogueOption(); // clear all options before adding new ones
-            npcDisplay.addDialogueOption("Who are you?", new Runnable() {
+            npc.setDialogueOptions(npcDisplay); // dialogue options for each npc
+            npcDisplay.addDialogueOption("Good bye", new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("Test");
+                    GUIManager.getInstance().switchToEventLog();
                 }
             });
-            npcDisplay.addDialogueOption("About the Dungeon", new Runnable() {
-                @Override
-                public void run() {
-                    System.out.println("Test");
-                }
-            });
-            npcDisplay.addDialogueOption("Ask for discount", new Runnable() {
-                @Override
-                public void run() {
-                    System.out.println("Test");
-                }
-            });
-            npcDisplay.addDialogueOption("Shop", new Runnable() {
-                @Override
-                public void run() {
-                    System.out.println("Test");
-                }
-            });
+
+            npcDisplay.clearAdditionalOverlay();
         }
 
         // ------------------------- Movement Mode -------------------------

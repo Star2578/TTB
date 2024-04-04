@@ -1,5 +1,10 @@
 package utils;
 
+import items.BaseItem;
+import items.potions.BluePotion;
+import skills.BaseSkill;
+import skills.knight.Slash;
+
 public class Config {
     public static String PlaceholderPath = "sprites/placeholder.png";
     public static String FramePath = "sprites/frame.png";

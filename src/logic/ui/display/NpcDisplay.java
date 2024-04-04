@@ -7,8 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -18,11 +17,12 @@ public class NpcDisplay implements Display{
     private Text npcName;
     private Text dialogueText;
     private VBox optionContainer;
+    private BorderPane additionalOverlay;
 
     public NpcDisplay() {
         view = new VBox();
-        view.minHeight(700);
-        view.maxHeight(700);
+        VBox.setVgrow(view, Priority.ALWAYS);
+        view.setMaxWidth(300);
         view.setSpacing(15);
         view.setPadding(new Insets(0, 10, 0, 10));
 
@@ -34,6 +34,7 @@ public class NpcDisplay implements Display{
         optionContainer = new VBox();
         optionContainer.setAlignment(Pos.BOTTOM_CENTER);
         optionContainer.setSpacing(10);
+        optionContainer.setPadding(new Insets(0, 0, 15, 0));
         VBox.setVgrow(optionContainer, Priority.ALWAYS);
 
         npcName = new Text("Placeholder");
@@ -61,19 +62,31 @@ public class NpcDisplay implements Display{
         dialogueContainer.setStyle(
                 "-fx-border-width: 5px;" +
                 " -fx-border-color: white;");
+        dialogueContainer.setMaxWidth(280);
         dialogueContainer.setPadding(new Insets(8));
         dialogueContainer.setAlignment(Pos.TOP_LEFT);
+        VBox.setVgrow(dialogueContainer, Priority.ALWAYS);
 
+
+        StackPane stackPane = new StackPane();
+        stackPane.setPrefHeight(720);
+        additionalOverlay = new BorderPane(); // This pane is for additional overlay i.e. Shop
+        VBox mainContainer = new VBox();
 
         // Add nodes to the view
-        view.getChildren().addAll(portraitContainer, dialogueContainer, optionContainer);
+        mainContainer.getChildren().addAll(portraitContainer, dialogueContainer, optionContainer);
+        stackPane.getChildren().addAll(mainContainer, additionalOverlay);
+        stackPane.setPickOnBounds(false);
+        additionalOverlay.setPickOnBounds(false);
+
+        view.getChildren().add(stackPane);
     }
 
     private ScrollPane getScrollPane() {
         ScrollPane dialogueScrollPane = new ScrollPane();
         dialogueScrollPane.setContent(dialogueText);
         dialogueScrollPane.setFitToWidth(true);
-        dialogueScrollPane.setPrefViewportHeight(200);
+        dialogueScrollPane.setFitToHeight(true);
         dialogueScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         dialogueScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         dialogueScrollPane.setStyle(
@@ -100,6 +113,15 @@ public class NpcDisplay implements Display{
     }
     public Text getNpcName() {
         return npcName;
+    }
+    public void newAdditionalOverlay(Node node) {
+        additionalOverlay.getChildren().add(node);
+    }
+    public void clearAdditionalOverlay() {
+        additionalOverlay.getChildren().clear();
+    }
+    public int getAdditionalOverlaySize() {
+        return additionalOverlay.getChildren().size();
     }
     @Override
     public Node getView() {

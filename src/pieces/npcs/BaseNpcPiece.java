@@ -5,7 +5,9 @@ import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import logic.ImageScaler;
 import logic.SpriteAnimation;
+import logic.ui.display.NpcDisplay;
 import pieces.BasePiece;
 import utils.Config;
 
@@ -16,16 +18,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class BaseNpcPiece extends BasePiece {
+public abstract class BaseNpcPiece extends BasePiece {
     private String name;
     private Image portrait;
+    private String currentDialogue;
     private Map<String, Object> dialogues;
 
     public BaseNpcPiece(String name, String portraitPath, int defaultDirection) {
         super(Config.ENTITY_TYPE.NPC, new ImageView(Config.PlaceholderPath), 0, 0);
+        ImageScaler imageScaler = new ImageScaler();
 
         this.name = name;
-        this.portrait = new Image(portraitPath);
+        this.portrait = imageScaler.resample(new Image(portraitPath), 2);
 
         // insert 1 as default (image facing right)
         // insert -1 to flip
@@ -49,13 +53,12 @@ public class BaseNpcPiece extends BasePiece {
         if (dialogues != null && dialogues.containsKey(category)) {
             Map<String, String> categoryDialogues = (Map<String, String>) dialogues.get(category);
             if (categoryDialogues.containsKey(key)) {
-                String dialogue = categoryDialogues.get(key);
-                System.out.println("Dialogue for category '" + category + "' and key '" + key + "': " + dialogue);
+                currentDialogue = categoryDialogues.get(key);
             } else {
-                System.out.println("No dialogue available for key '" + key + "' in category: " + category);
+                currentDialogue = ("No dialogue available for key '" + key + "' in category: " + category);
             }
         } else {
-            System.out.println("No dialogues available for category: " + category);
+            currentDialogue = ("No dialogues available for category: " + category);
         }
     }
 
@@ -66,10 +69,10 @@ public class BaseNpcPiece extends BasePiece {
             List<String> keys = new ArrayList<>(categoryDialogues.keySet());
             Random random = new Random();
             String randomKey = keys.get(random.nextInt(keys.size()));
-            String dialogue = categoryDialogues.get(randomKey);
-            System.out.println("Random dialogue for category '" + category + "': " + dialogue);
+
+            currentDialogue = categoryDialogues.get(randomKey);
         } else {
-            System.out.println("No dialogues available for category: " + category);
+            currentDialogue = ("No dialogues available for category: " + category);
         }
     }
 
@@ -97,4 +100,9 @@ public class BaseNpcPiece extends BasePiece {
     public String getName() {
         return name;
     }
+    public String getCurrentDialogue() {
+        return currentDialogue;
+    }
+
+    public abstract void setDialogueOptions(NpcDisplay npcDisplay);
 }

@@ -55,6 +55,13 @@ public class GameManager {
     public SkillInfoOverlay skillInfoOverlay;
     public ItemInfoOverlay itemInfoOverlay;
 
+    public final BaseSkill[] UNIVERSAL_SKILL_POOL = {
+
+    };
+    public final BaseItem[] ITEM_POOL = {
+        new BluePotion()
+    };
+
     public GameManager() {
         player = new Knight(0, 0, 1);
         playerSkills = player.getSkills();
