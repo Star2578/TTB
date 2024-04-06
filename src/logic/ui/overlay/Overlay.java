@@ -4,6 +4,8 @@ import javafx.scene.layout.VBox;
 
 public class Overlay {
     protected VBox view;
+    private double offsetX;
+    private double offsetY;
 
     public Overlay (int width, int height) {
         view = new VBox();
@@ -13,12 +15,12 @@ public class Overlay {
 
 
     // Method to update the position of the overlay
-    public void updatePosition(double x, double y) {
+    public void updatePosition(double x, double y, double offsetX, double offsetY) {
         // Adjust the layout parameters of the VBox to position it at (x, y)
-        double offsetX = view.getWidth() - 140;
-        double offsetY = view.getHeight() + 15;
-        view.setTranslateX(x - offsetX);
-        view.setTranslateY(y - offsetY);
+        this.offsetX = view.getWidth() + offsetX;
+        this.offsetY = view.getHeight() + offsetY;
+        view.setTranslateX(x - this.offsetX);
+        view.setTranslateY(y - this.offsetY);
     }
 
     public void setViewSize(int width, int height) {

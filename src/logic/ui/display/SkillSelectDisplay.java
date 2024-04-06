@@ -26,6 +26,7 @@ public class SkillSelectDisplay implements Display{
 
     private GridPane skillSelectorGrid;
     private ImageScaler imageScaler = new ImageScaler();
+    private SkillInfoOverlay skillInfoOverlay = new SkillInfoOverlay();
     private ImageView frameView;
 
 
@@ -94,8 +95,6 @@ public class SkillSelectDisplay implements Display{
                 System.out.println("Selected " + skill.getName() + " skill");
             });
 
-            SkillInfoOverlay skillInfoOverlay = GameManager.getInstance().skillInfoOverlay;
-
             skillFrame.setOnMouseEntered(mouseEvent -> {
                 skillInfoOverlay.getView().setVisible(true);
                 skillInfoOverlay.getView().toFront();
@@ -120,7 +119,7 @@ public class SkillSelectDisplay implements Display{
             });
 
             skillFrame.setOnMouseExited(mouseEvent -> {
-                GameManager.getInstance().skillInfoOverlay.getView().setVisible(false);
+                skillInfoOverlay.getView().setVisible(false);
             });
         }
 
@@ -138,6 +137,10 @@ public class SkillSelectDisplay implements Display{
         int col = index % skillCols;
         skillSelectorGrid.getChildren().remove(index); // Remove the old skill frame
         skillSelectorGrid.add(skillFrame, col, row); // Add the updated skill frame
+    }
+
+    public SkillInfoOverlay getSkillInfoOverlay() {
+        return skillInfoOverlay;
     }
 
     @Override

@@ -18,6 +18,7 @@ import logic.SceneManager;
 import logic.handlers.SkillHandler;
 import logic.ui.GUIManager;
 import logic.ui.display.NpcDisplay;
+import logic.ui.overlay.ItemInfoOverlay;
 import logic.ui.overlay.SkillInfoOverlay;
 import pieces.player.BasePlayerPiece;
 import skills.BaseSkill;
@@ -36,7 +37,10 @@ public class Dealer extends BaseNpcPiece {
     private ImageScaler imageScaler = new ImageScaler();
     private static List<BaseItem> selectedItems = new ArrayList<>();
     private static List<BaseSkill> selectedSkills = new ArrayList<>();
+    private SkillInfoOverlay skillInfoOverlay = new SkillInfoOverlay();
+    private ItemInfoOverlay itemInfoOverlay = new ItemInfoOverlay();
     private VBox ShopOverlay;
+
     public Dealer() {
         super("Dealer", Config.DealerPortraitPath, 1);
         importDialogues("res/dialogues/dealer-dialogue.json");
@@ -96,10 +100,12 @@ public class Dealer extends BaseNpcPiece {
 
     private void setupShop() {
         ShopOverlay = new VBox();
+        ShopOverlay.setMinHeight(700);
         ShopOverlay.setTranslateX(-300);
 
         // Add shop components
         GridPane itemShopGrid = new GridPane();
+        itemShopGrid.setMinHeight(350);
         itemShopGrid.setBackground(Background.fill(Color.GOLD));
         itemShopGrid.setHgap(5);
         itemShopGrid.setVgap(5);
@@ -114,6 +120,7 @@ public class Dealer extends BaseNpcPiece {
         }
 
         GridPane skillShopGrid = new GridPane();
+        skillShopGrid.setMinHeight(350);
         skillShopGrid.setBackground(Background.fill(Color.CYAN));
         skillShopGrid.setHgap(5);
         skillShopGrid.setVgap(5);
@@ -124,7 +131,24 @@ public class Dealer extends BaseNpcPiece {
             int col = totalSkills % itemsPerRow;
             skillShopGrid.add(item, col, row);
         }
-        ShopOverlay.getChildren().addAll(itemShopGrid, skillShopGrid);
+
+        // Setup child in pane
+        StackPane itemShopContainer = new StackPane();
+        itemShopContainer.getChildren().addAll(itemShopGrid, itemInfoOverlay.getView());
+        StackPane skillShopContainer = new StackPane();
+        skillShopContainer.getChildren().addAll(skillShopGrid, skillInfoOverlay.getView());
+
+        itemShopContainer.setOnMouseMoved(event -> {
+            // Update the position of the BoxOverlay to follow the mouse
+            itemInfoOverlay.updatePosition(event.getX(), event.getY(), -160, -170);
+        });
+
+        skillShopContainer.setOnMouseMoved(event -> {
+            // Update the position of the BoxOverlay to follow the mouse
+            skillInfoOverlay.updatePosition(event.getX(), event.getY(), -160, -170);
+        });
+
+        ShopOverlay.getChildren().addAll(itemShopContainer, skillShopContainer);
     }
 
     private BaseItem randomItem() {
@@ -160,6 +184,23 @@ public class Dealer extends BaseNpcPiece {
         itemFrame.setPrefHeight(64);
         itemFrame.getChildren().addAll(new ImageView(itemIcon), frameView);
 
+        itemFrame.setOnMouseEntered(mouseEvent -> {
+            itemInfoOverlay.getView().setVisible(true);
+
+            // setup info
+            itemInfoOverlay.getTitle().setText(item.getName());
+            itemInfoOverlay.getTitle().setTextFill(item.getNameColor());
+            itemInfoOverlay.getDesc().setText(item.getDescription());
+
+            itemInfoOverlay.getDataContainer().getChildren().clear();
+            if (item instanceof RefillMana r) {
+                itemInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+            }
+        });
+
+        itemFrame.setOnMouseExited(mouseEvent -> {
+            itemInfoOverlay.getView().setVisible(false);
+        });
 
         return itemFrame;
     }
@@ -198,6 +239,33 @@ public class Dealer extends BaseNpcPiece {
         skillFrame.setPrefWidth(64);
         skillFrame.setPrefHeight(64);
         skillFrame.getChildren().addAll(new ImageView(skillIcon), frameView);
+
+        skillFrame.setOnMouseEntered(mouseEvent -> {
+            skillInfoOverlay.getView().setVisible(true);
+            skillInfoOverlay.getView().toFront();
+
+            // Update overlay info
+            skillInfoOverlay.getTitle().setText(skill.getName());
+            skillInfoOverlay.getTitle().setTextFill(skill.getNameColor());
+            skillInfoOverlay.getDesc().setText(skill.getDescription());
+
+            skillInfoOverlay.getDataContainer().getChildren().clear();
+            skillInfoOverlay.newInfo("Mana", Color.DARKBLUE, String.valueOf(skill.getManaCost()));
+            skillInfoOverlay.newInfo("Action Point", Color.ORANGE, String.valueOf(skill.getActionPointCost()));
+
+            // Other skill info base on type
+            if (skill instanceof Attack a) {
+                skillInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(a.getAttack()));
+            }if (skill instanceof Healing h) {
+                skillInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(h.getHeal()));
+            }if (skill instanceof RefillMana r) {
+                skillInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+            }
+        });
+
+        skillFrame.setOnMouseExited(mouseEvent -> {
+            skillInfoOverlay.getView().setVisible(false);
+        });
 
         return skillFrame;
     }

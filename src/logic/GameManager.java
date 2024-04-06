@@ -52,8 +52,6 @@ public class GameManager {
     public List<BaseItem> inventory = new ArrayList<>();
 
     public Point2D doorAt = null; // use to store where the door is at
-    public SkillInfoOverlay skillInfoOverlay;
-    public ItemInfoOverlay itemInfoOverlay;
 
     public final BaseSkill[] UNIVERSAL_SKILL_POOL = {
 
@@ -77,8 +75,6 @@ public class GameManager {
         boardPane = new GridPane();
         animationPane = new Pane();
         inventory.add(new BluePotion()); // this is for testing
-        skillInfoOverlay = new SkillInfoOverlay();
-        itemInfoOverlay = new ItemInfoOverlay();
     }
 
     public static GameManager getInstance() {

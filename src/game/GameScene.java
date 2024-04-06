@@ -130,12 +130,12 @@ public class GameScene {
         // add StackPane to display box overlays
         StackPane stackOverlay = new StackPane();
         root.setLeft(stackOverlay);
-        stackOverlay.getChildren().addAll(leftPane, GameManager.getInstance().skillInfoOverlay.getView(), GameManager.getInstance().itemInfoOverlay.getView());
+        stackOverlay.getChildren().addAll(leftPane, GUIManager.getInstance().skillSelectDisplay.getSkillInfoOverlay().getView(), GUIManager.getInstance().inventoryDisplay.getItemInfoOverlay().getView());
 
         stackOverlay.setOnMouseMoved(event -> {
             // Update the position of the BoxOverlay to follow the mouse
-            GameManager.getInstance().skillInfoOverlay.updatePosition(event.getX(), event.getY());
-            GameManager.getInstance().itemInfoOverlay.updatePosition(event.getX(), event.getY());
+            GUIManager.getInstance().skillSelectDisplay.getSkillInfoOverlay().updatePosition(event.getX(), event.getY(), -140, 15);
+            GUIManager.getInstance().inventoryDisplay.getItemInfoOverlay().updatePosition(event.getX(), event.getY(), -140, 15);
         });
         leftPane.getChildren().addAll(guiManager.getPlayerOptionsMenu());
         leftPane.setPadding(new Insets(10));

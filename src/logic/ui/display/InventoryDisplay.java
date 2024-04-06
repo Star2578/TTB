@@ -24,8 +24,9 @@ import utils.RefillMana;
 
 public class InventoryDisplay implements Display {
     private VBox view;
-    private ImageScaler imageScaler = new ImageScaler();
     private VBox usableItemsSection;
+    private ImageScaler imageScaler = new ImageScaler();
+    private ItemInfoOverlay itemInfoOverlay = new ItemInfoOverlay();
 
     private Button useItem;
     private Button throwAwayItem;
@@ -167,8 +168,6 @@ public class InventoryDisplay implements Display {
                 GameManager.getInstance().selectedItem = item;
             });
 
-            ItemInfoOverlay itemInfoOverlay = GameManager.getInstance().itemInfoOverlay;
-
             itemFrame.setOnMouseEntered(mouseEvent -> {
                 itemInfoOverlay.getView().setVisible(true);
 
@@ -210,6 +209,9 @@ public class InventoryDisplay implements Display {
         }
     }
 
+    public ItemInfoOverlay getItemInfoOverlay() {
+        return itemInfoOverlay;
+    }
 
     @Override
     public Node getView() {
