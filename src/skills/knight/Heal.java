@@ -13,7 +13,7 @@ public class Heal extends BaseSkill implements Healing {
     private BasePiece target;
     private final int HEAL = 5;
     public Heal() {
-        super("Heal", Color.DARKGREEN, 1, 10, "Rest for one turn to heal");
+        super("Heal", Color.DARKGREEN, 1, 10, "Rest for one turn to heal", Config.Rarity.COMMON);
         icon = new ImageView(Config.HealPath);
         range = 0;
     }

@@ -7,6 +7,8 @@ import logic.ImageScaler;
 import pieces.BasePiece;
 import utils.Config;
 
+import java.util.Random;
+
 public abstract class BaseSkill {
     protected String name; // Skill name
     protected Color nameColor; // Skill name's color
@@ -18,7 +20,11 @@ public abstract class BaseSkill {
     protected int range; // Skill range, use to indicate the size of range needed
     protected boolean[][] areaRange; // For area skill
 
-    protected BaseSkill(String name, Color nameColor, int manaCost, int actionPointCost, String description) {
+    protected int price;
+
+    protected Config.Rarity rarity;
+
+    protected BaseSkill(String name, Color nameColor, int manaCost, int actionPointCost, String description, Config.Rarity rarity) {
         ImageScaler imageScaler = new ImageScaler();
 
         this.name = name;
@@ -27,6 +33,23 @@ public abstract class BaseSkill {
         this.actionPointCost = actionPointCost;
         this.description = description;
         this.frame = new ImageView(imageScaler.resample(new Image(Config.FramePath), 2));
+        this.rarity = rarity;
+        this.price = priceGenerator();
+    }
+
+    private int priceGenerator() {
+        Random random = new Random();
+        int basePrice = 10; // Starting base price
+
+        // Adjust base price based on rarity
+        return switch (rarity) {
+            case COMMON -> basePrice + random.nextInt(10); // Randomize a bit for common items
+            case UNCOMMON -> basePrice * 2 + random.nextInt(20); // Uncommon items are a bit pricier
+            case RARE -> basePrice * 5 + random.nextInt(50); // Rares are more valuable
+            case EPIC -> basePrice * 10 + random.nextInt(100); // Epics are quite valuable
+            case LEGENDARY -> basePrice * 20 + random.nextInt(200); // Legendary items are super rare and expensive
+            default -> basePrice; // Default to base price if rarity is unrecognized
+        };
     }
 
     /******************************************
@@ -64,6 +87,12 @@ public abstract class BaseSkill {
     }
     public ImageView getFrame() {
         return frame;
+    }
+    public int getPrice() {
+        return price;
+    }
+    public Config.Rarity getRarity() {
+        return rarity;
     }
     public void setFrame(ImageView frame) {
         this.frame = frame;

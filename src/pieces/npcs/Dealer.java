@@ -3,7 +3,6 @@ package pieces.npcs;
 import items.BaseItem;
 import items.potions.BluePotion;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,18 +11,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import logic.GameManager;
 import logic.ImageScaler;
-import logic.SceneManager;
-import logic.handlers.SkillHandler;
-import logic.ui.GUIManager;
 import logic.ui.display.NpcDisplay;
 import logic.ui.overlay.ItemInfoOverlay;
 import logic.ui.overlay.SkillInfoOverlay;
-import pieces.player.BasePlayerPiece;
 import skills.BaseSkill;
-import skills.EmptySlot;
-import skills.LockedSlot;
 import skills.knight.Slash;
 import utils.Attack;
 import utils.Config;
@@ -35,11 +29,13 @@ import java.util.stream.Collectors;
 
 public class Dealer extends BaseNpcPiece {
     private ImageScaler imageScaler = new ImageScaler();
-    private static List<BaseItem> selectedItems = new ArrayList<>();
-    private static List<BaseSkill> selectedSkills = new ArrayList<>();
+    private List<BaseItem> items_noDuplicate = new ArrayList<>(); // contain items that already on the shop, so there won't be any duplicate
+    private List<BaseSkill> skills_noDuplicate = new ArrayList<>(); // contain skills that already on the shop, so there won't be any duplicate
     private SkillInfoOverlay skillInfoOverlay = new SkillInfoOverlay();
     private ItemInfoOverlay itemInfoOverlay = new ItemInfoOverlay();
-    private VBox ShopOverlay;
+    private VBox shopLayout; // layout
+    private StackPane overlayPane; // contain shop grid & info overlay
+    private Text priceTag;
 
     public Dealer() {
         super("Dealer", Config.DealerPortraitPath, 1);
@@ -90,7 +86,7 @@ public class Dealer extends BaseNpcPiece {
                 talk("questions", "misc1");
                 npcDisplay.setDialogueText(getCurrentDialogue());
                 if (npcDisplay.getAdditionalOverlaySize() == 0) {
-                    npcDisplay.newAdditionalOverlay(ShopOverlay);
+                    npcDisplay.newAdditionalOverlay(shopLayout);
                 } else {
                     npcDisplay.clearAdditionalOverlay();
                 }
@@ -99,13 +95,21 @@ public class Dealer extends BaseNpcPiece {
     }
 
     private void setupShop() {
-        ShopOverlay = new VBox();
-        ShopOverlay.setMinHeight(700);
-        ShopOverlay.setTranslateX(-300);
+        shopLayout = new VBox();
+        shopLayout.setMinHeight(720);
+        shopLayout.setTranslateX(-300);
+
+        priceTag = new Text("Placeholder");
+        priceTag.setStyle(
+                "-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:30;" +
+                "-fx-fill:'gold';" +
+                "-fx-stroke:black;" +
+                "-fx-stroke-width:2px;");
+        priceTag.setVisible(false);
 
         // Add shop components
         GridPane itemShopGrid = new GridPane();
-        itemShopGrid.setMinHeight(350);
         itemShopGrid.setBackground(Background.fill(Color.GOLD));
         itemShopGrid.setHgap(5);
         itemShopGrid.setVgap(5);
@@ -120,7 +124,6 @@ public class Dealer extends BaseNpcPiece {
         }
 
         GridPane skillShopGrid = new GridPane();
-        skillShopGrid.setMinHeight(350);
         skillShopGrid.setBackground(Background.fill(Color.CYAN));
         skillShopGrid.setHgap(5);
         skillShopGrid.setVgap(5);
@@ -133,22 +136,19 @@ public class Dealer extends BaseNpcPiece {
         }
 
         // Setup child in pane
-        StackPane itemShopContainer = new StackPane();
-        itemShopContainer.getChildren().addAll(itemShopGrid, itemInfoOverlay.getView());
-        StackPane skillShopContainer = new StackPane();
-        skillShopContainer.getChildren().addAll(skillShopGrid, skillInfoOverlay.getView());
+        overlayPane = new StackPane();
+        VBox shopContainer = new VBox();
+        shopContainer.getChildren().addAll(itemShopGrid, skillShopGrid);
+        overlayPane.getChildren().addAll(shopContainer, itemInfoOverlay.getView(), skillInfoOverlay.getView(), priceTag);
 
-        itemShopContainer.setOnMouseMoved(event -> {
+        overlayPane.setOnMouseMoved(event -> {
             // Update the position of the BoxOverlay to follow the mouse
-            itemInfoOverlay.updatePosition(event.getX(), event.getY(), -160, -170);
+            itemInfoOverlay.updatePosition(event.getX(), event.getY(), -160, -190);
+            skillInfoOverlay.updatePosition(event.getX(), event.getY(), -160, -190);
+            priceTagPosition(event.getX(), event.getY(), 180, 150);
         });
 
-        skillShopContainer.setOnMouseMoved(event -> {
-            // Update the position of the BoxOverlay to follow the mouse
-            skillInfoOverlay.updatePosition(event.getX(), event.getY(), -160, -170);
-        });
-
-        ShopOverlay.getChildren().addAll(itemShopContainer, skillShopContainer);
+        shopLayout.getChildren().addAll(overlayPane);
     }
 
     private BaseItem randomItem() {
@@ -158,18 +158,18 @@ public class Dealer extends BaseNpcPiece {
 
         // Create a list of items not already selected
         List<BaseItem> availableItems = Arrays.stream(pool)
-                .filter(i -> !selectedItems.contains(i))
+                .filter(i -> !items_noDuplicate.contains(i))
                 .collect(Collectors.toList());
 
         // If all items have been selected, reset the selected items list
         if (availableItems.isEmpty()) {
-            selectedItems.clear();
+            items_noDuplicate.clear();
             availableItems.addAll(Arrays.asList(pool));
         }
 
         // Randomly select an item from the available items
         item = availableItems.get(random.nextInt(availableItems.size()));
-        selectedItems.add(item);
+        items_noDuplicate.add(item);
 
         return  item;
     }
@@ -184,8 +184,16 @@ public class Dealer extends BaseNpcPiece {
         itemFrame.setPrefHeight(64);
         itemFrame.getChildren().addAll(new ImageView(itemIcon), frameView);
 
+        itemFrame.setOnMouseClicked(mouseEvent -> {
+            // TODO : Buy Item Logic
+        });
+
         itemFrame.setOnMouseEntered(mouseEvent -> {
             itemInfoOverlay.getView().setVisible(true);
+
+            // show price
+            priceTag.setText(String.valueOf(item.getPrice()));
+            priceTag.setVisible(true);
 
             // setup info
             itemInfoOverlay.getTitle().setText(item.getName());
@@ -200,6 +208,7 @@ public class Dealer extends BaseNpcPiece {
 
         itemFrame.setOnMouseExited(mouseEvent -> {
             itemInfoOverlay.getView().setVisible(false);
+            priceTag.setVisible(false);
         });
 
         return itemFrame;
@@ -213,18 +222,18 @@ public class Dealer extends BaseNpcPiece {
 
         // Create a list of items not already selected
         List<BaseSkill> availableItems = Arrays.stream(pool)
-                .filter(i -> !selectedSkills.contains(i) && !playerOwned.contains(i))
+                .filter(i -> !skills_noDuplicate.contains(i) && !playerOwned.contains(i))
                 .collect(Collectors.toList());
 
         // If all items have been selected, reset the selected items list
         if (availableItems.isEmpty()) {
-            selectedSkills.clear();
+            skills_noDuplicate.clear();
             availableItems.addAll(Arrays.asList(pool));
         }
 
         // Randomly select an item from the available items
         skill = availableItems.get(random.nextInt(availableItems.size()));
-        selectedSkills.add(skill);
+        skills_noDuplicate.add(skill);
 
         return skill;
     }
@@ -240,9 +249,17 @@ public class Dealer extends BaseNpcPiece {
         skillFrame.setPrefHeight(64);
         skillFrame.getChildren().addAll(new ImageView(skillIcon), frameView);
 
+        skillFrame.setOnMouseClicked(mouseEvent -> {
+            // TODO : Buy Skill Logic
+        });
+
         skillFrame.setOnMouseEntered(mouseEvent -> {
             skillInfoOverlay.getView().setVisible(true);
             skillInfoOverlay.getView().toFront();
+
+            // show price
+            priceTag.setText(String.valueOf(skill.getPrice()));
+            priceTag.setVisible(true);
 
             // Update overlay info
             skillInfoOverlay.getTitle().setText(skill.getName());
@@ -265,8 +282,15 @@ public class Dealer extends BaseNpcPiece {
 
         skillFrame.setOnMouseExited(mouseEvent -> {
             skillInfoOverlay.getView().setVisible(false);
+            priceTag.setVisible(false);
         });
 
         return skillFrame;
+    }
+
+    public void priceTagPosition(double x, double y, double offsetX, double offsetY) {
+        // Adjust the layout parameters of the VBox to position it at (x, y)
+        priceTag.setTranslateX(x - offsetX);
+        priceTag.setTranslateY(y - offsetY);
     }
 }

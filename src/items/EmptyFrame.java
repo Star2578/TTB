@@ -5,6 +5,6 @@ import utils.Config;
 
 public class EmptyFrame extends BaseItem {
     public EmptyFrame() {
-        super("", Color.DARKGRAY, Config.FramePath, "");
+        super("", Color.DARKGRAY, Config.FramePath, "", Config.Rarity.COMMON);
     }
 }

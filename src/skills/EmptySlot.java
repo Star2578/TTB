@@ -7,7 +7,7 @@ import utils.Config;
 
 public class EmptySlot extends BaseSkill{
     public EmptySlot() {
-        super("Empty", Color.ALICEBLUE, 0, 0, "This slot is empty, you can add a skill here");
+        super("Empty", Color.ALICEBLUE, 0, 0, "This slot is empty, you can add a skill here", Config.Rarity.COMMON);
         icon = new ImageView(Config.UnlockedSkillIconPath);
     }
 

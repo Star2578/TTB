@@ -65,10 +65,10 @@ public class Config {
     public static String meleeAttackPath = "sprites/attacks/testLocation.png";
 
     public enum ENTITY_TYPE {
-        PLAYER,
-        MONSTER,
-        TRAP,
-        NPC,
-        WALL
+        PLAYER, MONSTER, TRAP, NPC, WALL
+    }
+
+    public enum Rarity {
+        COMMON, UNCOMMON, RARE, EPIC, LEGENDARY
     }
 }
