@@ -150,7 +150,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         GameManager.getInstance().playerMoney += moneyDrop;
         GUIManager.getInstance().updateGUI();
         // To call when this monster died
-        System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
+        GUIManager.getInstance().eventLogDisplay.addLog("Player killed " + this.getClass().getSimpleName());
     }
     public boolean isEndAction() {
         return endAction;

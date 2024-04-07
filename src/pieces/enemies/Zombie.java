@@ -101,7 +101,7 @@ public class Zombie extends BaseMonsterPiece{
 
     @Override
     public void attack(BasePlayerPiece playerPiece) {
-        System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
+        GUIManager.getInstance().eventLogDisplay.addLog("Attack Player at " + ATTACK_DAMAGE + " damage!");
 
         playerPiece.takeDamage(ATTACK_DAMAGE);
         GUIManager.getInstance().updateGUI();

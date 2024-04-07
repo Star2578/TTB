@@ -100,7 +100,7 @@ public class Tiny extends BaseMonsterPiece{
 
     @Override
     public void attack(BasePlayerPiece playerPiece) {
-        System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
+        GUIManager.getInstance().eventLogDisplay.addLog("Attack Player for " + ATTACK_DAMAGE + " damage!");
 
         playerPiece.takeDamage(ATTACK_DAMAGE);
         GUIManager.getInstance().updateGUI();

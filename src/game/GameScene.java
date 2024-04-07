@@ -360,7 +360,6 @@ public class GameScene {
     private void handleSquareClick(int row, int col) {
         System.out.println("Clicked on square (" + row + ", " + col + ")");
         if (!player.canAct()) {
-            System.out.println("Not on your turn");
             if (GUIManager.getInstance().isInAttackMode)
                 resetSelection(1);
             if (GameManager.getInstance().selectedSkill != null)
@@ -375,14 +374,13 @@ public class GameScene {
         boolean isInAttackMode = GUIManager.getInstance().isInAttackMode;
 
         if (isInAttackMode) {
-            System.out.println("Player Prepare to attack");
-
             // Check if the clicked square is within showValid attack range
             if (player.validAttack(row, col)) {
                 // Check if there is a monster on the clicked square
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     // Perform the attack on the monster
                     player.attack(monsterPiece);
+                    GUIManager.getInstance().eventLogDisplay.addLog("Player attack " + monsterPiece.getClass().getSimpleName() + " at (" + row + ", " + col + ")");
                     exitAttackMode();
                     if (!monsterPiece.isAlive()) {
                         removePiece(monsterPiece);
@@ -407,6 +405,7 @@ public class GameScene {
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     // Perform the attack on the monster
                     if (enoughMana && enoughActionPoint) {
+                        GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedSkill.getName() + " on " + monsterPiece.getClass().getSimpleName());
                         gameManager.selectedSkill.perform(monsterPiece);
                     } else {
                         System.out.println("Not enough mana or action point");
@@ -420,6 +419,7 @@ public class GameScene {
                     if (gameManager.selectedSkill.castOnSelf()) {
 
                         if (enoughMana && enoughActionPoint) {
+                            GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedSkill.getName());
                             gameManager.selectedSkill.perform(playerPiece);
                         } else {
                             System.out.println("Not enough mana or action point");
@@ -447,6 +447,7 @@ public class GameScene {
                         // use item on monster
                         if (((Usable) item).castOnMonster()) {
 
+                            GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedItem.getName() + " on " + monsterPiece.getClass().getSimpleName());
                             usableItem.useItem(monsterPiece);
                             resetSelection(3);
 
@@ -457,6 +458,7 @@ public class GameScene {
                         // use item on player
                         if (((Usable) item).castOnSelf()) {
 
+                            GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedItem.getName());
                             usableItem.useItem(playerPiece);
                             resetSelection(3);
                             // throw away after use
@@ -481,7 +483,6 @@ public class GameScene {
         NpcDisplay npcDisplay = GUIManager.getInstance().getNpcDisplay();
         // ------------------------- NPC Interact -------------------------
         if (piecesPosition[row][col] instanceof BaseNpcPiece npc) {
-            System.out.println("Talk to NPC");
             GUIManager.getInstance().switchToNpcDisplay();
 
             npcDisplay.setNpcPortrait(npc.getPortrait()); // get npc portrait
@@ -511,9 +512,8 @@ public class GameScene {
                 resetSelection(0);
             }
         } else if (isPlayerPieceSelected) {
-            System.out.println("Player Selected");
             if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
-                System.out.println("Moving player to square (" + row + ", " + col + ")");
+                GUIManager.getInstance().eventLogDisplay.addLog("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
             } else {
                 System.out.println("Invalid move");
@@ -655,6 +655,7 @@ public class GameScene {
                         for (int j = 0; j < Config.BOARD_SIZE; j++) {
                             if (piecesPosition[i][j] != null && !(piecesPosition[i][j] instanceof BaseWallPiece)) {
                                 System.out.println("There is " + piecesPosition[i][j] + "at " + i + " " + j);
+                                GUIManager.getInstance().eventLogDisplay.addLog("There is " + piecesPosition[i][j] + "at " + i + " " + j);
                             }
                         }
                     }
@@ -670,6 +671,7 @@ public class GameScene {
                 case F5:
                     for (int i = 0; i < gameManager.inventory.size(); i++) {
                         System.out.println("Inventory[" + i + "] is " + gameManager.inventory.get(i).getName());
+                        GUIManager.getInstance().eventLogDisplay.addLog("Inventory[" + i + "] is " + gameManager.inventory.get(i).getName());
                     }
                     break;
                 case F6:
