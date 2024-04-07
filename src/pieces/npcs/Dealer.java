@@ -1,6 +1,7 @@
 package pieces.npcs;
 
 import items.BaseItem;
+import items.EmptyFrame;
 import items.potions.BluePotion;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,16 +15,20 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import logic.GameManager;
 import logic.ImageScaler;
+import logic.ui.GUIManager;
 import logic.ui.display.NpcDisplay;
 import logic.ui.overlay.ItemInfoOverlay;
 import logic.ui.overlay.SkillInfoOverlay;
 import skills.BaseSkill;
+import skills.EmptySlot;
 import skills.knight.Slash;
 import utils.Attack;
 import utils.Config;
 import utils.Healing;
 import utils.RefillMana;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,6 +40,8 @@ public class Dealer extends BaseNpcPiece {
     private ItemInfoOverlay itemInfoOverlay = new ItemInfoOverlay();
     private VBox shopLayout; // layout
     private StackPane overlayPane; // contain shop grid & info overlay
+    private GridPane skillShopGrid;
+    private GridPane itemShopGrid;
     private Text priceTag;
 
     public Dealer() {
@@ -109,31 +116,23 @@ public class Dealer extends BaseNpcPiece {
         priceTag.setVisible(false);
 
         // Add shop components
-        GridPane itemShopGrid = new GridPane();
+        itemShopGrid = new GridPane();
         itemShopGrid.setBackground(Background.fill(Color.GOLD));
         itemShopGrid.setHgap(5);
         itemShopGrid.setVgap(5);
         itemShopGrid.setPadding(new Insets(10));
-        int itemsPerRow = 4;
 
-        for (int totalItems = 0; totalItems < 8; totalItems++) {
-            StackPane item = createItemFrame(new BluePotion());
-            int row = totalItems / itemsPerRow;
-            int col = totalItems % itemsPerRow;
-            itemShopGrid.add(item, col, row);
-        }
-
-        GridPane skillShopGrid = new GridPane();
+        skillShopGrid = new GridPane();
         skillShopGrid.setBackground(Background.fill(Color.CYAN));
         skillShopGrid.setHgap(5);
         skillShopGrid.setVgap(5);
         skillShopGrid.setPadding(new Insets(10));
-        for (int totalSkills = 0; totalSkills < 8; totalSkills++) {
-            StackPane item = createSkillFrame(new Slash());
-            int row = totalSkills / itemsPerRow;
-            int col = totalSkills % itemsPerRow;
-            skillShopGrid.add(item, col, row);
-        }
+
+        // setup item/skill in shop
+        items_noDuplicate = getRandomItems(8);
+        skills_noDuplicate = getRandomSkills(8);
+
+        updateShop();
 
         // Setup child in pane
         overlayPane = new StackPane();
@@ -151,27 +150,34 @@ public class Dealer extends BaseNpcPiece {
         shopLayout.getChildren().addAll(overlayPane);
     }
 
-    private BaseItem randomItem() {
-        BaseItem item;
+    private List<BaseItem> getRandomItems(int count) {
+        List<BaseItem> randomItems = new ArrayList<>();
         BaseItem[] pool = GameManager.getInstance().ITEM_POOL;
         Random random = new Random();
 
-        // Create a list of items not already selected
-        List<BaseItem> availableItems = Arrays.stream(pool)
-                .filter(i -> !items_noDuplicate.contains(i))
-                .collect(Collectors.toList());
+        for (int i = 0; i < count; i++) {
+            // Create a list of items not already selected
+            List<BaseItem> availableItems = Arrays.stream(pool)
+                    .filter(item -> !items_noDuplicate.contains(item))
+                    .toList();
 
-        // If all items have been selected, reset the selected items list
-        if (availableItems.isEmpty()) {
-            items_noDuplicate.clear();
-            availableItems.addAll(Arrays.asList(pool));
+//            // If all items have been selected, reset the selected items list
+//            if (availableItems.isEmpty()) {
+//                items_noDuplicate.clear();
+//                availableItems.addAll(Arrays.asList(pool));
+//            }
+
+            // Randomly select a skill from the available skills
+            BaseItem randomItem = availableItems.get(random.nextInt(availableItems.size()));
+
+            // Create a new instance of the randomly selected skill
+            BaseItem skill = createNewInstance(randomItem);
+
+            // Add the new skill instance to the list of random skills
+            randomItems.add(skill);
         }
 
-        // Randomly select an item from the available items
-        item = availableItems.get(random.nextInt(availableItems.size()));
-        items_noDuplicate.add(item);
-
-        return  item;
+        return randomItems;
     }
     private StackPane createItemFrame(BaseItem item) {
         StackPane itemFrame = new StackPane();
@@ -184,58 +190,73 @@ public class Dealer extends BaseNpcPiece {
         itemFrame.setPrefHeight(64);
         itemFrame.getChildren().addAll(new ImageView(itemIcon), frameView);
 
-        itemFrame.setOnMouseClicked(mouseEvent -> {
-            // TODO : Buy Item Logic
-        });
+        if (!(item instanceof EmptyFrame)) {
+            itemFrame.setOnMouseClicked(mouseEvent -> {
+                GameManager.getInstance().inventory.add(item);
+                GUIManager.getInstance().inventoryDisplay.updateInventoryUI();
 
-        itemFrame.setOnMouseEntered(mouseEvent -> {
-            itemInfoOverlay.getView().setVisible(true);
+                // turn item, in items_noDuplicate, that got click into new instance of EmptyFrame
+                int index = items_noDuplicate.indexOf(item);
+                items_noDuplicate.set(index, new EmptyFrame());
 
-            // show price
-            priceTag.setText(String.valueOf(item.getPrice()));
-            priceTag.setVisible(true);
+                updateShop();
+            });
 
-            // setup info
-            itemInfoOverlay.getTitle().setText(item.getName());
-            itemInfoOverlay.getTitle().setTextFill(item.getNameColor());
-            itemInfoOverlay.getDesc().setText(item.getDescription());
+            itemFrame.setOnMouseEntered(mouseEvent -> {
+                itemInfoOverlay.getView().setVisible(true);
 
-            itemInfoOverlay.getDataContainer().getChildren().clear();
-            if (item instanceof RefillMana r) {
-                itemInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
-            }
-        });
+                // show price
+                priceTag.setText("$" + item.getPrice());
+                priceTag.setVisible(true);
 
-        itemFrame.setOnMouseExited(mouseEvent -> {
-            itemInfoOverlay.getView().setVisible(false);
-            priceTag.setVisible(false);
-        });
+                // setup info
+                itemInfoOverlay.getTitle().setText(item.getName());
+                itemInfoOverlay.getTitle().setTextFill(item.getNameColor());
+                itemInfoOverlay.getDesc().setText(item.getDescription());
+
+                itemInfoOverlay.getDataContainer().getChildren().clear();
+                if (item instanceof RefillMana r) {
+                    itemInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+                }
+            });
+
+            itemFrame.setOnMouseExited(mouseEvent -> {
+                itemInfoOverlay.getView().setVisible(false);
+                priceTag.setVisible(false);
+            });
+        }
 
         return itemFrame;
     }
 
-    private BaseSkill randomSkill() {
-        BaseSkill skill;
-        List<BaseSkill> playerOwned = Arrays.stream(GameManager.getInstance().playerSkills).toList();
+    private List<BaseSkill> getRandomSkills(int count) {
+        List<BaseSkill> randomSkills = new ArrayList<>();
+        List<BaseSkill> playerOwned = Arrays.asList(GameManager.getInstance().playerSkills);
         BaseSkill[] pool = GameManager.getInstance().UNIVERSAL_SKILL_POOL;
         Random random = new Random();
 
-        // Create a list of items not already selected
-        List<BaseSkill> availableItems = Arrays.stream(pool)
-                .filter(i -> !skills_noDuplicate.contains(i) && !playerOwned.contains(i))
-                .collect(Collectors.toList());
+        for (int i = 0; i < count; i++) {
+            List<BaseSkill> availableSkills = Arrays.stream(pool)
+                    .filter(skill -> !skills_noDuplicate.contains(skill) && !playerOwned.contains(skill))
+                    .toList();
 
-        // If all items have been selected, reset the selected items list
-        if (availableItems.isEmpty()) {
-            skills_noDuplicate.clear();
-            availableItems.addAll(Arrays.asList(pool));
+//            // If all skills have been selected, reset the selected skills list
+//            if (availableSkills.isEmpty()) {
+//                skills_noDuplicate.clear();
+//                availableSkills.addAll(Arrays.asList(pool));
+//            }
+
+            // Randomly select a skill from the available skills
+            BaseSkill randomSkill = availableSkills.get(random.nextInt(availableSkills.size()));
+
+            // Create a new instance of the randomly selected skill
+            BaseSkill skill = createNewInstance(randomSkill);
+
+            // Add the new skill instance to the list of random skills
+            randomSkills.add(skill);
         }
 
-        // Randomly select an item from the available items
-        skill = availableItems.get(random.nextInt(availableItems.size()));
-        skills_noDuplicate.add(skill);
-
-        return skill;
+        return randomSkills;
     }
     private StackPane createSkillFrame(BaseSkill skill) {
         StackPane skillFrame = new StackPane();
@@ -249,41 +270,44 @@ public class Dealer extends BaseNpcPiece {
         skillFrame.setPrefHeight(64);
         skillFrame.getChildren().addAll(new ImageView(skillIcon), frameView);
 
-        skillFrame.setOnMouseClicked(mouseEvent -> {
-            // TODO : Buy Skill Logic
-        });
+        if (!(skill instanceof EmptySlot)) {
+            skillFrame.setOnMouseClicked(mouseEvent -> {
+                // TODO : Buy Skill Logic
+//                updateShop();
+            });
 
-        skillFrame.setOnMouseEntered(mouseEvent -> {
-            skillInfoOverlay.getView().setVisible(true);
-            skillInfoOverlay.getView().toFront();
+            skillFrame.setOnMouseEntered(mouseEvent -> {
+                skillInfoOverlay.getView().setVisible(true);
+                skillInfoOverlay.getView().toFront();
 
-            // show price
-            priceTag.setText(String.valueOf(skill.getPrice()));
-            priceTag.setVisible(true);
+                // show price
+                priceTag.setText("$" + skill.getPrice());
+                priceTag.setVisible(true);
 
-            // Update overlay info
-            skillInfoOverlay.getTitle().setText(skill.getName());
-            skillInfoOverlay.getTitle().setTextFill(skill.getNameColor());
-            skillInfoOverlay.getDesc().setText(skill.getDescription());
+                // Update overlay info
+                skillInfoOverlay.getTitle().setText(skill.getName());
+                skillInfoOverlay.getTitle().setTextFill(skill.getNameColor());
+                skillInfoOverlay.getDesc().setText(skill.getDescription());
 
-            skillInfoOverlay.getDataContainer().getChildren().clear();
-            skillInfoOverlay.newInfo("Mana", Color.DARKBLUE, String.valueOf(skill.getManaCost()));
-            skillInfoOverlay.newInfo("Action Point", Color.ORANGE, String.valueOf(skill.getActionPointCost()));
+                skillInfoOverlay.getDataContainer().getChildren().clear();
+                skillInfoOverlay.newInfo("Mana", Color.DARKBLUE, String.valueOf(skill.getManaCost()));
+                skillInfoOverlay.newInfo("Action Point", Color.ORANGE, String.valueOf(skill.getActionPointCost()));
 
-            // Other skill info base on type
-            if (skill instanceof Attack a) {
-                skillInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(a.getAttack()));
-            }if (skill instanceof Healing h) {
-                skillInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(h.getHeal()));
-            }if (skill instanceof RefillMana r) {
-                skillInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
-            }
-        });
+                // Other skill info base on type
+                if (skill instanceof Attack a) {
+                    skillInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(a.getAttack()));
+                }if (skill instanceof Healing h) {
+                    skillInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(h.getHeal()));
+                }if (skill instanceof RefillMana r) {
+                    skillInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+                }
+            });
 
-        skillFrame.setOnMouseExited(mouseEvent -> {
-            skillInfoOverlay.getView().setVisible(false);
-            priceTag.setVisible(false);
-        });
+            skillFrame.setOnMouseExited(mouseEvent -> {
+                skillInfoOverlay.getView().setVisible(false);
+                priceTag.setVisible(false);
+            });
+        }
 
         return skillFrame;
     }
@@ -292,5 +316,66 @@ public class Dealer extends BaseNpcPiece {
         // Adjust the layout parameters of the VBox to position it at (x, y)
         priceTag.setTranslateX(x - offsetX);
         priceTag.setTranslateY(y - offsetY);
+    }
+
+    private BaseSkill createNewInstance(BaseSkill skill) {
+        try {
+            // Get the class of the skill
+            Class<? extends BaseSkill> skillClass = skill.getClass();
+
+            // Get the constructor of the skill class
+            Constructor<? extends BaseSkill> constructor = skillClass.getDeclaredConstructor();
+
+            // Make the constructor accessible, as it may be private
+            constructor.setAccessible(true);
+
+            // Instantiate a new instance of the skill class using the constructor
+            return constructor.newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            System.out.println("Error when creating new instance @Dealer :" + e.getMessage());; // Handle the exception appropriately
+        }
+        return null;
+    }
+    private BaseItem createNewInstance(BaseItem item) {
+        try {
+            // Get the class of the item
+            Class<? extends BaseItem> itemClass = item.getClass();
+
+            // Get the constructor of the item class
+            Constructor<? extends BaseItem> constructor = itemClass.getDeclaredConstructor();
+
+            // Make the constructor accessible, as it may be private
+            constructor.setAccessible(true);
+
+            // Instantiate a new instance of the item class using the constructor
+            return constructor.newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            System.out.println("Error when creating new instance @Dealer :" + e.getMessage());; // Handle the exception appropriately
+        }
+        return null;
+    }
+
+
+    // Method to update item/skill in shop
+    private void updateShop() {
+        itemShopGrid.getChildren().clear();
+        skillShopGrid.getChildren().clear();
+        int itemsPerRow = 4;
+
+        // Add items to the item shop grid
+        for (int i = 0; i < items_noDuplicate.size(); i++) {
+            StackPane item = createItemFrame(items_noDuplicate.get(i));
+            int row = i / itemsPerRow;
+            int col = i % itemsPerRow;
+            itemShopGrid.add(item, col, row);
+        }
+
+        // Add skills to the skill shop grid
+        for (int i = 0; i < skills_noDuplicate.size(); i++) {
+            StackPane item = createSkillFrame(skills_noDuplicate.get(i));
+            int row = i / itemsPerRow;
+            int col = i % itemsPerRow;
+            skillShopGrid.add(item, col, row);
+        }
     }
 }

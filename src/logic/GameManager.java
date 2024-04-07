@@ -13,6 +13,8 @@ import logic.ui.overlay.SkillInfoOverlay;
 import pieces.BasePiece;
 import pieces.player.*;
 import skills.*;
+import skills.knight.Heal;
+import skills.knight.Slash;
 import utils.Config;
 
 import java.util.ArrayList;
@@ -54,7 +56,7 @@ public class GameManager {
     public Point2D doorAt = null; // use to store where the door is at
 
     public final BaseSkill[] UNIVERSAL_SKILL_POOL = {
-
+        new Slash(), new Heal()
     };
     public final BaseItem[] ITEM_POOL = {
         new BluePotion()
