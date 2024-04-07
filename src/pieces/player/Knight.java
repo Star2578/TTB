@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.SpriteAnimation;
+import logic.ui.GUIManager;
 import pieces.enemies.BaseMonsterPiece;
 import skills.knight.Heal;
 import skills.knight.Slash;
@@ -46,6 +47,7 @@ public class Knight extends BasePlayerPiece {
         //slowly move to target col,row
         moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
         moveTransition.setToY( (row-getRow()) * SQUARE_SIZE + offsetY);
+        GUIManager.getInstance().disableButton();
 
         moveTransition.setOnFinished(actionEvent->{
             //set image layering depend on row
@@ -59,6 +61,7 @@ public class Knight extends BasePlayerPiece {
             //now player can do actions
             spriteAnimation.changeAnimation(4 , 0);
             setCanAct(true);
+            GUIManager.getInstance().enableButton();
             setRow(row);
             setCol(col);
         });

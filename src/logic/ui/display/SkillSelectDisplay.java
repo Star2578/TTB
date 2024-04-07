@@ -149,6 +149,12 @@ public class SkillSelectDisplay implements Display{
     public SkillInfoOverlay getSkillInfoOverlay() {
         return skillInfoOverlay;
     }
+    public void enableFrame() {
+        skillSelectorGrid.setDisable(false);
+    }
+    public void disableFrame() {
+        skillSelectorGrid.setDisable(true);
+    }
 
     @Override
     public Node getView() {

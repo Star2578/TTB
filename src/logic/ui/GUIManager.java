@@ -279,10 +279,14 @@ public class GUIManager {
     public void enableButton(){
         attackButton.setDisable(false);
         endTurnButton.setDisable(false);
+        inventoryDisplay.enableFrame();
+        skillSelectDisplay.enableFrame();
     }
     public void disableButton(){
         attackButton.setDisable(true);
         endTurnButton.setDisable(true);
+        inventoryDisplay.disableFrame();
+        skillSelectDisplay.disableFrame();
     }
     public void deselectFrame(ImageView frameView) {
         frameView.setImage(imageScaler.resample(new Image(Config.FramePath), 2));

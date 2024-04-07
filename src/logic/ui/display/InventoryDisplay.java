@@ -212,7 +212,16 @@ public class InventoryDisplay implements Display {
     public ItemInfoOverlay getItemInfoOverlay() {
         return itemInfoOverlay;
     }
-
+    public void enableFrame() {
+        useItem.setDisable(false);
+        throwAwayItem.setDisable(false);
+        usableItemsSection.setDisable(false);
+    }
+    public void disableFrame() {
+        useItem.setDisable(true);
+        throwAwayItem.setDisable(true);
+        usableItemsSection.setDisable(true);
+    }
     @Override
     public Node getView() {
         return view;

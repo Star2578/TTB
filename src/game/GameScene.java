@@ -67,7 +67,7 @@ public class GameScene {
     private Scene scene;
     private Pane animationPane = gameManager.animationPane;
     private GridPane boardPane = gameManager.boardPane;
-    private GridPane tilePane = new GridPane();
+    private GridPane tilePane = new GridPane(); 
     private BorderPane root;
     private VBox rightPane; // Contain right side UI
     private VBox leftPane; // Contain left side UI
@@ -202,7 +202,7 @@ public class GameScene {
         // reset monsterCount = 0 every time we got to new floor
         SpawnerManager.getInstance().monsterCount = 0;
 
-        SpawnerManager.getInstance().randomMonsterSpawnFromPool(monsterPool1, environmentPieces, 5);
+        SpawnerManager.getInstance().randomMonsterSpawnFromPool(monsterPool1, environmentPieces);
 
         for (BasePiece entity : environmentPieces) {
             placeEntityRandomly(entity);

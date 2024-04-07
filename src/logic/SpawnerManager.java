@@ -58,11 +58,14 @@ public class SpawnerManager {
         System.out.println("Door spawn probability increased to " + doorProbability + "%");
     }
 
-    public void randomMonsterSpawnFromPool(BaseMonsterPiece[] pool, List<BasePiece> toAdd, int difficulty) {
+    public void randomMonsterSpawnFromPool(BaseMonsterPiece[] pool, List<BasePiece> toAdd) {
         Random random = new Random();
 
+        int calculateMonster = freeSquareCount / 12;
+        System.out.println("Free square = " + freeSquareCount);
+
         // Add monsters from the pool to toAdd list
-        for (int i = 0; i < difficulty; i++) {
+        for (int i = 0; i < calculateMonster; i++) {
             int index = random.nextInt(pool.length);
             BaseMonsterPiece newMonster = null;
             try {
@@ -74,6 +77,6 @@ public class SpawnerManager {
                 toAdd.add(newMonster);
             }
         }
-        monsterCount += difficulty;
+        monsterCount += calculateMonster;
     }
 }
