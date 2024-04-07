@@ -17,7 +17,7 @@ import logic.ui.GUIManager;
 import logic.ui.overlay.SkillInfoOverlay;
 import pieces.player.BasePlayerPiece;
 import skills.BaseSkill;
-import skills.EmptySlot;
+import skills.EmptySkill;
 import skills.LockedSlot;
 import utils.*;
 
@@ -41,13 +41,30 @@ public class SkillSelectDisplay implements Display{
         skillSelectorGrid.setHgap(5);
         skillSelectorGrid.setVgap(5);
 
-        BaseSkill[] skills = GameManager.getInstance().playerSkills;
+        updateSkillSelect();
 
+        skillSelectorGrid.setAlignment(Pos.BOTTOM_CENTER);
+        // Add skill info box and skill selector box to main view
+        view.getChildren().addAll(skillSelectorGrid);
+    }
+
+    private void updateSkillSelect() {
+        skillSelectorGrid.getChildren().clear();
+        BaseSkill[] playerSkills = GameManager.getInstance().playerSkills;
         // Add skill frames
         int row = 0;
         int col = 0;
+
         for (int i = 0; i < GameManager.getInstance().SKILL_SLOTS; i++) {
-            StackPane skillFrame = createSkillFrame(skills[i]);;
+            if (playerSkills[i] == null) {
+                if (i < GameManager.getInstance().unlockedSlots) {
+                    playerSkills[i] = new EmptySkill();
+                } else {
+                    playerSkills[i] = new LockedSlot();
+                }
+            }
+
+            StackPane skillFrame = createSkillFrame(playerSkills[i]);;
             skillSelectorGrid.add(skillFrame, col, row); // Add to the grid
             col++;
             if (col == 4) { // Adjust column count as needed
@@ -55,10 +72,6 @@ public class SkillSelectDisplay implements Display{
                 row++;
             }
         }
-
-        skillSelectorGrid.setAlignment(Pos.BOTTOM_CENTER);
-        // Add skill info box and skill selector box to main view
-        view.getChildren().addAll(skillSelectorGrid);
     }
 
     // This method create the skill frame from skill in parameter
@@ -77,7 +90,7 @@ public class SkillSelectDisplay implements Display{
         BasePlayerPiece player = GameManager.getInstance().player;
 
         // Make EmptySlot & Locked Slot can't be select
-        if (!(skill instanceof EmptySlot) && !(skill instanceof LockedSlot)) {
+        if (!(skill instanceof EmptySkill) && !(skill instanceof LockedSlot)) {
             skillFrame.setOnMouseClicked(mouseEvent -> {
                 // Exit attack mode if activated
                 if (GUIManager.getInstance().isInAttackMode) {
@@ -128,15 +141,9 @@ public class SkillSelectDisplay implements Display{
 
     // Method to update skill frame into other skill
     public void updateSkillFrame(int index, BaseSkill newSkill) {
-        StackPane skillFrame = createSkillFrame(newSkill);
+        GameManager.getInstance().playerSkills[index] = newSkill;
 
-        int skillCols = 4; // 4 columns
-
-        // Update the skill frame in the grid
-        int row = index / skillCols;
-        int col = index % skillCols;
-        skillSelectorGrid.getChildren().remove(index); // Remove the old skill frame
-        skillSelectorGrid.add(skillFrame, col, row); // Add the updated skill frame
+        updateSkillSelect();
     }
 
     public SkillInfoOverlay getSkillInfoOverlay() {

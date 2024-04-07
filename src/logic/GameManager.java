@@ -8,8 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import logic.ui.overlay.ItemInfoOverlay;
-import logic.ui.overlay.SkillInfoOverlay;
 import pieces.BasePiece;
 import pieces.player.*;
 import skills.*;
@@ -68,7 +66,7 @@ public class GameManager {
         for (int i = 0; i < SKILL_SLOTS; i++) {
             if (playerSkills[i] == null) {
                 if (i < unlockedSlots) {
-                    playerSkills[i] = new EmptySlot();
+                    playerSkills[i] = new EmptySkill();
                 } else {
                     playerSkills[i] = new LockedSlot();
                 }

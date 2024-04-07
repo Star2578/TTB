@@ -1,7 +1,7 @@
 package logic.ui.display;
 
 import items.BaseItem;
-import items.EmptyFrame;
+import items.EmptyItem;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -50,7 +50,7 @@ public class InventoryDisplay implements Display {
 
         useItem.setOnMouseClicked(mouseEvent -> {
             BaseItem currentItem = GameManager.getInstance().selectedItem;
-            if (currentItem != null && !(currentItem instanceof EmptyFrame)) {
+            if (currentItem != null && !(currentItem instanceof EmptyItem)) {
                 System.out.println("Use " + currentItem.getName());
                 // Exit attack mode if activated
                 if (GUIManager.getInstance().isInAttackMode) {
@@ -130,7 +130,7 @@ public class InventoryDisplay implements Display {
         }
 
         for (int i = 0; i < emptyFrames; i++) {
-            StackPane emptyFrame = createItemFrame(new EmptyFrame());
+            StackPane emptyFrame = createItemFrame(new EmptyItem());
             int row = totalItems / itemsPerRow;
             int col = totalItems % itemsPerRow;
             itemGrid.add(emptyFrame, col, row);
@@ -159,7 +159,7 @@ public class InventoryDisplay implements Display {
         itemFrame.setPrefHeight(64);
         itemFrame.getChildren().addAll(new ImageView(itemIcon), frameView);
 
-        if (!(item instanceof EmptyFrame)) {
+        if (!(item instanceof EmptyItem)) {
             itemFrame.setOnMouseClicked(mouseEvent -> {
                 if (GameManager.getInstance().selectedItem != null) {
                     GameManager.getInstance().gameScene.resetSelection(3);
@@ -198,7 +198,7 @@ public class InventoryDisplay implements Display {
     }
 
     public void throwAwayItem(BaseItem toThrow) {
-        if (toThrow != null && !(toThrow instanceof EmptyFrame)) {
+        if (toThrow != null && !(toThrow instanceof EmptyItem)) {
             System.out.println("Throw " + toThrow.getName() + " away");
 
             // remove item from inventory

@@ -1,10 +1,10 @@
 package pieces.npcs;
 
 import items.BaseItem;
-import items.EmptyFrame;
-import items.potions.BluePotion;
+import items.EmptyItem;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -20,8 +20,7 @@ import logic.ui.display.NpcDisplay;
 import logic.ui.overlay.ItemInfoOverlay;
 import logic.ui.overlay.SkillInfoOverlay;
 import skills.BaseSkill;
-import skills.EmptySlot;
-import skills.knight.Slash;
+import skills.EmptySkill;
 import utils.Attack;
 import utils.Config;
 import utils.Healing;
@@ -30,7 +29,6 @@ import utils.RefillMana;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Dealer extends BaseNpcPiece {
     private ImageScaler imageScaler = new ImageScaler();
@@ -43,6 +41,7 @@ public class Dealer extends BaseNpcPiece {
     private GridPane skillShopGrid;
     private GridPane itemShopGrid;
     private Text priceTag;
+    private int buySkillIndex = 0;
 
     public Dealer() {
         super("Dealer", Config.DealerPortraitPath, 1);
@@ -190,14 +189,14 @@ public class Dealer extends BaseNpcPiece {
         itemFrame.setPrefHeight(64);
         itemFrame.getChildren().addAll(new ImageView(itemIcon), frameView);
 
-        if (!(item instanceof EmptyFrame)) {
+        if (!(item instanceof EmptyItem)) {
             itemFrame.setOnMouseClicked(mouseEvent -> {
                 GameManager.getInstance().inventory.add(item);
                 GUIManager.getInstance().inventoryDisplay.updateInventoryUI();
 
-                // turn item, in items_noDuplicate, that got click into new instance of EmptyFrame
+                // turn item, in items_noDuplicate, that got click into new instance of EmptyItem
                 int index = items_noDuplicate.indexOf(item);
-                items_noDuplicate.set(index, new EmptyFrame());
+                items_noDuplicate.set(index, new EmptyItem());
 
                 updateShop();
             });
@@ -270,10 +269,16 @@ public class Dealer extends BaseNpcPiece {
         skillFrame.setPrefHeight(64);
         skillFrame.getChildren().addAll(new ImageView(skillIcon), frameView);
 
-        if (!(skill instanceof EmptySlot)) {
+        if (!(skill instanceof EmptySkill)) {
             skillFrame.setOnMouseClicked(mouseEvent -> {
                 // TODO : Buy Skill Logic
-//                updateShop();
+                GUIManager.getInstance().skillSelectDisplay.updateSkillFrame(buySkillIndex, skill);
+
+                // turn skill, in skills_noDuplicate, that got click into new instance of EmptySkill
+                int index = skills_noDuplicate.indexOf(skill);
+                skills_noDuplicate.set(index, new EmptySkill());
+
+                updateShop();
             });
 
             skillFrame.setOnMouseEntered(mouseEvent -> {
@@ -376,6 +381,24 @@ public class Dealer extends BaseNpcPiece {
             int row = i / itemsPerRow;
             int col = i % itemsPerRow;
             skillShopGrid.add(item, col, row);
+        }
+
+        for (int i = 0; i < GameManager.getInstance().unlockedSlots; i++) {
+            Button button = new Button(String.valueOf(i));
+            if (buySkillIndex == i) {
+                button.setStyle(
+                        "-fx-border-color:#f56f42;" +
+                        "-fx-background-color:#f7ca7c;" +
+                        "-fx-color: #f56f42");
+            }
+            int finalIndex = i;
+            button.setOnMouseClicked(mouseEvent -> {
+                buySkillIndex = finalIndex;
+                updateShop();
+            });
+            int row = (skills_noDuplicate.size() + i) / itemsPerRow;
+            int col = (skills_noDuplicate.size() + i) % itemsPerRow;
+            skillShopGrid.add(button, col, row);
         }
     }
 }
