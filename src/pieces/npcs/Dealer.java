@@ -149,35 +149,6 @@ public class Dealer extends BaseNpcPiece {
         shopLayout.getChildren().addAll(overlayPane);
     }
 
-    private List<BaseItem> getRandomItems(int count) {
-        List<BaseItem> randomItems = new ArrayList<>();
-        BaseItem[] pool = GameManager.getInstance().ITEM_POOL;
-        Random random = new Random();
-
-        for (int i = 0; i < count; i++) {
-            // Create a list of items not already selected
-            List<BaseItem> availableItems = Arrays.stream(pool)
-                    .filter(item -> !items_noDuplicate.contains(item))
-                    .toList();
-
-//            // If all items have been selected, reset the selected items list
-//            if (availableItems.isEmpty()) {
-//                items_noDuplicate.clear();
-//                availableItems.addAll(Arrays.asList(pool));
-//            }
-
-            // Randomly select a skill from the available skills
-            BaseItem randomItem = availableItems.get(random.nextInt(availableItems.size()));
-
-            // Create a new instance of the randomly selected skill
-            BaseItem skill = createNewInstance(randomItem);
-
-            // Add the new skill instance to the list of random skills
-            randomItems.add(skill);
-        }
-
-        return randomItems;
-    }
     private StackPane createItemFrame(BaseItem item) {
         StackPane itemFrame = new StackPane();
 
@@ -191,14 +162,19 @@ public class Dealer extends BaseNpcPiece {
 
         if (!(item instanceof EmptyItem)) {
             itemFrame.setOnMouseClicked(mouseEvent -> {
-                GameManager.getInstance().inventory.add(item);
-                GUIManager.getInstance().inventoryDisplay.updateInventoryUI();
+                if (GameManager.getInstance().playerMoney >= item.getPrice()) {
+                    GameManager.getInstance().inventory.add(item);
+                    GUIManager.getInstance().inventoryDisplay.updateInventoryUI();
 
-                // turn item, in items_noDuplicate, that got click into new instance of EmptyItem
-                int index = items_noDuplicate.indexOf(item);
-                items_noDuplicate.set(index, new EmptyItem());
+                    // turn item, in items_noDuplicate, that got click into new instance of EmptyItem
+                    int index = items_noDuplicate.indexOf(item);
+                    items_noDuplicate.set(index, new EmptyItem());
 
-                updateShop();
+                    GameManager.getInstance().playerMoney -= item.getPrice();
+                    GUIManager.getInstance().updateGUI();
+
+                    updateShop();
+                }
             });
 
             itemFrame.setOnMouseEntered(mouseEvent -> {
@@ -228,35 +204,6 @@ public class Dealer extends BaseNpcPiece {
         return itemFrame;
     }
 
-    private List<BaseSkill> getRandomSkills(int count) {
-        List<BaseSkill> randomSkills = new ArrayList<>();
-        List<BaseSkill> playerOwned = Arrays.asList(GameManager.getInstance().playerSkills);
-        BaseSkill[] pool = GameManager.getInstance().UNIVERSAL_SKILL_POOL;
-        Random random = new Random();
-
-        for (int i = 0; i < count; i++) {
-            List<BaseSkill> availableSkills = Arrays.stream(pool)
-                    .filter(skill -> !skills_noDuplicate.contains(skill) && !playerOwned.contains(skill))
-                    .toList();
-
-//            // If all skills have been selected, reset the selected skills list
-//            if (availableSkills.isEmpty()) {
-//                skills_noDuplicate.clear();
-//                availableSkills.addAll(Arrays.asList(pool));
-//            }
-
-            // Randomly select a skill from the available skills
-            BaseSkill randomSkill = availableSkills.get(random.nextInt(availableSkills.size()));
-
-            // Create a new instance of the randomly selected skill
-            BaseSkill skill = createNewInstance(randomSkill);
-
-            // Add the new skill instance to the list of random skills
-            randomSkills.add(skill);
-        }
-
-        return randomSkills;
-    }
     private StackPane createSkillFrame(BaseSkill skill) {
         StackPane skillFrame = new StackPane();
 
@@ -271,14 +218,18 @@ public class Dealer extends BaseNpcPiece {
 
         if (!(skill instanceof EmptySkill)) {
             skillFrame.setOnMouseClicked(mouseEvent -> {
-                // TODO : Buy Skill Logic
-                GUIManager.getInstance().skillSelectDisplay.updateSkillFrame(buySkillIndex, skill);
+                if (GameManager.getInstance().playerMoney >= skill.getPrice()) {
+                    GUIManager.getInstance().skillSelectDisplay.updateSkillFrame(buySkillIndex, skill);
 
-                // turn skill, in skills_noDuplicate, that got click into new instance of EmptySkill
-                int index = skills_noDuplicate.indexOf(skill);
-                skills_noDuplicate.set(index, new EmptySkill());
+                    // turn skill, in skills_noDuplicate, that got click into new instance of EmptySkill
+                    int index = skills_noDuplicate.indexOf(skill);
+                    skills_noDuplicate.set(index, new EmptySkill());
 
-                updateShop();
+                    GameManager.getInstance().playerMoney -= skill.getPrice();
+                    GUIManager.getInstance().updateGUI();
+
+                    updateShop();
+                }
             });
 
             skillFrame.setOnMouseEntered(mouseEvent -> {
@@ -315,6 +266,54 @@ public class Dealer extends BaseNpcPiece {
         }
 
         return skillFrame;
+    }
+
+    private List<BaseItem> getRandomItems(int count) {
+        List<BaseItem> randomItems = new ArrayList<>();
+        BaseItem[] pool = GameManager.getInstance().ITEM_POOL;
+        Random random = new Random();
+
+        for (int i = 0; i < count; i++) {
+            // Create a list of items not already selected
+            List<BaseItem> availableItems = Arrays.stream(pool)
+                    .filter(item -> !items_noDuplicate.contains(item))
+                    .toList();
+
+            // Randomly select a skill from the available skills
+            BaseItem randomItem = availableItems.get(random.nextInt(availableItems.size()));
+
+            // Create a new instance of the randomly selected skill
+            BaseItem skill = createNewInstance(randomItem);
+
+            // Add the new skill instance to the list of random skills
+            randomItems.add(skill);
+        }
+
+        return randomItems;
+    }
+
+    private List<BaseSkill> getRandomSkills(int count) {
+        List<BaseSkill> randomSkills = new ArrayList<>();
+        List<BaseSkill> playerOwned = Arrays.asList(GameManager.getInstance().playerSkills);
+        BaseSkill[] pool = GameManager.getInstance().UNIVERSAL_SKILL_POOL;
+        Random random = new Random();
+
+        for (int i = 0; i < count; i++) {
+            List<BaseSkill> availableSkills = Arrays.stream(pool)
+                    .filter(skill -> !skills_noDuplicate.contains(skill) && !playerOwned.contains(skill))
+                    .toList();
+
+            // Randomly select a skill from the available skills
+            BaseSkill randomSkill = availableSkills.get(random.nextInt(availableSkills.size()));
+
+            // Create a new instance of the randomly selected skill
+            BaseSkill skill = createNewInstance(randomSkill);
+
+            // Add the new skill instance to the list of random skills
+            randomSkills.add(skill);
+        }
+
+        return randomSkills;
     }
 
     public void priceTagPosition(double x, double y, double offsetX, double offsetY) {

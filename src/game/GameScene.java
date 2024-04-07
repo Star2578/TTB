@@ -672,6 +672,9 @@ public class GameScene {
                         System.out.println("Inventory[" + i + "] is " + gameManager.inventory.get(i).getName());
                     }
                     break;
+                case F6:
+                    SceneManager.getInstance().switchSceneTo(SceneManager.getInstance().getSummaryScene());
+                    break;
             }
         });
     }

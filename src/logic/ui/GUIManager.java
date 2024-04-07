@@ -21,7 +21,6 @@ import logic.SceneManager;
 import logic.TurnManager;
 import logic.handlers.AttackHandler;
 import logic.ui.display.*;
-import logic.ui.overlay.ItemInfoOverlay;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 
@@ -38,6 +37,7 @@ public class GUIManager {
 
     // Status Display
     private Text displayActionPoint;
+    private Text displayMoney;
     private VBox hpBox;
     private Text hpText;
     private ProgressBar hpBar;
@@ -134,8 +134,14 @@ public class GUIManager {
                         "-fx-font-family:x16y32pxGridGazer;" +
                         "-fx-font-size:16;" +
                         "-fx-fill:'white';");
-        playerOptionsMenu.getChildren().addAll(playerCharacterFrame , displayActionPoint);
-        VBox.setMargin(displayActionPoint, new Insets(0 , 0 , 20 ,130));
+        displayMoney = new Text("Money: " + GameManager.getInstance().playerMoney);
+        displayMoney.setStyle(
+                        "-fx-font-family:x16y32pxGridGazer;" +
+                        "-fx-font-size:16;" +
+                        "-fx-fill:'white';");
+        playerOptionsMenu.getChildren().addAll(playerCharacterFrame , displayActionPoint, displayMoney);
+        VBox.setMargin(displayActionPoint, new Insets(0 , 0 , 0 ,130));
+        VBox.setMargin(displayMoney, new Insets(0 , 0 , 0 ,130));
         //----------------------------------------------------------------------
 
 
@@ -174,7 +180,7 @@ public class GUIManager {
 
         playerOptionsMenu.getChildren().addAll(inventoryDisplay.getView(), skillSelectDisplay.getView(), playerOptionButtonBox);
 
-        playerOptionsMenu.setSpacing(30);
+        playerOptionsMenu.setSpacing(10);
 
         playerOptionsMenu.setMinWidth(300);
         playerOptionsMenu.setMaxWidth(300);
@@ -223,7 +229,7 @@ public class GUIManager {
     }
 
     public void updateGUI() {
-        updateActionPointDisplay();
+        updateText();
         updateStatusBar();
     }
 
@@ -237,8 +243,9 @@ public class GUIManager {
         manaBar.setProgress(mana);
     }
 
-    private void updateActionPointDisplay() {
+    private void updateText() {
         displayActionPoint.setText("Action Point: " + player.getCurrentActionPoint() + "/" + player.getMaxActionPoint());
+        displayMoney.setText("Money: " + GameManager.getInstance().playerMoney);
     }
 
     public void updateCursor(Scene currentScene, String cursorPath) {
