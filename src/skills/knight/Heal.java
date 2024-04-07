@@ -1,6 +1,7 @@
 package skills.knight;
 
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import logic.GameManager;
 import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
@@ -12,7 +13,7 @@ public class Heal extends BaseSkill implements Healing {
     private BasePiece target;
     private final int HEAL = 5;
     public Heal() {
-        super("Heal", 1, 10, "Rest for one turn to heal.");
+        super("Heal", Color.DARKGREEN, 1, 10, "Rest for one turn to heal", Config.Rarity.COMMON);
         icon = new ImageView(Config.HealPath);
         range = 0;
     }
@@ -49,5 +50,10 @@ public class Heal extends BaseSkill implements Healing {
             player.decreaseMana(manaCost);
             player.decreaseActionPoint(actionPointCost);
         }
+    }
+
+    @Override
+    public int getHeal() {
+        return HEAL;
     }
 }

@@ -1,0 +1,18 @@
+{
+  "greetings": {
+    "1": "See anything you like?",
+    "2": "Another customer for me, another fresh for the dungeon to devour"
+  },
+  "questions": {
+    "who_are_you": "I'm a dealer, that's all you need to know",
+    "about_dungeon": "Information won't come for free~",
+    "misc1": "Have a look around",
+    "misc2": "Special price for special one-time customer",
+    "misc3": "...",
+    "misc4": "... Go away"
+  },
+  "farewells": {
+    "1": "...",
+    "2": "Very well..."
+  }
+}

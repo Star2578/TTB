@@ -1,7 +1,6 @@
 package game;
 
 import items.BaseItem;
-import items.EmptyFrame;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
@@ -20,8 +19,11 @@ import javafx.util.Duration;
 import logic.*;
 import logic.handlers.*;
 import logic.ui.GUIManager;
+import logic.ui.display.NpcDisplay;
 import pieces.BasePiece;
 import pieces.enemies.*;
+import pieces.npcs.BaseNpcPiece;
+import pieces.npcs.Dealer;
 import pieces.player.*;
 import pieces.wall.*;
 import utils.Config;
@@ -125,8 +127,17 @@ public class GameScene {
         root.setRight(rightPane);
         rightPane.getChildren().add(guiManager.getRightSideUI());
 
-        root.setLeft(leftPane);
-        leftPane.getChildren().addAll(guiManager.getTurnOrderDisplay(), guiManager.getPlayerOptionsMenu());
+        // add StackPane to display box overlays
+        StackPane stackOverlay = new StackPane();
+        root.setLeft(stackOverlay);
+        stackOverlay.getChildren().addAll(leftPane, GUIManager.getInstance().skillSelectDisplay.getSkillInfoOverlay().getView(), GUIManager.getInstance().inventoryDisplay.getItemInfoOverlay().getView());
+
+        stackOverlay.setOnMouseMoved(event -> {
+            // Update the position of the BoxOverlay to follow the mouse
+            GUIManager.getInstance().skillSelectDisplay.getSkillInfoOverlay().updatePosition(event.getX(), event.getY(), -140, 15);
+            GUIManager.getInstance().inventoryDisplay.getItemInfoOverlay().updatePosition(event.getX(), event.getY(), -140, 15);
+        });
+        leftPane.getChildren().addAll(guiManager.getPlayerOptionsMenu());
         leftPane.setPadding(new Insets(10));
 
         // Define update logic
@@ -146,7 +157,20 @@ public class GameScene {
                 }
             }
         };
-
+        // Right click anywhere in the scene to cancel/deselect anything
+        scene.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+                if (GUIManager.getInstance().isInAttackMode) {
+                    resetSelection(1);
+                } else if (gameManager.selectedSkill != null) {
+                    resetSelection(2);
+                } else if (gameManager.selectedItem != null) {
+                    resetSelection(3);
+                } else {
+                    resetSelection(0);
+                }
+            }
+        });
         // Define render logic
         renderLogic = () -> {
             // Render game graphics
@@ -162,7 +186,6 @@ public class GameScene {
         SceneManager.getInstance().setGameScene(scene); // Save this scene for later use
         setupMouseEvents();
         setupKeyEvents(scene); // Debug Tool
-
     }
 
     public Scene getScene(){
@@ -182,9 +205,10 @@ public class GameScene {
         SpawnerManager.getInstance().randomMonsterSpawnFromPool(monsterPool1, environmentPieces, 5);
 
         for (BasePiece entity : environmentPieces) {
-            entity.getTexture().setOnMouseClicked(mouseEvent -> handleSquareClick(entity.getRow(), entity.getCol()));
             placeEntityRandomly(entity);
         }
+
+        placeEntityRandomly(new Dealer());
     }
 
     private void gameStart() {
@@ -283,28 +307,16 @@ public class GameScene {
     private void placePiece(BasePiece piece) {
         //this method is called after generated dungeon
         //place Piece to the board
-        if(piece instanceof BasePlayerPiece playerPiece){
-            //setup player image size
-            playerPiece.animationImage.setFitWidth(SQUARE_SIZE);
-            //set position
-            playerPiece.animationImage.setX(piece.getCol()*SQUARE_SIZE + playerPiece.offsetX);
-            playerPiece.animationImage.setY(piece.getRow()*SQUARE_SIZE + playerPiece.offsetY);
-            //add player sprite to animation pane
-            animationPane.getChildren().add(playerPiece.animationImage);
 
+        piece.animationImage.setFitWidth(SQUARE_SIZE);
+        piece.animationImage.setX(piece.getCol()*SQUARE_SIZE + piece.getOffsetX());
+        piece.animationImage.setY(piece.getRow()*SQUARE_SIZE + piece.getOffsetY());
+
+        animationPane.getChildren().add(piece.animationImage);
+
+        if(piece instanceof BasePlayerPiece){
             GameManager.getInstance().animationPane.getChildren().add(this.player.meleeAttackImage);
         }
-        else if (piece instanceof BaseMonsterPiece monsterPiece) {
-            //setup monster image size
-            monsterPiece.animationImage.setFitWidth(SQUARE_SIZE);
-            //set position
-            monsterPiece.animationImage.setX(piece.getCol() * SQUARE_SIZE + monsterPiece.offsetX);
-            monsterPiece.animationImage.setY(piece.getRow() * SQUARE_SIZE + monsterPiece.offsetY);
-            //add monster sprite to animation pane
-            animationPane.getChildren().add(monsterPiece.animationImage);
-        }
-        //TODO: if piece an instance of Object
-
     }
 
     private void setupMouseEvents() {
@@ -364,12 +376,12 @@ public class GameScene {
 
         if (isInAttackMode) {
             System.out.println("Player Prepare to attack");
+
             // Check if the clicked square is within showValid attack range
             if (player.validAttack(row, col)) {
                 // Check if there is a monster on the clicked square
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     // Perform the attack on the monster
-                    System.out.println("Player attack " + monsterPiece.getClass().getSimpleName() + " @ " + row + " " + col);
                     player.attack(monsterPiece);
                     exitAttackMode();
                     if (!monsterPiece.isAlive()) {
@@ -386,24 +398,26 @@ public class GameScene {
 
         // ------------------------- Skill Mode -------------------------
 
-        boolean isInUseSkillMode = GUIManager.getInstance().isInUseSkillMode;
+        if (gameManager.selectedSkill != null) {
+            boolean enoughMana = player.getCurrentMana() >= gameManager.selectedSkill.getManaCost();
+            boolean enoughActionPoint = player.getCurrentActionPoint() >= gameManager.selectedSkill.getActionPointCost();
 
-        if (isInUseSkillMode && gameManager.selectedSkill != null) {
             if (gameManager.selectedSkill.validRange(row, col)) {
                 // Check if there is a monster on the clicked square
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     // Perform the attack on the monster
-                    gameManager.selectedSkill.perform(monsterPiece);
+                    if (enoughMana && enoughActionPoint) {
+                        gameManager.selectedSkill.perform(monsterPiece);
+                    } else {
+                        System.out.println("Not enough mana or action point");
+                    }
                     resetSelection(2);
-                    GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
                     if (!monsterPiece.isAlive()) {
                         removePiece(monsterPiece);
                         environmentPieces.remove(monsterPiece);
                     }
                 } else if (piecesPosition[row][col] instanceof BasePlayerPiece playerPiece) {
                     if (gameManager.selectedSkill.castOnSelf()) {
-                        boolean enoughMana = playerPiece.getCurrentMana() >= gameManager.selectedSkill.getManaCost();
-                        boolean enoughActionPoint = playerPiece.getCurrentActionPoint() >= gameManager.selectedSkill.getActionPointCost();
 
                         if (enoughMana && enoughActionPoint) {
                             gameManager.selectedSkill.perform(playerPiece);
@@ -411,21 +425,20 @@ public class GameScene {
                             System.out.println("Not enough mana or action point");
                         }
                         resetSelection(2);
-                        GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
                     }
                 }
             } else {
                 // Cancel skill selection
                 resetSelection(2);
-                GUIManager.getInstance().skillSelectDisplay.updateSelectedSkillInfo();
             }
             return;
         }
 
+
         // ----------------------- Handle Item -----------------------
 
         BaseItem item = GameManager.getInstance().selectedItem;
-        if (item != null && !(item instanceof EmptyFrame)) {
+        if (item != null) {
             if (item instanceof Usable usableItem) {
                 if (usableItem.validRange(row, col)) {
                     BasePiece target = piecesPosition[row][col];
@@ -457,21 +470,48 @@ public class GameScene {
                     // reset selection when not in valid range
                     resetSelection(3);
                 }
+            } else {
+                // reset selection when clicked outside for other
+                resetSelection(3);
             }
 
             return;
         }
 
+        NpcDisplay npcDisplay = GUIManager.getInstance().getNpcDisplay();
+        // ------------------------- NPC Interact -------------------------
+        if (piecesPosition[row][col] instanceof BaseNpcPiece npc) {
+            System.out.println("Talk to NPC");
+            GUIManager.getInstance().switchToNpcDisplay();
+
+            npcDisplay.setNpcPortrait(npc.getPortrait()); // get npc portrait
+            npcDisplay.getNpcName().setText(npc.getName()); // get npc name
+            npcDisplay.setDialogueText(npc.getCurrentDialogue()); // set initial dialogue
+
+            npcDisplay.clearDialogueOption(); // clear all options before adding new ones
+            npc.setDialogueOptions(npcDisplay); // dialogue options for each npc
+            npcDisplay.addDialogueOption("Good bye", new Runnable() {
+                @Override
+                public void run() {
+                    GUIManager.getInstance().switchToEventLog();
+                }
+            });
+
+            npcDisplay.clearAdditionalOverlay();
+        }
+
         // ------------------------- Movement Mode -------------------------
 
         if (player.getRow() == row && player.getCol() == col) {
-            // toggle move selection mode by click on player's grid
-            // Show valid moves by changing the color of adjacent squares
+            // Toggle move selection mode by clicking on player's grid
             isPlayerPieceSelected = !isPlayerPieceSelected;
-            if(isPlayerPieceSelected) MovementHandler.showValidMoves(row, col);
-                else resetSelection(0);
-
+            if (isPlayerPieceSelected) {
+                MovementHandler.showValidMoves(row, col);
+            } else {
+                resetSelection(0);
+            }
         } else if (isPlayerPieceSelected) {
+            System.out.println("Player Selected");
             if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
                 System.out.println("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
@@ -483,10 +523,7 @@ public class GameScene {
     }
 
     private boolean isValidMove(int row, int col) {
-        if (piecesPosition[row][col] instanceof BaseWallPiece) {
-            return false; // Destination square contains a wall, invalid move
-        }
-        return true;
+        return !(piecesPosition[row][col] instanceof BaseWallPiece); // Destination square contains a wall, invalid move
     }
 
     private void precomputeValidMoves() {
@@ -503,29 +540,28 @@ public class GameScene {
     public void resetSelection(int type) {
         isPlayerPieceSelected = false;
 
-        /*
+        /**************************************************
         *   type manual
-        *
-        *   0 = vanilla remove selected tiles
-        *   1 = exit attack remove selected tiles
-        *   2 = deselected skill remove selected tiles
-        *   3 = reset item selection
-        */
+        *   0 = movement remove selected tiles
+        *   1 = attack remove selected tiles
+        *   2 = skill remove selected tiles
+        *   3 = item remove selected tiles
+        ***************************************************/
 
         if(type == 0){
             //reset move Selected Tiles
-            for (int i = 0  ; i < selectedMoveTiles.size() ; i++){
-                selectionFloor[(int) selectedMoveTiles.get(i).getX()][(int) selectedMoveTiles.get(i).getY()]
+            for (Point2D selectedMoveTile : selectedMoveTiles) {
+                selectionFloor[(int) selectedMoveTile.getX()][(int) selectedMoveTile.getY()]
                         .setImage(null);
 
             }
             selectedMoveTiles.clear();
 
         }
-        else if(type == 1){//reset attack selection
+        else if(type == 1){
             //reset attack Selected Tiles
-            for (int i = 0  ; i < selectedAttackTiles.size() ; i++){
-                selectionFloor[(int) selectedAttackTiles.get(i).getX()][(int) selectedAttackTiles.get(i).getY()]
+            for (Point2D selectedAttackTile : selectedAttackTiles) {
+                selectionFloor[(int) selectedAttackTile.getX()][(int) selectedAttackTile.getY()]
                         .setImage(null);
             }
             selectedAttackTiles.clear();
@@ -533,8 +569,8 @@ public class GameScene {
         }
         else if (type == 2) {
             //reset skill Selected Tiles
-            for (int i = 0  ; i < selectedSkillTiles.size() ; i++){
-                selectionFloor[(int) selectedSkillTiles.get(i).getX()][(int) selectedSkillTiles.get(i).getY()]
+            for (Point2D selectedSkillTile : selectedSkillTiles) {
+                selectionFloor[(int) selectedSkillTile.getX()][(int) selectedSkillTile.getY()]
                         .setImage(null);
             }
             selectedSkillTiles.clear();
@@ -543,8 +579,8 @@ public class GameScene {
             gameManager.selectedSkill = null;
         } else if (type == 3) {
             //reset item Selected Tiles
-            for (int i = 0  ; i < selectedItemTiles.size() ; i++){
-                selectionFloor[(int) selectedItemTiles.get(i).getX()][(int) selectedItemTiles.get(i).getY()]
+            for (Point2D selectedItemTile : selectedItemTiles) {
+                selectionFloor[(int) selectedItemTile.getX()][(int) selectedItemTile.getY()]
                         .setImage(null);
             }
             // reset item selection
@@ -562,10 +598,6 @@ public class GameScene {
             row = (int) (Math.random() * BOARD_SIZE);
             col = (int) (Math.random() * BOARD_SIZE);
         } while (!isValidMove(row, col) || piecesPosition[row][col] != null);
-
-        if (entity instanceof BasePlayerPiece) {
-            entity.getTexture().setOnMouseClicked(event -> handleSquareClick(entity.getRow(), entity.getCol()));
-        }
 
         entity.setRow(row);
         entity.setCol(col);
@@ -603,8 +635,6 @@ public class GameScene {
         if (toRemove instanceof BaseMonsterPiece monsterPiece)
             animationPane.getChildren().remove(monsterPiece.animationImage);
 
-        // TODO: When there are more types this may have to be added
-
         // Set the corresponding entry in the pieces array to null
         piecesPosition[row][col] = null;
     }
@@ -614,7 +644,8 @@ public class GameScene {
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case F1:
-                    removeElements();
+//                    removeElements();
+                    GUIManager.getInstance().eventLogDisplay.addLog("Hello World!");
                     break;
                 case F2:
                     generateNewFloor();
@@ -674,5 +705,4 @@ public class GameScene {
         resetSelection(1);
         GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
     }
-
 }

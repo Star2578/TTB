@@ -1,6 +1,7 @@
 package skills.universal;
 
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import logic.GameManager;
 import pieces.BasePiece;
 import skills.BaseSkill;
@@ -12,7 +13,7 @@ public class Bomb extends BaseSkill {
     private GameManager gameManager = GameManager.getInstance();
 
     public Bomb() {
-        super("Bomb", 3, 4, "Hot Bomb will explode in 2 turns!");
+        super("Bomb", Color.DARKGRAY, 3, 4, "Hot Bomb will explode in 2 turns!", Config.Rarity.COMMON);
         icon = new ImageView(Config.PlaceholderPath);
     }
     @Override

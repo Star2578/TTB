@@ -1,5 +1,10 @@
 package utils;
 
+import items.BaseItem;
+import items.potions.BluePotion;
+import skills.BaseSkill;
+import skills.knight.Slash;
+
 public class Config {
     public static String PlaceholderPath = "sprites/placeholder.png";
     public static String FramePath = "sprites/frame.png";
@@ -22,22 +27,18 @@ public class Config {
     public static String HandClickCursor = "sprites/cursors/png/cursor_select_tap.png";
 
     // Player
-    public static String KnightPath = "sprites/player/Knight_Small.png";
     public static String KnightLargePath = "sprites/player/Knight_Large.png";
     public static String KnightAnimationPath = "sprites/player/knight_sprite_sheet.png";
 
     // Enemies
-    public static String TinyPath = "sprites/enemies/tiny/tiny.png";
-    public static String TinyAnimationPath = "sprites/enemies/tiny/tiny_sprite_sheet.png";
-
-    public static String ZombiePath = "sprites/enemies/zombie/zombie.png";
-    public static String ZombieAnimationPath = "sprites/enemies/zombie/zombie_sprite_sheet.png";
-
-    public static String BomberPath = "sprites/enemies/bomber/bomber.png";
-    public static String BomberAnimationPath = "sprites/enemies/bomber/bomber_sprite_sheet.png";
-
-    public static String BombPath = "sprites/objects/bomb/bomb_f0.png";
+    public static String TinyAnimationPath = "sprites/enemies/tiny_sprite_sheet.png";
+    public static String ZombieAnimationPath = "sprites/enemies/zombie_sprite_sheet.png";
+    public static String BomberAnimationPath = "sprites/enemies/bomber_sprite_sheet.png";
     public static String BombAnimationPath = "sprites/objects/bomb/bomb_f0.png";
+
+    // NPC
+    public static String DealerPortraitPath = "sprites/npc/dealer_portrait.png";
+    public static String DealerAnimationPath = "sprites/npc/dealer_sprite_sheet.png";
 
     // Dungeon
     public static String WallPath = "sprites/ground/wall_1.png";
@@ -63,25 +64,11 @@ public class Config {
     // Attacks animation
     public static String meleeAttackPath = "sprites/attacks/testLocation.png";
 
-    //animation
-    public enum STATE{
-        IDLE,
-        MOVE,
-        ATTACK
-    }
-
-    public enum ITEM_TYPE {
-        ARMOR,
-        USABLE,
-        DROPS,
-        KEY_ITEM
-    }
-
     public enum ENTITY_TYPE {
-        PLAYER,
-        MONSTER,
-        TRAP,
-        NPC,
-        WALL
+        PLAYER, MONSTER, TRAP, NPC, WALL
+    }
+
+    public enum Rarity {
+        COMMON, UNCOMMON, RARE, EPIC, LEGENDARY
     }
 }

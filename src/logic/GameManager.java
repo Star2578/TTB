@@ -11,6 +11,8 @@ import javafx.scene.layout.Pane;
 import pieces.BasePiece;
 import pieces.player.*;
 import skills.*;
+import skills.knight.Heal;
+import skills.knight.Slash;
 import utils.Config;
 
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ public class GameManager {
     // ----------- Skill -----------
     public final int SKILL_SLOTS = 8;
     public int unlockedSlots = 4;
+    public int itemSlots = 4;
     public BaseSkill[] playerSkills; // List of skills player currently have
     public BaseSkill selectedSkill;
     public BaseItem selectedItem;
@@ -50,6 +53,12 @@ public class GameManager {
 
     public Point2D doorAt = null; // use to store where the door is at
 
+    public final BaseSkill[] UNIVERSAL_SKILL_POOL = {
+        new Slash(), new Heal()
+    };
+    public final BaseItem[] ITEM_POOL = {
+        new BluePotion()
+    };
 
     public GameManager() {
         player = new Knight(0, 0, 1);
@@ -57,7 +66,7 @@ public class GameManager {
         for (int i = 0; i < SKILL_SLOTS; i++) {
             if (playerSkills[i] == null) {
                 if (i < unlockedSlots) {
-                    playerSkills[i] = new EmptySlot();
+                    playerSkills[i] = new EmptySkill();
                 } else {
                     playerSkills[i] = new LockedSlot();
                 }
@@ -65,11 +74,7 @@ public class GameManager {
         }
         boardPane = new GridPane();
         animationPane = new Pane();
-        inventory.add(new BluePotion());
-        inventory.add(new BluePotion());
-        inventory.add(new BluePotion());
-        inventory.add(new BluePotion());
-        inventory.add(new BluePotion());
+        inventory.add(new BluePotion()); // this is for testing
     }
 
     public static GameManager getInstance() {

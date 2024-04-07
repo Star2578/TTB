@@ -1,12 +1,13 @@
 package skills;
 
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import pieces.BasePiece;
 import utils.Config;
 
-public class EmptySlot extends BaseSkill{
-    public EmptySlot() {
-        super("Empty", 0, 0, "This slot is empty, you can add a skill here");
+public class EmptySkill extends BaseSkill{
+    public EmptySkill() {
+        super("Empty", Color.ALICEBLUE, 0, 0, "This slot is empty, you can add a skill here", Config.Rarity.COMMON);
         icon = new ImageView(Config.UnlockedSkillIconPath);
     }
 

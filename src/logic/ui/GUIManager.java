@@ -1,6 +1,5 @@
 package logic.ui;
 
-import game.GameScene;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
@@ -21,6 +20,8 @@ import logic.ImageScaler;
 import logic.SceneManager;
 import logic.TurnManager;
 import logic.handlers.AttackHandler;
+import logic.ui.display.*;
+import logic.ui.overlay.ItemInfoOverlay;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 
@@ -31,7 +32,6 @@ public class GUIManager {
     private TurnManager turnManager;
     private BasePlayerPiece player;
     private ImageScaler imageScaler;
-    private VBox turnOrderDisplay;
     private VBox playerOptionsMenu;
     private VBox rightSideUI;
     private Display currentDisplay;
@@ -48,19 +48,17 @@ public class GUIManager {
 
     // Buttons
     VBox playerOptionButtonBox;
-    private Button inventoryButton;
-    private Button useSkillsButton;
     private Button endTurnButton;
     private Button attackButton;
 
     // Displays for each use
     public InventoryDisplay inventoryDisplay;
     public SkillSelectDisplay skillSelectDisplay;
+    public NpcDisplay npcDisplay;
+    public EventLogDisplay eventLogDisplay;
 
     // ----------- UI Status -----------
     public boolean isInAttackMode = false;
-    public boolean isInInventoryMode = false;
-    public boolean isInUseSkillMode = false;
 
 
     public GUIManager() {
@@ -70,8 +68,9 @@ public class GUIManager {
 
         inventoryDisplay = new InventoryDisplay();
         skillSelectDisplay = new SkillSelectDisplay();
+        eventLogDisplay = new EventLogDisplay();
+        npcDisplay = new NpcDisplay();
 
-        initializeTurnOrderDisplay();
         initializePlayerOptionsMenu();
         initializeRightSideUI();
     }
@@ -81,25 +80,6 @@ public class GUIManager {
             instance = new GUIManager();
         }
         return instance;
-    }
-
-    private void initializeTurnOrderDisplay() {
-        turnOrderDisplay = new VBox();
-
-        // Create a border with a specific color and stroke width
-        BorderStroke borderStroke = new BorderStroke(
-                Color.WHITE,                   // Border color
-                BorderStrokeStyle.SOLID,      // Border style
-                CornerRadii.EMPTY,            // Border radii (none in this case)
-                new BorderWidths(5)           // Border widths (adjust the thickness here)
-        );
-        // Set the border with the created border stroke
-        turnOrderDisplay.setBorder(new Border(borderStroke));
-
-        turnOrderDisplay.setMinWidth(300);
-        turnOrderDisplay.setMaxWidth(300);
-        turnOrderDisplay.setMinHeight(300);
-        turnOrderDisplay.setMaxHeight(300);
     }
 
     private void initializePlayerOptionsMenu() {
@@ -119,7 +99,6 @@ public class GUIManager {
         ImageView playerCharacterImage = new ImageView(imageScaler.resample(new Image(Config.KnightLargePath), 2));
         playerCharacterImage.setPreserveRatio(true);
         playerCharacterImage.setFitWidth(70);
-//       playerCharacterImage.setPreserveRatio(true);
 
         //-------------<player status section>----------------------------------
         // HP Bar
@@ -163,19 +142,11 @@ public class GUIManager {
         //-------------<player button section>----------------------------------
         playerOptionButtonBox = new VBox();
         playerOptionButtonBox.setSpacing(15);
-        playerOptionButtonBox.setAlignment(Pos.CENTER_LEFT);
-        playerOptionButtonBox.setStyle("-fx-padding:0 0 0 20");
+        playerOptionButtonBox.setAlignment(Pos.BOTTOM_CENTER);
+        playerOptionButtonBox.setStyle("-fx-padding:0 0 20 20");
 
-        inventoryButton = new Button("Inventory");
-        useSkillsButton = new Button("Use Skills");
         attackButton = new Button("Attack");
         endTurnButton = new Button("End Turn");
-
-        inventoryButton.setOnMouseClicked(mouseEvent -> switchToInventoryDisplay());
-        useSkillsButton.setOnMouseClicked(mouseEvent -> {
-            switchToSkillSelectDisplay();
-            isInUseSkillMode = true;
-        });
 
         attackButton.setOnMouseClicked(mouseEvent -> {
             // Cancel skill selection if skill is selected
@@ -194,15 +165,21 @@ public class GUIManager {
             disableButton();
         });
 
-        playerOptionButtonBox.getChildren().addAll(inventoryButton, attackButton, useSkillsButton, endTurnButton);
+        HBox buttonContainer = new HBox(attackButton, endTurnButton);
+        buttonContainer.setSpacing(50);
+        VBox.setVgrow(playerOptionButtonBox, Priority.ALWAYS);
+
+        playerOptionButtonBox.getChildren().addAll(buttonContainer);
         //----------------------------------------------------------------------
 
-        playerOptionsMenu.getChildren().addAll(playerOptionButtonBox);
+        playerOptionsMenu.getChildren().addAll(inventoryDisplay.getView(), skillSelectDisplay.getView(), playerOptionButtonBox);
+
+        playerOptionsMenu.setSpacing(30);
 
         playerOptionsMenu.setMinWidth(300);
         playerOptionsMenu.setMaxWidth(300);
-        playerOptionsMenu.setMinHeight(400);
-        playerOptionsMenu.setMaxHeight(400);
+        playerOptionsMenu.setMinHeight(700);
+        playerOptionsMenu.setMaxHeight(700);
     }
 
     private void initializeRightSideUI() {
@@ -220,21 +197,13 @@ public class GUIManager {
         // Set the border with the created border stroke
         rightSideUI.setBorder(new Border(borderStroke));
 
+        switchToEventLog();
+
         // Set the minimum width and height of the VBox
         rightSideUI.setMinWidth(300);
         rightSideUI.setMaxWidth(300);
         rightSideUI.setMinHeight(720);
         rightSideUI.setMaxHeight(720);
-    }
-
-    public void switchToInventoryDisplay() {
-        // set InventoryDisplay as the current display
-        setDisplay(inventoryDisplay);
-    }
-
-    public void switchToSkillSelectDisplay() {
-        // set SkillSelectDisplay as the current display
-        setDisplay(skillSelectDisplay);
     }
 
     private void setDisplay(Display display) {
@@ -243,10 +212,6 @@ public class GUIManager {
         // Initialize and set the new display
         this.currentDisplay = display;
         rightSideUI.getChildren().add(this.currentDisplay.getView());
-    }
-
-    public VBox getTurnOrderDisplay() {
-        return turnOrderDisplay;
     }
 
     public VBox getPlayerOptionsMenu() {
@@ -293,18 +258,25 @@ public class GUIManager {
         timeline.play();
     }
 
+    public void switchToEventLog() {
+        setDisplay(eventLogDisplay);
+    }
+    public void switchToNpcDisplay() {
+        setDisplay(npcDisplay);
+    }
+
+    public NpcDisplay getNpcDisplay() {
+        return npcDisplay;
+    }
+
     public void enableButton(){
-        useSkillsButton.setDisable(false);
         attackButton.setDisable(false);
         endTurnButton.setDisable(false);
     }
-
     public void disableButton(){
-        useSkillsButton.setDisable(true);
         attackButton.setDisable(true);
         endTurnButton.setDisable(true);
     }
-
     public void deselectFrame(ImageView frameView) {
         frameView.setImage(imageScaler.resample(new Image(Config.FramePath), 2));
     }

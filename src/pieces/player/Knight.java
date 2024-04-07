@@ -30,18 +30,15 @@ public class Knight extends BasePlayerPiece {
 
         attackDamage = 3; // Base attack for player
 
-
-        setTextureByPath(Config.KnightPath);
-
         //add skill
         skills[0] = new Slash();
         skills[1] = new Heal();
 
         //configs values for animation
-        setupAnimation();
-
+        setupAnimation(Config.KnightAnimationPath, 0, -15, 32, 56);
     }
 
+    @Override
     public void moveWithTransition(int row , int col){
         //stop player from do other action
         setCanAct(false);
@@ -145,36 +142,5 @@ public class Knight extends BasePlayerPiece {
                 throw new RuntimeException(e);
             }
         }).start();;
-    }
-
-    @Override
-    protected void setupAnimation(){
-        //===================<animation section>==========================================
-        offsetX=0;
-        offsetY=-15;
-        //idle sprite animations for player
-        animationImage = new ImageView(new Image(Config.KnightAnimationPath));
-        animationImage.setPreserveRatio(true);
-        animationImage.setTranslateX(offsetX);
-        animationImage.setTranslateY(offsetY);
-        animationImage.setDisable(true);
-        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,32,56,6);
-        spriteAnimation.start();
-
-        //attack animation for player
-        meleeAttackImage = new ImageView(new Image(Config.meleeAttackPath));
-        meleeAttackImage.setPreserveRatio(true);
-        meleeAttackImage.setFitWidth(50);
-        meleeAttackImage.setDisable(true);
-        meleeAttackImage.setVisible(true);
-        meleeAttackAnimation = new SpriteAnimation(meleeAttackImage , 5 , 1 , 5 , 37 , 32 , 8);
-        meleeAttackAnimation.setLoop(false);
-
-        //setup moveTranslate behaviour
-        moveTransition = new TranslateTransition();
-        moveTransition.setNode(animationImage);
-        moveTransition.setDuration(Duration.millis(600));
-        moveTransition.setCycleCount(1);
-        //================================================================================
     }
 }
