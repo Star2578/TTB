@@ -483,21 +483,29 @@ public class GameScene {
         NpcDisplay npcDisplay = GUIManager.getInstance().getNpcDisplay();
         // ------------------------- NPC Interact -------------------------
         if (piecesPosition[row][col] instanceof BaseNpcPiece npc) {
-            GUIManager.getInstance().switchToNpcDisplay();
+            double distance = Math.sqrt(Math.pow(GameManager.getInstance().player.getRow() - npc.getRow(), 2) + Math.pow(GameManager.getInstance().player.getCol() - npc.getCol(), 2));
 
-            npcDisplay.setNpcPortrait(npc.getPortrait()); // get npc portrait
-            npcDisplay.getNpcName().setText(npc.getName()); // get npc name
-            npcDisplay.setDialogueText(npc.getCurrentDialogue()); // set initial dialogue
+            // if in range, can talk
+            if (distance <= 1.5) {
+                GUIManager.getInstance().switchToNpcDisplay();
 
-            npcDisplay.clearDialogueOption(); // clear all options before adding new ones
-            npc.setDialogueOptions(npcDisplay); // dialogue options for each npc
-            npcDisplay.addDialogueOption("Good bye", new Runnable() {
-                @Override
-                public void run() {
-                    GUIManager.getInstance().switchToEventLog();
-                }
-            });
+                npcDisplay.setNpcPortrait(npc.getPortrait()); // get npc portrait
+                npcDisplay.getNpcName().setText(npc.getName()); // get npc name
+                npcDisplay.setDialogueText(npc.getCurrentDialogue()); // set initial dialogue
 
+                npcDisplay.clearDialogueOption(); // clear all options before adding new ones
+                npc.setDialogueOptions(npcDisplay); // dialogue options for each npc
+                npcDisplay.addDialogueOption("Good bye", new Runnable() {
+                    @Override
+                    public void run() {
+                        GUIManager.getInstance().switchToEventLog();
+                    }
+                });
+
+                npcDisplay.clearAdditionalOverlay();
+            }
+        } else {
+            GUIManager.getInstance().switchToEventLog();
             npcDisplay.clearAdditionalOverlay();
         }
 
