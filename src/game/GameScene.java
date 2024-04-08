@@ -160,15 +160,10 @@ public class GameScene {
         // Right click anywhere in the scene to cancel/deselect anything
         scene.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                if (GUIManager.getInstance().isInAttackMode) {
-                    resetSelection(1);
-                } else if (gameManager.selectedSkill != null) {
-                    resetSelection(2);
-                } else if (gameManager.selectedItem != null) {
-                    resetSelection(3);
-                } else {
-                    resetSelection(0);
-                }
+                resetSelection(0);
+                resetSelection(1);
+                resetSelection(2);
+                resetSelection(3);
             }
         });
         // Define render logic
@@ -359,6 +354,7 @@ public class GameScene {
 
     private void handleSquareClick(int row, int col) {
         System.out.println("Clicked on square (" + row + ", " + col + ")");
+//        System.out.println("can act? " + player.canAct());
         if (!player.canAct()) {
             if (GUIManager.getInstance().isInAttackMode)
                 resetSelection(1);
@@ -510,7 +506,7 @@ public class GameScene {
         }
 
         // ------------------------- Movement Mode -------------------------
-
+//        System.out.println(player.getRow() + " " + player.getCol() + " (" + row + "," + col + ")");
         if (player.getRow() == row && player.getCol() == col) {
             // Toggle move selection mode by clicking on player's grid
             isPlayerPieceSelected = !isPlayerPieceSelected;

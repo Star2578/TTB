@@ -13,7 +13,7 @@ import pieces.player.BasePlayerPiece;
 import java.util.List;
 
 public class TurnManager {
-    public static TurnManager instance;
+    private static TurnManager instance;
     private BasePlayerPiece player;
     private List<BasePiece> environmentPieces;
     private int currentEnvironmentPieceIndex;
@@ -23,10 +23,7 @@ public class TurnManager {
     private final double DELAY_BETWEEN_ENVIRONMENT = 0.25;
 
     public TurnManager() {
-        this.player = GameManager.getInstance().player;
-        this.environmentPieces = GameManager.getInstance().environmentPieces;
-        this.currentEnvironmentPieceIndex = 0;
-        this.isPlayerTurn = false;
+        initialize();
     }
 
     public static TurnManager getInstance() {
@@ -34,6 +31,13 @@ public class TurnManager {
             instance = new TurnManager();
         }
         return instance;
+    }
+
+    public void initialize() {
+        this.player = GameManager.getInstance().player;
+        this.environmentPieces = GameManager.getInstance().environmentPieces;
+        this.currentEnvironmentPieceIndex = 0;
+        this.isPlayerTurn = false;
     }
 
     public void startPlayerTurn() {

@@ -8,6 +8,8 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import logic.GameManager;
+import pieces.player.Knight;
 
 public class Summary {
     private Scene scene;
@@ -47,6 +49,7 @@ public class Summary {
         retryButton.setOnAction(e -> {
             // Add action to retry the game
             System.out.println("Retry button clicked");
+            GameManager.getInstance().GameStart(new Knight(0, 0, 1));
         });
 
         menuButton.setOnAction(e -> {

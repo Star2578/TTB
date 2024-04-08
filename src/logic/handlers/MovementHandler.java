@@ -13,18 +13,24 @@ import java.util.ArrayList;
 
 public class MovementHandler {
     private static GameManager gameManager = GameManager.getInstance();
-    private static BasePlayerPiece player = gameManager.player;
+    private static BasePlayerPiece player;
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
-    private static BasePiece[][] piecesPosition = gameManager.piecesPosition;
-    private static boolean[][] validMovesCache = gameManager.validMovesCache;
-    private static ArrayList<Point2D> selectedTiles = gameManager.selectedMoveTiles;
-    private static ImageView[][] selectionFloor = gameManager.selectionFloor;
+    private static BasePiece[][] piecesPosition;
+    private static boolean[][] validMovesCache;
+    private static ArrayList<Point2D> selectedTiles;
+    private static ImageView[][] selectionFloor;
     private static ImageScaler imageScaler = new ImageScaler();
 
     private static int newDirection = 1;
     private static int bufferDirection = newDirection;
 
     public static void showValidMoves(int playerRow, int playerCol) {
+        player = gameManager.player;
+        piecesPosition = gameManager.piecesPosition;
+        validMovesCache = gameManager.validMovesCache;
+        selectedTiles = gameManager.selectedMoveTiles;
+        selectionFloor = gameManager.selectionFloor;
+
         // Iterate over adjacent squares and update images based on cached valid moves
         for (int dRow = -1; dRow <= 1; dRow++) {
             for (int dCol = -1; dCol <= 1; dCol++) {

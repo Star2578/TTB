@@ -62,6 +62,10 @@ public class GUIManager {
 
 
     public GUIManager() {
+        initialize();
+    }
+
+    public void initialize() {
         this.turnManager = TurnManager.getInstance();
         this.player = GameManager.getInstance().player;
         this.imageScaler = new ImageScaler();
