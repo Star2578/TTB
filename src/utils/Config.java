@@ -31,6 +31,8 @@ public class Config {
     public static String KnightAnimationPath = "sprites/player/knight_sprite_sheet.png";
 
     // Enemies
+    public static String DeadEffectPath = "sprites/enemies/dead_smoke.png";
+
     public static String TinyAnimationPath = "sprites/enemies/tiny_sprite_sheet.png";
     public static String ZombieAnimationPath = "sprites/enemies/zombie_sprite_sheet.png";
     public static String BomberAnimationPath = "sprites/enemies/bomber_sprite_sheet.png";
@@ -42,7 +44,6 @@ public class Config {
 
     // Dungeon
     public static String WallPath = "sprites/ground/wall_1.png";
-    public static String WallOnFloorPath = "sprites/ground/wall_onfloor_tile_map.png";
     public static String WallTileMapPath = "sprites/ground/wall_tile_map.png";
     public static String FloorPath = "sprites/ground/floor_1.png";
     public static String DoorPath = "sprites/ground/floor_2.png";
@@ -62,7 +63,9 @@ public class Config {
     public static String BluePotionPath = "sprites/potions/blue_potion.png";
 
     // Attacks animation
-    public static String meleeAttackPath = "sprites/attacks/testLocation.png";
+    public static String meleeAttackPath = "sprites/attacks/common_melee_attack.png";
+    public static String skillSlashPath = "sprites/attacks/skill_slash.png";
+
 
     public enum ENTITY_TYPE {
         PLAYER, MONSTER, TRAP, NPC, WALL

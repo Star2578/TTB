@@ -78,7 +78,7 @@ public abstract class BaseNpcPiece extends BasePiece {
 
 
     @Override
-    public void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height) {
+    public void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height , boolean loop) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         animationImage = new ImageView(new Image(imgPath));
@@ -86,7 +86,7 @@ public abstract class BaseNpcPiece extends BasePiece {
         animationImage.setTranslateX(offsetX);
         animationImage.setTranslateY(offsetY);
         animationImage.setDisable(true);
-        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,width,height,5);
+        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,width,height,5,loop);
         spriteAnimation.start();
     }
 

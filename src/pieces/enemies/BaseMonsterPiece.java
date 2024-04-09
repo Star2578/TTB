@@ -1,9 +1,12 @@
 package pieces.enemies;
 
+import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import logic.GameManager;
 import logic.SpawnerManager;
 import logic.ui.GUIManager;
+import logic.effect.EffectConfig;
+import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
 import pieces.player.BasePlayerPiece;
@@ -151,6 +154,27 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         GUIManager.getInstance().updateGUI();
         // To call when this monster died
         GUIManager.getInstance().eventLogDisplay.addLog("Player killed " + this.getClass().getSimpleName());
+        //=====<dead effect>=========================================
+        new Thread(()->{
+            try {
+                Thread.sleep(150);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            Platform.runLater(()->{
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                                GameManager.getInstance().player ,
+                                this ,
+                                EffectManager.getInstance().createInPlaceEffects(2) ,
+                                new EffectConfig(0 , 0 , 0 , 1.25) );
+            });
+        }).start();
+
+        //=============================================================
+
+
+        System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
     }
     public boolean isEndAction() {
         return endAction;

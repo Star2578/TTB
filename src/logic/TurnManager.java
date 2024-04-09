@@ -3,6 +3,7 @@ package logic;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+import logic.effect.EffectManager;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
@@ -95,6 +96,7 @@ public class TurnManager {
         // Move to the next environment piece
         currentEnvironmentPieceIndex++;
         if (currentEnvironmentPieceIndex == environmentPieces.size()) {
+            EffectManager.getInstance().clearDeadEffect(); // remove unused effect
             currentEnvironmentPieceIndex = 0;
             startPlayerTurn();
             GUIManager.getInstance().enableButton();

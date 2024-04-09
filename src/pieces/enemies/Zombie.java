@@ -37,7 +37,7 @@ public class Zombie extends BaseMonsterPiece{
         currentState = State.NEUTRAL_ROAMING;
 
         //configs values for animation
-        setupAnimation(Config.ZombieAnimationPath, 0, -4, 32, 32);
+        setupAnimation(Config.ZombieAnimationPath, 0, -4, 32, 32 , true);
     }
 
     // Method to update the state of the Zombie based on the player's position
