@@ -143,17 +143,17 @@ public class GameScene {
         // Define update logic
         updateLogic = () -> {
             // Update game state
-            if (gameManager.doorAt != null) {
-                if (player.getRow() == gameManager.doorAt.getX() && player.getCol() == gameManager.doorAt.getY()) {
-                    System.out.println("New Floor");
-                    generateNewFloor();
+            if (gameManager.doorAt[player.getRow()][player.getCol()]) {
+                System.out.println("New Floor");
+                generateNewFloor();
 
-                    // switch the floor back to normal
-                    dungeonFloor[(int) gameManager.doorAt.getX()][(int) gameManager.doorAt.getY()]
-                            .setImage(new Image(Config.FloorPath));
-
-                    // reset doorAt to null
-                    gameManager.doorAt = null;
+                // switch the floor back to normal
+                for (int row = 0; row < Config.BOARD_SIZE; row++) {
+                    for (int col = 0; col < Config.BOARD_SIZE; col++) {
+                        dungeonFloor[row][col].setImage(imageScaler.resample(new Image(Config.FloorPath), 2));;
+                        // reset doorAt to null
+                        gameManager.doorAt[row][col] = false;
+                    }
                 }
             }
         };

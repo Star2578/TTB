@@ -59,7 +59,7 @@ public class GameManager {
     // -------------- Inventory --------------
     public List<BaseItem> inventory = new ArrayList<>();
     public int playerMoney = 0;
-    public Point2D doorAt = null; // use to store where the door is at
+    public boolean[][] doorAt = new boolean[Config.BOARD_SIZE][Config.BOARD_SIZE]; // use to store where the door is at
 
     public final BaseSkill[] UNIVERSAL_SKILL_POOL = {
         new Slash(), new Heal()
