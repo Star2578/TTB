@@ -62,7 +62,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public abstract void attack(BaseMonsterPiece monsterPiece); // This will differ for each class of player
     public abstract boolean validMove(int row, int col); // To set valid move for each classes
     @Override
-    protected void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height){
+    protected void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height , boolean loop){
         //===================<animation section>==========================================
         this.offsetX=offsetX;
         this.offsetY=offsetY;
@@ -72,7 +72,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         animationImage.setTranslateX(offsetX);
         animationImage.setTranslateY(offsetY);
         animationImage.setDisable(true);
-        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,width,height,6);
+        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,width,height,6 , loop);
         spriteAnimation.start();
 
         //attack animation for player
@@ -81,8 +81,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         meleeAttackImage.setFitWidth(50);
         meleeAttackImage.setDisable(true);
         meleeAttackImage.setVisible(true);
-        meleeAttackAnimation = new SpriteAnimation(meleeAttackImage , 5 , 1 , 5 , 37 , 32 , 8);
-        meleeAttackAnimation.setLoop(false);
+        meleeAttackAnimation = new SpriteAnimation(meleeAttackImage , 5 , 1 , 5 , 37 , 32 , 8 , false);
 
         //setup moveTranslate behaviour
         moveTransition = new TranslateTransition();
@@ -150,6 +149,9 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     }
     public int getAttackDamage() {
         return attackDamage;
+    }
+    public int getCurrentDirection() {
+        return currentDirection;
     }
     public void setAttackDamage(int attackDamage) {
         this.attackDamage = Math.max(attackDamage, 0);

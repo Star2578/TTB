@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import logic.*;
+import logic.effect.EffectManager;
 import logic.handlers.*;
 import logic.ui.GUIManager;
 import logic.ui.display.NpcDisplay;
@@ -38,6 +39,7 @@ public class GameScene {
     private static final int GAME_SIZE = Config.GAME_SIZE;
 
     private GameManager gameManager = GameManager.getInstance();
+    private EffectManager effectManager = EffectManager.getInstance();
     private BasePlayerPiece player;
     private GUIManager guiManager;
     private GameLoop gameLoop;
@@ -85,8 +87,7 @@ public class GameScene {
         scene.getStylesheets().add(getClass().getResource("/CSSs/BottomLeftGUI.css").toExternalForm());
 
 
-        //TODO: test auto-tiling tilemap
-        wallOnFloorTileMap = new TileMap(new Image(Config.WallOnFloorPath),4,8,32,32);
+
         tilePane.setMinSize(GAME_SIZE,GAME_SIZE);
         tilePane.setMaxSize(GAME_SIZE,GAME_SIZE);
         tilePane.setDisable(true);
@@ -95,7 +96,7 @@ public class GameScene {
             tilePane.getColumnConstraints().add(new ColumnConstraints(32));
             tilePane.getRowConstraints().add(new RowConstraints(32));
         }
-        //TODO============================
+
 
         //this pane contains all animation-related nodes
         //it's placed transparently over boardPane
@@ -103,6 +104,11 @@ public class GameScene {
         animationPane.setMaxHeight(SQUARE_SIZE*BOARD_SIZE);
         animationPane.setDisable(true);
 
+        //this pane contains all effect animation node
+        //placed transparently over boardPane
+        effectManager.effectPane.setMaxWidth(SQUARE_SIZE*BOARD_SIZE);
+        effectManager.effectPane.setMaxHeight(SQUARE_SIZE*BOARD_SIZE);
+        effectManager.effectPane.setDisable(true);
 
         rightPane = new VBox(); // Pane for right area
         rightPane.setBackground(Background.fill(Color.DARKRED));
@@ -117,7 +123,7 @@ public class GameScene {
 
         // Center the game board using a StackPane
         centerPane = new StackPane();
-        centerPane.getChildren().addAll(boardPane , tilePane , animationPane);
+        centerPane.getChildren().addAll(boardPane , tilePane , animationPane , effectManager.effectPane);
 
         boardPane.setBackground(Background.fill(Color.GOLD));
         root.setCenter(centerPane);
@@ -258,7 +264,8 @@ public class GameScene {
     private void placeDungeon() {
         // Place the walls according to dungeon generated
         char[][] dungeonLayout = dungeonGenerator.getDungeonLayout();
-        //make duplicate dungeonLayout of size + 1 , to take account of null border
+
+        //make duplicate dungeonLayout of size + 1 , to prevent null border
         char[][] expandedLayout = new char[BOARD_SIZE+2][BOARD_SIZE+2];
         for(int i = 0 ; i < expandedLayout.length ; i++){
             for(int j = 0 ; j < expandedLayout[0].length ; j++){
@@ -271,37 +278,47 @@ public class GameScene {
             }
         }
 
+        //=================<autotiling system>===============================================
         for (int row = 1; row < expandedLayout.length-1 ; row++) {
             for (int col = 1; col < expandedLayout[0].length-1 ; col++) {
                 if (expandedLayout[row][col] == '#') {
                     //assign new wall object to piecesPosition & add texture to tilePane
                     piecesPosition[row-1][col-1] = new BaseWallPiece(row-1, col-1);
-                    // |1|1|2| - tile around has its bit value
-                    // |2|X|4| - bitMask1 -> adjacent
-                    // |4|8|8| - bitMask2 -> corner
-                    int bitMask1 = 0;
-                    if(expandedLayout[row-1][col]== '#') bitMask1+=1;
-                    if(expandedLayout[row][col-1]== '#') bitMask1+=2;
-                    if(expandedLayout[row][col+1]== '#') bitMask1+=4;
-                    if(expandedLayout[row+1][col]== '#') bitMask1+=8;
+                    // |  1|  2|  4| - tile around has its bit value
+                    // |  8|  X| 16| - bitMask -> adjacent
+                    // | 32| 64|128| - **check corner when both adjacent is wall
+                    int bitMask = 0;
+                    int[] jumpList =  { 2,8,10,11,16,18,22,24,
+                            26,27,30,31,64,66,72,74,
+                            75,80,82,86,88,90,91,94,
+                            95,104,106,107,120,122,123,126,
+                            127,208,210,214,216,218,219,222,
+                            223,248,250,251,254,255,0};
 
-                    if(bitMask1 == 15){ //all adjacent is wall now check corner
-                        int bitMask2 = 0;
-                        if(expandedLayout[row-1][col-1] == '#')
-                            bitMask2+=1;
-                        if(expandedLayout[row-1][col+1]== '#')
-                            bitMask2+=2;
-                        if(expandedLayout[row+1][col-1]== '#')
-                            bitMask2+=4;
-                        if(expandedLayout[row+1][col+1]== '#')
-                            bitMask2+=8;
-                        tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt(bitMask2/4 , 4 + bitMask2%4 ) , col-1 , row-1);
-                        continue;
+                    //adjacent
+                    if(expandedLayout[row-1][col]== '#') bitMask+=2;
+                    if(expandedLayout[row][col-1]== '#') bitMask+=8;
+                    if(expandedLayout[row][col+1]== '#') bitMask+=16;
+                    if(expandedLayout[row+1][col]== '#') bitMask+=64;
+                    //corner
+                    if(expandedLayout[row-1][col]== '#' && expandedLayout[row][col-1]== '#' && expandedLayout[row-1][col-1]== '#') bitMask+=1;
+                    if(expandedLayout[row-1][col]== '#' && expandedLayout[row][col+1]== '#' && expandedLayout[row-1][col+1]== '#') bitMask+=4;
+                    if(expandedLayout[row+1][col]== '#' && expandedLayout[row][col-1]== '#' && expandedLayout[row+1][col-1]== '#') bitMask+=32;
+                    if(expandedLayout[row+1][col]== '#' && expandedLayout[row][col+1]== '#' && expandedLayout[row+1][col+1]== '#') bitMask+=128;
+
+                    for(int i = 0 ; i < jumpList.length; i++){
+                        if(bitMask == jumpList[i]){
+                            tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt((i+1)/8 , (i+1)%8) , col-1 , row-1);
+                            break;
+                        }
+                        if(i == jumpList.length-1){
+                            tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt(0 , 0 ) , col-1 , row-1);
+                        }
                     }
-                    tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt(bitMask1/4 , bitMask1%4) , col-1 , row-1);
                 }
             }
         }
+        //==================================================================================
     }
 
     private void placePiece(BasePiece piece) {

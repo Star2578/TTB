@@ -3,6 +3,8 @@ package skills.knight;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
+import logic.effect.EffectConfig;
+import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import utils.Attack;
@@ -27,6 +29,15 @@ public class Slash extends BaseSkill implements Attack {
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
+
+                //=========<SKILL EFFECT>====================================================================
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                                GameManager.getInstance().player ,
+                                target ,
+                                EffectManager.getInstance().createInPlaceEffects(1) ,
+                                new EffectConfig(0 , -16 , 24 , 1.1) );
+                //===========================================================================================
             }
         }
     }

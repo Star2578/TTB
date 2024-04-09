@@ -48,7 +48,7 @@ public class Dealer extends BaseNpcPiece {
         importDialogues("res/dialogues/dealer-dialogue.json");
         talk("greetings"); // setup starting dialogue
 
-        setupAnimation(Config.DealerAnimationPath, 0, -10, 32, 48);
+        setupAnimation(Config.DealerAnimationPath, 0, -10, 32, 48 , true);
         setupShop();
     }
 

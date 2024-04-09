@@ -55,7 +55,7 @@ public class BasePiece {
     public int getOffsetY() {
         return offsetY;
     }
-    protected void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height) {
+    protected void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height , boolean loop) {
         //===================<animation section>==========================================
         this.offsetX = offsetX;
         this.offsetY = offsetY;
@@ -65,7 +65,7 @@ public class BasePiece {
         animationImage.setTranslateX(offsetX);
         animationImage.setTranslateY(offsetY);
         animationImage.setDisable(true);
-        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,width,height,5);
+        spriteAnimation=new SpriteAnimation(animationImage,4,0,4,width,height,5,loop);
         spriteAnimation.start();
 
         //setup moveTranslate behaviour

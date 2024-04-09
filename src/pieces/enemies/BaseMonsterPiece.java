@@ -1,12 +1,15 @@
 package pieces.enemies;
 
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpawnerManager;
 import logic.SpriteAnimation;
+import logic.effect.EffectConfig;
+import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
 import pieces.player.BasePlayerPiece;
@@ -152,6 +155,26 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         SpawnerManager.getInstance().monsterCount--;
         SpawnerManager.getInstance().trySpawnDoor(getRow(), getCol());
         // To call when this monster died
+        //=====<dead effect>=========================================
+        new Thread(()->{
+            try {
+                Thread.sleep(150);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            Platform.runLater(()->{
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                                GameManager.getInstance().player ,
+                                this ,
+                                EffectManager.getInstance().createInPlaceEffects(2) ,
+                                new EffectConfig(0 , 0 , 0 , 1.25) );
+            });
+        }).start();
+
+        //=============================================================
+
+
         System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
     }
     public boolean isEndAction() {
