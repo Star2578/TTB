@@ -98,6 +98,20 @@ public class SkillSelectDisplay implements Display{
                 }
                 // Reset selection if other skill are selected
                 if (GameManager.getInstance().selectedSkill != null) {
+                    if (GameManager.getInstance().selectedSkill == skill && skill.castOnSelf()) {
+                        boolean enoughMana = player.getCurrentMana() >= GameManager.getInstance().selectedSkill.getManaCost();
+                        boolean enoughActionPoint = player.getCurrentActionPoint() >= GameManager.getInstance().selectedSkill.getActionPointCost();
+
+                        if (enoughMana && enoughActionPoint) {
+                            GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName());
+                            GameManager.getInstance().selectedSkill.perform(GameManager.getInstance().player);
+                        } else {
+                            System.out.println("Not enough mana or action point");
+                        }
+
+                        GameManager.getInstance().gameScene.resetSelection(2);
+                        return;
+                    }
                     GameManager.getInstance().gameScene.resetSelection(2);
                 }
 

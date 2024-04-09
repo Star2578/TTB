@@ -4,8 +4,8 @@ import java.util.*;
 
 public class DungeonGenerator {
     private static final int BOARD_SIZE = 20;
-    private static final int ROOM_MIN_SIZE = 4;
-    private static final int ROOM_MAX_SIZE = 7;
+    private static final int ROOM_MIN_SIZE = 3;
+    private static final int ROOM_MAX_SIZE = 5;
     private static final int MIN_ROOM_DISTANCE = 4; // Minimum distance between room centers
 
     private char[][] dungeon;
