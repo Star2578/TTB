@@ -36,7 +36,7 @@ public class Tiny extends BaseMonsterPiece{
         currentState = State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
 
         //configs values for animation
-        setupAnimation(Config.TinyAnimationPath, 0, -4, 32, 32);
+        setupAnimation(Config.TinyAnimationPath, 0, -4, 32, 32 , true);
     }
 
     // Method to update the state of the Tiny Zombie based on the player's position
@@ -100,7 +100,7 @@ public class Tiny extends BaseMonsterPiece{
 
     @Override
     public void attack(BasePlayerPiece playerPiece) {
-        System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
+        GUIManager.getInstance().eventLogDisplay.addLog("Attack Player for " + ATTACK_DAMAGE + " damage!");
 
         playerPiece.takeDamage(ATTACK_DAMAGE);
         GUIManager.getInstance().updateGUI();

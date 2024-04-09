@@ -1,12 +1,12 @@
 package pieces.enemies;
 
-import javafx.animation.TranslateTransition;
-import javafx.scene.image.Image;
+import javafx.application.Platform;
 import javafx.scene.image.ImageView;
-import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpawnerManager;
-import logic.SpriteAnimation;
+import logic.ui.GUIManager;
+import logic.effect.EffectConfig;
+import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
 import pieces.player.BasePlayerPiece;
@@ -16,9 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static utils.Config.BOARD_SIZE;
-import static utils.Config.SQUARE_SIZE;
-
 public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     private int currentHp;
     private int maxHp;
@@ -26,12 +23,14 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     private boolean isAlive = true;
     protected boolean endAction = false;
     protected boolean[][] validMovesCache; // Cache of valid moves for the entire board
+    protected int moneyDrop;
     protected Random random;
 
     public BaseMonsterPiece(int row, int col, int defaultDirection) {
         super(Config.ENTITY_TYPE.MONSTER, new ImageView(Config.PlaceholderPath), row, col);
         this.validMovesCache = GameManager.getInstance().validMovesCache;
         this.random = new Random();
+        this.moneyDrop = random.nextInt(30, 200);
 
         // insert 1 as default (image facing right)
         // insert -1 to flip
@@ -151,7 +150,30 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         isAlive = false;
         SpawnerManager.getInstance().monsterCount--;
         SpawnerManager.getInstance().trySpawnDoor(getRow(), getCol());
+        GameManager.getInstance().playerMoney += moneyDrop;
+        GUIManager.getInstance().updateGUI();
         // To call when this monster died
+        GUIManager.getInstance().eventLogDisplay.addLog("Player killed " + this.getClass().getSimpleName());
+        //=====<dead effect>=========================================
+        new Thread(()->{
+            try {
+                Thread.sleep(150);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            Platform.runLater(()->{
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                                GameManager.getInstance().player ,
+                                this ,
+                                EffectManager.getInstance().createInPlaceEffects(2) ,
+                                new EffectConfig(0 , 0 , 0 , 1.25) );
+            });
+        }).start();
+
+        //=============================================================
+
+
         System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
     }
     public boolean isEndAction() {

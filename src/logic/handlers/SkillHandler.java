@@ -13,12 +13,14 @@ import java.util.ArrayList;
 
 public class SkillHandler {
     private static GameManager gameManager = GameManager.getInstance();
-    private static ImageView[][] selectionFloor = gameManager.selectionFloor;
-    private static ArrayList<Point2D> selectedTiles = gameManager.selectedSkillTiles;
+    private static ImageView[][] selectionFloor;
+    private static ArrayList<Point2D> selectedTiles;
     private static ImageScaler imageScaler = new ImageScaler();
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
 
     public static void showValidSkillRange(int playerRow, int playerCol, BaseSkill skillSelected) {
+        selectionFloor = gameManager.selectionFloor;
+        selectedTiles = gameManager.selectedSkillTiles;
         int range = skillSelected.getRange();
 
         for (int dRow = -range; dRow <= range; dRow++) {

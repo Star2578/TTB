@@ -10,6 +10,7 @@ import logic.*;
 public class Main extends Application {
     GameScene gameScene;
     MainMenu mainMenu;
+    Summary summary;
 
     public static void main(String[] args) {
         launch(args);
@@ -27,10 +28,12 @@ public class Main extends Application {
 
         mainMenu = new MainMenu();
         gameScene = new GameScene();
+        summary = new Summary();
         GameManager.getInstance().gameScene = gameScene;
 
         SceneManager.getInstance().setGameScene(gameScene.getScene()); // Save this scene for later use
         SceneManager.getInstance().setMenuScene(mainMenu.getScene());
+        SceneManager.getInstance().setSummaryScene(summary.getScene());
 
         primaryStage.setResizable(false);
         primaryStage.setScene(mainMenu.getScene());

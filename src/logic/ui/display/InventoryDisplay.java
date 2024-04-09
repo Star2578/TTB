@@ -21,6 +21,7 @@ import logic.ui.overlay.ItemInfoOverlay;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 import utils.RefillMana;
+import utils.Usable;
 
 public class InventoryDisplay implements Display {
     private VBox view;
@@ -162,6 +163,17 @@ public class InventoryDisplay implements Display {
         if (!(item instanceof EmptyItem)) {
             itemFrame.setOnMouseClicked(mouseEvent -> {
                 if (GameManager.getInstance().selectedItem != null) {
+                    if (GameManager.getInstance().selectedItem == item && item instanceof Usable usable) {
+                        if (usable.castOnSelf()) {
+                            // Use item
+                            usable.useItem(GameManager.getInstance().player);
+                            GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedItem.getName());
+
+                            GameManager.getInstance().gameScene.resetSelection(3);
+                            GUIManager.getInstance().inventoryDisplay.throwAwayItem(item);
+                            return;
+                        }
+                    }
                     GameManager.getInstance().gameScene.resetSelection(3);
                 }
                 item.getFrame().setImage(imageScaler.resample(new Image(Config.FrameSelectedPath), 2));
@@ -212,7 +224,16 @@ public class InventoryDisplay implements Display {
     public ItemInfoOverlay getItemInfoOverlay() {
         return itemInfoOverlay;
     }
-
+    public void enableFrame() {
+        useItem.setDisable(false);
+        throwAwayItem.setDisable(false);
+        usableItemsSection.setDisable(false);
+    }
+    public void disableFrame() {
+        useItem.setDisable(true);
+        throwAwayItem.setDisable(true);
+        usableItemsSection.setDisable(true);
+    }
     @Override
     public Node getView() {
         return view;

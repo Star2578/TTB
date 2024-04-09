@@ -1,10 +1,8 @@
 package pieces.player;
 
-import javafx.animation.TranslateTransition;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.util.Duration;
-import logic.SpriteAnimation;
+import logic.ui.GUIManager;
+import logic.effect.EffectConfig;
+import logic.effect.EffectManager;
 import pieces.enemies.BaseMonsterPiece;
 import skills.knight.Heal;
 import skills.knight.Slash;
@@ -35,7 +33,7 @@ public class Knight extends BasePlayerPiece {
         skills[1] = new Heal();
 
         //configs values for animation
-        setupAnimation(Config.KnightAnimationPath, 0, -15, 32, 56);
+        setupAnimation(Config.KnightAnimationPath, 0, -15, 32, 56 , true);
     }
 
     @Override
@@ -46,6 +44,7 @@ public class Knight extends BasePlayerPiece {
         //slowly move to target col,row
         moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
         moveTransition.setToY( (row-getRow()) * SQUARE_SIZE + offsetY);
+        GUIManager.getInstance().disableButton();
 
         moveTransition.setOnFinished(actionEvent->{
             //set image layering depend on row
@@ -59,6 +58,7 @@ public class Knight extends BasePlayerPiece {
             //now player can do actions
             spriteAnimation.changeAnimation(4 , 0);
             setCanAct(true);
+            GUIManager.getInstance().enableButton();
             setRow(row);
             setCol(col);
         });
@@ -107,23 +107,14 @@ public class Knight extends BasePlayerPiece {
 
         //make player face to target
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
-        if(currentDirection == -1)meleeAttackImage.setScaleX(-1);
-            else meleeAttackImage.setScaleX(1);
 
-//        //rotate effect to target direction
-//        double xDist = monsterPiece.getCol() - getCol();
-//        double yDist = monsterPiece.getRow() - getRow();
-//        double degree = (Math.acos( xDist / Math.sqrt( xDist*xDist + yDist*yDist) )) * (180.0 / Math.PI);
-//        degree = yDist>0? degree*-1 : degree;
-//        meleeAttackImage.setRotate( yDist<0? 360-degree : -degree);
-
-        //play effect on monster position
-        meleeAttackImage.setX( ( getCol() * SQUARE_SIZE) - (SQUARE_SIZE / 2) - (meleeAttackImage.getFitWidth() / 2) );
-        meleeAttackImage.setY( ( getRow() * SQUARE_SIZE) - (SQUARE_SIZE / 2) - (meleeAttackImage.getFitHeight() / 2) );
-        meleeAttackImage.toFront();
-        //meleeAttackAnimation.start();
-        //TODO=================================
-
+        //attack effect
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                        this ,
+                        monsterPiece ,
+                        EffectManager.getInstance().createInPlaceEffects(0) ,
+                        new EffectConfig(0 , 8 , 0 , 1.25) );
 
         System.out.println("Attack success");
     }

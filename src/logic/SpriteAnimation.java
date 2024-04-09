@@ -2,30 +2,31 @@ package logic;
 
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class SpriteAnimation extends AnimationTimer {
 
-    private ImageView imageView; //Image view that will display our sprite
+    public ImageView imageView; //Image view that will display our sprite
 
-    private final int totalFrames; //Total number of frames in the sequence
-    private final float fps; //frames per second I.E. 24
+    public final int totalFrames; //Total number of frames in the sequence
+    public final float fps; //frames per second I.E. 24
 
-    private int cols; //Number of columns on the sprite sheet
-    private int rows; //Number of rows on the sprite sheet
+    public int cols; //Number of columns on the sprite sheet
+    public int rows; //Number of rows on the sprite sheet
 
-    private final int frameWidth; //Width of an individual frame
-    private final int frameHeight; //Height of an individual frame
+    public final int frameWidth; //Width of an individual frame
+    public final int frameHeight; //Height of an individual frame
 
-    private int currentCol = 0;
-    private int currentRow = 0;
+    protected int currentCol = 0;
+    protected int currentRow = 0;
 
-    private long lastFrame = 0;
+    protected long lastFrame = 0;
 
-    private boolean isPause = true;
-    private boolean loop = true;
+    protected boolean isPause = true;
+    public boolean loop = true;
 
-    public SpriteAnimation(ImageView imageView, int columns, int rows, int totalFrames, int frameWidth, int frameHeight, float framesPerSecond) {
+    public SpriteAnimation(ImageView imageView, int columns, int rows, int totalFrames, int frameWidth, int frameHeight, float framesPerSecond , boolean loop) {
         this.imageView = imageView;
         imageView.setViewport(new Rectangle2D(0, 0, frameWidth, frameHeight));
 
@@ -34,8 +35,10 @@ public class SpriteAnimation extends AnimationTimer {
         this.totalFrames = totalFrames;
         this.frameWidth = frameWidth;
         this.frameHeight = frameHeight;
+        this.loop = loop;
         fps = framesPerSecond;
         lastFrame = System.nanoTime();
+
     }
 
     @Override
@@ -44,6 +47,10 @@ public class SpriteAnimation extends AnimationTimer {
 
         if (frameJump >= 1) {
             lastFrame = now;
+            if( (currentCol + 1) % cols < currentCol && !loop) {
+                imageView.setVisible(false);
+                stop();
+            }
             currentCol = (currentCol + 1) % cols;
             imageView.setViewport(new Rectangle2D(currentCol * frameWidth, currentRow * frameHeight, frameWidth, frameHeight));
         }
@@ -68,9 +75,6 @@ public class SpriteAnimation extends AnimationTimer {
         }
     }
 
-    public void setLoop(boolean b){
-        this.loop=b;
-    }
 
     public void changeAnimation(int totalCols , int targetRows ){
         //in our game Sprite sheet design : new row -> new sprite animation
@@ -79,6 +83,14 @@ public class SpriteAnimation extends AnimationTimer {
         //go back to first frame
         currentCol = 0; currentRow = targetRows;
 
-        imageView.setViewport(new Rectangle2D(currentCol*frameWidth,currentRow*frameHeight , frameWidth , frameHeight));
+        imageView.setViewport(new Rectangle2D(0,currentRow*frameHeight , frameWidth , frameHeight));
+    }
+
+
+    @Override
+    public SpriteAnimation clone(){
+        SpriteAnimation clone = new SpriteAnimation(new ImageView(new Image( imageView.getImage().getUrl()))
+                ,cols,rows,totalFrames,frameWidth,frameHeight,fps,loop);
+        return clone;
     }
 }

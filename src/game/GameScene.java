@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import logic.*;
+import logic.effect.EffectManager;
 import logic.handlers.*;
 import logic.ui.GUIManager;
 import logic.ui.display.NpcDisplay;
@@ -38,6 +39,7 @@ public class GameScene {
     private static final int GAME_SIZE = Config.GAME_SIZE;
 
     private GameManager gameManager = GameManager.getInstance();
+    private EffectManager effectManager = EffectManager.getInstance();
     private BasePlayerPiece player;
     private GUIManager guiManager;
     private GameLoop gameLoop;
@@ -67,7 +69,7 @@ public class GameScene {
     private Scene scene;
     private Pane animationPane = gameManager.animationPane;
     private GridPane boardPane = gameManager.boardPane;
-    private GridPane tilePane = new GridPane();
+    private GridPane tilePane = new GridPane(); 
     private BorderPane root;
     private VBox rightPane; // Contain right side UI
     private VBox leftPane; // Contain left side UI
@@ -85,8 +87,7 @@ public class GameScene {
         scene.getStylesheets().add(getClass().getResource("/CSSs/BottomLeftGUI.css").toExternalForm());
 
 
-        //TODO: test auto-tiling tilemap
-        wallOnFloorTileMap = new TileMap(new Image(Config.WallOnFloorPath),4,8,32,32);
+
         tilePane.setMinSize(GAME_SIZE,GAME_SIZE);
         tilePane.setMaxSize(GAME_SIZE,GAME_SIZE);
         tilePane.setDisable(true);
@@ -95,7 +96,7 @@ public class GameScene {
             tilePane.getColumnConstraints().add(new ColumnConstraints(32));
             tilePane.getRowConstraints().add(new RowConstraints(32));
         }
-        //TODO============================
+
 
         //this pane contains all animation-related nodes
         //it's placed transparently over boardPane
@@ -103,6 +104,11 @@ public class GameScene {
         animationPane.setMaxHeight(SQUARE_SIZE*BOARD_SIZE);
         animationPane.setDisable(true);
 
+        //this pane contains all effect animation node
+        //placed transparently over boardPane
+        effectManager.effectPane.setMaxWidth(SQUARE_SIZE*BOARD_SIZE);
+        effectManager.effectPane.setMaxHeight(SQUARE_SIZE*BOARD_SIZE);
+        effectManager.effectPane.setDisable(true);
 
         rightPane = new VBox(); // Pane for right area
         rightPane.setBackground(Background.fill(Color.DARKRED));
@@ -117,7 +123,7 @@ public class GameScene {
 
         // Center the game board using a StackPane
         centerPane = new StackPane();
-        centerPane.getChildren().addAll(boardPane , tilePane , animationPane);
+        centerPane.getChildren().addAll(boardPane , tilePane , animationPane , effectManager.effectPane);
 
         boardPane.setBackground(Background.fill(Color.GOLD));
         root.setCenter(centerPane);
@@ -143,32 +149,27 @@ public class GameScene {
         // Define update logic
         updateLogic = () -> {
             // Update game state
-            if (gameManager.doorAt != null) {
-                if (player.getRow() == gameManager.doorAt.getX() && player.getCol() == gameManager.doorAt.getY()) {
-                    System.out.println("New Floor");
-                    generateNewFloor();
+            if (gameManager.doorAt[player.getRow()][player.getCol()]) {
+                System.out.println("New Floor");
+                generateNewFloor();
 
-                    // switch the floor back to normal
-                    dungeonFloor[(int) gameManager.doorAt.getX()][(int) gameManager.doorAt.getY()]
-                            .setImage(new Image(Config.FloorPath));
-
-                    // reset doorAt to null
-                    gameManager.doorAt = null;
+                // switch the floor back to normal
+                for (int row = 0; row < Config.BOARD_SIZE; row++) {
+                    for (int col = 0; col < Config.BOARD_SIZE; col++) {
+                        dungeonFloor[row][col].setImage(imageScaler.resample(new Image(Config.FloorPath), 2));;
+                        // reset doorAt to null
+                        gameManager.doorAt[row][col] = false;
+                    }
                 }
             }
         };
         // Right click anywhere in the scene to cancel/deselect anything
         scene.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                if (GUIManager.getInstance().isInAttackMode) {
-                    resetSelection(1);
-                } else if (gameManager.selectedSkill != null) {
-                    resetSelection(2);
-                } else if (gameManager.selectedItem != null) {
-                    resetSelection(3);
-                } else {
-                    resetSelection(0);
-                }
+                resetSelection(0);
+                resetSelection(1);
+                resetSelection(2);
+                resetSelection(3);
             }
         });
         // Define render logic
@@ -202,7 +203,7 @@ public class GameScene {
         // reset monsterCount = 0 every time we got to new floor
         SpawnerManager.getInstance().monsterCount = 0;
 
-        SpawnerManager.getInstance().randomMonsterSpawnFromPool(monsterPool1, environmentPieces, 5);
+        SpawnerManager.getInstance().randomMonsterSpawnFromPool(monsterPool1, environmentPieces);
 
         for (BasePiece entity : environmentPieces) {
             placeEntityRandomly(entity);
@@ -258,7 +259,8 @@ public class GameScene {
     private void placeDungeon() {
         // Place the walls according to dungeon generated
         char[][] dungeonLayout = dungeonGenerator.getDungeonLayout();
-        //make duplicate dungeonLayout of size + 1 , to take account of null border
+
+        //make duplicate dungeonLayout of size + 1 , to prevent null border
         char[][] expandedLayout = new char[BOARD_SIZE+2][BOARD_SIZE+2];
         for(int i = 0 ; i < expandedLayout.length ; i++){
             for(int j = 0 ; j < expandedLayout[0].length ; j++){
@@ -271,37 +273,47 @@ public class GameScene {
             }
         }
 
+        //=================<autotiling system>===============================================
         for (int row = 1; row < expandedLayout.length-1 ; row++) {
             for (int col = 1; col < expandedLayout[0].length-1 ; col++) {
                 if (expandedLayout[row][col] == '#') {
                     //assign new wall object to piecesPosition & add texture to tilePane
                     piecesPosition[row-1][col-1] = new BaseWallPiece(row-1, col-1);
-                    // |1|1|2| - tile around has its bit value
-                    // |2|X|4| - bitMask1 -> adjacent
-                    // |4|8|8| - bitMask2 -> corner
-                    int bitMask1 = 0;
-                    if(expandedLayout[row-1][col]== '#') bitMask1+=1;
-                    if(expandedLayout[row][col-1]== '#') bitMask1+=2;
-                    if(expandedLayout[row][col+1]== '#') bitMask1+=4;
-                    if(expandedLayout[row+1][col]== '#') bitMask1+=8;
+                    // |  1|  2|  4| - tile around has its bit value
+                    // |  8|  X| 16| - bitMask -> adjacent
+                    // | 32| 64|128| - **check corner when both adjacent is wall
+                    int bitMask = 0;
+                    int[] jumpList =  { 2,8,10,11,16,18,22,24,
+                            26,27,30,31,64,66,72,74,
+                            75,80,82,86,88,90,91,94,
+                            95,104,106,107,120,122,123,126,
+                            127,208,210,214,216,218,219,222,
+                            223,248,250,251,254,255,0};
 
-                    if(bitMask1 == 15){ //all adjacent is wall now check corner
-                        int bitMask2 = 0;
-                        if(expandedLayout[row-1][col-1] == '#')
-                            bitMask2+=1;
-                        if(expandedLayout[row-1][col+1]== '#')
-                            bitMask2+=2;
-                        if(expandedLayout[row+1][col-1]== '#')
-                            bitMask2+=4;
-                        if(expandedLayout[row+1][col+1]== '#')
-                            bitMask2+=8;
-                        tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt(bitMask2/4 , 4 + bitMask2%4 ) , col-1 , row-1);
-                        continue;
+                    //adjacent
+                    if(expandedLayout[row-1][col]== '#') bitMask+=2;
+                    if(expandedLayout[row][col-1]== '#') bitMask+=8;
+                    if(expandedLayout[row][col+1]== '#') bitMask+=16;
+                    if(expandedLayout[row+1][col]== '#') bitMask+=64;
+                    //corner
+                    if(expandedLayout[row-1][col]== '#' && expandedLayout[row][col-1]== '#' && expandedLayout[row-1][col-1]== '#') bitMask+=1;
+                    if(expandedLayout[row-1][col]== '#' && expandedLayout[row][col+1]== '#' && expandedLayout[row-1][col+1]== '#') bitMask+=4;
+                    if(expandedLayout[row+1][col]== '#' && expandedLayout[row][col-1]== '#' && expandedLayout[row+1][col-1]== '#') bitMask+=32;
+                    if(expandedLayout[row+1][col]== '#' && expandedLayout[row][col+1]== '#' && expandedLayout[row+1][col+1]== '#') bitMask+=128;
+
+                    for(int i = 0 ; i < jumpList.length; i++){
+                        if(bitMask == jumpList[i]){
+                            tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt((i+1)/8 , (i+1)%8) , col-1 , row-1);
+                            break;
+                        }
+                        if(i == jumpList.length-1){
+                            tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt(0 , 0 ) , col-1 , row-1);
+                        }
                     }
-                    tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt(bitMask1/4 , bitMask1%4) , col-1 , row-1);
                 }
             }
         }
+        //==================================================================================
     }
 
     private void placePiece(BasePiece piece) {
@@ -359,8 +371,8 @@ public class GameScene {
 
     private void handleSquareClick(int row, int col) {
         System.out.println("Clicked on square (" + row + ", " + col + ")");
+//        System.out.println("can act? " + player.canAct());
         if (!player.canAct()) {
-            System.out.println("Not on your turn");
             if (GUIManager.getInstance().isInAttackMode)
                 resetSelection(1);
             if (GameManager.getInstance().selectedSkill != null)
@@ -375,14 +387,13 @@ public class GameScene {
         boolean isInAttackMode = GUIManager.getInstance().isInAttackMode;
 
         if (isInAttackMode) {
-            System.out.println("Player Prepare to attack");
-
             // Check if the clicked square is within showValid attack range
             if (player.validAttack(row, col)) {
                 // Check if there is a monster on the clicked square
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     // Perform the attack on the monster
                     player.attack(monsterPiece);
+                    GUIManager.getInstance().eventLogDisplay.addLog("Player attack " + monsterPiece.getClass().getSimpleName() + " at (" + row + ", " + col + ")");
                     exitAttackMode();
                     if (!monsterPiece.isAlive()) {
                         removePiece(monsterPiece);
@@ -407,6 +418,7 @@ public class GameScene {
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     // Perform the attack on the monster
                     if (enoughMana && enoughActionPoint) {
+                        GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedSkill.getName() + " on " + monsterPiece.getClass().getSimpleName());
                         gameManager.selectedSkill.perform(monsterPiece);
                     } else {
                         System.out.println("Not enough mana or action point");
@@ -420,6 +432,7 @@ public class GameScene {
                     if (gameManager.selectedSkill.castOnSelf()) {
 
                         if (enoughMana && enoughActionPoint) {
+                            GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedSkill.getName());
                             gameManager.selectedSkill.perform(playerPiece);
                         } else {
                             System.out.println("Not enough mana or action point");
@@ -447,6 +460,7 @@ public class GameScene {
                         // use item on monster
                         if (((Usable) item).castOnMonster()) {
 
+                            GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedItem.getName() + " on " + monsterPiece.getClass().getSimpleName());
                             usableItem.useItem(monsterPiece);
                             resetSelection(3);
 
@@ -457,6 +471,7 @@ public class GameScene {
                         // use item on player
                         if (((Usable) item).castOnSelf()) {
 
+                            GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedItem.getName());
                             usableItem.useItem(playerPiece);
                             resetSelection(3);
                             // throw away after use
@@ -481,27 +496,34 @@ public class GameScene {
         NpcDisplay npcDisplay = GUIManager.getInstance().getNpcDisplay();
         // ------------------------- NPC Interact -------------------------
         if (piecesPosition[row][col] instanceof BaseNpcPiece npc) {
-            System.out.println("Talk to NPC");
-            GUIManager.getInstance().switchToNpcDisplay();
+            double distance = Math.sqrt(Math.pow(GameManager.getInstance().player.getRow() - npc.getRow(), 2) + Math.pow(GameManager.getInstance().player.getCol() - npc.getCol(), 2));
 
-            npcDisplay.setNpcPortrait(npc.getPortrait()); // get npc portrait
-            npcDisplay.getNpcName().setText(npc.getName()); // get npc name
-            npcDisplay.setDialogueText(npc.getCurrentDialogue()); // set initial dialogue
+            // if in range, can talk
+            if (distance <= 1.5) {
+                GUIManager.getInstance().switchToNpcDisplay();
 
-            npcDisplay.clearDialogueOption(); // clear all options before adding new ones
-            npc.setDialogueOptions(npcDisplay); // dialogue options for each npc
-            npcDisplay.addDialogueOption("Good bye", new Runnable() {
-                @Override
-                public void run() {
-                    GUIManager.getInstance().switchToEventLog();
-                }
-            });
+                npcDisplay.setNpcPortrait(npc.getPortrait()); // get npc portrait
+                npcDisplay.getNpcName().setText(npc.getName()); // get npc name
+                npcDisplay.setDialogueText(npc.getCurrentDialogue()); // set initial dialogue
 
+                npcDisplay.clearDialogueOption(); // clear all options before adding new ones
+                npc.setDialogueOptions(npcDisplay); // dialogue options for each npc
+                npcDisplay.addDialogueOption("Good bye", new Runnable() {
+                    @Override
+                    public void run() {
+                        GUIManager.getInstance().switchToEventLog();
+                    }
+                });
+
+                npcDisplay.clearAdditionalOverlay();
+            }
+        } else {
+            GUIManager.getInstance().switchToEventLog();
             npcDisplay.clearAdditionalOverlay();
         }
 
         // ------------------------- Movement Mode -------------------------
-
+//        System.out.println(player.getRow() + " " + player.getCol() + " (" + row + "," + col + ")");
         if (player.getRow() == row && player.getCol() == col) {
             // Toggle move selection mode by clicking on player's grid
             isPlayerPieceSelected = !isPlayerPieceSelected;
@@ -511,9 +533,8 @@ public class GameScene {
                 resetSelection(0);
             }
         } else if (isPlayerPieceSelected) {
-            System.out.println("Player Selected");
             if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
-                System.out.println("Moving player to square (" + row + ", " + col + ")");
+                GUIManager.getInstance().eventLogDisplay.addLog("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
             } else {
                 System.out.println("Invalid move");
@@ -655,6 +676,7 @@ public class GameScene {
                         for (int j = 0; j < Config.BOARD_SIZE; j++) {
                             if (piecesPosition[i][j] != null && !(piecesPosition[i][j] instanceof BaseWallPiece)) {
                                 System.out.println("There is " + piecesPosition[i][j] + "at " + i + " " + j);
+                                GUIManager.getInstance().eventLogDisplay.addLog("There is " + piecesPosition[i][j] + "at " + i + " " + j);
                             }
                         }
                     }
@@ -670,7 +692,11 @@ public class GameScene {
                 case F5:
                     for (int i = 0; i < gameManager.inventory.size(); i++) {
                         System.out.println("Inventory[" + i + "] is " + gameManager.inventory.get(i).getName());
+                        GUIManager.getInstance().eventLogDisplay.addLog("Inventory[" + i + "] is " + gameManager.inventory.get(i).getName());
                     }
+                    break;
+                case F6:
+                    SceneManager.getInstance().switchSceneTo(SceneManager.getInstance().getSummaryScene());
                     break;
             }
         });

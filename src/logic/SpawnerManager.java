@@ -16,19 +16,26 @@ import java.util.Random;
 public class SpawnerManager {
     public static SpawnerManager instance;
     private GameManager gameManager = GameManager.getInstance();
-    private ImageView[][] dungeonFloor = gameManager.dungeonFloor;
+    private ImageView[][] dungeonFloor;
     private ImageScaler imageScaler = new ImageScaler();
     private double doorProbability = 5.0; // probability that the door to next dungeon floor would spawn
-    public int monsterCount = 0;
-    public int freeSquareCount = 0;
+    public int monsterCount;
+    public int freeSquareCount;
     public BaseMonsterPiece[] monsterPool_1; // monster pool for area 1
 
     public SpawnerManager() {
+        initialize();
         monsterPool_1 = new BaseMonsterPiece[]{
                 new Bomber(), new Tiny(), new Zombie()
         };
     }
 
+    public void initialize() {
+        dungeonFloor = gameManager.dungeonFloor;
+        monsterCount = 0;
+        freeSquareCount = 0;
+        doorProbability = 5.0;
+    }
 
     public static SpawnerManager getInstance() {
         if (instance == null) {
@@ -42,10 +49,13 @@ public class SpawnerManager {
         double spawnChance = random.nextDouble() * 100; // Random number between 0 and 100
 
         if (spawnChance <= doorProbability || monsterCount == 0) {
+            // decrease doorProbability to 0
+            doorProbability = 0;
+
             // Door spawn successful
             System.out.println("Door spawned at row " + row + ", col " + col);
             dungeonFloor[row][col].setImage(imageScaler.resample(new Image(Config.DoorPath), 2));
-            gameManager.doorAt = new Point2D(row, col);
+            gameManager.doorAt[row][col] = true;
         } else {
             System.out.println("Door spawn failed at row " + row + ", col " + col);
             increaseDoorChance();
@@ -58,11 +68,14 @@ public class SpawnerManager {
         System.out.println("Door spawn probability increased to " + doorProbability + "%");
     }
 
-    public void randomMonsterSpawnFromPool(BaseMonsterPiece[] pool, List<BasePiece> toAdd, int difficulty) {
+    public void randomMonsterSpawnFromPool(BaseMonsterPiece[] pool, List<BasePiece> toAdd) {
         Random random = new Random();
 
+        int calculateMonster = freeSquareCount / 12;
+        System.out.println("Free square = " + freeSquareCount);
+
         // Add monsters from the pool to toAdd list
-        for (int i = 0; i < difficulty; i++) {
+        for (int i = 0; i < calculateMonster; i++) {
             int index = random.nextInt(pool.length);
             BaseMonsterPiece newMonster = null;
             try {
@@ -74,6 +87,6 @@ public class SpawnerManager {
                 toAdd.add(newMonster);
             }
         }
-        monsterCount += difficulty;
+        monsterCount += calculateMonster;
     }
 }

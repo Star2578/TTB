@@ -12,13 +12,17 @@ import java.util.ArrayList;
 
 public class AttackHandler {
     private static GameManager gameManager = GameManager.getInstance();
-    private static BasePlayerPiece player = gameManager.player;
-    private static ArrayList<Point2D> selectedTiles = gameManager.selectedAttackTiles;
-    private static ImageView[][] selectionFloor = gameManager.selectionFloor;
+    private static BasePlayerPiece player;
+    private static ArrayList<Point2D> selectedTiles;
+    private static ImageView[][] selectionFloor;
     private static ImageScaler imageScaler = new ImageScaler();
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
 
     public static void showValidAttackRange(int playerRow, int playerCol) {
+        player = gameManager.player;
+        selectedTiles = gameManager.selectedAttackTiles;
+        selectionFloor = gameManager.selectionFloor;
+
         int attackRange = player.getAttackRange(); // Change this according to the player's attack range
 
         for (int dRow = -attackRange; dRow <= attackRange; dRow++) {
