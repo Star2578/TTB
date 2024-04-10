@@ -29,7 +29,7 @@ public class Skeleton extends BaseMonsterPiece {
         currentState = Skeleton.State.NEUTRAL_ROAMING;
 
         //configs values for animation
-        setupAnimation(Config.SkeletonPath, 0, -4, 32, 32);
+        setupAnimation(Config.SkeletonPath, 0, -4, 32, 36);
     }
 
     // Method to update the state of the Skeleton based on the player's position
