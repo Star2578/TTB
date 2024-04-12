@@ -88,6 +88,7 @@ public class Knight extends BasePlayerPiece {
                         new EffectConfig(0 , 8 , 0 , 1.25) );
 
         System.out.println("Attack success");
+        GUIManager.getInstance().updateGUI();
     }
 
     @Override

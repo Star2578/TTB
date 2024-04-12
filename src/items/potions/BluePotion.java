@@ -29,7 +29,6 @@ public class BluePotion extends BasePotion implements RefillMana {
                 int currentMana = playerPiece.getCurrentMana();
 
                 playerPiece.setCurrentMana(currentMana + MANA_REFILL);
-                GUIManager.getInstance().updateGUI();
             }
         }
     }

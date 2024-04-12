@@ -104,6 +104,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     @Override
     public void takeDamage(int damage) {
         setCurrentHealth(currentHp - damage);
+        GUIManager.getInstance().updateGUI();
     }
     public void decreaseMana(int decrease) {
         this.currentMana = Math.max(0, this.currentMana - decrease);
@@ -176,6 +177,8 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void setCurrentHealth(int health) {
         this.currentHp = Math.max(health, 0);
         this.currentHp = Math.min(getMaxHealth(), currentHp);
+        GUIManager.getInstance().updateGUI();
+
         if (currentHp == 0) onDeath();
     }
     @Override
@@ -185,6 +188,8 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
         if (maxHp == maxHpBuffer) currentHp = maxHp;
         if (maxHp < currentHp) currentHp = maxHp;
+
+        GUIManager.getInstance().updateGUI();
     }
     public int getAttackDamage() {
         return attackDamage;
@@ -204,25 +209,30 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void setCurrentMana(int currentMana) {
         this.currentMana = Math.max(currentMana, 0);
         this.currentMana = Math.min(this.currentMana, getMaxMana());
+        GUIManager.getInstance().updateGUI();
     }
     public int getMaxMana() {
         return maxMana;
     }
     public void setMaxMana(int maxMana) {
         this.maxMana = Math.max(1, maxMana);
+        GUIManager.getInstance().updateGUI();
     }
     public void setCurrentActionPoint(int currentActionPoint) {
         this.currentActionPoint = Math.max(currentActionPoint, 0);
         this.currentActionPoint = Math.min(this.currentActionPoint, getMaxActionPoint());
+        GUIManager.getInstance().updateGUI();
     }
     public void setCurrentActionPointForce(int currentActionPoint) {
         this.currentActionPoint = currentActionPoint;
+        GUIManager.getInstance().updateGUI();
     }
     public int getCurrentActionPoint() {
         return currentActionPoint;
     }
     public void setMaxActionPoint(int maxActionPoint) {
         this.maxActionPoint = Math.max(maxActionPoint, 1);
+        GUIManager.getInstance().updateGUI();
     }
     public int getMaxActionPoint() {
         return maxActionPoint;

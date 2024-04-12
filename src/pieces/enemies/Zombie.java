@@ -104,7 +104,6 @@ public class Zombie extends BaseMonsterPiece{
         GUIManager.getInstance().eventLogDisplay.addLog("Attack Player at " + ATTACK_DAMAGE + " damage!");
 
         playerPiece.takeDamage(ATTACK_DAMAGE);
-        GUIManager.getInstance().updateGUI();
     }
 
     private void moveTowardsPlayer() {

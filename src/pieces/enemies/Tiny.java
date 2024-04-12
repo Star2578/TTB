@@ -103,7 +103,6 @@ public class Tiny extends BaseMonsterPiece{
         GUIManager.getInstance().eventLogDisplay.addLog("Attack Player for " + ATTACK_DAMAGE + " damage!");
 
         playerPiece.takeDamage(ATTACK_DAMAGE);
-        GUIManager.getInstance().updateGUI();
     }
 
     private void moveTowardsPlayer() {

@@ -736,7 +736,6 @@ public class GameScene {
 
     private void normalRoom() {
         player.setCurrentActionPoint(player.getMaxActionPoint());
-        GUIManager.getInstance().updateGUI();
         dungeonGenerator.generateDungeon();
         placeDungeon(dungeonGenerator.getDungeonLayout());
         placeEntityRandomly(player);
@@ -754,7 +753,6 @@ public class GameScene {
         player.setRow(10);
         player.setCol(6);
         player.setCurrentActionPointForce(999); // so player can move freely
-        GUIManager.getInstance().updateGUI();
         precomputeValidMoves();
 
         SpawnerManager.getInstance().spawnDoor(10, 13);
