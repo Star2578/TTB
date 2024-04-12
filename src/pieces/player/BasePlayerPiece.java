@@ -4,6 +4,7 @@ import javafx.animation.TranslateTransition;
 import javafx.beans.Observable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import logic.SpriteAnimation;
 import logic.GameManager;
@@ -25,7 +26,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     protected int currentMana;
     protected int maxMana;
     protected int attackDamage;
-
 
     protected boolean canAct; // status
     protected BaseSkill[] skills; // skill list
@@ -120,7 +120,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
             imageView.setScaleX(direction); // Flipping the image horizontally if direction is -1
         }
     }
-
 
     /******************************************
      *             getter setter

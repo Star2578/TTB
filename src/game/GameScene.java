@@ -5,6 +5,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
 
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -14,6 +15,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 import logic.*;
@@ -326,9 +329,34 @@ public class GameScene {
 
         animationPane.getChildren().add(piece.animationImage);
 
-        if(piece instanceof BasePlayerPiece){
-            GameManager.getInstance().animationPane.getChildren().add(this.player.meleeAttackImage);
-        }
+        if (piece instanceof BasePlayerPiece) {
+            // Place a text "You're here!" above the player
+            Text here = new Text("You're here!\nV");
+            here.setStyle(
+                    "-fx-font-family:x16y32pxGridGazer;" +
+                            "-fx-font-size:24;" +
+                            "-fx-fill:'white';");
+            here.setTextAlignment(TextAlignment.CENTER);
+            here.setX(piece.getCol()*SQUARE_SIZE - 45);
+            here.setY(piece.getRow()*SQUARE_SIZE - 30); // Adjust the Y position to place it above the player
+            animationPane.getChildren().add(here);
+
+            // Animation for the text
+            TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(1), here);
+            translateTransition.setToY(-10); // Move up by 10 pixels
+            translateTransition.setAutoReverse(true); // Move back and forth
+            translateTransition.setCycleCount(TranslateTransition.INDEFINITE); // Repeat indefinitely
+            translateTransition.play();
+
+            // Timeline to make both text and "V" part disappear after 1 second
+            Timeline timeline = new Timeline(new KeyFrame(
+                    Duration.seconds(5),
+                    ae -> {
+                        animationPane.getChildren().remove(here);
+                        translateTransition.stop();
+                    }));
+            timeline.play();
+            }
     }
 
     private void setupMouseEvents() {
