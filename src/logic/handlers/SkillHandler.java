@@ -15,19 +15,21 @@ public class SkillHandler {
     private static GameManager gameManager = GameManager.getInstance();
     private static ImageView[][] selectionFloor;
     private static ArrayList<Point2D> selectedTiles;
+    private static boolean[][] validMovesCache;
     private static ImageScaler imageScaler = new ImageScaler();
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
 
     public static void showValidSkillRange(int playerRow, int playerCol, BaseSkill skillSelected) {
         selectionFloor = gameManager.selectionFloor;
         selectedTiles = gameManager.selectedSkillTiles;
+        validMovesCache = gameManager.validMovesCache;
         int range = skillSelected.getRange();
 
         for (int dRow = -range; dRow <= range; dRow++) {
             for (int dCol = -range; dCol <= range; dCol++) {
                 int newRow = playerRow + dRow;
                 int newCol = playerCol + dCol;
-                if (isInBoardPosition(newRow, newCol) && skillSelected.validRange(newRow, newCol)) {
+                if (validMovesCache[newRow][newCol] && isInBoardPosition(newRow, newCol) && skillSelected.validRange(newRow, newCol)) {
                     if (!skillSelected.castOnSelf()) {
                         if ((newRow == playerRow && newCol == playerCol)) continue;
                     }
