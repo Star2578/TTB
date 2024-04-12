@@ -37,35 +37,6 @@ public class Knight extends BasePlayerPiece {
     }
 
     @Override
-    public void moveWithTransition(int row , int col){
-        //stop player from do other action
-        setCanAct(false);
-        spriteAnimation.changeAnimation(4 , 2);
-        //slowly move to target col,row
-        moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
-        moveTransition.setToY( (row-getRow()) * SQUARE_SIZE + offsetY);
-        GUIManager.getInstance().disableButton();
-
-        moveTransition.setOnFinished(actionEvent->{
-            //set image layering depend on row
-            animationImage.setViewOrder(BOARD_SIZE - row);
-            //move real coordinate to new col,row
-            animationImage.setX(col*SQUARE_SIZE + offsetX);
-            animationImage.setY(row*SQUARE_SIZE + offsetY);
-            //set translateProperty back to default
-            animationImage.translateXProperty().set(offsetX);
-            animationImage.translateYProperty().set(offsetY);
-            //now player can do actions
-            spriteAnimation.changeAnimation(4 , 0);
-            setCanAct(true);
-            GUIManager.getInstance().enableButton();
-            setRow(row);
-            setCol(col);
-        });
-        moveTransition.play();
-    }
-
-    @Override
     public boolean validMove(int row, int col) {
         
         int currentRow = getRow();

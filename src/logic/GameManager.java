@@ -59,7 +59,8 @@ public class GameManager {
     // -------------- Inventory --------------
     public List<BaseItem> inventory = new ArrayList<>();
     public int playerMoney = 0;
-    public boolean[][] doorAt = new boolean[Config.BOARD_SIZE][Config.BOARD_SIZE]; // use to store where the door is at
+    public int dungeonLevel = 0;
+    public List<Point2D> doorAt = new ArrayList<>(); // use to store where the door is at
 
     public final BaseSkill[] UNIVERSAL_SKILL_POOL = {
         new Slash(), new Heal()
@@ -104,6 +105,7 @@ public class GameManager {
     public void GameStart(BasePlayerPiece playerClass) {
         // reset fields
         playerMoney = 0;
+        dungeonLevel = 0;
         player = playerClass;
         for (int i = 0; i < SKILL_SLOTS; i++) {
             if (playerSkills[i] == null) {

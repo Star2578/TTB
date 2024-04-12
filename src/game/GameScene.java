@@ -64,8 +64,7 @@ public class GameScene {
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
     private boolean isPlayerPieceSelected = false;
     private boolean autoCycle = false;
-    private TileMap wallOnFloorTileMap;
-
+    private int dungeonLevel = GameManager.getInstance().dungeonLevel;
 
 
     //------------<UI>----------------------------------------------------
@@ -152,19 +151,6 @@ public class GameScene {
         // Define update logic
         updateLogic = () -> {
             // Update game state
-            if (gameManager.doorAt[player.getRow()][player.getCol()]) {
-                System.out.println("New Floor");
-                generateNewFloor();
-
-                // switch the floor back to normal
-                for (int row = 0; row < Config.BOARD_SIZE; row++) {
-                    for (int col = 0; col < Config.BOARD_SIZE; col++) {
-                        dungeonFloor[row][col].setImage(imageScaler.resample(new Image(Config.FloorPath), 2));;
-                        // reset doorAt to null
-                        gameManager.doorAt[row][col] = false;
-                    }
-                }
-            }
         };
         // Right click anywhere in the scene to cancel/deselect anything
         scene.setOnMouseClicked(mouseEvent -> {
@@ -211,8 +197,6 @@ public class GameScene {
         for (BasePiece entity : environmentPieces) {
             placeEntityRandomly(entity);
         }
-
-        placeEntityRandomly(new Dealer());
     }
 
     private void gameStart() {
@@ -220,7 +204,7 @@ public class GameScene {
         player = GameManager.getInstance().player;
         dungeonGenerator = new DungeonGenerator(); // Initialize DungeonGenerator
         dungeonGenerator.generateDungeon(); // Generate dungeon
-        placeDungeon();
+        placeDungeon(dungeonGenerator.getDungeonLayout());
         placeEntityRandomly(player);
         precomputeValidMoves();
         initializeEnvironment();
@@ -259,9 +243,8 @@ public class GameScene {
         }
     }
 
-    private void placeDungeon() {
+    private void placeDungeon(char [][] dungeonLayout) {
         // Place the walls according to dungeon generated
-        char[][] dungeonLayout = dungeonGenerator.getDungeonLayout();
 
         //make duplicate dungeonLayout of size + 1 , to prevent null border
         char[][] expandedLayout = new char[BOARD_SIZE+2][BOARD_SIZE+2];
@@ -356,7 +339,7 @@ public class GameScene {
                         translateTransition.stop();
                     }));
             timeline.play();
-            }
+        }
     }
 
     private void setupMouseEvents() {
@@ -564,6 +547,7 @@ public class GameScene {
             if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
                 GUIManager.getInstance().eventLogDisplay.addLog("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
+
             } else {
                 System.out.println("Invalid move");
             }
@@ -730,13 +714,53 @@ public class GameScene {
         });
     }
 
-    private void generateNewFloor() {
+    public void generateNewFloor() {
+        dungeonLevel += 1;
+
+        // switch the floor back to normal
+        for (Point2D coordinate : gameManager.doorAt) {
+            int row = (int) coordinate.getX();
+            int col = (int) coordinate.getY();
+
+            dungeonFloor[row][col].setImage(imageScaler.resample(new Image(Config.FloorPath), 2));
+        }
+        gameManager.doorAt.clear();
+
         removeElements();
+        if (dungeonLevel % 5 != 0) {
+            normalRoom();
+        } else {
+            safeRoom();
+        }
+    }
+
+    private void normalRoom() {
+        player.setCurrentActionPoint(player.getMaxActionPoint());
+        GUIManager.getInstance().updateGUI();
         dungeonGenerator.generateDungeon();
-        placeDungeon();
+        placeDungeon(dungeonGenerator.getDungeonLayout());
         placeEntityRandomly(player);
         precomputeValidMoves();
         initializeEnvironment();
+    }
+
+    private void safeRoom() {
+        placeDungeon(Config.safeRoom);
+
+        Dealer dealer = new Dealer();
+        dealer.setRow(7);
+        dealer.setCol(9);
+
+        player.setRow(10);
+        player.setCol(6);
+        player.setCurrentActionPointForce(999); // so player can move freely
+        GUIManager.getInstance().updateGUI();
+        precomputeValidMoves();
+
+        SpawnerManager.getInstance().spawnDoor(10, 13);
+
+        placePiece(player);
+        placePiece(dealer);
     }
 
     private void startAutoCycle() {
