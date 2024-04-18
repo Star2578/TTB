@@ -34,7 +34,7 @@ public class Necromancer extends BaseMonsterPiece{
         currentState = Necromancer.State.NEUTRAL_ROAMING;
 
         //configs values for animation
-        setupAnimation(Config.NecromancerPath, 0, -4, 32, 32);
+        setupAnimation(Config.NecromancerPath, 0, -12, 32, 48, true);
     }
 
     // Method to update the state of the Necromancer based on the player's position

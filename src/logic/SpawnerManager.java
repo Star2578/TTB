@@ -23,7 +23,7 @@ public class SpawnerManager {
     public SpawnerManager() {
         initialize();
         monsterPool_1 = new BaseMonsterPiece[]{
-                new Bomber(), new Tiny(), new Zombie(), new Skeleton()
+                new Bomber(), new Tiny(), new Zombie(), new Skeleton(), new Vampire(), new Necromancer()
         };
     }
 

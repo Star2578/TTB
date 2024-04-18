@@ -38,7 +38,7 @@ public class Vampire extends BaseMonsterPiece{
         currentState = State.NEUTRAL_ROAMING;
 
         //configs values for animation
-        setupAnimation(Config.VampirePath, 0, -4, 32, 32);
+        setupAnimation(Config.VampirePath, 0, -12, 32, 48, true);
     }
 
     // Method to update the state of the Vampire based on the player's position
