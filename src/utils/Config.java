@@ -37,6 +37,10 @@ public class Config {
     public static String ZombieAnimationPath = "sprites/enemies/zombie_sprite_sheet.png";
     public static String BomberAnimationPath = "sprites/enemies/bomber_sprite_sheet.png";
     public static String BombAnimationPath = "sprites/objects/bomb/bomb_f0.png";
+    public  static  String NecromancerPath = "sprites/enemies/necromancer_sprite_sheet.png";
+    public  static  String SkeletonPath = "sprites/enemies/skeleton_sprite_sheet.png";
+    public  static  String SkeletonPath1 = "sprites/enemies/test2_image_skeleton.png";
+    public  static  String VampirePath = "sprites/enemies/vampire_sprite_sheet.png";
 
     // NPC
     public static String DealerPortraitPath = "sprites/npc/dealer_portrait.png";
