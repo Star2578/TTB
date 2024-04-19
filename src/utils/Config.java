@@ -1,10 +1,5 @@
 package utils;
 
-import items.BaseItem;
-import items.potions.BluePotion;
-import skills.BaseSkill;
-import skills.knight.Slash;
-
 public class Config {
     public static String PlaceholderPath = "sprites/placeholder.png";
     public static String FramePath = "sprites/frame.png";
@@ -69,6 +64,8 @@ public class Config {
     public static String meleeAttackPath = "sprites/attacks/common_melee_attack.png";
     public static String skillSlashPath = "sprites/attacks/skill_slash.png";
 
+    // SFX
+    public static String sfx_attackSound = "res/SFX/attack/JDSherbert - Ultimate UI SFX Pack - Swipe - 2.wav";
 
     public enum ENTITY_TYPE {
         PLAYER, MONSTER, TRAP, NPC, WALL

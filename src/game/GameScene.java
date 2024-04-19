@@ -430,6 +430,7 @@ public class GameScene {
                     // Perform the attack on the monster
                     if (enoughMana && enoughActionPoint) {
                         GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedSkill.getName() + " on " + monsterPiece.getClass().getSimpleName());
+                        SoundManager.getInstance().playSoundEffect(Config.sfx_attackSound);
                         gameManager.selectedSkill.perform(monsterPiece);
                     } else {
                         System.out.println("Not enough mana or action point");
@@ -547,7 +548,7 @@ public class GameScene {
             if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
                 GUIManager.getInstance().eventLogDisplay.addLog("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
-
+                SoundManager.getInstance().playSoundEffect("res/SFX/walk/8bit-blip1.wav");
             } else {
                 System.out.println("Invalid move");
             }
@@ -759,6 +760,7 @@ public class GameScene {
 
         placePiece(player);
         placePiece(dealer);
+        piecesPosition[7][9] = dealer;
     }
 
     private void startAutoCycle() {
