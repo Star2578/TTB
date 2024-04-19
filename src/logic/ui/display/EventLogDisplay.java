@@ -44,6 +44,10 @@ public class EventLogDisplay implements Display{
 
     public void addLog(String msg) {
         Text text = new Text(msg);
+        text.setStyle(
+                "-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:16;" +
+                "-fx-text-fill:'white';");
         text.setFill(Color.WHITE);
         text.setWrappingWidth(260);
 
