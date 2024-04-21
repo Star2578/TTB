@@ -8,6 +8,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 import logic.SceneManager;
+import logic.SoundManager;
+import utils.Config;
 
 public class MainMenu {
     Scene scene;
@@ -71,6 +73,8 @@ public class MainMenu {
 
 
         playBtn.setOnAction(actionEvent -> {
+            // switch bgm
+            SoundManager.getInstance().changeBackgroundMusic(Config.bgm_8_bit_adventure);
             //start and switch to the game scene
             SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getGameScene());
         });

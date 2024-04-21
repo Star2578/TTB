@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import logic.SoundManager;
 import logic.SpriteAnimation;
 import logic.GameManager;
 import logic.ui.GUIManager;
@@ -18,8 +19,7 @@ import utils.Config;
 
 import java.util.List;
 
-import static utils.Config.BOARD_SIZE;
-import static utils.Config.SQUARE_SIZE;
+import static utils.Config.*;
 
 public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     // Player stats
@@ -104,6 +104,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     @Override
     public void takeDamage(int damage) {
         setCurrentHealth(currentHp - damage);
+        SoundManager.getInstance().playSoundEffect(sfx_hurtSound);
         GUIManager.getInstance().updateGUI();
     }
     public void decreaseMana(int decrease) {

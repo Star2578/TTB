@@ -88,8 +88,6 @@ public class GameScene {
         scene = new Scene(root, 1280, 720);
         scene.getStylesheets().add(getClass().getResource("/CSSs/BottomLeftGUI.css").toExternalForm());
 
-
-
         tilePane.setMinSize(GAME_SIZE,GAME_SIZE);
         tilePane.setMaxSize(GAME_SIZE,GAME_SIZE);
         tilePane.setDisable(true);
@@ -403,6 +401,7 @@ public class GameScene {
                 // Check if there is a monster on the clicked square
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     // Perform the attack on the monster
+                    SoundManager.getInstance().playSoundEffect(Config.sfx_attackSound);
                     player.attack(monsterPiece);
                     GUIManager.getInstance().eventLogDisplay.addLog("Player attack " + monsterPiece.getClass().getSimpleName() + " at (" + row + ", " + col + ")");
                     exitAttackMode();
@@ -430,7 +429,6 @@ public class GameScene {
                     // Perform the attack on the monster
                     if (enoughMana && enoughActionPoint) {
                         GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedSkill.getName() + " on " + monsterPiece.getClass().getSimpleName());
-                        SoundManager.getInstance().playSoundEffect(Config.sfx_attackSound);
                         gameManager.selectedSkill.perform(monsterPiece);
                     } else {
                         System.out.println("Not enough mana or action point");
@@ -548,7 +546,7 @@ public class GameScene {
             if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
                 GUIManager.getInstance().eventLogDisplay.addLog("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
-                SoundManager.getInstance().playSoundEffect("res/SFX/walk/8bit-blip1.wav");
+                SoundManager.getInstance().playSoundEffect(Config.sfx_moveSound);
             } else {
                 System.out.println("Invalid move");
             }

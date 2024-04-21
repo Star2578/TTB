@@ -5,6 +5,7 @@ import javafx.scene.text.Font;
 
 import javafx.stage.Stage;
 import logic.*;
+import utils.Config;
 
 
 public class Main extends Application {
@@ -22,6 +23,7 @@ public class Main extends Application {
         Font.loadFont(getClass().getResource("/font/x12y16pxSolidLinker.ttf").toExternalForm(),24);
         Font.loadFont(getClass().getResource("/font/x16y32pxGridGazer.ttf").toExternalForm(),24);
 
+        SoundManager.getInstance().playBackgroundMusic(Config.bgm_8_bit_nostalgia); // BGM
 
         SceneManager sceneManager = SceneManager.getInstance();
         sceneManager.setStage(primaryStage);

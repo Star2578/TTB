@@ -64,8 +64,18 @@ public class Config {
     public static String meleeAttackPath = "sprites/attacks/common_melee_attack.png";
     public static String skillSlashPath = "sprites/attacks/skill_slash.png";
 
+    // BGM
+    public static String bgm_8_bit_adventure = "res/BGM/8_Bit_Adventure.wav";
+    public static String bgm_8_bit_nostalgia = "res/BGM/8_Bit_Nostalgia.wav";
+
     // SFX
-    public static String sfx_attackSound = "res/SFX/attack/JDSherbert - Ultimate UI SFX Pack - Swipe - 2.wav";
+    public static String sfx_attackSound = "res/SFX/attack/Swipe_2_converted.wav";
+    public static String sfx_moveSound = "res/SFX/walk/feet_05.wav";
+    public static String sfx_hurtSound = "res/SFX/hurt/hit_001.wav";
+    public static String sfx_gameOverSound = "res/SFX/gameover/Game Over.wav";
+    public static String sfx_buttonSound = "res/SFX/click/JDSherbert - Ultimate UI SFX Pack - Cursor - 4.wav";
+    public static String sfx_failedSound = "res/SFX/failed/8bit-blip4.wav";
+    public static String sfx_deadSound = "res/SFX/monster/dead/explosion_03.wav";
 
     public enum ENTITY_TYPE {
         PLAYER, MONSTER, TRAP, NPC, WALL
