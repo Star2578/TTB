@@ -5,6 +5,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.SpriteAnimation;
+import logic.effect.EffectConfig;
+import logic.effect.EffectManager;
+import logic.ui.GUIManager;
 import pieces.enemies.BaseMonsterPiece;
 import skills.knight.Heal;
 import skills.knight.Slash;
@@ -29,43 +32,43 @@ public class Wizard extends BasePlayerPiece{
         maxHp = 12;
         currentHp = maxHp;
 
-        attackDamage = 5; // Base attack for player
+        attackDamage = 4; // Base attack for player
 
         //add skill
-//        skills[0] = new Slash();
-//        skills[1] = new Heal();
+        skills[0] = new Slash();
+        skills[1] = new Heal();
         //TODO===========
 
         //configs values for animation
 //        setupAnimation(Config.WizardAnimationPath, 0, -15, 32, 56);
     }
 
-    @Override
-    public void moveWithTransition(int row , int col) {
-        //stop player from do other action
-        setCanAct(false);
-        spriteAnimation.changeAnimation(4, 2);
-        //slowly move to target col,row
-        moveTransition.setToX((col - getCol()) * SQUARE_SIZE + offsetX);
-        moveTransition.setToY((row - getRow()) * SQUARE_SIZE + offsetY);
-
-        moveTransition.setOnFinished(actionEvent -> {
-            //set image layering depend on row
-            animationImage.setViewOrder(BOARD_SIZE - row);
-            //move real coordinate to new col,row
-            animationImage.setX(col * SQUARE_SIZE + offsetX);
-            animationImage.setY(row * SQUARE_SIZE + offsetY);
-            //set translateProperty back to default
-            animationImage.translateXProperty().set(offsetX);
-            animationImage.translateYProperty().set(offsetY);
-            //now player can do actions
-            spriteAnimation.changeAnimation(4, 0);
-            setCanAct(true);
-            setRow(row);
-            setCol(col);
-        });
-        moveTransition.play();
-    }
+//    @Override
+//    public void moveWithTransition(int row , int col) {
+//        //stop player from do other action
+//        setCanAct(false);
+//        spriteAnimation.changeAnimation(4, 2);
+//        //slowly move to target col,row
+//        moveTransition.setToX((col - getCol()) * SQUARE_SIZE + offsetX);
+//        moveTransition.setToY((row - getRow()) * SQUARE_SIZE + offsetY);
+//
+//        moveTransition.setOnFinished(actionEvent -> {
+//            //set image layering depend on row
+//            animationImage.setViewOrder(BOARD_SIZE - row);
+//            //move real coordinate to new col,row
+//            animationImage.setX(col * SQUARE_SIZE + offsetX);
+//            animationImage.setY(row * SQUARE_SIZE + offsetY);
+//            //set translateProperty back to default
+//            animationImage.translateXProperty().set(offsetX);
+//            animationImage.translateYProperty().set(offsetY);
+//            //now player can do actions
+//            spriteAnimation.changeAnimation(4, 0);
+//            setCanAct(true);
+//            setRow(row);
+//            setCol(col);
+//        });
+//        moveTransition.play();
+//    }
 
     @Override
     public boolean validMove(int row, int col) {
@@ -100,20 +103,25 @@ public class Wizard extends BasePlayerPiece{
         monsterPiece.takeDamage(getAttackDamage());
 
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
-        if(currentDirection == -1) {
-            meleeAttackImage.setScaleX(-1);
-        } else {
-            meleeAttackImage.setScaleX(1);
-        }
+//        if(currentDirection == -1) {
+//            meleeAttackImage.setScaleX(-1);
+//        } else {
+//            meleeAttackImage.setScaleX(1);
+//        }
 
-        meleeAttackImage.setX( ( getCol() * SQUARE_SIZE) - ((double) SQUARE_SIZE / 2) - (meleeAttackImage.getFitWidth() / 2) );
-        meleeAttackImage.setY( ( getRow() * SQUARE_SIZE) - ((double) SQUARE_SIZE / 2) - (meleeAttackImage.getFitHeight() / 2) );
-        meleeAttackImage.toFront();
+        EffectManager.getInstance()
+                .renderEffect(EffectManager.TYPE.ON_TARGET,
+                        this,
+                        monsterPiece,
+                        EffectManager.getInstance().createInPlaceEffects(0),
+                        new EffectConfig(0, 8, 0, 1.25));
 
-        //TODO=================================
-
+//        meleeAttackImage.setX( ( getCol() * SQUARE_SIZE) - ((double) SQUARE_SIZE / 2) - (meleeAttackImage.getFitWidth() / 2) );
+//        meleeAttackImage.setY( ( getRow() * SQUARE_SIZE) - ((double) SQUARE_SIZE / 2) - (meleeAttackImage.getFitHeight() / 2) );
+//        meleeAttackImage.toFront();
 
         System.out.println("Attack success");
+        GUIManager.getInstance().updateGUI();
     }
 
     @Override
