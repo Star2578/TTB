@@ -165,7 +165,7 @@ public class Necromancer extends BaseMonsterPiece{
         int newCol = getCol() + dCol;
 
         // If the new position is valid, summon the Zombie there
-        if (isValidMoveSet(newRow, newCol)) {
+        if ((GameManager.getInstance().piecesPosition[newRow][newCol] == null) && (GameManager.getInstance().isEmptySquare(newRow, newCol))) {
             summonZombie(newRow, newCol);
         }
     }
