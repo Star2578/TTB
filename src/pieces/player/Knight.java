@@ -104,6 +104,6 @@ public class Knight extends BasePlayerPiece {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        }).start();;
+        }).start();
     }
 }
