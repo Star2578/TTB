@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
+import logic.GameManager;
 import logic.SceneManager;
 import logic.SoundManager;
 import utils.Config;
@@ -96,6 +97,8 @@ public class MainMenu {
 
         quitBtn.setOnAction(mouseEvent -> {
             SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
+            GameManager.getInstance().saveGame();
+            SoundManager.getInstance().stopBackgroundMusic();
             Platform.exit();
         });
 

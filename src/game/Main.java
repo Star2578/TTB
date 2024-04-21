@@ -59,5 +59,6 @@ public class Main extends Application {
         primaryStage.setScene(mainMenu.getScene());
         fadeTransition.play(); // Start the fade-in animation
         primaryStage.show();
+        primaryStage.setOnCloseRequest(event -> SoundManager.getInstance().stopBackgroundMusic());
     }
 }

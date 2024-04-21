@@ -88,6 +88,7 @@ public class SoundManager {
 
             // Start playing the background music in a new thread
             backgroundMusicThread = new Thread(() -> backgroundMusic.start());
+            backgroundMusicThread.setDaemon(true);
             backgroundMusicThread.start();
         } catch (Exception e) {
             System.out.println("Error with playing background music: " + e.getMessage());

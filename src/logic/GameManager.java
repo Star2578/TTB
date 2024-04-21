@@ -149,7 +149,7 @@ public class GameManager {
         SoundManager.getInstance().playSoundEffect(Config.sfx_gameOverSound);
 
         // Send player back to main menu scene
-        SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getMenuScene());
+        SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getSummaryScene());
     }
 
     public void saveGame() {
