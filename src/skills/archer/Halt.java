@@ -1,4 +1,4 @@
-package skills.knight;
+package skills.archer;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -7,17 +7,17 @@ import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
-import utils.Attack;
 import skills.BaseSkill;
+import utils.Attack;
 import utils.Config;
 
-public class Slash extends BaseSkill implements Attack {
+public class Halt extends BaseSkill implements Attack {
     private BasePiece target;
-    private final int DAMAGE = 10;
-    public Slash() {
-        super("Slash", Color.DARKRED, 2, 2, "A true knight slash doesn't need a sword", Config.Rarity.COMMON);
+    private final int DAMAGE = 6;
+    public Halt() {
+        super("Halt", Color.DARKRED, 5, 2, "In a display of mastery over battlefield tactics, the Archer invokes the Halt skill to bring adversaries to a sudden standstill.", Config.Rarity.COMMON);
         icon = new ImageView(Config.SlashPath);
-        range = 3;
+        range = 5;
     }
 
     @Override
@@ -26,6 +26,8 @@ public class Slash extends BaseSkill implements Attack {
             // Perform Attack
             if (target instanceof BaseMonsterPiece monsterPiece) {
                 monsterPiece.takeDamage(DAMAGE);
+                // Stun monster 1 turn
+                monsterPiece.setStun(1);
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
@@ -71,4 +73,7 @@ public class Slash extends BaseSkill implements Attack {
     public int getAttack() {
         return DAMAGE;
     }
+
+
+
 }

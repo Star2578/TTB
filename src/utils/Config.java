@@ -29,6 +29,7 @@ public class Config {
     // Player
     public static String KnightLargePath = "sprites/player/Knight_Large.png";
     public static String KnightAnimationPath = "sprites/player/knight_sprite_sheet.png";
+    public static String ArcherAnimationPath = "sprites/player/Archer_sprite_sheet.png";
 
     // Enemies
     public static String DeadEffectPath = "sprites/enemies/dead_smoke.png";

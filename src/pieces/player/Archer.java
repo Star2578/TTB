@@ -4,7 +4,10 @@ import logic.ui.GUIManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.enemies.BaseMonsterPiece;
+import skills.archer.Halt;
 import skills.archer.Snipe;
+import skills.archer.Targetlock;
+import skills.archer.Teleport;
 import skills.knight.Heal;
 import skills.knight.Slash;
 import utils.Config;
@@ -14,33 +17,32 @@ import java.util.ArrayList;
 import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
 
-public class Knight extends BasePlayerPiece {
-    public Knight(int row, int col, int defaultDirection) {
+public class Archer extends BasePlayerPiece {
+    public Archer(int row, int col, int defaultDirection) {
         super(row, col, defaultDirection);
 
         maxActionPoint = 10;
         currentActionPoint = maxActionPoint;
 
-        maxMana = 10;
+        maxMana = 15;
         currentMana = maxMana;
 
-        maxHp = 20;
+        maxHp = 15;
         currentHp = maxHp;
 
-        attackDamage = 3; // Base attack for player
+        attackDamage = 5; // Base attack for player
 
         //add skill
         skills[0] = new Slash();
         skills[1] = new Heal();
-        skills[2] = new Snipe();
 
         //configs values for animation
-        setupAnimation(Config.KnightAnimationPath, 0, -15, 32, 56 , true);
+        setupAnimation(Config.ArcherAnimationPath, 0, -12, 32, 48 , true);
     }
 
     @Override
     public boolean validMove(int row, int col) {
-        
+
         int currentRow = getRow();
         int currentCol = getCol();
 
@@ -49,17 +51,17 @@ public class Knight extends BasePlayerPiece {
 
     @Override
     public boolean validAttack(int row, int col) {
-        // For Knight, it's the same as his movement
+        // For Archer, it's the same as his movement
         int currentRow = getRow();
         int currentCol = getCol();
 
-        return Math.abs(row - currentRow) <= 1 && Math.abs(col - currentCol) <= 1;
+        return Math.abs(row - currentRow) <= 4 && Math.abs(col - currentCol) <= 4;
     }
 
     @Override
     public void startTurn() {
         setCanAct(true);
-        setCurrentMana(getCurrentMana() + 1); // Knight restore 1 mana every turn
+        setCurrentMana(getCurrentMana() + 1); // Archer restore 1 mana every turn
         setCurrentActionPoint(getMaxActionPoint());
     }
 
@@ -106,6 +108,6 @@ public class Knight extends BasePlayerPiece {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        }).start();
+        }).start();;
     }
 }
