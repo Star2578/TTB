@@ -19,9 +19,10 @@ public class Setting {
     public static Scene setting(Stage stage, Scene previousScene) {
         // Create UI elements for the settings scene
         Button backButton = new Button("Back");
-        backButton.getStyleClass().add("menu-button-2");
         VBox settingsRoot = new VBox();
         settingsRoot.setAlignment(Pos.TOP_RIGHT);
+        settingsRoot.setPrefWidth(1280);
+        settingsRoot.setPrefHeight(720);
 
         // Volume sliders for background music and SFX
         Slider bgMusicSlider = new Slider();
