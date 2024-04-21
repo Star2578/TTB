@@ -73,7 +73,7 @@ public class Config {
     public static String sfx_moveSound = "res/SFX/walk/feet_05.wav";
     public static String sfx_hurtSound = "res/SFX/hurt/hit_001.wav";
     public static String sfx_gameOverSound = "res/SFX/gameover/Game Over.wav";
-    public static String sfx_buttonSound = "res/SFX/click/JDSherbert - Ultimate UI SFX Pack - Cursor - 4.wav";
+    public static String sfx_buttonSound = "res/SFX/click/click.wav";
     public static String sfx_failedSound = "res/SFX/failed/8bit-blip4.wav";
     public static String sfx_deadSound = "res/SFX/monster/dead/explosion_03.wav";
 

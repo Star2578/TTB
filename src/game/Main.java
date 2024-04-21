@@ -1,9 +1,12 @@
 package game;
 
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import logic.*;
 import utils.Config;
 
@@ -23,8 +26,6 @@ public class Main extends Application {
         Font.loadFont(getClass().getResource("/font/x12y16pxSolidLinker.ttf").toExternalForm(),24);
         Font.loadFont(getClass().getResource("/font/x16y32pxGridGazer.ttf").toExternalForm(),24);
 
-        SoundManager.getInstance().playBackgroundMusic(Config.bgm_8_bit_nostalgia); // BGM
-
         SceneManager sceneManager = SceneManager.getInstance();
         sceneManager.setStage(primaryStage);
 
@@ -40,6 +41,23 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.setScene(mainMenu.getScene());
         primaryStage.setTitle("Dungeon Crawler");
+
+        primaryStage.getScene().setFill(Color.BLACK);
+
+        // Create a FadeTransition when entering the game
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), mainMenu.getScene().getRoot());
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(1);
+        fadeTransition.setOnFinished(event -> {
+            // This code block will run after the fade transition finishes
+            SoundManager.getInstance().playBackgroundMusic(Config.bgm_8_bit_nostalgia); // Play background music after the fade-in
+            System.out.println("bg music vol: " + SoundManager.getInstance().getBackgroundMusicVolume());
+        });
+
+
+        // Show the primaryStage after configuring the fade transition
+        primaryStage.setScene(mainMenu.getScene());
+        fadeTransition.play(); // Start the fade-in animation
         primaryStage.show();
     }
 }

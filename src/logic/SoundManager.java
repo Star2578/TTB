@@ -19,7 +19,6 @@ public class SoundManager {
     private float backgroundMusicVolume = MID_DECIBEL;
     private float backgroundMusicSlider = 50.0f;
 
-    private final GameManager gameManager = GameManager.getInstance();
     private AudioInputStream audioInputStream;
     private Clip backgroundMusic;
     private Thread backgroundMusicThread;
@@ -52,7 +51,7 @@ public class SoundManager {
             // Open audio clip and load samples from the audio input stream
             clip.open(audioInputStream);
 
-//            adjustSoundEffectVolume(clip, gameManager.getSoundEffectVolume());
+            adjustSoundEffectVolume(clip, getSoundEffectVolume());
 
             // Play the sound in a separate thread
             new Thread(() -> {
@@ -85,7 +84,7 @@ public class SoundManager {
             // Set the clip to loop indefinitely
             backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
 
-//            adjustBackgroundMusicVolume(gameManager.getBackgroundMusicVolume());
+            adjustBackgroundMusicVolume(backgroundMusicVolume);
 
             // Start playing the background music in a new thread
             backgroundMusicThread = new Thread(() -> backgroundMusic.start());
@@ -149,5 +148,27 @@ public class SoundManager {
         sfx = choices[choose];
 
         return sfx;
+    }
+
+    public float getBackgroundMusicVolume() { return backgroundMusicVolume; }
+    public void setBackgroundMusicVolume(float backgroundMusicVolume) { this.backgroundMusicVolume = backgroundMusicVolume; }
+
+    public float getSoundEffectVolume() { return soundEffectVolume; }
+    public void setSoundEffectVolume(float soundEffectVolume) { this.soundEffectVolume = soundEffectVolume; }
+
+    public float getBackgroundMusicSlider() { return backgroundMusicSlider; }
+    public void setBackgroundMusicSlider(float backgroundMusicSlider) { this.backgroundMusicSlider = backgroundMusicSlider; }
+
+    public float getSoundEffectSlider() { return soundEffectSlider; }
+    public void setSoundEffectSlider(float soundEffectSlider) { this.soundEffectSlider = soundEffectSlider; }
+
+    public static float getMidDecibel() {
+        return MID_DECIBEL;
+    }
+    public static float getMaxDecibel() {
+        return MAX_DECIBEL;
+    }
+    public static float getMinDecibel() {
+        return MIN_DECIBEL;
     }
 }

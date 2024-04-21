@@ -152,31 +152,6 @@ public class GameManager {
         SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getMenuScene());
     }
 
-    private void loadSettings() {
-        // Implement loading settings from file
-        try (InputStream input = new FileInputStream(CONFIG_FILE_PATH)) {
-            settingProperties.load(input);
-
-            // Load settings from properties
-
-        } catch (IOException e) {
-            System.out.println("Error when loading game setting:" + e.getMessage());
-        }
-    }
-    private void saveSettings() {
-        // Implement saving settings to file
-        try (OutputStream output = new FileOutputStream(CONFIG_FILE_PATH)) {
-            // Save settings to properties
-
-            // Save other settings...
-
-            settingProperties.store(output, "Game Settings");
-
-        } catch (IOException e) {
-            System.out.println("Error when saving game settings:" + e.getMessage());
-        }
-    }
-
     public void saveGame() {
         // save the game progression
         try (OutputStream output = new FileOutputStream(PROGRESSION_FILE_PATH)) {
@@ -200,6 +175,39 @@ public class GameManager {
 
         } catch (IOException e) {
             System.out.println("Error when loading game progression:" + e.getMessage());
+        }
+    }
+
+    public void loadSettings() {
+        // Implement loading settings from file
+        try (InputStream input = new FileInputStream(CONFIG_FILE_PATH)) {
+            settingProperties.load(input);
+
+            // Load settings from properties
+            SoundManager.getInstance().setBackgroundMusicSlider(Float.parseFloat(settingProperties.getProperty("backgroundMusicSlider", "50")));
+            SoundManager.getInstance().setBackgroundMusicVolume(Float.parseFloat(settingProperties.getProperty("backgroundMusicVolume", String.valueOf(SoundManager.getMidDecibel()))));
+            SoundManager.getInstance().setSoundEffectSlider(Float.parseFloat(settingProperties.getProperty("soundEffectSlider", "50")));
+            SoundManager.getInstance().setSoundEffectVolume(Float.parseFloat(settingProperties.getProperty("soundEffectVolume", String.valueOf(SoundManager.getMidDecibel()))));
+            // Load other settings...
+
+        } catch (IOException e) {
+            System.out.println("Error when loading game setting:" + e.getMessage());
+        }
+    }
+    public void saveSettings() {
+        // Implement saving settings to file
+        try (OutputStream output = new FileOutputStream(CONFIG_FILE_PATH)) {
+            // Save settings to properties
+            settingProperties.setProperty("backgroundMusicVolume", String.valueOf(SoundManager.getInstance().getBackgroundMusicVolume()));
+            settingProperties.setProperty("backgroundMusicSlider", String.valueOf(SoundManager.getInstance().getBackgroundMusicSlider()));
+            settingProperties.setProperty("soundEffectVolume", String.valueOf(SoundManager.getInstance().getSoundEffectVolume()));
+            settingProperties.setProperty("soundEffectSlider", String.valueOf(SoundManager.getInstance().getSoundEffectSlider()));
+            // Save other settings...
+
+            settingProperties.store(output, "Game Settings");
+
+        } catch (IOException e) {
+            System.out.println("Error when saving game settings:" + e.getMessage());
         }
     }
 }
