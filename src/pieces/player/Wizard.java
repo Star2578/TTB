@@ -11,9 +11,13 @@ import logic.ui.GUIManager;
 import pieces.enemies.BaseMonsterPiece;
 import skills.knight.Heal;
 import skills.knight.Slash;
+import skills.wizard.Fireball;
+import skills.wizard.IceShield;
+import skills.wizard.RainOfFire;
 import utils.Config;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
@@ -22,6 +26,7 @@ public class Wizard extends BasePlayerPiece{
 
     public Wizard(int row, int col, int defaultDirection) {
         super(row, col, defaultDirection);
+        buffturn = 0;
 
         maxActionPoint = 10;
         currentActionPoint = maxActionPoint;
@@ -35,40 +40,14 @@ public class Wizard extends BasePlayerPiece{
         attackDamage = 4; // Base attack for player
 
         //add skill
-        skills[0] = new Slash();
-        skills[1] = new Heal();
+        skills[0] = new Fireball();
+        skills[1] = new IceShield();
+        skills[2] = new RainOfFire();
         //TODO===========
 
         //configs values for animation
-//        setupAnimation(Config.WizardAnimationPath, 0, -15, 32, 56);
+        setupAnimation(Config.WizardAnimationPath, 0, -12, 32, 56, true);
     }
-
-//    @Override
-//    public void moveWithTransition(int row , int col) {
-//        //stop player from do other action
-//        setCanAct(false);
-//        spriteAnimation.changeAnimation(4, 2);
-//        //slowly move to target col,row
-//        moveTransition.setToX((col - getCol()) * SQUARE_SIZE + offsetX);
-//        moveTransition.setToY((row - getRow()) * SQUARE_SIZE + offsetY);
-//
-//        moveTransition.setOnFinished(actionEvent -> {
-//            //set image layering depend on row
-//            animationImage.setViewOrder(BOARD_SIZE - row);
-//            //move real coordinate to new col,row
-//            animationImage.setX(col * SQUARE_SIZE + offsetX);
-//            animationImage.setY(row * SQUARE_SIZE + offsetY);
-//            //set translateProperty back to default
-//            animationImage.translateXProperty().set(offsetX);
-//            animationImage.translateYProperty().set(offsetY);
-//            //now player can do actions
-//            spriteAnimation.changeAnimation(4, 0);
-//            setCanAct(true);
-//            setRow(row);
-//            setCol(col);
-//        });
-//        moveTransition.play();
-//    }
 
     @Override
     public boolean validMove(int row, int col) {
@@ -83,6 +62,19 @@ public class Wizard extends BasePlayerPiece{
     @Override
     public void startTurn() {
         setCanAct(true);
+        // Check if the player has any effect
+        for(Map.Entry<String, Integer> entry : EffectBuffs.entrySet()) {
+            String BuffName = entry.getKey();
+            int duration = EffectBuffs.get(BuffName);
+            if (duration > 0) {
+                duration--; // Decrement the duration
+                EffectBuffs.put(BuffName, duration);
+            }
+            if (duration == 0) {
+                EffectBuffs.remove(BuffName);
+            }
+            System.out.println(BuffName + " " + duration);
+        }
         setCurrentMana(getCurrentMana() + 1); // Wizard restore 1 mana every turn
         setCurrentActionPoint(getMaxActionPoint());
     }
@@ -103,22 +95,12 @@ public class Wizard extends BasePlayerPiece{
         monsterPiece.takeDamage(getAttackDamage());
 
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
-//        if(currentDirection == -1) {
-//            meleeAttackImage.setScaleX(-1);
-//        } else {
-//            meleeAttackImage.setScaleX(1);
-//        }
-
         EffectManager.getInstance()
-                .renderEffect(EffectManager.TYPE.ON_TARGET,
+                .renderEffect(EffectManager.TYPE.AROUND_SELF,
                         this,
                         monsterPiece,
                         EffectManager.getInstance().createInPlaceEffects(0),
                         new EffectConfig(0, 8, 0, 1.25));
-
-//        meleeAttackImage.setX( ( getCol() * SQUARE_SIZE) - ((double) SQUARE_SIZE / 2) - (meleeAttackImage.getFitWidth() / 2) );
-//        meleeAttackImage.setY( ( getRow() * SQUARE_SIZE) - ((double) SQUARE_SIZE / 2) - (meleeAttackImage.getFitHeight() / 2) );
-//        meleeAttackImage.toFront();
 
         System.out.println("Attack success");
         GUIManager.getInstance().updateGUI();
@@ -126,7 +108,17 @@ public class Wizard extends BasePlayerPiece{
 
     @Override
     public void takeDamage(int damage) {
+        System.out.println("Damage taken: " + damage);
+
+        //Check if the player has any effect
+        if(EffectBuffs != null) {
+            if(EffectBuffs.containsKey("Ice Shield")) {
+                damage = (damage * 60) / 100;
+                System.out.println("Damage reduced by 40% : " + damage);
+            }
+        }
         super.takeDamage(damage);
+
 
         spriteAnimation.changeAnimation(1, 1);
         new Thread(() -> {
