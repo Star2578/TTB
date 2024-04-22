@@ -3,10 +3,10 @@ package game;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import logic.GameManager;
 import logic.SoundManager;
@@ -19,8 +19,11 @@ public class Setting {
     public static Scene setting(Stage stage, Scene previousScene) {
         // Create UI elements for the settings scene
         Button backButton = new Button("Back");
+        VBox.setMargin(backButton, new Insets(10));
+
         VBox settingsRoot = new VBox();
         settingsRoot.setAlignment(Pos.TOP_RIGHT);
+        settingsRoot.setBackground(Background.fill(Paint.valueOf("#300c17")));
         settingsRoot.setPrefWidth(1280);
         settingsRoot.setPrefHeight(720);
 
@@ -58,16 +61,26 @@ public class Setting {
 
         // Text labels for sliders and combo box
         Label bgMusicLabel = new Label("Background Music Volume:");
+        bgMusicLabel.setStyle(
+                "-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:16;" +
+                "-fx-text-fill:'white';");
         Label sfxLabel = new Label("SFX Volume:");
+        sfxLabel.setStyle(
+                "-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:16;" +
+                "-fx-text-fill:'white';");
 
         VBox settingsContainer = new VBox(bgMusicLabel, bgMusicSlider, sfxLabel, sfxSlider);
         settingsContainer.setPadding(new Insets(40));
+        settingsContainer.setSpacing(10);
 
         // Add labels and components to the settingsRoot VBox
         settingsRoot.getChildren().addAll(backButton, settingsContainer);
 
         // Create a new scene for settings
         Scene settingsScene = new Scene(settingsRoot);
+        settingsRoot.getStylesheets().add(Setting.class.getResource("/CSSs/BottomLeftGUI.css").toExternalForm());
 
         // Handle action for the "Back" button to return to the main menu
         backButton.setOnAction(e -> {
@@ -76,6 +89,86 @@ public class Setting {
             stage.setScene(previousScene); // Return to the previous scene
         });
 
+//        ComboBox<Music> bgMusicSelector = new ComboBox<>();
+//        bgMusicSelector.getItems().addAll(
+//                new Music("8 Bit Adventure", "res/BGM/8_Bit_Adventure.wav"),
+//                new Music("8 Bit Nostalgia", "res/BGM/8_Bit_Nostalgia.wav")
+//        );
+//        bgMusicSelector.setValue(new Music("8 Bit Nostalgia", "res/BGM/8_Bit_Nostalgia.wav")); // Set default value
+//
+//        // Event listener for background music selector
+//        bgMusicSelector.setOnAction(event -> {
+//            Music selectedMusic = bgMusicSelector.getValue();
+//            soundManager.changeBackgroundMusic(selectedMusic.getPath());
+//        });
+//
+//        // Add the background music selector to the settingsContainer
+//        settingsContainer.getChildren().add(bgMusicSelector);
+
+        CheckBox fastUseCheckbox = new CheckBox("Fast Use on Self");
+        fastUseCheckbox.setStyle(
+                        "-fx-font-family:x16y32pxGridGazer;" +
+                        "-fx-font-size:16;" +
+                        "-fx-text-fill:'white';");
+        fastUseCheckbox.setSelected(GameManager.getInstance().fastUse);
+        CheckBox autoEndTurnCheckbox = new CheckBox("Auto End Turn");
+        autoEndTurnCheckbox.setStyle(
+                        "-fx-font-family:x16y32pxGridGazer;" +
+                        "-fx-font-size:16;" +
+                        "-fx-text-fill:'white';");
+        autoEndTurnCheckbox.setSelected(GameManager.getInstance().autoEndTurn);
+        CheckBox displayDamageNumbersCheckbox = new CheckBox("Display Damage Numbers");
+        displayDamageNumbersCheckbox.setStyle(
+                        "-fx-font-family:x16y32pxGridGazer;" +
+                        "-fx-font-size:16;" +
+                        "-fx-text-fill:'white';");
+        displayDamageNumbersCheckbox.setSelected(GameManager.getInstance().displayDamageNumber);
+
+        // Event listeners for option checkboxes
+        fastUseCheckbox.setOnAction(event -> {
+            // Handle the fast use on self option
+            // Your logic here...
+            GameManager.getInstance().fastUse = fastUseCheckbox.isSelected();
+        });
+
+        autoEndTurnCheckbox.setOnAction(event -> {
+            // Handle the auto end turn option
+            // Your logic here...
+            GameManager.getInstance().autoEndTurn = autoEndTurnCheckbox.isSelected();
+        });
+
+        displayDamageNumbersCheckbox.setOnAction(event -> {
+            // Handle the display damage numbers option
+            // Your logic here...
+            GameManager.getInstance().displayDamageNumber = displayDamageNumbersCheckbox.isSelected();
+        });
+
+        // Add checkboxes to the settingsContainer
+        settingsContainer.getChildren().addAll(fastUseCheckbox, autoEndTurnCheckbox, displayDamageNumbersCheckbox);
+
         return settingsScene;
+    }
+
+    public static class Music {
+        private final String name;
+        private final String path;
+
+        public Music(String name, String path) {
+            this.name = name;
+            this.path = path;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }

@@ -29,6 +29,11 @@ public class GameManager {
     private static final String CONFIG_FILE_PATH = "config.properties";
     private static final String PROGRESSION_FILE_PATH = "config.progression";
 
+    // -------- Settings ---------
+    public boolean fastUse;
+    public boolean autoEndTurn;
+    public boolean displayDamageNumber;
+
     public GameScene gameScene;
     public Pane animationPane;
 
@@ -188,6 +193,9 @@ public class GameManager {
             SoundManager.getInstance().setBackgroundMusicVolume(Float.parseFloat(settingProperties.getProperty("backgroundMusicVolume", String.valueOf(SoundManager.getMidDecibel()))));
             SoundManager.getInstance().setSoundEffectSlider(Float.parseFloat(settingProperties.getProperty("soundEffectSlider", "50")));
             SoundManager.getInstance().setSoundEffectVolume(Float.parseFloat(settingProperties.getProperty("soundEffectVolume", String.valueOf(SoundManager.getMidDecibel()))));
+            fastUse = Boolean.parseBoolean(settingProperties.getProperty("_fastUse", String.valueOf(false)));
+            autoEndTurn = Boolean.parseBoolean(settingProperties.getProperty("_autoEndTurn", String.valueOf(false)));
+            displayDamageNumber = Boolean.parseBoolean(settingProperties.getProperty("_displayDamageNumber", String.valueOf(false)));
             // Load other settings...
 
         } catch (IOException e) {
@@ -202,6 +210,9 @@ public class GameManager {
             settingProperties.setProperty("backgroundMusicSlider", String.valueOf(SoundManager.getInstance().getBackgroundMusicSlider()));
             settingProperties.setProperty("soundEffectVolume", String.valueOf(SoundManager.getInstance().getSoundEffectVolume()));
             settingProperties.setProperty("soundEffectSlider", String.valueOf(SoundManager.getInstance().getSoundEffectSlider()));
+            settingProperties.setProperty("_fastUse", String.valueOf(fastUse));
+            settingProperties.setProperty("_autoEndTurn", String.valueOf(autoEndTurn));
+            settingProperties.setProperty("_displayDamageNumber", String.valueOf(displayDamageNumber));
             // Save other settings...
 
             settingProperties.store(output, "Game Settings");
