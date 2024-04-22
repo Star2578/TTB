@@ -19,7 +19,9 @@ public class BaseItem {
 
     protected Config.Rarity rarity;
 
-    protected BaseItem(String name, Color nameColor, String iconPath, String description, Config.Rarity rarity) {
+    protected String sfxPath;
+
+    protected BaseItem(String name, Color nameColor, String iconPath, String description, Config.Rarity rarity, String sfxPath) {
         ImageScaler imageScaler = new ImageScaler();
 
         this.name = name;
@@ -29,6 +31,7 @@ public class BaseItem {
         this.description = description;
         this.rarity = rarity;
         this.price = priceGenerator();
+        this.sfxPath = sfxPath;
     }
 
     private int priceGenerator() {
