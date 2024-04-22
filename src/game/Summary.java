@@ -9,7 +9,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import logic.GameManager;
+import logic.SceneManager;
+import logic.SoundManager;
 import pieces.player.Knight;
+import utils.Config;
 
 public class Summary {
     private Scene scene;
@@ -55,6 +58,8 @@ public class Summary {
         menuButton.setOnAction(e -> {
             // Add action to return to the menu
             System.out.println("Return to Menu button clicked");
+            SceneManager.getInstance().switchSceneTo(SceneManager.getInstance().getMenuScene());
+            SoundManager.getInstance().changeBackgroundMusic(Config.bgm_8_bit_nostalgia);
         });
 
         // Add nodes to root pane

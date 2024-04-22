@@ -2,9 +2,12 @@ package pieces.player;
 
 import javafx.animation.TranslateTransition;
 import javafx.beans.Observable;
+import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
+import logic.SoundManager;
 import logic.SpriteAnimation;
 import logic.GameManager;
 import logic.ui.GUIManager;
@@ -16,6 +19,8 @@ import utils.Config;
 
 import java.util.List;
 
+import static utils.Config.*;
+
 public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     // Player stats
     protected int currentHp;
@@ -25,7 +30,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     protected int currentMana;
     protected int maxMana;
     protected int attackDamage;
-
 
     protected boolean canAct; // status
     protected BaseSkill[] skills; // skill list
@@ -100,6 +104,8 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     @Override
     public void takeDamage(int damage) {
         setCurrentHealth(currentHp - damage);
+        SoundManager.getInstance().playSoundEffect(sfx_hurtSound);
+        GUIManager.getInstance().updateGUI();
     }
     public void decreaseMana(int decrease) {
         this.currentMana = Math.max(0, this.currentMana - decrease);
@@ -121,6 +127,41 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         }
     }
 
+    @Override
+    public void moveWithTransition(int row , int col){
+        //stop player from do other action
+        setCanAct(false);
+        spriteAnimation.changeAnimation(4 , 2);
+        //slowly move to target col,row
+        moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
+        moveTransition.setToY( (row-getRow()) * SQUARE_SIZE + offsetY);
+        GUIManager.getInstance().disableButton();
+
+        moveTransition.setOnFinished(actionEvent->{
+            //set image layering depend on row
+            animationImage.setViewOrder(BOARD_SIZE - row);
+            //move real coordinate to new col,row
+            animationImage.setX(col*SQUARE_SIZE + offsetX);
+            animationImage.setY(row*SQUARE_SIZE + offsetY);
+            //set translateProperty back to default
+            animationImage.translateXProperty().set(offsetX);
+            animationImage.translateYProperty().set(offsetY);
+            //now player can do actions
+            spriteAnimation.changeAnimation(4 , 0);
+            setCanAct(true);
+            GUIManager.getInstance().enableButton();
+            setRow(row);
+            setCol(col);
+
+            for (Point2D coordinate : GameManager.getInstance().doorAt) {
+                if (coordinate.getX() == getRow() && coordinate.getY() == getCol()) {
+                    GameManager.getInstance().gameScene.generateNewFloor();
+                    break;
+                }
+            }
+        });
+        moveTransition.play();
+    }
 
     /******************************************
      *             getter setter
@@ -137,6 +178,8 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void setCurrentHealth(int health) {
         this.currentHp = Math.max(health, 0);
         this.currentHp = Math.min(getMaxHealth(), currentHp);
+        GUIManager.getInstance().updateGUI();
+
         if (currentHp == 0) onDeath();
     }
     @Override
@@ -146,6 +189,8 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
         if (maxHp == maxHpBuffer) currentHp = maxHp;
         if (maxHp < currentHp) currentHp = maxHp;
+
+        GUIManager.getInstance().updateGUI();
     }
     public int getAttackDamage() {
         return attackDamage;
@@ -165,22 +210,30 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void setCurrentMana(int currentMana) {
         this.currentMana = Math.max(currentMana, 0);
         this.currentMana = Math.min(this.currentMana, getMaxMana());
+        GUIManager.getInstance().updateGUI();
     }
     public int getMaxMana() {
         return maxMana;
     }
     public void setMaxMana(int maxMana) {
         this.maxMana = Math.max(1, maxMana);
+        GUIManager.getInstance().updateGUI();
     }
     public void setCurrentActionPoint(int currentActionPoint) {
         this.currentActionPoint = Math.max(currentActionPoint, 0);
         this.currentActionPoint = Math.min(this.currentActionPoint, getMaxActionPoint());
+        GUIManager.getInstance().updateGUI();
+    }
+    public void setCurrentActionPointForce(int currentActionPoint) {
+        this.currentActionPoint = currentActionPoint;
+        GUIManager.getInstance().updateGUI();
     }
     public int getCurrentActionPoint() {
         return currentActionPoint;
     }
     public void setMaxActionPoint(int maxActionPoint) {
         this.maxActionPoint = Math.max(maxActionPoint, 1);
+        GUIManager.getInstance().updateGUI();
     }
     public int getMaxActionPoint() {
         return maxActionPoint;

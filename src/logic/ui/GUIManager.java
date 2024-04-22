@@ -26,7 +26,7 @@ import utils.Config;
 
 public class GUIManager {
 
-    public static GUIManager instance;
+    private static GUIManager instance;
 
     private TurnManager turnManager;
     private BasePlayerPiece player;

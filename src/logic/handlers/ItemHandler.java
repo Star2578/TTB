@@ -15,11 +15,13 @@ public class ItemHandler {
     private static GameManager gameManager = GameManager.getInstance();
     private static ImageView[][] selectionFloor;
     private static ArrayList<Point2D> selectedTiles;
+    private static boolean[][] validMovesCache;
     private static ImageScaler imageScaler = new ImageScaler();
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
     public static void showValidItemRange(int playerRow, int playerCol, BaseItem itemSelected) {
         selectionFloor = gameManager.selectionFloor;
         selectedTiles = gameManager.selectedItemTiles;
+        validMovesCache = gameManager.validMovesCache;
 
         if (itemSelected instanceof Usable usableItem) {
             int range = usableItem.getRange();
@@ -28,7 +30,7 @@ public class ItemHandler {
                 for (int dCol = -range; dCol <= range; dCol++) {
                     int newRow = playerRow + dRow;
                     int newCol = playerCol + dCol;
-                    if (isInBoardPosition(newRow, newCol) && usableItem.validRange(newRow, newCol)) {
+                    if (validMovesCache[newRow][newCol] && isInBoardPosition(newRow, newCol) && usableItem.validRange(newRow, newCol)) {
                         if (!usableItem.castOnSelf()) {
                             if ((newRow == playerRow && newCol == playerCol)) continue;
                         }

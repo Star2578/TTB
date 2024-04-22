@@ -13,25 +13,22 @@
     src: url("/font/x16y32pxGridGazer.ttf");
 }
 
-#playBtn , #settingBtn{
-    -fx-font-size:24;
+.btn{
     -fx-border-style:SOLID;
     -fx-border-color:'black';
     -fx-border-width:5;
     -fx-background-color:#843939;
+
+    -fx-font-family:'x8y12pxTheStrongGamer';
+    -fx-font-size:32;
+    -fx-text-fill:#EEEEEE;
 }
 
-#playBtn:hover , #settingBtn:hover{
+.btn:hover{
     -fx-background-color:#733333;
 }
 
-#playBtn:pressed , #settingBtn:pressed{
+.btn:pressed{
     -fx-border-color:#FFC115;
     -fx-background-color:#512525;
-}
-
-#settingText , #playText{
-    -fx-font-family:'x8y12pxTheStrongGamer';
-    -fx-font-size:32;
-    -fx-fill:#EEEEEE;
 }

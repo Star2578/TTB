@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
+import logic.ui.GUIManager;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 
@@ -58,6 +59,12 @@ public class Bomb extends BaseMonsterPiece{
         // TODO : Implement explosion, + shape
 
         System.out.println("Bomb exploded");
+
+        BasePlayerPiece player = GameManager.getInstance().player;
+        if (player.getRow() == getRow() || player.getCol() == getCol()) {
+            player.takeDamage(player.getCurrentHealth());
+            GUIManager.getInstance().updateGUI();
+        }
 
         endAction = true;
 

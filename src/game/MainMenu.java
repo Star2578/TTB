@@ -1,5 +1,7 @@
 package game;
 
+import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
@@ -7,17 +9,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
+import logic.GameManager;
 import logic.SceneManager;
+import logic.SoundManager;
+import utils.Config;
 
 public class MainMenu {
     Scene scene;
     Pane rootPane;
 
     Button playBtn;
-    Text playBtnText;
-
     Button settingBtn;
-    Text settingBtnText;
+    Button quitBtn;
 
     Text titleText;
     Rectangle titleRect1;
@@ -57,42 +60,47 @@ public class MainMenu {
 
 
         //-------------------<play button>-----------------------------------------
-        playBtn= new Button();
-        playBtn.setId("playBtn");
+        playBtn= new Button("START");
+        playBtn.getStyleClass().add("btn");
         playBtn.setPrefWidth(250);
         playBtn.setLayoutX(515);
         playBtn.setLayoutY(360);
 
-        playBtnText = new Text("START");
-        playBtnText.setId("playText");
-        playBtnText.setX(587);
-        playBtnText.setY(368 + 32);
-        playBtnText.setDisable(true);
-
 
         playBtn.setOnAction(actionEvent -> {
+            SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
+            // switch bgm
+            SoundManager.getInstance().changeBackgroundMusic(Config.bgm_8_bit_adventure);
             //start and switch to the game scene
             SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getGameScene());
         });
 
         //-------------------<setting button>-----------------------------------------
-        settingBtn = new Button();
-        settingBtn.setId("settingBtn");
+        settingBtn = new Button("SETTINGS");
+        settingBtn.getStyleClass().add("btn");
         settingBtn.setPrefWidth(250);
         settingBtn.setLayoutX(515);
-        settingBtn.setLayoutY(453);
-
-        settingBtnText = new Text("SETTINGS");
-        settingBtnText.setId("settingText");
-        settingBtnText.setX(555);
-        settingBtnText.setY(461 + 32);
-        settingBtnText.setDisable(true);
+        settingBtn.setLayoutY(360 + 80);
 
 
         settingBtn.setOnAction(mouseEvent -> {
+            SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
             //will do scene event handler on this one
+            SceneManager.getInstance().switchSceneTo(Setting.setting(SceneManager.getInstance().getStage(), this.scene));
         });
 
+        quitBtn = new Button("QUIT");
+        quitBtn.getStyleClass().add("btn");
+        quitBtn.setPrefWidth(250);
+        quitBtn.setLayoutX(515);
+        quitBtn.setLayoutY(440 + 80);
+
+        quitBtn.setOnAction(mouseEvent -> {
+            SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
+            GameManager.getInstance().saveGame();
+            SoundManager.getInstance().stopBackgroundMusic();
+            Platform.exit();
+        });
 
         //-------------------<put everything on scene>-----------------------------------------
 
@@ -100,9 +108,9 @@ public class MainMenu {
                                       titleRect2,
                                       titleText,
                                       playBtn,
-                                      playBtnText,
                                       settingBtn,
-                                      settingBtnText);
+                                      quitBtn
+        );
     }
 
 

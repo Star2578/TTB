@@ -71,7 +71,7 @@ public class BasePiece {
         //setup moveTranslate behaviour
         moveTransition = new TranslateTransition();
         moveTransition.setNode(animationImage);
-        moveTransition.setDuration(Duration.millis(600));
+        moveTransition.setDuration(Duration.millis(500));
         moveTransition.setCycleCount(1);
         //================================================================================
     }

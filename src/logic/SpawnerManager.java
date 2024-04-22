@@ -4,10 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import pieces.BasePiece;
-import pieces.enemies.BaseMonsterPiece;
-import pieces.enemies.Bomber;
-import pieces.enemies.Tiny;
-import pieces.enemies.Zombie;
+import pieces.enemies.*;
 import utils.Config;
 
 import java.util.List;
@@ -26,7 +23,7 @@ public class SpawnerManager {
     public SpawnerManager() {
         initialize();
         monsterPool_1 = new BaseMonsterPiece[]{
-                new Bomber(), new Tiny(), new Zombie()
+                new Bomber(), new Tiny(), new Zombie(), new Skeleton(), new Vampire(), new Necromancer()
         };
     }
 
@@ -49,17 +46,21 @@ public class SpawnerManager {
         double spawnChance = random.nextDouble() * 100; // Random number between 0 and 100
 
         if (spawnChance <= doorProbability || monsterCount == 0) {
-            // decrease doorProbability to 0
-            doorProbability = 0;
-
-            // Door spawn successful
-            System.out.println("Door spawned at row " + row + ", col " + col);
-            dungeonFloor[row][col].setImage(imageScaler.resample(new Image(Config.DoorPath), 2));
-            gameManager.doorAt[row][col] = true;
+            spawnDoor(row, col);
         } else {
             System.out.println("Door spawn failed at row " + row + ", col " + col);
             increaseDoorChance();
         }
+    }
+
+    public void spawnDoor(int row, int col) {
+        // decrease doorProbability to 0
+        doorProbability = 0;
+
+        // Door spawn successful
+        System.out.println("Door spawned at row " + row + ", col " + col);
+        dungeonFloor[row][col].setImage(imageScaler.resample(new Image(Config.DoorPath), 2));
+        gameManager.doorAt.add(new Point2D(row, col));
     }
 
     public void increaseDoorChance() {

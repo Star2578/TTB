@@ -21,7 +21,7 @@ public class TurnManager {
     private Timeline waitTimeline;
 
     public boolean isPlayerTurn;
-    private final double DELAY_BETWEEN_ENVIRONMENT = 0.25;
+    private final double DELAY_BETWEEN_ENVIRONMENT = 0.1;
 
     public TurnManager() {
         initialize();
