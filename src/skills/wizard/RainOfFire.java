@@ -15,9 +15,8 @@ public class RainOfFire extends BaseSkill implements Attack {
     private BasePiece target;
     private final int DAMAGE = 6;
     public RainOfFire() {
-        super("Rain of Fire", Color.DARKORANGE, 10, 2, "", Config.Rarity.COMMON);
+        super("Rain of Fire", Color.DARKORANGE, 10, 2, "Summon a rain of fire above the enemies for  2 x 2 range around the enemy", Config.Rarity.COMMON);
 
-        //TODO======================
         icon = new ImageView(Config.RainOfFirePath);
         range = 5;
     }

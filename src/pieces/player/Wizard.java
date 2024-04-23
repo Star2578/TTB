@@ -115,8 +115,8 @@ public class Wizard extends BasePlayerPiece{
         //Check if the player has any effect
         if(EffectBuffs != null) {
             if(EffectBuffs.containsKey("Ice Shield")) {
-                damage = (damage * 60) / 100;
-                System.out.println("Damage reduced by 40% : " + damage);
+                damage = (damage * 70) / 100;
+                System.out.println("Damage reduced by 30% : " + damage);
             }
         }
         super.takeDamage(damage);

@@ -15,11 +15,10 @@ public class DragonFire extends BaseSkill implements Attack {
     private BasePiece target;
     private final int DAMAGE = 15;
     public DragonFire() {
-        super("Dragon Fire", Color.ORANGE, 15, 2, "Ultimate Skill", Config.Rarity.COMMON);
+        super("Dragon Fire", Color.ORANGE, 15, 2, "Ultimate Skill Summon a dragon fire to the enemies by Triangle AOE for 3 range ", Config.Rarity.RARE);
 
-        //TODO======================
         icon = new ImageView(Config.DragonFirePath);
-        range = 5;
+        range = 3;
     }
 
     @Override
@@ -45,7 +44,9 @@ public class DragonFire extends BaseSkill implements Attack {
 //            BasePiece piece1 = GameManager.getInstance().piecesPosition[newRow+1][newCol];
 //            BasePiece piece2 = GameManager.getInstance().piecesPosition[newRow+1][newCol+1];
 //            BasePiece piece3 = GameManager.getInstance().piecesPosition[newRow][newCol+1];
-
+            if(newRow < 0 || newRow > GameManager.getInstance().boardPane.getRowCount()) {
+                break;
+            }
             if (piece instanceof BaseMonsterPiece monsterPiece) {
                 monsterPiece.takeDamage(getAttack());
                 break;
