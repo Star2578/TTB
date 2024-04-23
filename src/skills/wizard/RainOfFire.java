@@ -15,7 +15,7 @@ public class RainOfFire extends BaseSkill implements Attack {
     private BasePiece target;
     private final int DAMAGE = 6;
     public RainOfFire() {
-        super("Rain of Fire", Color.DARKORANGE, 10, 2, "Summon a rain of fire above the enemies for  2 x 2 range around the enemy", Config.Rarity.COMMON);
+        super("Rain of Fire", Color.DARKORANGE, 1, 2, "Summon a rain of fire above the enemies for  2 x 2 range around the enemy", Config.Rarity.COMMON);
 
         icon = new ImageView(Config.RainOfFirePath);
         range = 5;
@@ -30,16 +30,46 @@ public class RainOfFire extends BaseSkill implements Attack {
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
+                System.out.println("Damage: " + DAMAGE);
+                int newRow = monsterPiece.getRow();
+                int newCol = monsterPiece.getCol();
+                BasePiece piece2 = GameManager.getInstance().piecesPosition[newRow+1][newCol];
+                BasePiece piece3 = GameManager.getInstance().piecesPosition[newRow][newCol+1];
+                BasePiece piece4 = GameManager.getInstance().piecesPosition[newRow][newCol-1];
+                BasePiece piece5 = GameManager.getInstance().piecesPosition[newRow-1][newCol];
+
+                PieceAttack(piece2);
+                PieceAttack(piece3);
+                PieceAttack(piece4);
+                PieceAttack(piece5);
+
+                System.out.println("Attack at " + newRow + " " + newCol);
+                System.out.println("Attack at " + (newRow+1) + " " + newCol);
+                System.out.println("Attack at " + newRow + " " + (newCol+1));
+                System.out.println("Attack at " + newRow + " " + (newCol-1));
+                System.out.println("Attack at " + (newRow-1) + " " + newCol);
 
                 //=========<SKILL EFFECT>====================================================================
                 EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
                                 GameManager.getInstance().player ,
                                 target ,
                                 EffectManager.getInstance().createInPlaceEffects(1) ,
                                 new EffectConfig(0 , -16 , 24 , 1.1) );
                 //===========================================================================================
             }
+        }
+    }
+
+    private boolean checkRange (int row, int col) {
+        return row >= 0 && row < Config.BOARD_SIZE && col >= 0 && col < Config.BOARD_SIZE;
+    }
+
+    private void PieceAttack (BasePiece piece) {
+        if (piece instanceof BaseMonsterPiece monsterPiece) {
+            monsterPiece.takeDamage(getAttack());
+            System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
+            System.out.println("Damage: " + DAMAGE);
         }
     }
 

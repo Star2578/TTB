@@ -36,6 +36,15 @@ public class IceShield extends BaseSkill implements Buff {
             GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
             GameManager.getInstance().player.decreaseMana(manaCost);
             System.out.println("Use " + name + " on " + player.getClass().getSimpleName());
+
+            //=========<SKILL EFFECT>====================================================================
+            EffectManager.getInstance()
+                    .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                            GameManager.getInstance().player ,
+                            target ,
+                            EffectManager.getInstance().createInPlaceEffects(1) ,
+                            new EffectConfig(0 , -16 , 24 , 1.1) );
+            //===========================================================================================
         }
     }
 

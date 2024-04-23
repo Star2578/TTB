@@ -25,32 +25,37 @@ public class DragonFire extends BaseSkill implements Attack {
     public void attack() {
         int currentRow = GameManager.getInstance().player.getRow();
         int currentCol = GameManager.getInstance().player.getCol();
-        int directionRow = target.getRow() - currentRow;
-        int directionCol = target.getCol() - currentCol;
+        int dRow = target.getRow() - currentRow;
+        int dCol = target.getCol() - currentCol;
+        int directionRow = dRow;
+        int directionCol = dCol;
 
         GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
         GameManager.getInstance().player.decreaseMana(manaCost);
 
         // Normalize the direction
-        if (directionRow != 0) directionRow /= Math.abs(directionRow);
-        if (directionCol != 0) directionCol /= Math.abs(directionCol);
+        if (dRow != 0) directionRow /= Math.abs(dRow);
+        if (dCol != 0) directionCol /= Math.abs(dCol);
 
         // Perform the attack
         for (int i = 0; i < range; i++) {
             int newRow = currentRow + directionRow * i;
             int newCol = currentCol + directionCol * i;
             System.out.println(newRow + " " + newCol);
-            BasePiece piece = GameManager.getInstance().piecesPosition[newRow][newCol];
-//            BasePiece piece1 = GameManager.getInstance().piecesPosition[newRow+1][newCol];
-//            BasePiece piece2 = GameManager.getInstance().piecesPosition[newRow+1][newCol+1];
-//            BasePiece piece3 = GameManager.getInstance().piecesPosition[newRow][newCol+1];
-            if(newRow < 0 || newRow > GameManager.getInstance().boardPane.getRowCount()) {
-                break;
+            if(i == 0 && checkRange(newRow,newCol)) {
+                BasePiece piece = GameManager.getInstance().piecesPosition[newRow][newCol];
+                PieceAttack(piece);
             }
-            if (piece instanceof BaseMonsterPiece monsterPiece) {
-                monsterPiece.takeDamage(getAttack());
-                break;
-            }
+        }
+    }
+
+    private boolean checkRange (int row, int col) {
+        return row >= 0 && row < Config.BOARD_SIZE && col >= 0 && col < Config.BOARD_SIZE;
+    }
+
+    private void PieceAttack (BasePiece piece) {
+        if (piece instanceof BaseMonsterPiece monsterPiece) {
+            monsterPiece.takeDamage(getAttack());
         }
     }
 
