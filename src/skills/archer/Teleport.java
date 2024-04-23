@@ -10,7 +10,11 @@ import utils.Config;
 public class Teleport extends BaseSkill {
     private BasePiece target;
     public Teleport() {
-        super("Teleport", Color.DARKRED, 7, 2, "Teleport to a chosen location", Config.Rarity.COMMON);
+        super("Teleport", Color.DARKRED,
+                7, 2,
+                "Teleport to a chosen location",
+                Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav"
+        );
         icon = new ImageView(Config.HealPath);
         range = 5; // Set the range to 5
     }

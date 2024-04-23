@@ -15,7 +15,11 @@ public class Snipe extends BaseSkill implements Attack {
     private BasePiece target;
     private final int DAMAGE = 18;
     public Snipe() {
-        super("Snipe", Color.DARKRED, 1, 2, "", Config.Rarity.COMMON);
+        super("Snipe", Color.DARKRED,
+                1, 2,
+                "Snipe at the enemy for 1 x 7 range"
+                , Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav"
+        );
         icon = new ImageView(Config.SlashPath);
         range = 7;
     }

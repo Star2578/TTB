@@ -17,7 +17,11 @@ public class IceShield extends BaseSkill implements Buff {
     private BasePiece target;
     private final int BUFF_DURATION = 2;
     public IceShield() {
-        super("Ice Shield", Color.DARKCYAN, 5, 2, "Summon Ice Shield that Decrease Damage by 30% for 2 turns", Config.Rarity.COMMON);
+        super("Ice Shield", Color.DARKCYAN,
+                5, 2,
+                "Summon Ice Shield that Decrease Damage by 30% for 2 turns",
+                Config.Rarity.COMMON , "res/SFX/skills/slash/PP_01.wav"
+        );
         icon = new ImageView(Config.IceShieldPath);
         range = 0;
     }
