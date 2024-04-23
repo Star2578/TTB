@@ -24,6 +24,8 @@ public class Config {
     // Player
     public static String KnightLargePath = "sprites/player/Knight_Large.png";
     public static String KnightAnimationPath = "sprites/player/knight_sprite_sheet.png";
+    public static String ArcherAnimationPath = "sprites/player/Archer_sprite_sheet.png";
+    public static String WizardAnimationPath = "sprites/player/Wizard_sprite_sheet2.png";
 
     // Enemies
     public static String DeadEffectPath = "sprites/enemies/dead_smoke.png";
@@ -56,6 +58,12 @@ public class Config {
     public static String UnlockedSkillIconPath = "sprites/skills/icons/skill_placeholder_unlocked.png";
     public static String SlashPath = "sprites/skills/icons/slash.png";
     public static String HealPath = "sprites/skills/icons/heal.png";
+
+    // Wizard Icons
+    public static String FireballPath = "sprites/skills/icons/Wizard/Fireball.png";
+    public static String IceShieldPath = "sprites/skills/icons/Wizard/IceShield.png";
+    public static String RainOfFirePath = "sprites/skills/icons/Wizard/RainOfFire.png";
+    public static String DragonFirePath = "sprites/skills/icons/Wizard/DragonFire.png";
 
     // Potion Icons
     public static String BluePotionPath = "sprites/potions/blue_potion.png";

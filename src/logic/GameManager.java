@@ -87,7 +87,7 @@ public class GameManager {
     };
 
     public GameManager() {
-        player = new Knight(0, 0, 1);
+        player = new Wizard(0, 0, 1);
         playerSkills = player.getSkills();
         for (int i = 0; i < SKILL_SLOTS; i++) {
             if (playerSkills[i] == null) {

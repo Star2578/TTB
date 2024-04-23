@@ -1,24 +1,25 @@
-package skills.knight;
+package skills.wizard;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
-import logic.SoundManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
-import utils.Attack;
 import skills.BaseSkill;
+import utils.Attack;
 import utils.Config;
 
-public class Slash extends BaseSkill implements Attack {
+public class Fireball extends BaseSkill implements Attack {
     private BasePiece target;
-    private final int DAMAGE = 10;
-    public Slash() {
-        super("Slash", Color.DARKRED, 2, 2, "A true knight slash doesn't need a sword", Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav");
-        icon = new ImageView(Config.SlashPath);
-        range = 1;
+    private final int DAMAGE = 8;
+    public Fireball() {
+        super("Fireball", Color.RED, 5, 2, "Shoot a fireball to the enemies", Config.Rarity.COMMON);
+
+        //TODO======================
+        icon = new ImageView(Config.FireballPath);
+        range = 5;
     }
 
     @Override
@@ -47,7 +48,6 @@ public class Slash extends BaseSkill implements Attack {
     public void perform(BasePiece target) {
         this.target = target;
         attack();
-        SoundManager.getInstance().playSoundEffect(sfxPath);
     }
 
     @Override
@@ -68,7 +68,6 @@ public class Slash extends BaseSkill implements Attack {
     public boolean castOnMonster() {
         return true;
     }
-
     @Override
     public int getAttack() {
         return DAMAGE;

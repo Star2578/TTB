@@ -26,6 +26,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     protected boolean[][] validMovesCache; // Cache of valid moves for the entire board
     protected int moneyDrop;
     protected Random random;
+    protected int stun = 0;
 
     public BaseMonsterPiece(int row, int col, int defaultDirection) {
         super(Config.ENTITY_TYPE.MONSTER, new ImageView(Config.PlaceholderPath), row, col, defaultDirection);
@@ -180,5 +181,13 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     }
     public boolean isEndAction() {
         return endAction;
+    }
+
+    public int getStun() {
+        return stun;
+    }
+
+    public void setStun(int stun) {
+        this.stun = Math.max(0,stun);
     }
 }
