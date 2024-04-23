@@ -123,6 +123,12 @@ public class Setting {
                         "-fx-font-size:16;" +
                         "-fx-text-fill:'white';");
         displayDamageNumbersCheckbox.setSelected(GameManager.getInstance().displayDamageNumber);
+        CheckBox displayActionPointOnCursorCheckbox = new CheckBox("Display Action Point on Cursor");
+        displayActionPointOnCursorCheckbox.setStyle(
+                        "-fx-font-family:x16y32pxGridGazer;" +
+                        "-fx-font-size:16;" +
+                        "-fx-text-fill:'white';");
+        displayActionPointOnCursorCheckbox.setSelected(GameManager.getInstance().displayActionPointOnCursor);
 
         // Event listeners for option checkboxes
         fastUseCheckbox.setOnAction(event -> {
@@ -143,8 +149,14 @@ public class Setting {
             GameManager.getInstance().displayDamageNumber = displayDamageNumbersCheckbox.isSelected();
         });
 
+        displayActionPointOnCursorCheckbox.setOnAction(event -> {
+            // Handle the display damage numbers option
+            // Your logic here...
+            GameManager.getInstance().displayActionPointOnCursor = displayActionPointOnCursorCheckbox.isSelected();
+        });
+
         // Add checkboxes to the settingsContainer
-        settingsContainer.getChildren().addAll(fastUseCheckbox, autoEndTurnCheckbox, displayDamageNumbersCheckbox);
+        settingsContainer.getChildren().addAll(fastUseCheckbox, autoEndTurnCheckbox, displayDamageNumbersCheckbox, displayActionPointOnCursorCheckbox);
 
         return settingsScene;
     }

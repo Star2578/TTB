@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.ImageScaler;
 import logic.SceneManager;
+import logic.SoundManager;
 import logic.handlers.ItemHandler;
 import logic.ui.GUIManager;
 import logic.ui.overlay.ItemInfoOverlay;
@@ -51,6 +52,7 @@ public class InventoryDisplay implements Display {
 
         useItem.setOnMouseClicked(mouseEvent -> {
             BaseItem currentItem = GameManager.getInstance().selectedItem;
+            SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
             if (currentItem != null && !(currentItem instanceof EmptyItem)) {
                 System.out.println("Use " + currentItem.getName());
                 // Exit attack mode if activated
@@ -71,6 +73,8 @@ public class InventoryDisplay implements Display {
 
         throwAwayItem.setOnMouseClicked(mouseEvent -> {
             BaseItem currentItem = GameManager.getInstance().selectedItem;
+            SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
+
             // throw item away
             throwAwayItem(currentItem);
         });
@@ -162,6 +166,8 @@ public class InventoryDisplay implements Display {
 
         if (!(item instanceof EmptyItem)) {
             itemFrame.setOnMouseClicked(mouseEvent -> {
+                SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
+
                 if (GameManager.getInstance().selectedItem != null) {
                     if (GameManager.getInstance().selectedItem == item && item instanceof Usable usable) {
                         if (usable.castOnSelf()) {

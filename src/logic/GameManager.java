@@ -33,6 +33,7 @@ public class GameManager {
     public boolean fastUse;
     public boolean autoEndTurn;
     public boolean displayDamageNumber;
+    public boolean displayActionPointOnCursor;
 
     public GameScene gameScene;
     public Pane animationPane;
@@ -196,6 +197,7 @@ public class GameManager {
             fastUse = Boolean.parseBoolean(settingProperties.getProperty("_fastUse", String.valueOf(false)));
             autoEndTurn = Boolean.parseBoolean(settingProperties.getProperty("_autoEndTurn", String.valueOf(false)));
             displayDamageNumber = Boolean.parseBoolean(settingProperties.getProperty("_displayDamageNumber", String.valueOf(false)));
+            displayActionPointOnCursor = Boolean.parseBoolean(settingProperties.getProperty("_displayActionPointOnCursor", String.valueOf(false)));
             // Load other settings...
 
         } catch (IOException e) {
@@ -213,6 +215,7 @@ public class GameManager {
             settingProperties.setProperty("_fastUse", String.valueOf(fastUse));
             settingProperties.setProperty("_autoEndTurn", String.valueOf(autoEndTurn));
             settingProperties.setProperty("_displayDamageNumber", String.valueOf(displayDamageNumber));
+            settingProperties.setProperty("_displayActionPointOnCursor", String.valueOf(displayActionPointOnCursor));
             // Save other settings...
 
             settingProperties.store(output, "Game Settings");

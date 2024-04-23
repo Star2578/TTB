@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.ImageScaler;
 import logic.SceneManager;
+import logic.SoundManager;
 import logic.handlers.SkillHandler;
 import logic.ui.GUIManager;
 import logic.ui.overlay.SkillInfoOverlay;
@@ -96,6 +97,8 @@ public class SkillSelectDisplay implements Display{
                 if (GUIManager.getInstance().isInAttackMode) {
                     GameManager.getInstance().gameScene.exitAttackMode();
                 }
+                SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
+
                 // Reset selection if other skill are selected
                 if (GameManager.getInstance().selectedSkill != null) {
                     if (GameManager.getInstance().selectedSkill == skill && skill.castOnSelf()) {

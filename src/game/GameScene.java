@@ -11,6 +11,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -382,6 +383,8 @@ public class GameScene {
         System.out.println("Clicked on square (" + row + ", " + col + ")");
 //        System.out.println("can act? " + player.canAct());
         if (!player.canAct()) {
+            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+
             if (GUIManager.getInstance().isInAttackMode)
                 resetSelection(1);
             if (GameManager.getInstance().selectedSkill != null)
@@ -431,6 +434,7 @@ public class GameScene {
                         GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedSkill.getName() + " on " + monsterPiece.getClass().getSimpleName());
                         gameManager.selectedSkill.perform(monsterPiece);
                     } else {
+                        SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                         System.out.println("Not enough mana or action point");
                     }
                     resetSelection(2);
@@ -445,6 +449,7 @@ public class GameScene {
                             GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedSkill.getName());
                             gameManager.selectedSkill.perform(playerPiece);
                         } else {
+                            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                             System.out.println("Not enough mana or action point");
                         }
                         resetSelection(2);
@@ -521,6 +526,7 @@ public class GameScene {
                 npcDisplay.addDialogueOption("Good bye", new Runnable() {
                     @Override
                     public void run() {
+                        SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
                         GUIManager.getInstance().switchToEventLog();
                     }
                 });
@@ -674,6 +680,11 @@ public class GameScene {
     private void setupKeyEvents(Scene scene) {
         // Debug tool
         scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                SceneManager.getInstance().switchSceneTo(Setting.setting(SceneManager.getInstance().getStage(), this.scene));
+                return;
+            }
+
             switch (event.getCode()) {
                 case F1:
 //                    removeElements();

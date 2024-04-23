@@ -15,10 +15,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import logic.GameManager;
-import logic.ImageScaler;
-import logic.SceneManager;
-import logic.TurnManager;
+import logic.*;
 import logic.handlers.AttackHandler;
 import logic.ui.display.*;
 import pieces.player.BasePlayerPiece;
@@ -163,6 +160,7 @@ public class GUIManager {
             if (GameManager.getInstance().selectedSkill != null) {
                 GameManager.getInstance().gameScene.resetSelection(2);
             }
+            SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
 
             isInAttackMode = true;
             updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
@@ -171,6 +169,7 @@ public class GUIManager {
 
         endTurnButton.setOnMouseClicked(mouseEvent -> {
             turnManager.endPlayerTurn();
+            SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
             GameManager.getInstance().gameScene.exitAttackMode();
             disableButton();
         });
