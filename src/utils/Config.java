@@ -64,6 +64,12 @@ public class Config {
     public static String SlashPath = "sprites/skills/icons/slash.png";
     public static String HealPath = "sprites/skills/icons/heal.png";
 
+    // Wizard Icons
+    public static String FireballPath = "sprites/skills/icons/Wizard/Fireball.png";
+    public static String IceShieldPath = "sprites/skills/icons/Wizard/IceShield.png";
+    public static String RainOfFirePath = "sprites/skills/icons/Wizard/RainOfFire.png";
+    public static String DragonFirePath = "sprites/skills/icons/Wizard/DragonFire.png";
+
     // Potion Icons
     public static String BluePotionPath = "sprites/potions/blue_potion.png";
 

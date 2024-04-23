@@ -15,10 +15,10 @@ public class Fireball extends BaseSkill implements Attack {
     private BasePiece target;
     private final int DAMAGE = 8;
     public Fireball() {
-        super("Fireball", Color.DARKORANGE, 5, 2, "", Config.Rarity.COMMON);
+        super("Fireball", Color.RED, 5, 2, "", Config.Rarity.COMMON);
 
         //TODO======================
-        icon = new ImageView(Config.SlashPath);
+        icon = new ImageView(Config.FireballPath);
         range = 5;
     }
 
@@ -42,9 +42,9 @@ public class Fireball extends BaseSkill implements Attack {
             int newCol = currentCol + directionCol * i;
             System.out.println(newRow + " " + newCol);
             BasePiece piece = GameManager.getInstance().piecesPosition[newRow][newCol];
-            BasePiece piece1 = GameManager.getInstance().piecesPosition[newRow+1][newCol];
-            BasePiece piece2 = GameManager.getInstance().piecesPosition[newRow+1][newCol+1];
-            BasePiece piece3 = GameManager.getInstance().piecesPosition[newRow][newCol+1];
+//            BasePiece piece1 = GameManager.getInstance().piecesPosition[newRow+1][newCol];
+//            BasePiece piece2 = GameManager.getInstance().piecesPosition[newRow+1][newCol+1];
+//            BasePiece piece3 = GameManager.getInstance().piecesPosition[newRow][newCol+1];
 
             if (piece instanceof BaseMonsterPiece monsterPiece) {
                 monsterPiece.takeDamage(getAttack());

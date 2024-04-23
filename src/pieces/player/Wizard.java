@@ -11,6 +11,7 @@ import logic.ui.GUIManager;
 import pieces.enemies.BaseMonsterPiece;
 import skills.knight.Heal;
 import skills.knight.Slash;
+import skills.wizard.DragonFire;
 import skills.wizard.Fireball;
 import skills.wizard.IceShield;
 import skills.wizard.RainOfFire;
@@ -43,6 +44,7 @@ public class Wizard extends BasePlayerPiece{
         skills[0] = new Fireball();
         skills[1] = new IceShield();
         skills[2] = new RainOfFire();
+        skills[3] = new DragonFire();
         //TODO===========
 
         //configs values for animation

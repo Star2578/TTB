@@ -19,7 +19,7 @@ public class IceShield extends BaseSkill implements Buff {
     public IceShield() {
         super("Ice Shield", Color.DARKCYAN, 5, 2, "", Config.Rarity.COMMON);
         //TODO===
-        icon = new ImageView(Config.SlashPath);
+        icon = new ImageView(Config.IceShieldPath);
         range = 0;
     }
 
