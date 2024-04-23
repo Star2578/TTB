@@ -10,8 +10,8 @@ import utils.Config;
 public class Teleport extends BaseSkill {
     private BasePiece target;
     public Teleport() {
-        super("Teleport", Color.DARKRED, 7, 2, "Teleport to a chosen location", Config.Rarity.COMMON);
-        icon = new ImageView(Config.HealPath);
+        super("Teleport", Color.DARKRED, 7, 2, "The Archer defies conventional limitations of movement, appearing in an unanticipated position with startling swiftness.", Config.Rarity.COMMON);
+        icon = new ImageView(Config.TeleportPath);
         range = 5; // Set the range to 5
     }
 

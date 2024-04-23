@@ -62,6 +62,11 @@ public class Config {
     public static String UnlockedSkillIconPath = "sprites/skills/icons/skill_placeholder_unlocked.png";
     public static String SlashPath = "sprites/skills/icons/slash.png";
     public static String HealPath = "sprites/skills/icons/heal.png";
+    //Archer
+    public static String HaltPath = "sprites/skills/icons/Archer/Halt.png";
+    public static String TargetLockPath = "sprites/skills/icons/Archer/Targetlock.png";
+    public static String SnipePath = "sprites/skills/icons/Archer/Snipe.png";
+    public static String TeleportPath = "sprites/skills/icons/Archer/Teleport.png";
 
     // Potion Icons
     public static String BluePotionPath = "sprites/potions/blue_potion.png";

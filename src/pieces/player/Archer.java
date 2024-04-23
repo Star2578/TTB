@@ -35,7 +35,8 @@ public class Archer extends BasePlayerPiece {
         //add skill
         skills[0] = new Targetlock();
         skills[1] = new Teleport();
-        skills[2] = new Snipe();
+        skills[2] = new Halt();
+        skills[3] = new Snipe();
 
         //configs values for animation
         setupAnimation(Config.ArcherAnimationPath, 0, -12, 32, 48 , true);

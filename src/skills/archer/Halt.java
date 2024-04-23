@@ -16,7 +16,7 @@ public class Halt extends BaseSkill implements Attack {
     private final int DAMAGE = 6;
     public Halt() {
         super("Halt", Color.DARKRED, 5, 2, "In a display of mastery over battlefield tactics, the Archer invokes the Halt skill to bring adversaries to a sudden standstill.", Config.Rarity.COMMON);
-        icon = new ImageView(Config.SlashPath);
+        icon = new ImageView(Config.HaltPath);
         range = 5;
     }
 

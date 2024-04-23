@@ -16,7 +16,7 @@ public class Targetlock extends BaseSkill implements Attack {
     private final int DAMAGE = 7;
     public Targetlock() {
         super("TargetLock", Color.DARKRED, 5, 2, "With a keen eye and steady hand, the Archer employs the TargetLock skill to pinpoint enemies with precision.", Config.Rarity.COMMON);
-        icon = new ImageView(Config.SlashPath);
+        icon = new ImageView(Config.TargetLockPath);
         range = 7;
     }
 
