@@ -8,7 +8,7 @@ import utils.Config;
 public class LockedSlot extends BaseSkill{
 
     public LockedSlot() {
-        super("Locked", Color.ALICEBLUE, 0, 0, "", Config.Rarity.COMMON);
+        super("Locked", Color.ALICEBLUE, 0, 0, "", Config.Rarity.COMMON, "");
         icon = new ImageView(Config.LockedSkillIconPath);
     }
 

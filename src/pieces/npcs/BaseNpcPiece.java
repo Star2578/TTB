@@ -25,18 +25,11 @@ public abstract class BaseNpcPiece extends BasePiece {
     private Map<String, Object> dialogues;
 
     public BaseNpcPiece(String name, String portraitPath, int defaultDirection) {
-        super(Config.ENTITY_TYPE.NPC, new ImageView(Config.PlaceholderPath), 0, 0);
+        super(Config.ENTITY_TYPE.NPC, new ImageView(Config.PlaceholderPath), 0, 0, defaultDirection);
         ImageScaler imageScaler = new ImageScaler();
 
         this.name = name;
         this.portrait = imageScaler.resample(new Image(portraitPath), 2);
-
-        // insert 1 as default (image facing right)
-        // insert -1 to flip
-        if (defaultDirection == -1) {
-            ImageView imageView = getTexture();
-            imageView.setScaleX(-1); // Flipping the image horizontally
-        }
     }
 
     protected void importDialogues(String jsonFilePath) {

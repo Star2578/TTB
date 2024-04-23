@@ -11,6 +11,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -382,6 +383,8 @@ public class GameScene {
         System.out.println("Clicked on square (" + row + ", " + col + ")");
 //        System.out.println("can act? " + player.canAct());
         if (!player.canAct()) {
+            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+
             if (GUIManager.getInstance().isInAttackMode)
                 resetSelection(1);
             if (GameManager.getInstance().selectedSkill != null)
@@ -408,6 +411,7 @@ public class GameScene {
                     if (!monsterPiece.isAlive()) {
                         removePiece(monsterPiece);
                         environmentPieces.remove(monsterPiece);
+                        gameManager.totalKillThisRun++;
                     }
                 }
             } else {
@@ -431,12 +435,14 @@ public class GameScene {
                         GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedSkill.getName() + " on " + monsterPiece.getClass().getSimpleName());
                         gameManager.selectedSkill.perform(monsterPiece);
                     } else {
+                        SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                         System.out.println("Not enough mana or action point");
                     }
                     resetSelection(2);
                     if (!monsterPiece.isAlive()) {
                         removePiece(monsterPiece);
                         environmentPieces.remove(monsterPiece);
+                        gameManager.totalKillThisRun++;
                     }
                 } else if (piecesPosition[row][col] instanceof BasePlayerPiece playerPiece) {
                     if (gameManager.selectedSkill.castOnSelf()) {
@@ -445,6 +451,7 @@ public class GameScene {
                             GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedSkill.getName());
                             gameManager.selectedSkill.perform(playerPiece);
                         } else {
+                            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                             System.out.println("Not enough mana or action point");
                         }
                         resetSelection(2);
@@ -521,6 +528,7 @@ public class GameScene {
                 npcDisplay.addDialogueOption("Good bye", new Runnable() {
                     @Override
                     public void run() {
+                        SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
                         GUIManager.getInstance().switchToEventLog();
                     }
                 });
@@ -547,6 +555,7 @@ public class GameScene {
                 GUIManager.getInstance().eventLogDisplay.addLog("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
                 SoundManager.getInstance().playSoundEffect(Config.sfx_moveSound);
+                gameManager.totalMovesThisRun++;
             } else {
                 System.out.println("Invalid move");
             }
@@ -671,10 +680,61 @@ public class GameScene {
         piecesPosition[row][col] = null;
     }
 
+    private boolean isWPressed = false;
+    private boolean isAPressed = false;
+    private boolean isSPressed = false;
+    private boolean isDPressed = false;
+
     private void setupKeyEvents(Scene scene) {
         // Debug tool
         scene.setOnKeyPressed(event -> {
+            int up = 0;
+            int down = 0;
+            int left = 0;
+            int right = 0;
             switch (event.getCode()) {
+                case ESCAPE:
+                    SceneManager.getInstance().switchSceneTo(Setting.setting(SceneManager.getInstance().getStage(), this.scene));
+                    break;
+                case W:
+                case A:
+                case S:
+                case D:
+                case UP:
+                case DOWN:
+                case LEFT:
+                case RIGHT:
+                    if (!isPlayerPieceSelected && player.canAct()) {
+                        isPlayerPieceSelected = true;
+                        MovementHandler.showValidMoves(player.getRow(), player.getCol());
+                    } else if (player.canAct()) {
+                        // Determine direction based on key pressed
+                        int rowDelta = 0;
+                        int colDelta = 0;
+                        switch (event.getCode()) {
+                            case W:
+                            case UP:
+                                rowDelta = -1;
+                                break;
+                            case A:
+                            case LEFT:
+                                colDelta = -1;
+                                break;
+                            case S:
+                            case DOWN:
+                                rowDelta = 1;
+                                break;
+                            case D:
+                            case RIGHT:
+                                colDelta = 1;
+                                break;
+                        }
+
+                        // Move the player
+                        MovementHandler.movePlayer(player.getRow() + rowDelta, player.getCol() + colDelta);
+                        resetSelection(0);
+                    }
+                    break;
                 case F1:
 //                    removeElements();
                     GUIManager.getInstance().eventLogDisplay.addLog("Hello World!");

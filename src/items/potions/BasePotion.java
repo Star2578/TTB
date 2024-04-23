@@ -7,8 +7,8 @@ import utils.Config;
 import utils.Usable;
 
 public abstract class BasePotion extends BaseItem implements Usable {
-    public BasePotion(String name, Color nameColor, String iconPath, String description, Config.Rarity rarity) {
-        super(name, nameColor, iconPath, description, rarity);
+    public BasePotion(String name, Color nameColor, String iconPath, String description, Config.Rarity rarity, String sfxPath) {
+        super(name, nameColor, iconPath, description, rarity, sfxPath);
     }
 
     public abstract void usePotion(BasePiece target);

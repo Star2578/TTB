@@ -107,6 +107,11 @@ public class SoundManager {
     }
 
     public void changeBackgroundMusic(String filePath) {
+        // Check if the new background music is the same as the current one
+        if (backgroundMusic != null && backgroundMusic.isOpen() && filePath.equals(audioInputStream.toString())) {
+            // Same song is already playing, no need to change
+            return;
+        }
         // Stop the current background music
         stopBackgroundMusic();
 

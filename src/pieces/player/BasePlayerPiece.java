@@ -37,23 +37,12 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     protected int attackRange = 1;
 
     // Animations
-    protected int currentDirection;
     protected SpriteAnimation meleeAttackAnimation;
     public ImageView meleeAttackImage;
 
     public BasePlayerPiece(int row, int col, int defaultDirection) {
-        super(Config.ENTITY_TYPE.PLAYER, new ImageView(Config.PlaceholderPath), row, col);
+        super(Config.ENTITY_TYPE.PLAYER, new ImageView(Config.PlaceholderPath), row, col, defaultDirection);
         canAct = false;
-
-        /****************************************************************************************
-        *   defaultDirection = the character in the image should face to the right direction
-        *   insert 1 if true
-        *   insert -1 if false so it'll flip the image
-        *****************************************************************************************/
-        if (defaultDirection == -1) {
-            ImageView imageView = getTexture();
-            imageView.setScaleX(-1); // Flipping the image horizontally
-        }
 
         skills = new BaseSkill[8]; // Player can have up to 8 skills
     }

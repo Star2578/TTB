@@ -1,5 +1,6 @@
 package pieces.player;
 
+import logic.SoundManager;
 import logic.ui.GUIManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
@@ -70,6 +71,7 @@ public class Knight extends BasePlayerPiece {
     public void attack(BaseMonsterPiece monsterPiece) {
         if (ATTACK_COST > getCurrentActionPoint()) {
             System.out.println("Attack failed: Not enough Action Point");
+            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
             return;
         }
 

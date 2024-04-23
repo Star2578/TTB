@@ -48,12 +48,7 @@ public class Main extends Application {
         FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), mainMenu.getScene().getRoot());
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(1);
-        fadeTransition.setOnFinished(event -> {
-            // This code block will run after the fade transition finishes
-            SoundManager.getInstance().playBackgroundMusic(Config.bgm_8_bit_nostalgia); // Play background music after the fade-in
-            System.out.println("bg music vol: " + SoundManager.getInstance().getBackgroundMusicVolume());
-        });
-
+        SoundManager.getInstance().playBackgroundMusic(Config.bgm_8_bit_nostalgia); // Play background music after the fade-in
 
         // Show the primaryStage after configuring the fade transition
         primaryStage.setScene(mainMenu.getScene());

@@ -18,15 +18,26 @@ public class BasePiece {
     protected SpriteAnimation spriteAnimation;
     public ImageView animationImage;
     protected TranslateTransition moveTransition;
+    protected int currentDirection;
     protected int offsetX=0;
     protected int offsetY=0;
 
-    protected BasePiece(Config.ENTITY_TYPE type, ImageView texture, int row, int col) {
+    protected BasePiece(Config.ENTITY_TYPE type, ImageView texture, int row, int col, int defaultDirection) {
         this.type = type;
         this.texture = texture;
         this.row = row;
         this.col = col;
-//        test
+
+        /****************************************************************************************
+         *   defaultDirection = the character in the image should face to the right direction
+         *   insert 1 if true
+         *   insert -1 if false so it'll flip the image
+         *****************************************************************************************/
+        if (defaultDirection == -1) {
+            ImageView imageView = getTexture();
+            imageView.setScaleX(-1); // Flipping the image horizontally
+        }
+
         this.animationImage = new ImageView();
     }
 
@@ -55,6 +66,10 @@ public class BasePiece {
     public int getOffsetY() {
         return offsetY;
     }
+    public int getCurrentDirection() {
+        return currentDirection;
+    }
+
     protected void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height , boolean loop) {
         //===================<animation section>==========================================
         this.offsetX = offsetX;

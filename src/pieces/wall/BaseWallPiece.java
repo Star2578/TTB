@@ -11,7 +11,7 @@ public class BaseWallPiece extends BasePiece {
     private TileMap tileMap;
 
     public BaseWallPiece(int row, int col) {
-        super(Config.ENTITY_TYPE.WALL, new ImageView(Config.WallPath), row, col);
+        super(Config.ENTITY_TYPE.WALL, new ImageView(Config.WallPath), row, col, 0);
         tileMap = GameManager.getInstance().wallTileMap;
         getTexture().setPreserveRatio(true);
     }

@@ -24,7 +24,9 @@ public abstract class BaseSkill {
 
     protected Config.Rarity rarity;
 
-    protected BaseSkill(String name, Color nameColor, int manaCost, int actionPointCost, String description, Config.Rarity rarity) {
+    protected String sfxPath;
+
+    protected BaseSkill(String name, Color nameColor, int manaCost, int actionPointCost, String description, Config.Rarity rarity, String sfxPath) {
         ImageScaler imageScaler = new ImageScaler();
 
         this.name = name;
@@ -35,6 +37,7 @@ public abstract class BaseSkill {
         this.frame = new ImageView(imageScaler.resample(new Image(Config.FramePath), 2));
         this.rarity = rarity;
         this.price = priceGenerator();
+        this.sfxPath = sfxPath;
     }
 
     private int priceGenerator() {
