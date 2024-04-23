@@ -411,6 +411,7 @@ public class GameScene {
                     if (!monsterPiece.isAlive()) {
                         removePiece(monsterPiece);
                         environmentPieces.remove(monsterPiece);
+                        gameManager.totalKillThisRun++;
                     }
                 }
             } else {
@@ -441,6 +442,7 @@ public class GameScene {
                     if (!monsterPiece.isAlive()) {
                         removePiece(monsterPiece);
                         environmentPieces.remove(monsterPiece);
+                        gameManager.totalKillThisRun++;
                     }
                 } else if (piecesPosition[row][col] instanceof BasePlayerPiece playerPiece) {
                     if (gameManager.selectedSkill.castOnSelf()) {
@@ -553,6 +555,7 @@ public class GameScene {
                 GUIManager.getInstance().eventLogDisplay.addLog("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
                 SoundManager.getInstance().playSoundEffect(Config.sfx_moveSound);
+                gameManager.totalMovesThisRun++;
             } else {
                 System.out.println("Invalid move");
             }

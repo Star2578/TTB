@@ -28,17 +28,22 @@ public class Summary {
         root.setBackground(Background.fill(Color.BLACK));
 
         // Create text nodes for player stats
-        Text killedMonstersText = new Text("Monsters Killed: 10"); // Replace 10 with actual value
+        Text killedMonstersText = new Text("Monsters Killed: " + GameManager.getInstance().totalKillThisRun);
         killedMonstersText.setStyle(
                 "-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:20;" +
                 "-fx-fill:'white';");
-        Text moneyGatheredText = new Text("Money Gathered: $100"); // Replace $100 with actual value
+        Text moneyGatheredText = new Text("Money Gathered: $" + + GameManager.getInstance().totalMoneyThisRun);
         moneyGatheredText.setStyle(
                 "-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:20;" +
                 "-fx-fill:'white';");
-        Text levelDiedOnText = new Text("Level Died On: 5"); // Replace 5 with actual value
+        Text moveCountText = new Text("Move Count: " + GameManager.getInstance().totalMovesThisRun);
+        moveCountText.setStyle(
+                "-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:20;" +
+                "-fx-fill:'white';");
+        Text levelDiedOnText = new Text("Level Died On: " + GameManager.getInstance().currentLevelReach);
         levelDiedOnText.setStyle(
                 "-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:20;" +
@@ -52,12 +57,14 @@ public class Summary {
         retryButton.setOnAction(e -> {
             // Add action to retry the game
             System.out.println("Retry button clicked");
+            SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
             GameManager.getInstance().GameStart(new Knight(0, 0, 1));
         });
 
         menuButton.setOnAction(e -> {
             // Add action to return to the menu
             System.out.println("Return to Menu button clicked");
+            SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
             SceneManager.getInstance().switchSceneTo(SceneManager.getInstance().getMenuScene());
             SoundManager.getInstance().changeBackgroundMusic(Config.bgm_8_bit_nostalgia);
         });

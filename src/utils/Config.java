@@ -71,7 +71,7 @@ public class Config {
     // SFX
     public static String sfx_attackSound = "res/SFX/attack/Swipe_2_converted.wav";
     public static String sfx_moveSound = "res/SFX/walk/jump2.wav";
-    public static String sfx_hurtSound = "res/SFX/hurt/hit_001.wav";
+    public static String sfx_hurtSound = "res/SFX/hurt/hit_003.wav";
     public static String sfx_gameOverSound = "res/SFX/gameover/Game Over.wav";
     public static String sfx_buttonSound = "res/SFX/click/click.wav";
     public static String sfx_failedSound = "res/SFX/failed/8bit-blip4.wav";

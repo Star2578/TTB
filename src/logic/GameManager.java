@@ -35,6 +35,17 @@ public class GameManager {
     public boolean displayDamageNumber;
     public boolean displayActionPointOnCursor;
 
+    // ------------ Progression --------------
+    public int totalKill = 0;
+    public int totalKillThisRun = 0;
+    public int totalMoves = 0;
+    public int totalMovesThisRun = 0;
+    public int totalMoney = 0;
+    public int totalMoneyThisRun = 0;
+    public int farthestLevelReach = 0;
+    public int currentLevelReach = 0;
+
+
     public GameScene gameScene;
     public Pane animationPane;
 
@@ -151,9 +162,15 @@ public class GameManager {
     }
     public void GameOver() {
         // save game progress
-        saveGame();
         SoundManager.getInstance().playSoundEffect(Config.sfx_gameOverSound);
+        totalMoneyThisRun = playerMoney;
 
+        totalKill += totalKillThisRun;
+        totalMoney += totalMoneyThisRun;
+        totalMoves += totalMovesThisRun;
+        farthestLevelReach = Math.max(farthestLevelReach, currentLevelReach);
+
+        saveGame();
         // Send player back to main menu scene
         SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getSummaryScene());
     }
@@ -162,7 +179,10 @@ public class GameManager {
         // save the game progression
         try (OutputStream output = new FileOutputStream(PROGRESSION_FILE_PATH)) {
             // Progression
-
+            gameProperties.setProperty("s_totalKill", String.valueOf(totalKill));
+            gameProperties.setProperty("s_totalMoney", String.valueOf(totalMoney));
+            gameProperties.setProperty("s_totalMoves", String.valueOf(totalMoves));
+            gameProperties.setProperty("s_farthestLevelReach", String.valueOf(farthestLevelReach));
 
             gameProperties.store(output, "Game Progression");
 
@@ -177,6 +197,10 @@ public class GameManager {
             gameProperties.load(input);
 
             // Load progression from properties
+            totalKill = Integer.parseInt(gameProperties.getProperty("s_totalKill", "0"));
+            totalMoney = Integer.parseInt(gameProperties.getProperty("s_totalMoney", "0"));
+            totalMoves = Integer.parseInt(gameProperties.getProperty("s_totalMoves", "0"));
+            farthestLevelReach = Integer.parseInt(gameProperties.getProperty("s_farthestLevelReach", "0"));
 
 
         } catch (IOException e) {
@@ -198,7 +222,6 @@ public class GameManager {
             autoEndTurn = Boolean.parseBoolean(settingProperties.getProperty("_autoEndTurn", String.valueOf(false)));
             displayDamageNumber = Boolean.parseBoolean(settingProperties.getProperty("_displayDamageNumber", String.valueOf(false)));
             displayActionPointOnCursor = Boolean.parseBoolean(settingProperties.getProperty("_displayActionPointOnCursor", String.valueOf(false)));
-            // Load other settings...
 
         } catch (IOException e) {
             System.out.println("Error when loading game setting:" + e.getMessage());
