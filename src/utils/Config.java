@@ -56,8 +56,11 @@ public class Config {
     // Skill Icons
     public static String LockedSkillIconPath = "sprites/skills/icons/skill_placeholder_locked.png";
     public static String UnlockedSkillIconPath = "sprites/skills/icons/skill_placeholder_unlocked.png";
-    public static String SlashPath = "sprites/skills/icons/slash.png";
-    public static String HealPath = "sprites/skills/icons/heal.png";
+    // Knight Icons
+    public static String SlashPath = "sprites/skills/icons/Knight/slash.png";
+    public static String HealPath = "sprites/skills/icons/Knight/heal.png";
+    public static String DartPath = "sprites/skills/icons/Knight/Dart.png";
+    public static String StompPath = "sprites/skills/icons/Knight/Stomp.png";
 
     // Wizard Icons
     public static String FireballPath = "sprites/skills/icons/Wizard/Fireball.png";

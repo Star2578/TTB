@@ -6,8 +6,10 @@ import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.enemies.BaseMonsterPiece;
 import skills.archer.Snipe;
+import skills.knight.Dart;
 import skills.knight.Heal;
 import skills.knight.Slash;
+import skills.knight.Stomp;
 import utils.Config;
 
 import java.util.ArrayList;
@@ -33,7 +35,8 @@ public class Knight extends BasePlayerPiece {
         //add skill
         skills[0] = new Slash();
         skills[1] = new Heal();
-        skills[2] = new Snipe();
+        skills[2] = new Dart();
+        skills[3] = new Stomp();
 
         //configs values for animation
         setupAnimation(Config.KnightAnimationPath, 0, -15, 32, 56 , true);
