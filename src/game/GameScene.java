@@ -680,15 +680,61 @@ public class GameScene {
         piecesPosition[row][col] = null;
     }
 
+    private boolean isWPressed = false;
+    private boolean isAPressed = false;
+    private boolean isSPressed = false;
+    private boolean isDPressed = false;
+
     private void setupKeyEvents(Scene scene) {
         // Debug tool
         scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ESCAPE) {
-                SceneManager.getInstance().switchSceneTo(Setting.setting(SceneManager.getInstance().getStage(), this.scene));
-                return;
-            }
-
+            int up = 0;
+            int down = 0;
+            int left = 0;
+            int right = 0;
             switch (event.getCode()) {
+                case ESCAPE:
+                    SceneManager.getInstance().switchSceneTo(Setting.setting(SceneManager.getInstance().getStage(), this.scene));
+                    break;
+                case W:
+                case A:
+                case S:
+                case D:
+                case UP:
+                case DOWN:
+                case LEFT:
+                case RIGHT:
+                    if (!isPlayerPieceSelected && player.canAct()) {
+                        isPlayerPieceSelected = true;
+                        MovementHandler.showValidMoves(player.getRow(), player.getCol());
+                    } else if (player.canAct()) {
+                        // Determine direction based on key pressed
+                        int rowDelta = 0;
+                        int colDelta = 0;
+                        switch (event.getCode()) {
+                            case W:
+                            case UP:
+                                rowDelta = -1;
+                                break;
+                            case A:
+                            case LEFT:
+                                colDelta = -1;
+                                break;
+                            case S:
+                            case DOWN:
+                                rowDelta = 1;
+                                break;
+                            case D:
+                            case RIGHT:
+                                colDelta = 1;
+                                break;
+                        }
+
+                        // Move the player
+                        MovementHandler.movePlayer(player.getRow() + rowDelta, player.getCol() + colDelta);
+                        resetSelection(0);
+                    }
+                    break;
                 case F1:
 //                    removeElements();
                     GUIManager.getInstance().eventLogDisplay.addLog("Hello World!");
