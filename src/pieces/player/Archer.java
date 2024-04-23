@@ -33,8 +33,9 @@ public class Archer extends BasePlayerPiece {
         attackDamage = 5; // Base attack for player
 
         //add skill
-        skills[0] = new Slash();
-        skills[1] = new Heal();
+        skills[0] = new Targetlock();
+        skills[1] = new Teleport();
+        skills[2] = new Snipe();
 
         //configs values for animation
         setupAnimation(Config.ArcherAnimationPath, 0, -12, 32, 48 , true);

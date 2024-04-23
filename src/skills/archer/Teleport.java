@@ -8,17 +8,31 @@ import skills.BaseSkill;
 import utils.Config;
 
 public class Teleport extends BaseSkill {
+    private BasePiece target;
     public Teleport() {
-        super("Teleport", Color.DARKRED, 0, 0, "Teleport to a chosen location", Config.Rarity.COMMON);
-        icon = new ImageView();
+        super("Teleport", Color.DARKRED, 7, 2, "Teleport to a chosen location", Config.Rarity.COMMON);
+        icon = new ImageView(Config.HealPath);
         range = 5; // Set the range to 5
+    }
+
+    public void teleport() {
+
+        GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
+        GameManager.getInstance().player.decreaseMana(manaCost);
+
+        // Teleport the player to the target position
+        BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
+        pieces[GameManager.getInstance().player.getRow()][GameManager.getInstance().player.getCol()] = null;
+        pieces[target.getRow()][target.getCol()] = GameManager.getInstance().player;
+
+//        GameManager.getInstance().player.setRow(target.getRow());
+//        GameManager.getInstance().player.setCol(target.getCol());
     }
 
     @Override
     public void perform(BasePiece target) {
-        // Teleport the player to the target position
-        GameManager.getInstance().player.setRow(target.getRow());
-        GameManager.getInstance().player.setCol(target.getCol());
+        this.target = target;
+        teleport();
     }
 
     @Override

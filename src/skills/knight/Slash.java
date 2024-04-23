@@ -17,7 +17,7 @@ public class Slash extends BaseSkill implements Attack {
     public Slash() {
         super("Slash", Color.DARKRED, 2, 2, "A true knight slash doesn't need a sword", Config.Rarity.COMMON);
         icon = new ImageView(Config.SlashPath);
-        range = 3;
+        range = 1;
     }
 
     @Override
