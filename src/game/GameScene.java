@@ -152,11 +152,6 @@ public class GameScene {
         // Define update logic
         updateLogic = () -> {
             // Update game state
-
-            // Auto End Turn when player is out of action point
-            if (player.getCurrentActionPoint() == 0 && GameManager.getInstance().autoEndTurn) {
-                if (turnManager.isPlayerTurn) turnManager.endPlayerTurn();
-            }
         };
 
         // move action point display text around mouse cursor
@@ -746,7 +741,7 @@ public class GameScene {
                     }
                     break;
                 case V:
-                    if (!GUIManager.getInstance().isInAttackMode) {
+                    if (player.canAct() && !GUIManager.getInstance().isInAttackMode) {
                         // Cancel skill selection if skill is selected
                         if (GameManager.getInstance().selectedSkill != null) {
                             GameManager.getInstance().gameScene.resetSelection(2);
