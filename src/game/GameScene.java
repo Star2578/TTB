@@ -139,6 +139,8 @@ public class GameScene {
         root.setLeft(stackOverlay);
         stackOverlay.getChildren().addAll(leftPane, GUIManager.getInstance().skillSelectDisplay.getSkillInfoOverlay().getView(), GUIManager.getInstance().inventoryDisplay.getItemInfoOverlay().getView());
 
+        root.getChildren().add(GUIManager.getInstance().getActionPointDisplayText());
+
         stackOverlay.setOnMouseMoved(event -> {
             // Update the position of the BoxOverlay to follow the mouse
             GUIManager.getInstance().skillSelectDisplay.getSkillInfoOverlay().updatePosition(event.getX(), event.getY(), -140, 15);
@@ -151,6 +153,13 @@ public class GameScene {
         updateLogic = () -> {
             // Update game state
         };
+
+        // move action point display text around mouse cursor
+        scene.setOnMouseMoved(mouseEvent -> {
+            GUIManager.getInstance().getActionPointDisplayText().setTranslateX(mouseEvent.getX() + 20);
+            GUIManager.getInstance().getActionPointDisplayText().setTranslateY(mouseEvent.getY());
+        });
+
         // Right click anywhere in the scene to cancel/deselect anything
         scene.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.SECONDARY) {
@@ -541,7 +550,6 @@ public class GameScene {
         }
 
         // ------------------------- Movement Mode -------------------------
-//        System.out.println(player.getRow() + " " + player.getCol() + " (" + row + "," + col + ")");
         if (player.getRow() == row && player.getCol() == col) {
             // Toggle move selection mode by clicking on player's grid
             isPlayerPieceSelected = !isPlayerPieceSelected;
@@ -554,7 +562,6 @@ public class GameScene {
             if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
                 GUIManager.getInstance().eventLogDisplay.addLog("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
-                SoundManager.getInstance().playSoundEffect(Config.sfx_moveSound);
                 gameManager.totalMovesThisRun++;
             } else {
                 System.out.println("Invalid move");
@@ -688,10 +695,6 @@ public class GameScene {
     private void setupKeyEvents(Scene scene) {
         // Debug tool
         scene.setOnKeyPressed(event -> {
-            int up = 0;
-            int down = 0;
-            int left = 0;
-            int right = 0;
             switch (event.getCode()) {
                 case ESCAPE:
                     SceneManager.getInstance().switchSceneTo(Setting.setting(SceneManager.getInstance().getStage(), this.scene));
@@ -730,8 +733,15 @@ public class GameScene {
                                 break;
                         }
 
-                        // Move the player
-                        MovementHandler.movePlayer(player.getRow() + rowDelta, player.getCol() + colDelta);
+                        int rowToMove = player.getRow() + rowDelta;
+                        int colToMove = player.getCol() + colDelta;
+
+                        if (validMovesCache[rowToMove][colToMove] && player.validMove(rowToMove, colToMove) && piecesPosition[rowToMove][colToMove] == null) {
+                            // Move the player
+                            MovementHandler.movePlayer(player.getRow() + rowDelta, player.getCol() + colDelta);
+                        } else {
+                            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+                        }
                         resetSelection(0);
                     }
                     break;
