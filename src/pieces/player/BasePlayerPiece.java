@@ -35,8 +35,8 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     protected int attackRange = 1;
 
     // Animations
-    protected SpriteAnimation meleeAttackAnimation;
-    public ImageView meleeAttackImage;
+    protected int currentDirection;
+
 
     // Buffs
     protected int buffturn;
@@ -69,14 +69,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         animationImage.setDisable(true);
         spriteAnimation=new SpriteAnimation(animationImage,4,0,4,width,height,6 , loop);
         spriteAnimation.start();
-
-        //attack animation for player
-        meleeAttackImage = new ImageView(new Image(Config.meleeAttackPath));
-        meleeAttackImage.setPreserveRatio(true);
-        meleeAttackImage.setFitWidth(50);
-        meleeAttackImage.setDisable(true);
-        meleeAttackImage.setVisible(true);
-        meleeAttackAnimation = new SpriteAnimation(meleeAttackImage , 5 , 1 , 5 , 37 , 32 , 8 , false);
 
         //setup moveTranslate behaviour
         moveTransition = new TranslateTransition();
