@@ -10,10 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.ImageScaler;
@@ -155,12 +152,17 @@ public class InventoryDisplay implements Display {
         Image itemIcon = imageScaler.resample(item.getIcon().getImage(), 2);
         ImageView frameView = item.getFrame();
 
-        itemFrame.setAlignment(Pos.CENTER);
-        itemFrame.setPrefWidth(64);
-        itemFrame.setPrefHeight(64);
-        itemFrame.getChildren().addAll(new ImageView(itemIcon), frameView);
-
         if (!(item instanceof EmptyItem)) {
+            ImageView itemIconView = new ImageView(itemIcon);
+            itemIconView.setFitWidth(40);
+            itemIconView.setFitHeight(40);
+            itemIconView.setPreserveRatio(true);
+
+            itemFrame.setAlignment(Pos.CENTER);
+            itemFrame.setPrefWidth(64);
+            itemFrame.setPrefHeight(64);
+            itemFrame.getChildren().addAll(itemIconView);
+
             itemFrame.setOnMouseClicked(mouseEvent -> {
                 SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
 
@@ -199,7 +201,11 @@ public class InventoryDisplay implements Display {
             itemFrame.setOnMouseExited(mouseEvent -> {
                 itemInfoOverlay.getView().setVisible(false);
             });
+
+            itemFrame.setBackground(Background.fill(item.getBackgroundColor()));
         }
+
+        itemFrame.getChildren().addAll(frameView);
 
         return itemFrame;
     }
