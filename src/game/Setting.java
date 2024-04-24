@@ -4,13 +4,17 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import logic.GameManager;
 import logic.SoundManager;
+import logic.ui.GUIManager;
 import utils.Config;
+
+import java.util.Objects;
 
 public class Setting {
     public static GameManager gameManager = GameManager.getInstance();
@@ -133,26 +137,34 @@ public class Setting {
         // Event listeners for option checkboxes
         fastUseCheckbox.setOnAction(event -> {
             // Handle the fast use on self option
-            // Your logic here...
+            // TODO
             GameManager.getInstance().fastUse = fastUseCheckbox.isSelected();
         });
 
         autoEndTurnCheckbox.setOnAction(event -> {
             // Handle the auto end turn option
-            // Your logic here...
+            // TODO
             GameManager.getInstance().autoEndTurn = autoEndTurnCheckbox.isSelected();
         });
 
         displayDamageNumbersCheckbox.setOnAction(event -> {
             // Handle the display damage numbers option
-            // Your logic here...
+            // TODO
             GameManager.getInstance().displayDamageNumber = displayDamageNumbersCheckbox.isSelected();
         });
 
         displayActionPointOnCursorCheckbox.setOnAction(event -> {
             // Handle the display damage numbers option
-            // Your logic here...
             GameManager.getInstance().displayActionPointOnCursor = displayActionPointOnCursorCheckbox.isSelected();
+            GUIManager.getInstance().getActionPointDisplayText().setVisible(GameManager.getInstance().displayActionPointOnCursor);
+        });
+
+        settingsRoot.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                gameManager.saveSettings();
+                soundManager.playSoundEffect(Config.sfx_buttonSound);
+                stage.setScene(previousScene); // Return to the previous scene
+            }
         });
 
         // Add checkboxes to the settingsContainer

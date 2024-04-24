@@ -139,6 +139,8 @@ public class GameScene {
         root.setLeft(stackOverlay);
         stackOverlay.getChildren().addAll(leftPane, GUIManager.getInstance().skillSelectDisplay.getSkillInfoOverlay().getView(), GUIManager.getInstance().inventoryDisplay.getItemInfoOverlay().getView());
 
+        root.getChildren().add(GUIManager.getInstance().getActionPointDisplayText());
+
         stackOverlay.setOnMouseMoved(event -> {
             // Update the position of the BoxOverlay to follow the mouse
             GUIManager.getInstance().skillSelectDisplay.getSkillInfoOverlay().updatePosition(event.getX(), event.getY(), -140, 15);
@@ -151,6 +153,13 @@ public class GameScene {
         updateLogic = () -> {
             // Update game state
         };
+
+        // move action point display text around mouse cursor
+        scene.setOnMouseMoved(mouseEvent -> {
+            GUIManager.getInstance().getActionPointDisplayText().setTranslateX(mouseEvent.getX() + 20);
+            GUIManager.getInstance().getActionPointDisplayText().setTranslateY(mouseEvent.getY());
+        });
+
         // Right click anywhere in the scene to cancel/deselect anything
         scene.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.SECONDARY) {
@@ -541,7 +550,6 @@ public class GameScene {
         }
 
         // ------------------------- Movement Mode -------------------------
-//        System.out.println(player.getRow() + " " + player.getCol() + " (" + row + "," + col + ")");
         if (player.getRow() == row && player.getCol() == col) {
             // Toggle move selection mode by clicking on player's grid
             isPlayerPieceSelected = !isPlayerPieceSelected;
@@ -554,8 +562,6 @@ public class GameScene {
             if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
                 GUIManager.getInstance().eventLogDisplay.addLog("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
-                SoundManager.getInstance().playSoundEffect(Config.sfx_moveSound);
-                gameManager.totalMovesThisRun++;
             } else {
                 System.out.println("Invalid move");
             }
@@ -606,7 +612,7 @@ public class GameScene {
                         .setImage(null);
             }
             selectedAttackTiles.clear();
-
+            GUIManager.getInstance().isInAttackMode = false;
         }
         else if (type == 2) {
             //reset skill Selected Tiles
@@ -680,18 +686,10 @@ public class GameScene {
         piecesPosition[row][col] = null;
     }
 
-    private boolean isWPressed = false;
-    private boolean isAPressed = false;
-    private boolean isSPressed = false;
-    private boolean isDPressed = false;
 
     private void setupKeyEvents(Scene scene) {
         // Debug tool
         scene.setOnKeyPressed(event -> {
-            int up = 0;
-            int down = 0;
-            int left = 0;
-            int right = 0;
             switch (event.getCode()) {
                 case ESCAPE:
                     SceneManager.getInstance().switchSceneTo(Setting.setting(SceneManager.getInstance().getStage(), this.scene));
@@ -730,9 +728,31 @@ public class GameScene {
                                 break;
                         }
 
-                        // Move the player
-                        MovementHandler.movePlayer(player.getRow() + rowDelta, player.getCol() + colDelta);
+                        int rowToMove = player.getRow() + rowDelta;
+                        int colToMove = player.getCol() + colDelta;
+
+                        if (validMovesCache[rowToMove][colToMove] && player.validMove(rowToMove, colToMove) && piecesPosition[rowToMove][colToMove] == null) {
+                            // Move the player
+                            MovementHandler.movePlayer(player.getRow() + rowDelta, player.getCol() + colDelta);
+                        } else {
+                            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+                        }
                         resetSelection(0);
+                    }
+                    break;
+                case V:
+                    if (player.canAct() && !GUIManager.getInstance().isInAttackMode) {
+                        // Cancel skill selection if skill is selected
+                        if (GameManager.getInstance().selectedSkill != null) {
+                            GameManager.getInstance().gameScene.resetSelection(2);
+                        }
+                        if (GameManager.getInstance().selectedItem != null) {
+                            GameManager.getInstance().gameScene.resetSelection(3);
+                        }
+
+                        GUIManager.getInstance().isInAttackMode = true;
+                        GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+                        AttackHandler.showValidAttackRange(GameManager.getInstance().player.getRow() , GameManager.getInstance().player.getCol());
                     }
                     break;
                 case F1:
@@ -767,7 +787,7 @@ public class GameScene {
                     }
                     break;
                 case F6:
-                    SceneManager.getInstance().switchSceneTo(SceneManager.getInstance().getSummaryScene());
+                    GameManager.getInstance().GameOver();
                     break;
             }
         });

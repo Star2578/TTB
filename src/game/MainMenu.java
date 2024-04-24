@@ -12,6 +12,7 @@ import javafx.scene.text.Text;
 import logic.GameManager;
 import logic.SceneManager;
 import logic.SoundManager;
+import pieces.player.Knight;
 import utils.Config;
 
 public class MainMenu {
@@ -72,7 +73,7 @@ public class MainMenu {
             // switch bgm
             SoundManager.getInstance().changeBackgroundMusic(Config.bgm_8_bit_adventure);
             //start and switch to the game scene
-            SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getGameScene());
+            GameManager.getInstance().GameStart(new Knight(0, 0, 1));
         });
 
         //-------------------<setting button>-----------------------------------------

@@ -27,7 +27,7 @@ public class Bomb extends BaseMonsterPiece{
         currentState = State.COUNTDOWN; // Initially in the Neutral/Roaming State
 
         //configs values for animation
-        setupAnimation(Config.BombAnimationPath, 0, 0, 16, 16 , false);
+        setupAnimation(Config.BombAnimationPath, 0, 0, 32, 32 , true);
     }
 
     @Override
@@ -51,6 +51,9 @@ public class Bomb extends BaseMonsterPiece{
 
     private void countingDownTimer() {
         if (timeLeft > 0) timeLeft--;
+
+        if (timeLeft == 1) spriteAnimation.changeAnimation(4, 1);
+        if (timeLeft == 0) spriteAnimation.changeAnimation(4, 2);
 
         endAction = true;
     }
