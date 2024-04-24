@@ -37,6 +37,7 @@ public class Config {
     public  static  String NecromancerPath = "sprites/enemies/necromancer_sprite_sheet.png";
     public  static  String SkeletonPath = "sprites/enemies/skeleton_sprite_sheet.png";
     public  static  String VampirePath = "sprites/enemies/vampire_sprite_sheet.png";
+    public  static  String SlimePath = "sprites/enemies/slime_sprite.png";
 
     // NPC
     public static String DealerPortraitPath = "sprites/npc/dealer_portrait.png";
