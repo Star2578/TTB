@@ -72,6 +72,8 @@ public class MovementHandler {
 
         piecesPosition[player.getRow()][player.getCol()] = null;
         piecesPosition[row][col] = player;
+
+        gameManager.totalMovesThisRun++;
     }
 
     private static boolean isInBoardPosition(int row, int col) {

@@ -167,10 +167,10 @@ public class SkillSelectDisplay implements Display{
         return skillInfoOverlay;
     }
     public void enableFrame() {
-        skillSelectorGrid.setDisable(false);
+        view.setDisable(false);
     }
     public void disableFrame() {
-        skillSelectorGrid.setDisable(true);
+        view.setDisable(true);
     }
 
     @Override

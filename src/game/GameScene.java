@@ -152,6 +152,11 @@ public class GameScene {
         // Define update logic
         updateLogic = () -> {
             // Update game state
+
+            // Auto End Turn when player is out of action point
+            if (player.getCurrentActionPoint() == 0 && GameManager.getInstance().autoEndTurn) {
+                if (turnManager.isPlayerTurn) turnManager.endPlayerTurn();
+            }
         };
 
         // move action point display text around mouse cursor
@@ -562,7 +567,6 @@ public class GameScene {
             if (validMovesCache[row][col] && player.validMove(row, col) && piecesPosition[row][col] == null) {
                 GUIManager.getInstance().eventLogDisplay.addLog("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
-                gameManager.totalMovesThisRun++;
             } else {
                 System.out.println("Invalid move");
             }
@@ -613,7 +617,7 @@ public class GameScene {
                         .setImage(null);
             }
             selectedAttackTiles.clear();
-
+            GUIManager.getInstance().isInAttackMode = false;
         }
         else if (type == 2) {
             //reset skill Selected Tiles
@@ -687,10 +691,6 @@ public class GameScene {
         piecesPosition[row][col] = null;
     }
 
-    private boolean isWPressed = false;
-    private boolean isAPressed = false;
-    private boolean isSPressed = false;
-    private boolean isDPressed = false;
 
     private void setupKeyEvents(Scene scene) {
         // Debug tool
@@ -745,6 +745,21 @@ public class GameScene {
                         resetSelection(0);
                     }
                     break;
+                case V:
+                    if (!GUIManager.getInstance().isInAttackMode) {
+                        // Cancel skill selection if skill is selected
+                        if (GameManager.getInstance().selectedSkill != null) {
+                            GameManager.getInstance().gameScene.resetSelection(2);
+                        }
+                        if (GameManager.getInstance().selectedItem != null) {
+                            GameManager.getInstance().gameScene.resetSelection(3);
+                        }
+
+                        GUIManager.getInstance().isInAttackMode = true;
+                        GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+                        AttackHandler.showValidAttackRange(GameManager.getInstance().player.getRow() , GameManager.getInstance().player.getCol());
+                    }
+                    break;
                 case F1:
 //                    removeElements();
                     GUIManager.getInstance().eventLogDisplay.addLog("Hello World!");
@@ -777,7 +792,7 @@ public class GameScene {
                     }
                     break;
                 case F6:
-                    SceneManager.getInstance().switchSceneTo(SceneManager.getInstance().getSummaryScene());
+                    GameManager.getInstance().GameOver();
                     break;
             }
         });

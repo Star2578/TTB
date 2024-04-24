@@ -18,6 +18,11 @@ public class Summary {
     private Scene scene;
     private VBox root;
 
+    private Text killedMonstersText;
+    private Text moneyGatheredText;
+    private Text moveCountText;
+    private Text levelDiedOnText;
+
     public Summary() {
         // Create root pane
         root = new VBox();
@@ -28,22 +33,22 @@ public class Summary {
         root.setBackground(Background.fill(Color.BLACK));
 
         // Create text nodes for player stats
-        Text killedMonstersText = new Text("Monsters Killed: " + GameManager.getInstance().totalKillThisRun);
+        killedMonstersText = new Text("Monsters Killed: " + GameManager.getInstance().totalKillThisRun);
         killedMonstersText.setStyle(
                 "-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:20;" +
                 "-fx-fill:'white';");
-        Text moneyGatheredText = new Text("Money Gathered: $" + + GameManager.getInstance().totalMoneyThisRun);
+        moneyGatheredText = new Text("Money Gathered: $" + + GameManager.getInstance().totalMoneyThisRun);
         moneyGatheredText.setStyle(
                 "-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:20;" +
                 "-fx-fill:'white';");
-        Text moveCountText = new Text("Move Count: " + GameManager.getInstance().totalMovesThisRun);
+        moveCountText = new Text("Move Count: " + GameManager.getInstance().totalMovesThisRun);
         moveCountText.setStyle(
                 "-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:20;" +
                 "-fx-fill:'white';");
-        Text levelDiedOnText = new Text("Level Died On: " + GameManager.getInstance().currentLevelReach);
+        levelDiedOnText = new Text("Level Died On: " + GameManager.getInstance().currentLevelReach);
         levelDiedOnText.setStyle(
                 "-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:20;" +
@@ -70,13 +75,26 @@ public class Summary {
         });
 
         // Add nodes to root pane
-        root.getChildren().addAll(killedMonstersText, moneyGatheredText, levelDiedOnText, retryButton, menuButton);
+        root.getChildren().addAll(killedMonstersText, moneyGatheredText, moveCountText, levelDiedOnText, retryButton, menuButton);
 
         // Create scene
         scene = new Scene(root, 1280, 720); // Set scene size as needed
     }
 
+    public void updateText() {
+        System.out.println("Monsters Killed: " + GameManager.getInstance().totalKillThisRun);
+        System.out.println("Money Gathered: $" + + GameManager.getInstance().totalMoneyThisRun);
+        System.out.println("Move Count: " + GameManager.getInstance().totalMovesThisRun);
+        System.out.println("Level Died On: " + GameManager.getInstance().currentLevelReach);
+
+        killedMonstersText.setText("Monsters Killed: " + GameManager.getInstance().totalKillThisRun);
+        moveCountText.setText("Money Gathered: $" + + GameManager.getInstance().totalMoneyThisRun);
+        levelDiedOnText.setText("Move Count: " + GameManager.getInstance().totalMovesThisRun);
+        moneyGatheredText.setText("Level Died On: " + GameManager.getInstance().currentLevelReach);
+    }
+
     public Scene getScene() {
+        updateText();
         return scene;
     }
 }

@@ -36,7 +36,7 @@ public class Main extends Application {
 
         SceneManager.getInstance().setGameScene(gameScene.getScene()); // Save this scene for later use
         SceneManager.getInstance().setMenuScene(mainMenu.getScene());
-        SceneManager.getInstance().setSummaryScene(summary.getScene());
+        SceneManager.getInstance().setSummary(summary);
 
         primaryStage.setResizable(false);
         primaryStage.setScene(mainMenu.getScene());
