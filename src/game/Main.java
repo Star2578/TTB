@@ -2,10 +2,14 @@ package game;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import logic.*;
 import logic.ui.GUIManager;
@@ -16,6 +20,7 @@ public class Main extends Application {
     GameScene gameScene;
     MainMenu mainMenu;
     Summary summary;
+    CharSelection charSelection;
 
     public static void main(String[] args) {
         launch(args);
@@ -31,14 +36,30 @@ public class Main extends Application {
         sceneManager.setStage(primaryStage);
 
         mainMenu = new MainMenu();
+        charSelection = new CharSelection();
         gameScene = new GameScene();
         summary = new Summary();
         GameManager.getInstance().gameScene = gameScene;
 
-        SceneManager.getInstance().setGameScene(gameScene.getScene()); // Save this scene for later use
+        // Save these scene for later use
         SceneManager.getInstance().setMenuScene(mainMenu.getScene());
+        SceneManager.getInstance().setGameScene(gameScene.getScene());
+        SceneManager.getInstance().setCharSelectionScene(charSelection.getScene());
         SceneManager.getInstance().setSummary(summary);
 
+
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            //terminate everything when close window
+            @Override
+            public void handle(WindowEvent t) {
+
+                //TODO: do something about SAVING PROGRESS before exit
+                //TODO: write your code here
+
+                Platform.exit();
+                System.exit(0);
+            }
+        });
         primaryStage.setResizable(false);
         primaryStage.setScene(mainMenu.getScene());
         primaryStage.setTitle("Dungeon Crawler");
@@ -56,7 +77,7 @@ public class Main extends Application {
         GUIManager.getInstance().updateCursor(summary.getScene(), Config.DefaultCursor);
 
         // Show the primaryStage after configuring the fade transition
-        primaryStage.setScene(mainMenu.getScene());
+        //primaryStage.setScene(mainMenu.getScene());
         fadeTransition.play(); // Start the fade-in animation
         primaryStage.show();
         primaryStage.setOnCloseRequest(event -> SoundManager.getInstance().stopBackgroundMusic());

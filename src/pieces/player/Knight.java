@@ -1,6 +1,8 @@
 package pieces.player;
 
 import logic.SoundManager;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import logic.ui.GUIManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
@@ -39,6 +41,7 @@ public class Knight extends BasePlayerPiece {
         skills[3] = new Stomp();
 
         //configs values for animation
+        setTexture(new ImageView(new Image(Config.KnightPath))); //static image for icon, ...
         setupAnimation(Config.KnightAnimationPath, 0, -15, 32, 56 , true);
     }
 

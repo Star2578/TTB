@@ -21,8 +21,11 @@ public class Config {
     public static String HandCursor = "sprites/cursors/Megabyte Games Mouse Cursor Pack/16x16/png/cursor-pointer-18.png";
     public static String HandClickCursor = "sprites/cursors/Megabyte Games Mouse Cursor Pack/16x16/png/cursor-pointer-18-click.png";
 
+    // Player shadow
+    public static String FootShadowPath = "sprites/char_floor_shadow.png";
+
     // Player
-    public static String KnightLargePath = "sprites/player/Knight_Large.png";
+    public static String KnightPath = "sprites/player/Knight_Large.png";
     public static String KnightAnimationPath = "sprites/player/knight_sprite_sheet.png";
     public static String ArcherAnimationPath = "sprites/player/Archer_sprite_sheet.png";
     public static String WizardAnimationPath = "sprites/player/Wizard_sprite_sheet2.png";

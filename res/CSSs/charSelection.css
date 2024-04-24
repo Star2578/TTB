@@ -1,0 +1,25 @@
+@font-face {
+    font-family: "x8y12pxTheStrongGamer";
+    src: url("/font/x8y12pxTheStrongGamer.ttf");
+}
+
+@font-face {
+    font-family: "x12y16pxSolidLinker";
+    src: url("/font/x12y16pxSolidLinker.ttf");
+}
+
+@font-face {
+    font-family: "x16y32pxGridGazer";
+    src: url("/font/x16y32pxGridGazer.ttf");
+}
+
+#charNameText{
+    -fx-font-family:"x16y32pxGridGazer";
+    -fx-font-size: 64px;
+    -fx-fill: "#f4f6ff";
+}
+
+#scrollPane{
+  -fx-background-insets: 0, 0, 1, 2;
+  -fx-background-color: "#ffffff";
+}
