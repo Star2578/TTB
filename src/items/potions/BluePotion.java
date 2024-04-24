@@ -3,7 +3,6 @@ package items.potions;
 import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
-import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
 import utils.Config;

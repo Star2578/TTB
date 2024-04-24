@@ -93,7 +93,9 @@ public class SkillSelectDisplay implements Display{
         // Make EmptySlot & Locked Slot can't be select
         if (!(skill instanceof EmptySkill) && !(skill instanceof LockedSlot)) {
             skillFrame.setOnMouseClicked(mouseEvent -> {
-                GameManager.getInstance().gameScene.resetSelectionAll();
+                GameManager.getInstance().gameScene.resetSelection(0);
+                GameManager.getInstance().gameScene.resetSelection(1);
+                GameManager.getInstance().gameScene.resetSelection(3);
                 SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
 
                 // Reset selection if other skill are selected
@@ -117,7 +119,7 @@ public class SkillSelectDisplay implements Display{
                 }
 
                 SkillHandler.showValidSkillRange(player.getRow(), player.getCol(), skill);
-                GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+                GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.HandCursor);
                 GameManager.getInstance().selectedSkill = skill;
                 skill.getFrame().setImage(imageScaler.resample(new Image(Config.FrameSelectedPath), 2));
                 System.out.println("Selected " + skill.getName() + " skill");

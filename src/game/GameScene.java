@@ -11,7 +11,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -136,7 +135,7 @@ public class GameScene {
                 "-fx-font-size:50;" +
                 "-fx-fill:'white';");
         currentLevelText.setTranslateX(300);
-        currentLevelText.setTranslateY(-280);
+        currentLevelText.setTranslateY(-290);
         centerPane.getChildren().add(currentLevelText);
 
         gameStart();
@@ -364,13 +363,23 @@ public class GameScene {
                 final int currentRow = row; // Make row effectively final
                 final int currentCol = col; // Make col effectively final
                 ImageView square = dungeonFloor[row][col];
+                int finalRow = row;
+                int finalCol = col;
                 square.setOnMouseClicked(event -> {
                     if(event.getButton() == MouseButton.PRIMARY){
                         //left click for moving & attack
                         handleSquareClick(currentRow, currentCol);
 
                     } else if (event.getButton() == MouseButton.SECONDARY) {
-                        //TODO : right click to inspect environment
+                        BasePiece target = piecesPosition[finalRow][finalCol];
+
+                        if (target instanceof BaseMonsterPiece monsterPiece) {
+                            GUIManager.getInstance().eventLogDisplay.addLog("--------------------------------");
+                            GUIManager.getInstance().eventLogDisplay.addLog(monsterPiece.getClass().getSimpleName());
+                            GUIManager.getInstance().eventLogDisplay.addLog("HP: "+ monsterPiece.getCurrentHealth() + "/" + monsterPiece.getMaxHealth());
+                            // TODO : Maybe log brief description of the monster characteristic?
+                            GUIManager.getInstance().eventLogDisplay.addLog("--------------------------------");
+                        }
                     }
                 });
             }

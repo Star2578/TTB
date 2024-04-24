@@ -10,7 +10,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.ImageScaler;
@@ -60,7 +63,7 @@ public class InventoryDisplay implements Display {
                 BasePlayerPiece player = GameManager.getInstance().player;
 
                 ItemHandler.showValidItemRange(player.getRow(), player.getCol(), currentItem);
-                GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+                GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.HandCursor);
             }
         });
 

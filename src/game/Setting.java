@@ -35,11 +35,10 @@ public class Setting {
         Button backButton = new Button("Back");
         VBox.setMargin(backButton, new Insets(10));
 
-
         ScrollPane settingsRoot = new ScrollPane();
 //        settingsRoot.setMaxHeight(720);
         settingsRoot.setMaxWidth(1280);
-        settingsRoot.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        settingsRoot.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         settingsRoot.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         settingsRoot.setStyle("-fx-background-color:transparent;");
 
@@ -178,6 +177,8 @@ public class Setting {
         howToPlayContainer.setTranslateX(-140);
 
         vBox.getChildren().add(howToPlayContainer);
+
+        GUIManager.getInstance().updateCursor(settingsScene, Config.DefaultCursor);
 
         return settingsScene;
     }

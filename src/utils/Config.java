@@ -13,13 +13,13 @@ public class Config {
     public static final int MOVE_ACTIONPOINT = 1;
 
     // Cursor
-    public static String DefaultCursor = "sprites/cursors/png/cursor_default.png";
-    public static String UnavailableCursor = "";
-    public static String AttackCursor = "sprites/cursors/png/cursor_select.png";
-    public static String AimCursor = "";
-    public static String QuestionCursor = "";
-    public static String HandCursor = "sprites/cursors/png/cursor_select.png";
-    public static String HandClickCursor = "sprites/cursors/png/cursor_select_tap.png";
+    public static String DefaultCursor = "sprites/cursors/Megabyte Games Mouse Cursor Pack/16x16/png/cursor-pointer-1.png";
+    public static String UnavailableCursor = "sprites/cursors/Megabyte Games Mouse Cursor Pack/16x16/png/cursor-idle-2a.png";
+    public static String AttackCursor = "sprites/cursors/Megabyte Games Mouse Cursor Pack/16x16/png/cursor-pointer-25.png";
+    public static String AimCursor = "sprites/cursors/Megabyte Games Mouse Cursor Pack/16x16/png/cursor-target-10.png";
+    public static String QuestionCursor = "sprites/cursors/Megabyte Games Mouse Cursor Pack/16x16/png/cursor-question.png";
+    public static String HandCursor = "sprites/cursors/Megabyte Games Mouse Cursor Pack/16x16/png/cursor-pointer-18.png";
+    public static String HandClickCursor = "sprites/cursors/Megabyte Games Mouse Cursor Pack/16x16/png/cursor-pointer-18-click.png";
 
     // Player
     public static String KnightLargePath = "sprites/player/Knight_Large.png";
