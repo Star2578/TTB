@@ -163,10 +163,7 @@ public class GameScene {
         // Right click anywhere in the scene to cancel/deselect anything
         scene.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                resetSelection(0);
-                resetSelection(1);
-                resetSelection(2);
-                resetSelection(3);
+                resetSelectionAll();
             }
         });
         // Define render logic
@@ -394,12 +391,7 @@ public class GameScene {
         if (!player.canAct()) {
             SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
 
-            if (GUIManager.getInstance().isInAttackMode)
-                resetSelection(1);
-            if (GameManager.getInstance().selectedSkill != null)
-                resetSelection(2);
-            if (GameManager.getInstance().selectedItem != null)
-                resetSelection(3);
+            resetSelectionAll();
             return;
         }
 
@@ -447,7 +439,6 @@ public class GameScene {
                         SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                         System.out.println("Not enough mana or action point");
                     }
-                    resetSelection(2);
                     if (!monsterPiece.isAlive()) {
                         removePiece(monsterPiece);
                         environmentPieces.remove(monsterPiece);
@@ -463,13 +454,11 @@ public class GameScene {
                             SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                             System.out.println("Not enough mana or action point");
                         }
-                        resetSelection(2);
                     }
                 }
-            } else {
-                // Cancel skill selection
-                resetSelection(2);
             }
+            resetSelection(2);
+
             return;
         }
 
@@ -488,7 +477,6 @@ public class GameScene {
 
                             GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedItem.getName() + " on " + monsterPiece.getClass().getSimpleName());
                             usableItem.useItem(monsterPiece);
-                            resetSelection(3);
 
                             // throw away after use
                             GUIManager.getInstance().inventoryDisplay.throwAwayItem(item);
@@ -499,22 +487,14 @@ public class GameScene {
 
                             GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedItem.getName());
                             usableItem.useItem(playerPiece);
-                            resetSelection(3);
                             // throw away after use
                             GUIManager.getInstance().inventoryDisplay.throwAwayItem(item);
                         }
-                    } else {
-                        // cancel selection
-                        resetSelection(3);
                     }
-                } else {
-                    // reset selection when not in valid range
-                    resetSelection(3);
                 }
-            } else {
-                // reset selection when clicked outside for other
-                resetSelection(3);
             }
+
+            resetSelection(3);
 
             return;
         }
@@ -694,6 +674,13 @@ public class GameScene {
                 case ESCAPE:
                     SceneManager.getInstance().switchSceneTo(Setting.setting(SceneManager.getInstance().getStage(), this.scene));
                     break;
+                case SHIFT:
+                    System.out.println("Space pressed");
+                    turnManager.endPlayerTurn();
+                    GameManager.getInstance().gameScene.exitAttackMode();
+                    GameManager.getInstance().gameScene.resetSelectionAll();
+                    GUIManager.getInstance().disableButton();
+                    break;
                 case W:
                 case A:
                 case S:
@@ -703,6 +690,7 @@ public class GameScene {
                 case LEFT:
                 case RIGHT:
                     if (!isPlayerPieceSelected && player.canAct()) {
+                        resetSelectionAll();
                         isPlayerPieceSelected = true;
                         MovementHandler.showValidMoves(player.getRow(), player.getCol());
                     } else if (player.canAct()) {
@@ -743,12 +731,7 @@ public class GameScene {
                 case V:
                     if (player.canAct() && !GUIManager.getInstance().isInAttackMode) {
                         // Cancel skill selection if skill is selected
-                        if (GameManager.getInstance().selectedSkill != null) {
-                            GameManager.getInstance().gameScene.resetSelection(2);
-                        }
-                        if (GameManager.getInstance().selectedItem != null) {
-                            GameManager.getInstance().gameScene.resetSelection(3);
-                        }
+                        resetSelectionAll();
 
                         GUIManager.getInstance().isInAttackMode = true;
                         GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
@@ -860,5 +843,12 @@ public class GameScene {
         GUIManager.getInstance().isInAttackMode = false;
         resetSelection(1);
         GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
+    }
+
+    public void resetSelectionAll() {
+        resetSelection(0);
+        resetSelection(1);
+        resetSelection(2);
+        resetSelection(3);
     }
 }
