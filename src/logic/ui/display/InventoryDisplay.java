@@ -55,14 +55,7 @@ public class InventoryDisplay implements Display {
             SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
             if (currentItem != null && !(currentItem instanceof EmptyItem)) {
                 System.out.println("Use " + currentItem.getName());
-                // Exit attack mode if activated
-                if (GUIManager.getInstance().isInAttackMode) {
-                    GameManager.getInstance().gameScene.exitAttackMode();
-                }
-                // Reset selection if other skill are selected
-                if (GameManager.getInstance().selectedSkill != null) {
-                    GameManager.getInstance().gameScene.resetSelection(2);
-                }
+                GameManager.getInstance().gameScene.resetSelectionAll();
 
                 BasePlayerPiece player = GameManager.getInstance().player;
 

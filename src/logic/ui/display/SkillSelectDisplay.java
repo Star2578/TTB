@@ -93,10 +93,7 @@ public class SkillSelectDisplay implements Display{
         // Make EmptySlot & Locked Slot can't be select
         if (!(skill instanceof EmptySkill) && !(skill instanceof LockedSlot)) {
             skillFrame.setOnMouseClicked(mouseEvent -> {
-                // Exit attack mode if activated
-                if (GUIManager.getInstance().isInAttackMode) {
-                    GameManager.getInstance().gameScene.exitAttackMode();
-                }
+                GameManager.getInstance().gameScene.resetSelectionAll();
                 SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
 
                 // Reset selection if other skill are selected
@@ -109,6 +106,7 @@ public class SkillSelectDisplay implements Display{
                             GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName());
                             GameManager.getInstance().selectedSkill.perform(GameManager.getInstance().player);
                         } else {
+                            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                             System.out.println("Not enough mana or action point");
                         }
 

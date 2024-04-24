@@ -65,7 +65,6 @@ public class GameScene {
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
     private boolean isPlayerPieceSelected = false;
     private boolean autoCycle = false;
-    private int dungeonLevel = GameManager.getInstance().dungeonLevel;
 
 
     //------------<UI>----------------------------------------------------
@@ -77,6 +76,7 @@ public class GameScene {
     private VBox rightPane; // Contain right side UI
     private VBox leftPane; // Contain left side UI
     private StackPane centerPane; // Contain the game board
+    private Text currentLevelText;
 
     private Runnable renderLogic;
     private Runnable updateLogic;
@@ -128,6 +128,16 @@ public class GameScene {
 
         boardPane.setBackground(Background.fill(Color.GOLD));
         root.setCenter(centerPane);
+
+        // Current Level Text
+        currentLevelText = new Text(String.valueOf(GameManager.getInstance().dungeonLevel));
+        currentLevelText.setStyle(
+                "-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:50;" +
+                "-fx-fill:'white';");
+        currentLevelText.setTranslateX(300);
+        currentLevelText.setTranslateY(-280);
+        centerPane.getChildren().add(currentLevelText);
 
         gameStart();
         // Add game area and GUI panes to the root BorderPane
@@ -408,17 +418,15 @@ public class GameScene {
                     SoundManager.getInstance().playSoundEffect(Config.sfx_attackSound);
                     player.attack(monsterPiece);
                     GUIManager.getInstance().eventLogDisplay.addLog("Player attack " + monsterPiece.getClass().getSimpleName() + " at (" + row + ", " + col + ")");
-                    exitAttackMode();
                     if (!monsterPiece.isAlive()) {
                         removePiece(monsterPiece);
                         environmentPieces.remove(monsterPiece);
                         gameManager.totalKillThisRun++;
                     }
                 }
-            } else {
-                // Player clicked outside valid attack range, exit attack mode
-                exitAttackMode();
             }
+            resetSelection(1);
+
             return;
         }
 
@@ -593,6 +601,7 @@ public class GameScene {
             }
             selectedAttackTiles.clear();
             GUIManager.getInstance().isInAttackMode = false;
+            GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
         }
         else if (type == 2) {
             //reset skill Selected Tiles
@@ -677,7 +686,6 @@ public class GameScene {
                 case SHIFT:
                     System.out.println("Space pressed");
                     turnManager.endPlayerTurn();
-                    GameManager.getInstance().gameScene.exitAttackMode();
                     GameManager.getInstance().gameScene.resetSelectionAll();
                     GUIManager.getInstance().disableButton();
                     break;
@@ -777,7 +785,8 @@ public class GameScene {
     }
 
     public void generateNewFloor() {
-        dungeonLevel += 1;
+        GameManager.getInstance().dungeonLevel += 1;
+        currentLevelText.setText(String.valueOf(GameManager.getInstance().dungeonLevel));
 
         // switch the floor back to normal
         for (Point2D coordinate : gameManager.doorAt) {
@@ -789,7 +798,7 @@ public class GameScene {
         gameManager.doorAt.clear();
 
         removeElements();
-        if (dungeonLevel % 5 != 0) {
+        if (GameManager.getInstance().dungeonLevel % 5 != 0) {
             normalRoom();
         } else {
             safeRoom();
@@ -837,12 +846,6 @@ public class GameScene {
         if (autoCycleTurn != null) {
             autoCycleTurn.stop();
         }
-    }
-
-    public void exitAttackMode() {
-        GUIManager.getInstance().isInAttackMode = false;
-        resetSelection(1);
-        GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
     }
 
     public void resetSelectionAll() {

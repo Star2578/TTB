@@ -36,6 +36,9 @@ public class GameManager {
     public boolean displayActionPointOnCursor;
 
     // ------------ Progression --------------
+    public int playerMoney = 0;
+    public int dungeonLevel = 0;
+
     public int totalKill = 0;
     public int totalKillThisRun = 0;
     public int totalMoves = 0;
@@ -75,8 +78,6 @@ public class GameManager {
 
     // -------------- Inventory --------------
     public List<BaseItem> inventory = new ArrayList<>();
-    public int playerMoney = 0;
-    public int dungeonLevel = 0;
     public List<Point2D> doorAt = new ArrayList<>(); // use to store where the door is at
 
     public final BaseSkill[] UNIVERSAL_SKILL_POOL = {
@@ -164,6 +165,7 @@ public class GameManager {
         // save game progress
         SoundManager.getInstance().playSoundEffect(Config.sfx_gameOverSound);
         totalMoneyThisRun = playerMoney;
+        currentLevelReach = dungeonLevel;
 
         totalKill += totalKillThisRun;
         totalMoney += totalMoneyThisRun;

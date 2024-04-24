@@ -175,7 +175,6 @@ public class GUIManager {
         endTurnButton.setOnMouseClicked(mouseEvent -> {
             turnManager.endPlayerTurn();
             SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
-            GameManager.getInstance().gameScene.exitAttackMode();
             GameManager.getInstance().gameScene.resetSelectionAll();
             disableButton();
         });
