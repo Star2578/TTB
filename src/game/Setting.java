@@ -1,16 +1,30 @@
 package game;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import logic.GameManager;
 import logic.SoundManager;
+import logic.ui.GUIManager;
 import utils.Config;
+
+import java.util.Objects;
+import java.util.Random;
 
 public class Setting {
     public static GameManager gameManager = GameManager.getInstance();
@@ -21,11 +35,18 @@ public class Setting {
         Button backButton = new Button("Back");
         VBox.setMargin(backButton, new Insets(10));
 
-        VBox settingsRoot = new VBox();
-        settingsRoot.setAlignment(Pos.TOP_RIGHT);
-        settingsRoot.setBackground(Background.fill(Paint.valueOf("#300c17")));
-        settingsRoot.setPrefWidth(1280);
-        settingsRoot.setPrefHeight(720);
+        ScrollPane settingsRoot = new ScrollPane();
+//        settingsRoot.setMaxHeight(720);
+        settingsRoot.setMaxWidth(1280);
+        settingsRoot.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        settingsRoot.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        settingsRoot.setStyle("-fx-background-color:transparent;");
+
+        VBox vBox = new VBox();
+        vBox.setAlignment(Pos.TOP_RIGHT);
+        vBox.setBackground(Background.fill(Paint.valueOf("#300c17")));
+        vBox.setPrefWidth(1280);
+        vBox.setPrefHeight(720);
 
         // Volume sliders for background music and SFX
         Slider bgMusicSlider = new Slider();
@@ -60,27 +81,21 @@ public class Setting {
         });
 
         // Text labels for sliders and combo box
-        Label bgMusicLabel = new Label("Background Music Volume:");
-        bgMusicLabel.setStyle(
-                "-fx-font-family:x16y32pxGridGazer;" +
-                "-fx-font-size:16;" +
-                "-fx-text-fill:'white';");
-        Label sfxLabel = new Label("SFX Volume:");
-        sfxLabel.setStyle(
-                "-fx-font-family:x16y32pxGridGazer;" +
-                "-fx-font-size:16;" +
-                "-fx-text-fill:'white';");
+        Label bgMusicLabel = createLabel("Background Music Volume:");
+        Label sfxLabel = createLabel("SFX Volume:");
 
         VBox settingsContainer = new VBox(bgMusicLabel, bgMusicSlider, sfxLabel, sfxSlider);
         settingsContainer.setPadding(new Insets(40));
         settingsContainer.setSpacing(10);
 
-        // Add labels and components to the settingsRoot VBox
-        settingsRoot.getChildren().addAll(backButton, settingsContainer);
+        // Add labels and components to the VBox
+        vBox.getChildren().addAll(backButton, settingsContainer);
+
+        settingsRoot.setContent(vBox);
 
         // Create a new scene for settings
         Scene settingsScene = new Scene(settingsRoot);
-        settingsRoot.getStylesheets().add(Setting.class.getResource("/CSSs/BottomLeftGUI.css").toExternalForm());
+        vBox.getStylesheets().add(Setting.class.getResource("/CSSs/BottomLeftGUI.css").toExternalForm());
 
         // Handle action for the "Back" button to return to the main menu
         backButton.setOnAction(e -> {
@@ -88,22 +103,6 @@ public class Setting {
             soundManager.playSoundEffect(Config.sfx_buttonSound);
             stage.setScene(previousScene); // Return to the previous scene
         });
-
-//        ComboBox<Music> bgMusicSelector = new ComboBox<>();
-//        bgMusicSelector.getItems().addAll(
-//                new Music("8 Bit Adventure", "res/BGM/8_Bit_Adventure.wav"),
-//                new Music("8 Bit Nostalgia", "res/BGM/8_Bit_Nostalgia.wav")
-//        );
-//        bgMusicSelector.setValue(new Music("8 Bit Nostalgia", "res/BGM/8_Bit_Nostalgia.wav")); // Set default value
-//
-//        // Event listener for background music selector
-//        bgMusicSelector.setOnAction(event -> {
-//            Music selectedMusic = bgMusicSelector.getValue();
-//            soundManager.changeBackgroundMusic(selectedMusic.getPath());
-//        });
-//
-//        // Add the background music selector to the settingsContainer
-//        settingsContainer.getChildren().add(bgMusicSelector);
 
         CheckBox fastUseCheckbox = new CheckBox("Fast Use on Self");
         fastUseCheckbox.setStyle(
@@ -133,54 +132,124 @@ public class Setting {
         // Event listeners for option checkboxes
         fastUseCheckbox.setOnAction(event -> {
             // Handle the fast use on self option
-            // Your logic here...
+            // TODO
             GameManager.getInstance().fastUse = fastUseCheckbox.isSelected();
         });
 
         autoEndTurnCheckbox.setOnAction(event -> {
             // Handle the auto end turn option
-            // Your logic here...
             GameManager.getInstance().autoEndTurn = autoEndTurnCheckbox.isSelected();
         });
 
         displayDamageNumbersCheckbox.setOnAction(event -> {
             // Handle the display damage numbers option
-            // Your logic here...
+            // TODO
             GameManager.getInstance().displayDamageNumber = displayDamageNumbersCheckbox.isSelected();
         });
 
         displayActionPointOnCursorCheckbox.setOnAction(event -> {
             // Handle the display damage numbers option
-            // Your logic here...
             GameManager.getInstance().displayActionPointOnCursor = displayActionPointOnCursorCheckbox.isSelected();
+            GUIManager.getInstance().getActionPointDisplayText().setVisible(GameManager.getInstance().displayActionPointOnCursor);
+        });
+
+        vBox.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                gameManager.saveSettings();
+                soundManager.playSoundEffect(Config.sfx_buttonSound);
+                stage.setScene(previousScene); // Return to the previous scene
+            }
         });
 
         // Add checkboxes to the settingsContainer
         settingsContainer.getChildren().addAll(fastUseCheckbox, autoEndTurnCheckbox, displayDamageNumbersCheckbox, displayActionPointOnCursorCheckbox);
 
+        // How to play section
+        VBox howToPlayContainer = createHowToPlayContainer();
+        howToPlayContainer.setPadding(new Insets(20));
+
+        howToPlayContainer.setMaxWidth(1000);
+        howToPlayContainer.setBackground(Background.fill(Paint.valueOf("#000000")));
+        howToPlayContainer.setBorder(Border.stroke(Paint.valueOf("#FFFFFF")));
+        howToPlayContainer.setPadding(new Insets(20));
+        howToPlayContainer.setSpacing(10);
+        howToPlayContainer.setAlignment(Pos.CENTER);
+        howToPlayContainer.setTranslateX(-140);
+
+        vBox.getChildren().add(howToPlayContainer);
+
+        GUIManager.getInstance().updateCursor(settingsScene, Config.DefaultCursor);
+
         return settingsScene;
     }
 
-    public static class Music {
-        private final String name;
-        private final String path;
+    private static Label createLabel(String text) {
+        Label label = new Label(text);
+        label.setFont(Font.font("x16y32pxGridGazer", 16));
+        label.setTextFill(Color.WHITE);
+        return label;
+    }
 
-        public Music(String name, String path) {
-            this.name = name;
-            this.path = path;
-        }
+    // Helper method to create the How to Play container
+    private static VBox createHowToPlayContainer() {
+        Label howToPlayLabel = new Label("How to Play");
+        howToPlayLabel.setFont(Font.font("x16y32pxGridGazer", 28));
+        howToPlayLabel.setTextFill(Color.WHITE);
+        addChangingDropShadow(howToPlayLabel);
 
-        public String getName() {
-            return name;
-        }
+        // Text for How to Play instructions
+        String movementText = "Click on your character, then click where you want to move, or use WASD/Arrow keys.";
+        String actionsText = "View and select character actions on the left sidebar. This includes health, mana, action points (like stamina), money, item selection slots, and skill selection slots.";
+        String combatText = "Click 'Attack' or press V to enter attack mode. Click the target to attack. Press spacebar or click 'End Turn' to end your turn.";
+        String objectiveText = "Explore the dungeon, defeating monsters for money drops. Every 5 levels, encounter a dealer to spend money. The goal is to progress as far as possible. Money is lost upon game over.";
 
-        public String getPath() {
-            return path;
-        }
+        VBox howToPlayContainer = new VBox(
+                howToPlayLabel,
+                createHowToPlaySubtitle("Movement:", movementText),
+                createHowToPlaySubtitle("Actions:", actionsText),
+                createHowToPlaySubtitle("Combat:", combatText),
+                createHowToPlaySubtitle("Objective:", objectiveText)
+        );
+        howToPlayContainer.setBackground(Background.fill(Paint.valueOf("#000000")));
+        howToPlayContainer.setBorder(Border.stroke(Paint.valueOf("#FFFFFF")));
+        howToPlayContainer.setSpacing(10);
+        howToPlayContainer.setAlignment(Pos.CENTER_LEFT);
+        return howToPlayContainer;
+    }
 
-        @Override
-        public String toString() {
-            return name;
-        }
+    // Helper method to create How to Play subtitles
+    private static VBox createHowToPlaySubtitle(String title, String text) {
+        Label subtitleLabel = new Label(title);
+        subtitleLabel.setFont(Font.font("x16y32pxGridGazer", 20));
+        subtitleLabel.setTextFill(Color.web("#FFD700")); // Gold color
+
+        Label textLabel = new Label(text);
+        textLabel.setFont(Font.font("x16y32pxGridGazer", 18));
+        textLabel.setTextFill(Color.WHITE);
+        textLabel.setWrapText(true);
+
+        return new VBox(subtitleLabel, textLabel);
+    }
+
+    private static void addChangingDropShadow(Label text) {
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(0);
+        dropShadow.setOffsetX(2);
+        dropShadow.setOffsetY(2);
+        text.setEffect(dropShadow);
+
+        // Create a Timeline to change the drop shadow color randomly
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(0.25), event -> {
+                    dropShadow.setColor(generateRandomColor());
+                })
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    private static Color generateRandomColor() {
+        Random random = new Random();
+        return Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
     }
 }

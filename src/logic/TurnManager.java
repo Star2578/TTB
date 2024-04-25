@@ -60,6 +60,7 @@ public class TurnManager {
         GameManager.getInstance().gameScene.resetSelection(0);
         GameManager.getInstance().gameScene.resetSelection(1);
         GameManager.getInstance().gameScene.resetSelection(2);
+        currentEnvironmentPieceIndex = 0;
         startEnvironmentTurn();
     }
 
@@ -95,7 +96,7 @@ public class TurnManager {
 
         // Move to the next environment piece
         currentEnvironmentPieceIndex++;
-        if (currentEnvironmentPieceIndex == environmentPieces.size()) {
+        if (currentEnvironmentPieceIndex >= environmentPieces.size()) {
             EffectManager.getInstance().clearDeadEffect(); // remove unused effect
             currentEnvironmentPieceIndex = 0;
             startPlayerTurn();

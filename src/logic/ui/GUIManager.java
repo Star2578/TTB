@@ -41,7 +41,7 @@ public class GUIManager {
     private VBox manaBox;
     private Text manaText;
     private ProgressBar manaBar;
-
+    private Text actionPointDisplayText;
 
     // Buttons
     VBox playerOptionButtonBox;
@@ -71,6 +71,14 @@ public class GUIManager {
         skillSelectDisplay = new SkillSelectDisplay();
         eventLogDisplay = new EventLogDisplay();
         npcDisplay = new NpcDisplay();
+
+        actionPointDisplayText = new Text(player.getCurrentActionPoint() + "/" + player.getMaxActionPoint());
+        actionPointDisplayText.setStyle(
+                "-fx-font-family:x16y32pxGridGazer;" +
+                        "-fx-font-size:16;" +
+                        "-fx-fill:'white';");
+        actionPointDisplayText.setDisable(true);
+        actionPointDisplayText.setVisible(GameManager.getInstance().displayActionPointOnCursor);
 
         initializePlayerOptionsMenu();
         initializeRightSideUI();
@@ -156,10 +164,7 @@ public class GUIManager {
         endTurnButton = new Button("End Turn");
 
         attackButton.setOnMouseClicked(mouseEvent -> {
-            // Cancel skill selection if skill is selected
-            if (GameManager.getInstance().selectedSkill != null) {
-                GameManager.getInstance().gameScene.resetSelection(2);
-            }
+            GameManager.getInstance().gameScene.resetSelectionAll();
             SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
 
             isInAttackMode = true;
@@ -170,7 +175,7 @@ public class GUIManager {
         endTurnButton.setOnMouseClicked(mouseEvent -> {
             turnManager.endPlayerTurn();
             SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
-            GameManager.getInstance().gameScene.exitAttackMode();
+            GameManager.getInstance().gameScene.resetSelectionAll();
             disableButton();
         });
 
@@ -249,6 +254,7 @@ public class GUIManager {
     private void updateText() {
         displayActionPoint.setText("Action Point: " + player.getCurrentActionPoint() + "/" + player.getMaxActionPoint());
         displayMoney.setText("Money: " + GameManager.getInstance().playerMoney);
+        actionPointDisplayText.setText(player.getCurrentActionPoint() + "/" + player.getMaxActionPoint());
     }
 
     public void updateCursor(Scene currentScene, String cursorPath) {
@@ -266,6 +272,10 @@ public class GUIManager {
             currentScene.setCursor(bufferCursor);
         }));
         timeline.play();
+    }
+
+    public Text getActionPointDisplayText() {
+        return actionPointDisplayText;
     }
 
     public void switchToEventLog() {

@@ -20,9 +20,7 @@ import logic.handlers.ItemHandler;
 import logic.ui.GUIManager;
 import logic.ui.overlay.ItemInfoOverlay;
 import pieces.player.BasePlayerPiece;
-import utils.Config;
-import utils.RefillMana;
-import utils.Usable;
+import utils.*;
 
 public class InventoryDisplay implements Display {
     private VBox view;
@@ -55,19 +53,12 @@ public class InventoryDisplay implements Display {
             SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
             if (currentItem != null && !(currentItem instanceof EmptyItem)) {
                 System.out.println("Use " + currentItem.getName());
-                // Exit attack mode if activated
-                if (GUIManager.getInstance().isInAttackMode) {
-                    GameManager.getInstance().gameScene.exitAttackMode();
-                }
-                // Reset selection if other skill are selected
-                if (GameManager.getInstance().selectedSkill != null) {
-                    GameManager.getInstance().gameScene.resetSelection(2);
-                }
+                GameManager.getInstance().gameScene.resetSelectionAll();
 
                 BasePlayerPiece player = GameManager.getInstance().player;
 
                 ItemHandler.showValidItemRange(player.getRow(), player.getCol(), currentItem);
-                GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+                GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.HandCursor);
             }
         });
 
@@ -159,18 +150,23 @@ public class InventoryDisplay implements Display {
         Image itemIcon = imageScaler.resample(item.getIcon().getImage(), 2);
         ImageView frameView = item.getFrame();
 
-        itemFrame.setAlignment(Pos.CENTER);
-        itemFrame.setPrefWidth(64);
-        itemFrame.setPrefHeight(64);
-        itemFrame.getChildren().addAll(new ImageView(itemIcon), frameView);
-
         if (!(item instanceof EmptyItem)) {
+            ImageView itemIconView = new ImageView(itemIcon);
+            itemIconView.setFitWidth(40);
+            itemIconView.setFitHeight(40);
+            itemIconView.setPreserveRatio(true);
+
+            itemFrame.setAlignment(Pos.CENTER);
+            itemFrame.setPrefWidth(64);
+            itemFrame.setPrefHeight(64);
+            itemFrame.getChildren().addAll(itemIconView);
+
             itemFrame.setOnMouseClicked(mouseEvent -> {
                 SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
 
                 if (GameManager.getInstance().selectedItem != null) {
                     if (GameManager.getInstance().selectedItem == item && item instanceof Usable usable) {
-                        if (usable.castOnSelf()) {
+                        if (usable.castOnSelf() && GameManager.getInstance().fastUse) {
                             // Use item
                             usable.useItem(GameManager.getInstance().player);
                             GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedItem.getName());
@@ -195,15 +191,29 @@ public class InventoryDisplay implements Display {
                 itemInfoOverlay.getDesc().setText(item.getDescription());
 
                 itemInfoOverlay.getDataContainer().getChildren().clear();
-                if (item instanceof RefillMana r) {
+                if (item instanceof Attack r) {
+                    itemInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
+                }if (item instanceof Healing r) {
+                    itemInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
+                }if (item instanceof RefillMana r) {
                     itemInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+                }if (item instanceof BuffAttack r) {
+                    itemInfoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
+                }if (item instanceof BuffActionPoint r) {
+                    itemInfoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
+                }if (item instanceof BuffHealth r) {
+                    itemInfoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
                 }
             });
 
             itemFrame.setOnMouseExited(mouseEvent -> {
                 itemInfoOverlay.getView().setVisible(false);
             });
+
+            itemFrame.setBackground(Background.fill(item.getBackgroundColor()));
         }
+
+        itemFrame.getChildren().addAll(frameView);
 
         return itemFrame;
     }

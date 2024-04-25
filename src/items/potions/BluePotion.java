@@ -3,7 +3,6 @@ package items.potions;
 import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
-import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
@@ -15,7 +14,7 @@ public class BluePotion extends BasePotion implements RefillMana {
 
     public BluePotion() {
         super("Blue Potion", Color.AQUAMARINE, Config.BluePotionPath,
-                "Help replenish mana", Config.Rarity.COMMON, "res/SFX/powerup/8bit-powerup2.wav");
+                "Help replenish mana", Config.Rarity.COMMON, "res/SFX/powerup/8bit-powerup2.wav", Color.DARKCYAN);
     }
 
     @Override

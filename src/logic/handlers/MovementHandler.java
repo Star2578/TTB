@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import logic.GameManager;
 import logic.ImageScaler;
+import logic.SoundManager;
 import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
@@ -51,9 +52,12 @@ public class MovementHandler {
 
     public static void movePlayer(int row, int col) {
         if (Config.MOVE_ACTIONPOINT > player.getCurrentActionPoint()) {
+            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
             System.out.println("Not enough Action Point");
             return;
         }
+
+        SoundManager.getInstance().playSoundEffect(Config.sfx_moveSound);
 
         player.decreaseActionPoint(Config.MOVE_ACTIONPOINT);
 
@@ -68,6 +72,8 @@ public class MovementHandler {
 
         piecesPosition[player.getRow()][player.getCol()] = null;
         piecesPosition[row][col] = player;
+
+        gameManager.totalMovesThisRun++;
     }
 
     private static boolean isInBoardPosition(int row, int col) {

@@ -1,27 +1,21 @@
 package pieces.player;
 
 import javafx.animation.TranslateTransition;
-import javafx.beans.Observable;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
-import logic.SoundManager;
-import logic.SpriteAnimation;
-import logic.GameManager;
+import logic.*;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
 import utils.Config;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import static utils.Config.*;
 
 public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
@@ -33,6 +27,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     protected int currentMana;
     protected int maxMana;
     protected int attackDamage;
+    protected boolean animationFinished = true;
 
     protected boolean canAct; // status
     protected BaseSkill[] skills; // skill list
@@ -110,6 +105,11 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void decreaseActionPoint(int decrease) {
         this.currentActionPoint = Math.max(0, this.currentActionPoint - decrease);
         GUIManager.getInstance().updateGUI();
+
+        // Auto End Turn when player is out of action point
+        if (this.currentActionPoint == 0 && GameManager.getInstance().autoEndTurn && animationFinished) {
+            if (TurnManager.getInstance().isPlayerTurn) TurnManager.getInstance().endPlayerTurn();
+        }
     }
     public void changeDirection(int direction) {
 
@@ -127,6 +127,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void moveWithTransition(int row , int col){
         //stop player from do other action
         setCanAct(false);
+        animationFinished = false;
         spriteAnimation.changeAnimation(4 , 2);
         //slowly move to target col,row
         moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
@@ -155,6 +156,8 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
                     break;
                 }
             }
+
+            animationFinished = true; // Finish animation
         });
         moveTransition.play();
     }
@@ -191,11 +194,9 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public int getAttackDamage() {
         return attackDamage;
     }
-    public int getCurrentDirection() {
-        return currentDirection;
-    }
     public void setAttackDamage(int attackDamage) {
         this.attackDamage = Math.max(attackDamage, 0);
+        GUIManager.getInstance().updateGUI();
     }
     public int getAttackRange() {
         return attackRange;
@@ -238,6 +239,14 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         this.canAct = canAct;
     }
     public boolean canAct() {
+        if (canAct && GameManager.getInstance().gameScene != null) {
+            GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), DefaultCursor);
+            if (GameManager.getInstance().selectedSkill != null || GameManager.getInstance().selectedItem != null) {
+                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), HandCursor);
+            } else if (GUIManager.getInstance().isInAttackMode) {
+                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), AttackCursor);
+            }
+        }
         return canAct;
     }
     public BaseSkill[] getSkills() {
