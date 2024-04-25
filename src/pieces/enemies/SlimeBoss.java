@@ -2,6 +2,7 @@ package pieces.enemies;
 
 import javafx.scene.image.ImageView;
 import logic.GameManager;
+import logic.SpawnerManager;
 import logic.ui.GUIManager;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
@@ -85,21 +86,25 @@ public class SlimeBoss extends BaseMonsterPiece {
         // Logic to split the slime into smaller pieces
         // For demonstration, we can create new slime pieces here
         // But you can adjust this part based on your game's logic
+        System.out.println("Summon slime");
+
+        SpawnerManager spawnerManager = SpawnerManager.getInstance();
 
         // Creating smaller slime pieces
-        for (int i = 0; i < sizeRow; i++) {
-            for (int j = 0; j < sizeCol; j++) {
-                SlimeBoss smallerSlime = new SlimeBoss();
-                smallerSlime.setRow(getRow() + i);
-                smallerSlime.setCol(getCol() + j);
-                smallerSlime.setMaxHealth(hp);
-                smallerSlime.setCurrentHealth(hp);
-                //TODO===============
-                // Add to game manager
-                GameManager.getInstance().addEnemy(smallerSlime);
+//        for (int i = 0; i < sizeRow; i++) {
+//            for (int j = 0; j < sizeCol; j++) {
+//                SlimeBoss smallerSlime = new SlimeBoss();
+//                smallerSlime.setRow(getRow() + i);
+//                smallerSlime.setCol(getCol() + j);
+//                smallerSlime.setMaxHealth(hp);
+//                smallerSlime.setCurrentHealth(hp);
+//                //TODO===============
+//                // Add to game manager
+//                GameManager.getInstance().addEnemy(smallerSlime);
+//
+//            }
+//        }
 
-            }
-        }
 
         // Change the current phase to the next phase
         this.currentPhase = nextPhase;
