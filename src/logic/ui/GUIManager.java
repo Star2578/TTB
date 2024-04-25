@@ -164,10 +164,7 @@ public class GUIManager {
         endTurnButton = new Button("End Turn");
 
         attackButton.setOnMouseClicked(mouseEvent -> {
-            // Cancel skill selection if skill is selected
-            if (GameManager.getInstance().selectedSkill != null) {
-                GameManager.getInstance().gameScene.resetSelection(2);
-            }
+            GameManager.getInstance().gameScene.resetSelectionAll();
             SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
 
             isInAttackMode = true;
@@ -178,7 +175,7 @@ public class GUIManager {
         endTurnButton.setOnMouseClicked(mouseEvent -> {
             turnManager.endPlayerTurn();
             SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
-            GameManager.getInstance().gameScene.exitAttackMode();
+            GameManager.getInstance().gameScene.resetSelectionAll();
             disableButton();
         });
 

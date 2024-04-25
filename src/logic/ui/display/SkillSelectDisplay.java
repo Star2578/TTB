@@ -93,15 +93,14 @@ public class SkillSelectDisplay implements Display{
         // Make EmptySlot & Locked Slot can't be select
         if (!(skill instanceof EmptySkill) && !(skill instanceof LockedSlot)) {
             skillFrame.setOnMouseClicked(mouseEvent -> {
-                // Exit attack mode if activated
-                if (GUIManager.getInstance().isInAttackMode) {
-                    GameManager.getInstance().gameScene.exitAttackMode();
-                }
+                GameManager.getInstance().gameScene.resetSelection(0);
+                GameManager.getInstance().gameScene.resetSelection(1);
+                GameManager.getInstance().gameScene.resetSelection(3);
                 SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
 
                 // Reset selection if other skill are selected
                 if (GameManager.getInstance().selectedSkill != null) {
-                    if (GameManager.getInstance().selectedSkill == skill && skill.castOnSelf()) {
+                    if (GameManager.getInstance().selectedSkill == skill && skill.castOnSelf() && GameManager.getInstance().fastUse) {
                         boolean enoughMana = player.getCurrentMana() >= GameManager.getInstance().selectedSkill.getManaCost();
                         boolean enoughActionPoint = player.getCurrentActionPoint() >= GameManager.getInstance().selectedSkill.getActionPointCost();
 
@@ -109,6 +108,7 @@ public class SkillSelectDisplay implements Display{
                             GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName());
                             GameManager.getInstance().selectedSkill.perform(GameManager.getInstance().player);
                         } else {
+                            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                             System.out.println("Not enough mana or action point");
                         }
 
@@ -119,7 +119,7 @@ public class SkillSelectDisplay implements Display{
                 }
 
                 SkillHandler.showValidSkillRange(player.getRow(), player.getCol(), skill);
-                GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.AttackCursor);
+                GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.HandCursor);
                 GameManager.getInstance().selectedSkill = skill;
                 skill.getFrame().setImage(imageScaler.resample(new Image(Config.FrameSelectedPath), 2));
                 System.out.println("Selected " + skill.getName() + " skill");
@@ -139,12 +139,18 @@ public class SkillSelectDisplay implements Display{
                 skillInfoOverlay.newInfo("Action Point", Color.ORANGE, String.valueOf(skill.getActionPointCost()));
 
                 // Other skill info base on type
-                if (skill instanceof Attack a) {
-                    skillInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(a.getAttack()));
-                }if (skill instanceof Healing h) {
-                    skillInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(h.getHeal()));
+                if (skill instanceof Attack r) {
+                    skillInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
+                }if (skill instanceof Healing r) {
+                    skillInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
                 }if (skill instanceof RefillMana r) {
                     skillInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+                }if (skill instanceof BuffAttack r) {
+                    skillInfoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
+                }if (skill instanceof BuffActionPoint r) {
+                    skillInfoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
+                }if (skill instanceof BuffHealth r) {
+                    skillInfoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
                 }
             });
 
