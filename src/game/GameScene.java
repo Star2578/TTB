@@ -380,6 +380,15 @@ public class GameScene {
                             // TODO : Maybe log brief description of the monster characteristic?
                             GUIManager.getInstance().eventLogDisplay.addLog("--------------------------------");
                         }
+                        if (target instanceof BasePlayerPiece playerPiece) {
+                            GUIManager.getInstance().eventLogDisplay.addLog("--------------------------------");
+                            GUIManager.getInstance().eventLogDisplay.addLog(playerPiece.getClass().getSimpleName());
+                            GUIManager.getInstance().eventLogDisplay.addLog("HP: "+ playerPiece.getCurrentHealth() + "/" + playerPiece.getMaxHealth());
+                            GUIManager.getInstance().eventLogDisplay.addLog("Mana: "+ playerPiece.getCurrentMana() + "/" + playerPiece.getMaxMana());
+                            GUIManager.getInstance().eventLogDisplay.addLog("Action Point: "+ playerPiece.getCurrentActionPoint() + "/" + playerPiece.getMaxActionPoint());
+                            GUIManager.getInstance().eventLogDisplay.addLog("Attack: "+ playerPiece.getAttackDamage());
+                            GUIManager.getInstance().eventLogDisplay.addLog("--------------------------------");
+                        }
                     }
                 });
             }

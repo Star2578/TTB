@@ -32,8 +32,6 @@ public class Config {
     public static String ZombieAnimationPath = "sprites/enemies/zombie_sprite_sheet.png";
     public static String BomberAnimationPath = "sprites/enemies/bomber_sprite_sheet.png";
     public static String BombAnimationPath = "sprites/objects/bomb/bomb_f0.png";
-    public static String Bomb1AnimationPath = "sprites/objects/bomb/bomb_f1.png";
-    public static String Bomb2AnimationPath = "sprites/objects/bomb/bomb_f2.png";
     public  static  String NecromancerPath = "sprites/enemies/necromancer_sprite_sheet.png";
     public  static  String SkeletonPath = "sprites/enemies/skeleton_sprite_sheet.png";
     public  static  String VampirePath = "sprites/enemies/vampire_sprite_sheet.png";
@@ -61,6 +59,10 @@ public class Config {
 
     // Potion Icons
     public static String BluePotionPath = "sprites/potions/blue_potion.png";
+    public static String RedPotionPath = "sprites/potions/red_potion.png";
+    public static String PurplePotionPath = "sprites/potions/purple_potion.png";
+    public static String GreenPotionPath = "sprites/potions/green_potion.png";
+    public static String YellowPotionPath = "sprites/potions/yellow_potion.png";
 
     // Attacks animation
     public static String meleeAttackPath = "sprites/attacks/common_melee_attack.png";

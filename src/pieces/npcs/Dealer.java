@@ -22,10 +22,7 @@ import logic.ui.overlay.ItemInfoOverlay;
 import logic.ui.overlay.SkillInfoOverlay;
 import skills.BaseSkill;
 import skills.EmptySkill;
-import utils.Attack;
-import utils.Config;
-import utils.Healing;
-import utils.RefillMana;
+import utils.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -197,8 +194,18 @@ public class Dealer extends BaseNpcPiece {
                 itemInfoOverlay.getDesc().setText(item.getDescription());
 
                 itemInfoOverlay.getDataContainer().getChildren().clear();
-                if (item instanceof RefillMana r) {
+                if (item instanceof Attack r) {
+                    itemInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
+                }if (item instanceof Healing r) {
+                    itemInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
+                }if (item instanceof RefillMana r) {
                     itemInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+                }if (item instanceof BuffAttack r) {
+                    itemInfoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
+                }if (item instanceof BuffActionPoint r) {
+                    itemInfoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
+                }if (item instanceof BuffHealth r) {
+                    itemInfoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
                 }
             });
 
@@ -259,12 +266,18 @@ public class Dealer extends BaseNpcPiece {
                 skillInfoOverlay.newInfo("Action Point", Color.ORANGE, String.valueOf(skill.getActionPointCost()));
 
                 // Other skill info base on type
-                if (skill instanceof Attack a) {
-                    skillInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(a.getAttack()));
-                }if (skill instanceof Healing h) {
-                    skillInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(h.getHeal()));
+                if (skill instanceof Attack r) {
+                    skillInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
+                }if (skill instanceof Healing r) {
+                    skillInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
                 }if (skill instanceof RefillMana r) {
                     skillInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+                }if (skill instanceof BuffAttack r) {
+                    skillInfoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
+                }if (skill instanceof BuffActionPoint r) {
+                    skillInfoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
+                }if (skill instanceof BuffHealth r) {
+                    skillInfoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
                 }
             });
 

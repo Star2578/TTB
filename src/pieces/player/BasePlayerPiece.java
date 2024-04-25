@@ -196,6 +196,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     }
     public void setAttackDamage(int attackDamage) {
         this.attackDamage = Math.max(attackDamage, 0);
+        GUIManager.getInstance().updateGUI();
     }
     public int getAttackRange() {
         return attackRange;

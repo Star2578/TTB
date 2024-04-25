@@ -20,9 +20,7 @@ import logic.handlers.ItemHandler;
 import logic.ui.GUIManager;
 import logic.ui.overlay.ItemInfoOverlay;
 import pieces.player.BasePlayerPiece;
-import utils.Config;
-import utils.RefillMana;
-import utils.Usable;
+import utils.*;
 
 public class InventoryDisplay implements Display {
     private VBox view;
@@ -193,8 +191,18 @@ public class InventoryDisplay implements Display {
                 itemInfoOverlay.getDesc().setText(item.getDescription());
 
                 itemInfoOverlay.getDataContainer().getChildren().clear();
-                if (item instanceof RefillMana r) {
+                if (item instanceof Attack r) {
+                    itemInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
+                }if (item instanceof Healing r) {
+                    itemInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
+                }if (item instanceof RefillMana r) {
                     itemInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+                }if (item instanceof BuffAttack r) {
+                    itemInfoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
+                }if (item instanceof BuffActionPoint r) {
+                    itemInfoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
+                }if (item instanceof BuffHealth r) {
+                    itemInfoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
                 }
             });
 

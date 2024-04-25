@@ -2,7 +2,7 @@ package logic;
 
 import game.GameScene;
 import items.BaseItem;
-import items.potions.BluePotion;
+import items.potions.*;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -84,7 +84,7 @@ public class GameManager {
         new Slash(), new Heal()
     };
     public final BaseItem[] ITEM_POOL = {
-        new BluePotion()
+        new BluePotion(), new GreenPotion(), new PurplePotion(), new RedPotion(), new YellowPotion()
     };
 
     public GameManager() {
@@ -101,7 +101,6 @@ public class GameManager {
         }
         boardPane = new GridPane();
         animationPane = new Pane();
-        inventory.add(new BluePotion()); // this is for testing
 
         settingProperties = new Properties();
         gameProperties = new Properties();
@@ -151,6 +150,10 @@ public class GameManager {
         validMovesCache = new boolean[Config.BOARD_SIZE][Config.BOARD_SIZE];
 
         inventory.add(new BluePotion()); // this is for testing
+        inventory.add(new RedPotion()); // this is for testing
+        inventory.add(new PurplePotion()); // this is for testing
+        inventory.add(new GreenPotion()); // this is for testing
+        inventory.add(new YellowPotion()); // this is for testing
 
         TurnManager.getInstance().initialize();
         SpawnerManager.getInstance().initialize();

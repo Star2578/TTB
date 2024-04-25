@@ -139,12 +139,18 @@ public class SkillSelectDisplay implements Display{
                 skillInfoOverlay.newInfo("Action Point", Color.ORANGE, String.valueOf(skill.getActionPointCost()));
 
                 // Other skill info base on type
-                if (skill instanceof Attack a) {
-                    skillInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(a.getAttack()));
-                }if (skill instanceof Healing h) {
-                    skillInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(h.getHeal()));
+                if (skill instanceof Attack r) {
+                    skillInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
+                }if (skill instanceof Healing r) {
+                    skillInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
                 }if (skill instanceof RefillMana r) {
                     skillInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+                }if (skill instanceof BuffAttack r) {
+                    skillInfoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
+                }if (skill instanceof BuffActionPoint r) {
+                    skillInfoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
+                }if (skill instanceof BuffHealth r) {
+                    skillInfoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
                 }
             });
 
