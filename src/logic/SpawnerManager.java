@@ -19,11 +19,15 @@ public class SpawnerManager {
     public int monsterCount;
     public int freeSquareCount;
     public BaseMonsterPiece[] monsterPool_1; // monster pool for area 1
+    public BaseMonsterPiece[] monsterPool_2; // Boss monster pool for Boss area
 
     public SpawnerManager() {
         initialize();
         monsterPool_1 = new BaseMonsterPiece[]{
                 new Bomber(), new Tiny(), new Zombie(), new Skeleton(), new Vampire(), new Necromancer()
+        };
+        monsterPool_2 = new BaseMonsterPiece[]{
+            new SlimeBoss()
         };
     }
 
