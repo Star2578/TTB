@@ -1,5 +1,6 @@
 package logic.ui.display;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -54,7 +55,7 @@ public class EventLogDisplay implements Display{
         // Add new log text from the bottom
         logContainer.getChildren().add(text);
 
-        scrollPane.setVvalue(1.0);
+        Platform.runLater(() -> scrollPane.setVvalue(1.0));
     }
 
     public void clearLog() {

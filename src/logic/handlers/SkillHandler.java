@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import logic.GameManager;
 import logic.ImageScaler;
-import pieces.BasePiece;
 import skills.BaseSkill;
 import utils.Config;
 

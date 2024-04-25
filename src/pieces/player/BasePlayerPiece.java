@@ -1,24 +1,17 @@
 package pieces.player;
 
 import javafx.animation.TranslateTransition;
-import javafx.beans.Observable;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
-import logic.SoundManager;
-import logic.SpriteAnimation;
-import logic.GameManager;
-import logic.TurnManager;
+import logic.*;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
 import utils.Config;
-
-import java.util.List;
 
 import static utils.Config.*;
 
@@ -196,6 +189,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     }
     public void setAttackDamage(int attackDamage) {
         this.attackDamage = Math.max(attackDamage, 0);
+        GUIManager.getInstance().updateGUI();
     }
     public int getAttackRange() {
         return attackRange;
@@ -238,6 +232,14 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         this.canAct = canAct;
     }
     public boolean canAct() {
+        if (canAct && GameManager.getInstance().gameScene != null) {
+            GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), DefaultCursor);
+            if (GameManager.getInstance().selectedSkill != null || GameManager.getInstance().selectedItem != null) {
+                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), HandCursor);
+            } else if (GUIManager.getInstance().isInAttackMode) {
+                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), AttackCursor);
+            }
+        }
         return canAct;
     }
     public BaseSkill[] getSkills() {

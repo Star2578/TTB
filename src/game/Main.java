@@ -8,6 +8,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import logic.*;
+import logic.ui.GUIManager;
 import utils.Config;
 
 
@@ -49,6 +50,10 @@ public class Main extends Application {
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(1);
         SoundManager.getInstance().playBackgroundMusic(Config.bgm_8_bit_nostalgia); // Play background music after the fade-in
+
+        GUIManager.getInstance().updateCursor(mainMenu.getScene(), Config.DefaultCursor);
+        GUIManager.getInstance().updateCursor(gameScene.getScene(), Config.DefaultCursor);
+        GUIManager.getInstance().updateCursor(summary.getScene(), Config.DefaultCursor);
 
         // Show the primaryStage after configuring the fade transition
         primaryStage.setScene(mainMenu.getScene());
