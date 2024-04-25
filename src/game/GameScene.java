@@ -847,10 +847,8 @@ public class GameScene {
         gameManager.doorAt.clear();
 
         removeElements();
-        if (GameManager.getInstance().dungeonLevel == 1) {
-            BossRoom1();
-        }
-        else if (GameManager.getInstance().dungeonLevel % 10 == 0) {
+
+        if (GameManager.getInstance().dungeonLevel % 10 == 0) {
             BossRoom1();
         } else if (GameManager.getInstance().dungeonLevel % 5 == 0) {
             safeRoom();

@@ -30,7 +30,7 @@ public class Knight extends BasePlayerPiece {
         maxHp = 20;
         currentHp = maxHp;
 
-        attackDamage = 3; // Base attack for player
+        attackDamage = 200; // Base attack for player
 
         //add skill
         skills[0] = new Slash();
