@@ -166,7 +166,7 @@ public class InventoryDisplay implements Display {
 
                 if (GameManager.getInstance().selectedItem != null) {
                     if (GameManager.getInstance().selectedItem == item && item instanceof Usable usable) {
-                        if (usable.castOnSelf()) {
+                        if (usable.castOnSelf() && GameManager.getInstance().fastUse) {
                             // Use item
                             usable.useItem(GameManager.getInstance().player);
                             GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedItem.getName());

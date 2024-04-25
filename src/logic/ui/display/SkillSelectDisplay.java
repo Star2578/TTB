@@ -100,7 +100,7 @@ public class SkillSelectDisplay implements Display{
 
                 // Reset selection if other skill are selected
                 if (GameManager.getInstance().selectedSkill != null) {
-                    if (GameManager.getInstance().selectedSkill == skill && skill.castOnSelf()) {
+                    if (GameManager.getInstance().selectedSkill == skill && skill.castOnSelf() && GameManager.getInstance().fastUse) {
                         boolean enoughMana = player.getCurrentMana() >= GameManager.getInstance().selectedSkill.getManaCost();
                         boolean enoughActionPoint = player.getCurrentActionPoint() >= GameManager.getInstance().selectedSkill.getActionPointCost();
 
