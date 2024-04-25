@@ -15,7 +15,11 @@ public class Fireball extends BaseSkill implements Attack {
     private BasePiece target;
     private final int DAMAGE = 8;
     public Fireball() {
-        super("Fireball", Color.RED, 5, 2, "Shoot a fireball to the enemies", Config.Rarity.COMMON);
+        super("Fireball", Color.RED,
+                5, 2,
+                "Shoot a fireball to the enemies",
+                Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav"
+        );
 
         //TODO======================
         icon = new ImageView(Config.FireballPath);

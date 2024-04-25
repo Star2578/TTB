@@ -29,6 +29,23 @@ public class GameManager {
     private static final String CONFIG_FILE_PATH = "config.properties";
     private static final String PROGRESSION_FILE_PATH = "config.progression";
 
+    // -------- Settings ---------
+    public boolean fastUse;
+    public boolean autoEndTurn;
+    public boolean displayDamageNumber;
+    public boolean displayActionPointOnCursor;
+
+    // ------------ Progression --------------
+    public int totalKill = 0;
+    public int totalKillThisRun = 0;
+    public int totalMoves = 0;
+    public int totalMovesThisRun = 0;
+    public int totalMoney = 0;
+    public int totalMoneyThisRun = 0;
+    public int farthestLevelReach = 0;
+    public int currentLevelReach = 0;
+
+
     public GameScene gameScene;
     public Pane animationPane;
 
@@ -70,13 +87,8 @@ public class GameManager {
     };
 
     public GameManager() {
-<<<<<<< HEAD
-        player = new Archer(0, 0, 1);
-||||||| 58c8f08
         player = new Knight(0, 0, 1);
-=======
-        player = new Wizard(0, 0, 1);
->>>>>>> pieces-wizard
+
         playerSkills = player.getSkills();
         for (int i = 0; i < SKILL_SLOTS; i++) {
             if (playerSkills[i] == null) {
@@ -151,42 +163,27 @@ public class GameManager {
     }
     public void GameOver() {
         // save game progress
+        SoundManager.getInstance().playSoundEffect(Config.sfx_gameOverSound);
+        totalMoneyThisRun = playerMoney;
+
+        totalKill += totalKillThisRun;
+        totalMoney += totalMoneyThisRun;
+        totalMoves += totalMovesThisRun;
+        farthestLevelReach = Math.max(farthestLevelReach, currentLevelReach);
+
         saveGame();
-
         // Send player back to main menu scene
-        SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getMenuScene());
-    }
-
-    private void loadSettings() {
-        // Implement loading settings from file
-        try (InputStream input = new FileInputStream(CONFIG_FILE_PATH)) {
-            settingProperties.load(input);
-
-            // Load settings from properties
-
-        } catch (IOException e) {
-            System.out.println("Error when loading game setting:" + e.getMessage());
-        }
-    }
-    private void saveSettings() {
-        // Implement saving settings to file
-        try (OutputStream output = new FileOutputStream(CONFIG_FILE_PATH)) {
-            // Save settings to properties
-
-            // Save other settings...
-
-            settingProperties.store(output, "Game Settings");
-
-        } catch (IOException e) {
-            System.out.println("Error when saving game settings:" + e.getMessage());
-        }
+        SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getSummaryScene());
     }
 
     public void saveGame() {
         // save the game progression
         try (OutputStream output = new FileOutputStream(PROGRESSION_FILE_PATH)) {
             // Progression
-
+            gameProperties.setProperty("s_totalKill", String.valueOf(totalKill));
+            gameProperties.setProperty("s_totalMoney", String.valueOf(totalMoney));
+            gameProperties.setProperty("s_totalMoves", String.valueOf(totalMoves));
+            gameProperties.setProperty("s_farthestLevelReach", String.valueOf(farthestLevelReach));
 
             gameProperties.store(output, "Game Progression");
 
@@ -201,10 +198,54 @@ public class GameManager {
             gameProperties.load(input);
 
             // Load progression from properties
+            totalKill = Integer.parseInt(gameProperties.getProperty("s_totalKill", "0"));
+            totalMoney = Integer.parseInt(gameProperties.getProperty("s_totalMoney", "0"));
+            totalMoves = Integer.parseInt(gameProperties.getProperty("s_totalMoves", "0"));
+            farthestLevelReach = Integer.parseInt(gameProperties.getProperty("s_farthestLevelReach", "0"));
 
 
         } catch (IOException e) {
             System.out.println("Error when loading game progression:" + e.getMessage());
+        }
+    }
+
+    public void loadSettings() {
+        // Implement loading settings from file
+        try (InputStream input = new FileInputStream(CONFIG_FILE_PATH)) {
+            settingProperties.load(input);
+
+            // Load settings from properties
+            SoundManager.getInstance().setBackgroundMusicSlider(Float.parseFloat(settingProperties.getProperty("backgroundMusicSlider", "50")));
+            SoundManager.getInstance().setBackgroundMusicVolume(Float.parseFloat(settingProperties.getProperty("backgroundMusicVolume", String.valueOf(SoundManager.getMidDecibel()))));
+            SoundManager.getInstance().setSoundEffectSlider(Float.parseFloat(settingProperties.getProperty("soundEffectSlider", "50")));
+            SoundManager.getInstance().setSoundEffectVolume(Float.parseFloat(settingProperties.getProperty("soundEffectVolume", String.valueOf(SoundManager.getMidDecibel()))));
+            fastUse = Boolean.parseBoolean(settingProperties.getProperty("_fastUse", String.valueOf(false)));
+            autoEndTurn = Boolean.parseBoolean(settingProperties.getProperty("_autoEndTurn", String.valueOf(false)));
+            displayDamageNumber = Boolean.parseBoolean(settingProperties.getProperty("_displayDamageNumber", String.valueOf(false)));
+            displayActionPointOnCursor = Boolean.parseBoolean(settingProperties.getProperty("_displayActionPointOnCursor", String.valueOf(false)));
+
+        } catch (IOException e) {
+            System.out.println("Error when loading game setting:" + e.getMessage());
+        }
+    }
+    public void saveSettings() {
+        // Implement saving settings to file
+        try (OutputStream output = new FileOutputStream(CONFIG_FILE_PATH)) {
+            // Save settings to properties
+            settingProperties.setProperty("backgroundMusicVolume", String.valueOf(SoundManager.getInstance().getBackgroundMusicVolume()));
+            settingProperties.setProperty("backgroundMusicSlider", String.valueOf(SoundManager.getInstance().getBackgroundMusicSlider()));
+            settingProperties.setProperty("soundEffectVolume", String.valueOf(SoundManager.getInstance().getSoundEffectVolume()));
+            settingProperties.setProperty("soundEffectSlider", String.valueOf(SoundManager.getInstance().getSoundEffectSlider()));
+            settingProperties.setProperty("_fastUse", String.valueOf(fastUse));
+            settingProperties.setProperty("_autoEndTurn", String.valueOf(autoEndTurn));
+            settingProperties.setProperty("_displayDamageNumber", String.valueOf(displayDamageNumber));
+            settingProperties.setProperty("_displayActionPointOnCursor", String.valueOf(displayActionPointOnCursor));
+            // Save other settings...
+
+            settingProperties.store(output, "Game Settings");
+
+        } catch (IOException e) {
+            System.out.println("Error when saving game settings:" + e.getMessage());
         }
     }
 }

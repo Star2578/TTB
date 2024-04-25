@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import logic.GameManager;
 import logic.ImageScaler;
+import logic.SoundManager;
 import logic.ui.GUIManager;
 import logic.ui.display.NpcDisplay;
 import logic.ui.overlay.ItemInfoOverlay;
@@ -58,6 +59,7 @@ public class Dealer extends BaseNpcPiece {
             @Override
             public void run() {
                 talk("questions", "who_are_you");
+                SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
                 npcDisplay.setDialogueText(getCurrentDialogue());
             }
         });
@@ -65,6 +67,7 @@ public class Dealer extends BaseNpcPiece {
             @Override
             public void run() {
                 talk("questions", "about_dungeon");
+                SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
                 npcDisplay.setDialogueText(getCurrentDialogue());
             }
         });
@@ -83,6 +86,7 @@ public class Dealer extends BaseNpcPiece {
                     // discount fail
                     talk("questions", "misc3");
                 }
+                SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
                 npcDisplay.setDialogueText(getCurrentDialogue());
             }
         });
@@ -90,6 +94,7 @@ public class Dealer extends BaseNpcPiece {
             @Override
             public void run() {
                 talk("questions", "misc1");
+                SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
                 npcDisplay.setDialogueText(getCurrentDialogue());
                 if (npcDisplay.getAdditionalOverlaySize() == 0) {
                     npcDisplay.newAdditionalOverlay(shopLayout);
@@ -162,6 +167,8 @@ public class Dealer extends BaseNpcPiece {
 
         if (!(item instanceof EmptyItem)) {
             itemFrame.setOnMouseClicked(mouseEvent -> {
+                SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
+
                 if (GameManager.getInstance().playerMoney >= item.getPrice()) {
                     GameManager.getInstance().inventory.add(item);
                     GUIManager.getInstance().inventoryDisplay.updateInventoryUI();
@@ -218,6 +225,8 @@ public class Dealer extends BaseNpcPiece {
 
         if (!(skill instanceof EmptySkill)) {
             skillFrame.setOnMouseClicked(mouseEvent -> {
+                SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
+
                 if (GameManager.getInstance().playerMoney >= skill.getPrice()) {
                     GUIManager.getInstance().skillSelectDisplay.updateSkillFrame(buySkillIndex, skill);
 

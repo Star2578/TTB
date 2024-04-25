@@ -1,10 +1,5 @@
 package utils;
 
-import items.BaseItem;
-import items.potions.BluePotion;
-import skills.BaseSkill;
-import skills.knight.Slash;
-
 public class Config {
     public static String PlaceholderPath = "sprites/placeholder.png";
     public static String FramePath = "sprites/frame.png";
@@ -61,9 +56,12 @@ public class Config {
     // Skill Icons
     public static String LockedSkillIconPath = "sprites/skills/icons/skill_placeholder_locked.png";
     public static String UnlockedSkillIconPath = "sprites/skills/icons/skill_placeholder_unlocked.png";
-    public static String SlashPath = "sprites/skills/icons/slash.png";
-    public static String HealPath = "sprites/skills/icons/heal.png";
-    //Archer
+    // Knight Icons
+    public static String SlashPath = "sprites/skills/icons/Knight/slash.png";
+    public static String HealPath = "sprites/skills/icons/Knight/heal.png";
+    public static String DartPath = "sprites/skills/icons/Knight/Dart.png";
+    public static String StompPath = "sprites/skills/icons/Knight/Stomp.png";
+    // Archer Icons
     public static String HaltPath = "sprites/skills/icons/Archer/Halt.png";
     public static String TargetLockPath = "sprites/skills/icons/Archer/Targetlock.png";
     public static String SnipePath = "sprites/skills/icons/Archer/Snipe.png";
@@ -82,6 +80,18 @@ public class Config {
     public static String meleeAttackPath = "sprites/attacks/common_melee_attack.png";
     public static String skillSlashPath = "sprites/attacks/skill_slash.png";
 
+    // BGM
+    public static String bgm_8_bit_adventure = "res/BGM/8_Bit_Adventure.wav";
+    public static String bgm_8_bit_nostalgia = "res/BGM/8_Bit_Nostalgia.wav";
+
+    // SFX
+    public static String sfx_attackSound = "res/SFX/attack/Swipe_2_converted.wav";
+    public static String sfx_moveSound = "res/SFX/walk/jump2.wav";
+    public static String sfx_hurtSound = "res/SFX/hurt/hit_003.wav";
+    public static String sfx_gameOverSound = "res/SFX/gameover/Game Over.wav";
+    public static String sfx_buttonSound = "res/SFX/click/click.wav";
+    public static String sfx_failedSound = "res/SFX/failed/8bit-blip4.wav";
+    public static String sfx_deadSound = "res/SFX/monster/dead/explosion_03.wav";
 
     public enum ENTITY_TYPE {
         PLAYER, MONSTER, TRAP, NPC, WALL

@@ -3,6 +3,7 @@ package pieces.enemies;
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import logic.GameManager;
+import logic.SoundManager;
 import logic.SpawnerManager;
 import logic.ui.GUIManager;
 import logic.effect.EffectConfig;
@@ -28,7 +29,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     protected int stun = 0;
 
     public BaseMonsterPiece(int row, int col, int defaultDirection) {
-        super(Config.ENTITY_TYPE.MONSTER, new ImageView(Config.PlaceholderPath), row, col);
+        super(Config.ENTITY_TYPE.MONSTER, new ImageView(Config.PlaceholderPath), row, col, defaultDirection);
         this.validMovesCache = GameManager.getInstance().validMovesCache;
         this.random = new Random();
         this.moneyDrop = random.nextInt(30, 200);
@@ -149,6 +150,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     @Override
     public void onDeath() {
         isAlive = false;
+        SoundManager.getInstance().playSoundEffect(Config.sfx_deadSound);
         SpawnerManager.getInstance().monsterCount--;
         SpawnerManager.getInstance().trySpawnDoor(getRow(), getCol());
         GameManager.getInstance().playerMoney += moneyDrop;

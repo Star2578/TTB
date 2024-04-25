@@ -15,7 +15,10 @@ public class Halt extends BaseSkill implements Attack {
     private BasePiece target;
     private final int DAMAGE = 6;
     public Halt() {
-        super("Halt", Color.DARKRED, 5, 2, "In a display of mastery over battlefield tactics, the Archer invokes the Halt skill to bring adversaries to a sudden standstill.", Config.Rarity.COMMON);
+        super("Halt", Color.DARKRED,
+                5, 2,
+                "In a display of mastery over battlefield tactics, the Archer invokes the Halt skill to bring adversaries to a sudden standstill."
+                , Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav");
         icon = new ImageView(Config.HaltPath);
         range = 5;
     }
@@ -27,7 +30,7 @@ public class Halt extends BaseSkill implements Attack {
             if (target instanceof BaseMonsterPiece monsterPiece) {
                 monsterPiece.takeDamage(DAMAGE);
                 // Stun monster 1 turn
-                monsterPiece.setStun(1);
+                monsterPiece.setStun(monsterPiece.getStun() + 1);
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());

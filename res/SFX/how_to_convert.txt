@@ -1,0 +1,6 @@
+// Must have ffmpeg installed
+// use command in terminal
+// change input.wav to what ever file you want to convert i.e. [filename].[filetype]
+// *** you can also change the name of output file but keep .wav
+
+ffmpeg -i input.wav -acodec pcm_s16le -ar 44100 output.wav

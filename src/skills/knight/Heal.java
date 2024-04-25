@@ -3,6 +3,7 @@ package skills.knight;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
+import logic.SoundManager;
 import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
 import skills.BaseSkill;
@@ -13,7 +14,7 @@ public class Heal extends BaseSkill implements Healing {
     private BasePiece target;
     private final int HEAL = 5;
     public Heal() {
-        super("Heal", Color.DARKGREEN, 1, 10, "Rest for one turn to heal", Config.Rarity.COMMON);
+        super("Heal", Color.DARKGREEN, 1, 10, "Rest for one turn to heal", Config.Rarity.COMMON, "res/SFX/skills/heal/8bit-powerup1.wav");
         icon = new ImageView(Config.HealPath);
         range = 0;
     }
@@ -21,6 +22,7 @@ public class Heal extends BaseSkill implements Healing {
     public void perform(BasePiece target) {
         this.target = target;
         heal();
+        SoundManager.getInstance().playSoundEffect(sfxPath);
     }
 
     @Override

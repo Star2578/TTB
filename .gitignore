@@ -1,3 +1,7 @@
+### saves ###
+config.properties
+config.progression
+
 ### IntelliJ IDEA ###
 out/
 !**/src/main/**/out/
