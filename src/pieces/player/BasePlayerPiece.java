@@ -16,7 +16,10 @@ import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
 import utils.Config;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
@@ -40,6 +43,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     protected int currentDirection;
     protected SpriteAnimation meleeAttackAnimation;
     public ImageView meleeAttackImage;
+
+    // Buffs
+    protected int buffturn;
+    protected Map<String, Integer> EffectBuffs = new HashMap<>();
 
     public BasePlayerPiece(int row, int col, int defaultDirection) {
         super(Config.ENTITY_TYPE.PLAYER, new ImageView(Config.PlaceholderPath), row, col);
@@ -254,5 +261,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void onDeath() {
         System.out.println("Game Over! You are dead!");
         GameManager.getInstance().GameOver();
+    }
+
+    public void addBuff(int buff_duration, String buff_name) {
+        EffectBuffs.put(buff_name, buff_duration);
+        System.out.println(buff_name + " adding");
     }
 }
