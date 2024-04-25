@@ -58,7 +58,7 @@ public class SkillSelectDisplay implements Display{
 
         for (int i = 0; i < GameManager.getInstance().SKILL_SLOTS; i++) {
             if (playerSkills[i] == null) {
-                if (i < GameManager.getInstance().unlockedSlots) {
+                if (i < GameManager.getInstance().skillUnlockedSlots) {
                     playerSkills[i] = new EmptySkill();
                 } else {
                     playerSkills[i] = new LockedSlot();

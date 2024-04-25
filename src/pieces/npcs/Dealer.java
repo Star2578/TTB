@@ -5,6 +5,7 @@ import items.EmptyItem;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -12,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import logic.GameManager;
 import logic.ImageScaler;
@@ -118,13 +120,13 @@ public class Dealer extends BaseNpcPiece {
 
         // Add shop components
         itemShopGrid = new GridPane();
-        itemShopGrid.setBackground(Background.fill(Color.GOLD));
+        itemShopGrid.setBackground(Background.fill(Paint.valueOf("#262b44")));
         itemShopGrid.setHgap(5);
         itemShopGrid.setVgap(5);
         itemShopGrid.setPadding(new Insets(10));
 
         skillShopGrid = new GridPane();
-        skillShopGrid.setBackground(Background.fill(Color.CYAN));
+        skillShopGrid.setBackground(Background.fill(Paint.valueOf("#262b44")));
         skillShopGrid.setHgap(5);
         skillShopGrid.setVgap(5);
         skillShopGrid.setPadding(new Insets(10));
@@ -172,7 +174,7 @@ public class Dealer extends BaseNpcPiece {
             itemFrame.setOnMouseClicked(mouseEvent -> {
                 SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
 
-                if (GameManager.getInstance().playerMoney >= item.getPrice()) {
+                if (GameManager.getInstance().playerMoney >= item.getPrice() && GameManager.getInstance().inventory.size() < GameManager.getInstance().itemUnlockedSlots) {
                     GameManager.getInstance().inventory.add(item);
                     GUIManager.getInstance().inventoryDisplay.updateInventoryUI();
 
@@ -184,6 +186,9 @@ public class Dealer extends BaseNpcPiece {
                     GUIManager.getInstance().updateGUI();
 
                     updateShop();
+                } else {
+                    SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+                    // TODO : ADD ERROR INDICATOR
                 }
             });
 
@@ -413,7 +418,14 @@ public class Dealer extends BaseNpcPiece {
             skillShopGrid.add(item, col, row);
         }
 
-        for (int i = 0; i < GameManager.getInstance().unlockedSlots; i++) {
+        Label slotSelectLabel = new Label("Select Skill Slot");
+        slotSelectLabel.setStyle(
+                "-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:18;" +
+                "-fx-text-fill:'white';");
+        skillShopGrid.add(slotSelectLabel, 0, 2, 3, 1);
+
+        for (int i = 0; i < GameManager.getInstance().skillUnlockedSlots; i++) {
             Button button = new Button(String.valueOf(i));
             if (buySkillIndex == i) {
                 button.setStyle(
@@ -428,7 +440,7 @@ public class Dealer extends BaseNpcPiece {
             });
             int row = (skills_noDuplicate.size() + i) / itemsPerRow;
             int col = (skills_noDuplicate.size() + i) % itemsPerRow;
-            skillShopGrid.add(button, col, row);
+            skillShopGrid.add(button, col, row+1);
         }
     }
 }

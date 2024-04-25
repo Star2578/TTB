@@ -37,7 +37,7 @@ public class GameManager {
 
     // ------------ Progression --------------
     public int playerMoney = 0;
-    public int dungeonLevel = 0;
+    public int dungeonLevel = 1;
 
     public int totalKill = 0;
     public int totalKillThisRun = 0;
@@ -70,8 +70,8 @@ public class GameManager {
 
     // ----------- Skill -----------
     public final int SKILL_SLOTS = 8;
-    public int unlockedSlots = 4;
-    public int itemSlots = 4;
+    public int skillUnlockedSlots = 4;
+    public int itemUnlockedSlots = 4;
     public BaseSkill[] playerSkills; // List of skills player currently have
     public BaseSkill selectedSkill;
     public BaseItem selectedItem;
@@ -92,7 +92,7 @@ public class GameManager {
         playerSkills = player.getSkills();
         for (int i = 0; i < SKILL_SLOTS; i++) {
             if (playerSkills[i] == null) {
-                if (i < unlockedSlots) {
+                if (i < skillUnlockedSlots) {
                     playerSkills[i] = new EmptySkill();
                 } else {
                     playerSkills[i] = new LockedSlot();
@@ -122,11 +122,11 @@ public class GameManager {
     public void GameStart(BasePlayerPiece playerClass) {
         // reset fields
         playerMoney = 0;
-        dungeonLevel = 0;
+        dungeonLevel = 1; // start at 1 bro not 0
         player = playerClass;
         for (int i = 0; i < SKILL_SLOTS; i++) {
             if (playerSkills[i] == null) {
-                if (i < unlockedSlots) {
+                if (i < skillUnlockedSlots) {
                     playerSkills[i] = new EmptySkill();
                 } else {
                     playerSkills[i] = new LockedSlot();
@@ -148,12 +148,6 @@ public class GameManager {
         wallTileMap = new TileMap(new Image(Config.WallTileMapPath) , 4 , 4,Config.SQUARE_SIZE,Config.SQUARE_SIZE);
         piecesPosition = new BasePiece[Config.BOARD_SIZE][Config.BOARD_SIZE];
         validMovesCache = new boolean[Config.BOARD_SIZE][Config.BOARD_SIZE];
-
-        inventory.add(new BluePotion()); // this is for testing
-        inventory.add(new RedPotion()); // this is for testing
-        inventory.add(new PurplePotion()); // this is for testing
-        inventory.add(new GreenPotion()); // this is for testing
-        inventory.add(new YellowPotion()); // this is for testing
 
         TurnManager.getInstance().initialize();
         SpawnerManager.getInstance().initialize();

@@ -4,6 +4,7 @@ import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import logic.*;
 import logic.ui.GUIManager;
@@ -146,6 +147,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
             for (Point2D coordinate : GameManager.getInstance().doorAt) {
                 if (coordinate.getX() == getRow() && coordinate.getY() == getCol()) {
                     GameManager.getInstance().gameScene.generateNewFloor();
+                    GUIManager.getInstance().eventLogDisplay.addLog("Going deeper...", Color.PALEVIOLETRED);
                     break;
                 }
             }
