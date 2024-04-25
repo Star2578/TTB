@@ -161,6 +161,9 @@ public class GameScene {
         // Define update logic
         updateLogic = () -> {
             // Update game state
+            if (!player.canAct()) {
+                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), Config.UnavailableCursor);
+            }
         };
 
         // move action point display text around mouse cursor
@@ -388,6 +391,32 @@ public class GameScene {
                             GUIManager.getInstance().eventLogDisplay.addLog("Action Point: "+ playerPiece.getCurrentActionPoint() + "/" + playerPiece.getMaxActionPoint());
                             GUIManager.getInstance().eventLogDisplay.addLog("Attack: "+ playerPiece.getAttackDamage());
                             GUIManager.getInstance().eventLogDisplay.addLog("--------------------------------");
+                        }
+                    }
+                });
+
+                // detect mouse enter/exit for squares
+                square.setOnMouseEntered(mouseEvent -> {
+                    if (piecesPosition[finalRow][finalCol] instanceof Dealer) {
+                        System.out.println("Mouse on dealer");
+                        GUIManager.getInstance().updateCursor(this.getScene(), Config.QuestionCursor);
+                    }
+                    square.setImage(new Image(Config.FloorHoverPath));
+                });
+                square.setOnMouseExited(mouseEvent -> {
+                    if (piecesPosition[finalRow][finalCol] instanceof Dealer) {
+                        System.out.println("Mouse off dealer");
+                        GUIManager.getInstance().updateCursor(this.getScene(), Config.DefaultCursor);
+                    }
+                    square.setImage(new Image(Config.FloorPath));
+
+                    // Check for door
+                    if (!gameManager.doorAt.isEmpty()) {
+                        for (Point2D coordinate : gameManager.doorAt) {
+                            int rowD = (int) coordinate.getX();
+                            int colD = (int) coordinate.getY();
+
+                            dungeonFloor[rowD][colD].setImage(imageScaler.resample(new Image(Config.DoorPath), 2));
                         }
                     }
                 });

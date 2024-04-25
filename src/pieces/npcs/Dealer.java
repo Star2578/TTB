@@ -157,12 +157,18 @@ public class Dealer extends BaseNpcPiece {
         Image itemIcon = imageScaler.resample(item.getIcon().getImage(), 2);
         ImageView frameView = item.getFrame();
 
-        itemFrame.setAlignment(Pos.CENTER);
-        itemFrame.setPrefWidth(64);
-        itemFrame.setPrefHeight(64);
-        itemFrame.getChildren().addAll(new ImageView(itemIcon), frameView);
-
         if (!(item instanceof EmptyItem)) {
+            ImageView itemIconView = new ImageView(itemIcon);
+            itemIconView.setFitWidth(40);
+            itemIconView.setFitHeight(40);
+            itemIconView.setPreserveRatio(true);
+
+            itemFrame.setAlignment(Pos.CENTER);
+            itemFrame.setPrefWidth(64);
+            itemFrame.setPrefHeight(64);
+            itemFrame.getChildren().addAll(itemIconView);
+
+
             itemFrame.setOnMouseClicked(mouseEvent -> {
                 SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
 
@@ -213,7 +219,10 @@ public class Dealer extends BaseNpcPiece {
                 itemInfoOverlay.getView().setVisible(false);
                 priceTag.setVisible(false);
             });
+
+            itemFrame.setBackground(Background.fill(item.getBackgroundColor()));
         }
+        itemFrame.getChildren().addAll(frameView);
 
         return itemFrame;
     }
