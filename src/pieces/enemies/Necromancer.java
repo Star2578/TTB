@@ -61,6 +61,11 @@ public class Necromancer extends BaseMonsterPiece{
     public void performAction() {
         endAction = false;
         updateState();
+        if (getStun() > 0) {
+            setStun(getStun() - 1);
+            endAction = true;
+            return;
+        }
         switch (currentState) {
             case NEUTRAL_ROAMING: {
                 roamRandomly();
@@ -165,7 +170,7 @@ public class Necromancer extends BaseMonsterPiece{
         int newCol = getCol() + dCol;
 
         // If the new position is valid, summon the Zombie there
-        if (isValidMoveSet(newRow, newCol)) {
+        if ((GameManager.getInstance().piecesPosition[newRow][newCol] == null) && (GameManager.getInstance().isEmptySquare(newRow, newCol))) {
             summonZombie(newRow, newCol);
         }
     }

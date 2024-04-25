@@ -1,24 +1,27 @@
-package skills.knight;
+package skills.archer;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
-import logic.SoundManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
-import utils.Attack;
 import skills.BaseSkill;
+import utils.Attack;
 import utils.Config;
 
-public class Slash extends BaseSkill implements Attack {
+public class Targetlock extends BaseSkill implements Attack {
     private BasePiece target;
-    private final int DAMAGE = 10;
-    public Slash() {
-        super("Slash", Color.DARKRED, 2, 2, "A true knight slash doesn't need a sword", Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav");
-        icon = new ImageView(Config.SlashPath);
-        range = 1;
+    private final int DAMAGE = 7;
+    public Targetlock() {
+        super("TargetLock", Color.DARKRED,
+                5, 2,
+                "With a keen eye and steady hand, the Archer employs the TargetLock skill to pinpoint enemies with precision.",
+                Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav"
+        );
+        icon = new ImageView(Config.TargetLockPath);
+        range = 7;
     }
 
     @Override
@@ -47,7 +50,6 @@ public class Slash extends BaseSkill implements Attack {
     public void perform(BasePiece target) {
         this.target = target;
         attack();
-        SoundManager.getInstance().playSoundEffect(sfxPath);
     }
 
     @Override
@@ -73,4 +75,7 @@ public class Slash extends BaseSkill implements Attack {
     public int getAttack() {
         return DAMAGE;
     }
+
+
+
 }

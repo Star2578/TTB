@@ -28,7 +28,7 @@ public class SkillHandler {
             for (int dCol = -range; dCol <= range; dCol++) {
                 int newRow = playerRow + dRow;
                 int newCol = playerCol + dCol;
-                if (validMovesCache[newRow][newCol] && isInBoardPosition(newRow, newCol) && skillSelected.validRange(newRow, newCol)) {
+                if (isInBoardPosition(newRow, newCol) && validMovesCache[newRow][newCol] && skillSelected.validRange(newRow, newCol)) {
                     if (!skillSelected.castOnSelf()) {
                         if ((newRow == playerRow && newCol == playerCol)) continue;
                     }
