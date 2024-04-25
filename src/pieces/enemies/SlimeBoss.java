@@ -5,7 +5,11 @@ import logic.GameManager;
 import logic.SpawnerManager;
 import logic.ui.GUIManager;
 import pieces.player.BasePlayerPiece;
+import pieces.wall.BaseWallPiece;
 import utils.Config;
+
+import static utils.Config.BOARD_SIZE;
+import static utils.Config.SQUARE_SIZE;
 
 public class SlimeBoss extends BaseMonsterPiece {
     private enum Phase {
@@ -26,25 +30,15 @@ public class SlimeBoss extends BaseMonsterPiece {
 
         this.currentPhase = Phase.FIRST;
 
-        //TODO===============
-        // Set the size of the slime
-        setValidMovesCacheSize(3, 3);
-
-        // Set the image for the slime boss
-//        setTexture(new ImageView(Config.SlimeBossImagePath));
-        setupAnimation(Config.SlimePath, 0, -4, 32, 32 , true);
+        setupAnimation(Config.SlimePath4, 0, -10, 32, 32 , true);
     }
 
     @Override
     public void performAction() {
         endAction = false;
-
+        updateState();
         switch (currentPhase) {
-            case FIRST:
-                roamRandomly();
-                break;
-            case SECOND:
-            case THIRD:
+            case FIRST, SECOND, THIRD:
                 chasePlayer();
                 break;
             case DEAD:
@@ -56,9 +50,9 @@ public class SlimeBoss extends BaseMonsterPiece {
     @Override
     public void updateState() {
         if (currentPhase == Phase.FIRST && getCurrentHealth() <= 0) {
-            splitSlime(2, 2, 100, Phase.SECOND);
+            splitSlime( 100, Phase.SECOND);
         } else if (currentPhase == Phase.SECOND && getCurrentHealth() <= 0) {
-            splitSlime(1, 1, 50, Phase.THIRD);
+            splitSlime(50, Phase.THIRD);
         } else if (currentPhase == Phase.THIRD && getCurrentHealth() <= 0) {
             currentPhase = Phase.DEAD;
             onDeath();
@@ -81,37 +75,41 @@ public class SlimeBoss extends BaseMonsterPiece {
         GUIManager.getInstance().eventLogDisplay.addLog("Slime Boss dealt " + ATTACK_DAMAGE_FIRST_PHASE);
     }
 
-    private void splitSlime(int sizeRow, int sizeCol, int hp, Phase nextPhase) {
+    private void splitSlime(int hp, Phase nextPhase) {
         //TODO===============
         // Logic to split the slime into smaller pieces
-        // For demonstration, we can create new slime pieces here
-        // But you can adjust this part based on your game's logic
-        System.out.println("Summon slime");
+
+        do {
+            row = (int) (Math.random() * BOARD_SIZE);
+            col = (int) (Math.random() * BOARD_SIZE);
+//        } while (!isValidMove(row, col) || piecesPosition[row][col] != null);
+        } while (!isValidMoveSet(row, col));
 
         SpawnerManager spawnerManager = SpawnerManager.getInstance();
 
-        // Creating smaller slime pieces
-//        for (int i = 0; i < sizeRow; i++) {
-//            for (int j = 0; j < sizeCol; j++) {
-//                SlimeBoss smallerSlime = new SlimeBoss();
-//                smallerSlime.setRow(getRow() + i);
-//                smallerSlime.setCol(getCol() + j);
-//                smallerSlime.setMaxHealth(hp);
-//                smallerSlime.setCurrentHealth(hp);
-//                //TODO===============
-//                // Add to game manager
-//                GameManager.getInstance().addEnemy(smallerSlime);
-//
-//            }
-//        }
+        SlimeBoss smallerSlime = new SlimeBoss();
+        smallerSlime.setRow(row);
+        smallerSlime.setCol(col);
+        smallerSlime.setMaxHealth(hp);
+        smallerSlime.setCurrentHealth(hp);
+        smallerSlime.currentPhase = nextPhase;
 
+        GameManager.getInstance().piecesPosition[row][col] = smallerSlime;
+
+        smallerSlime.animationImage.setFitWidth(SQUARE_SIZE);
+        smallerSlime.animationImage.setX(col * SQUARE_SIZE + smallerSlime.getOffsetX());
+        smallerSlime.animationImage.setY(row * SQUARE_SIZE + smallerSlime.getOffsetY());
+
+        GameManager.getInstance().environmentPieces.add(smallerSlime);
+        GameManager.getInstance().animationPane.getChildren().add(smallerSlime.animationImage);
+        spawnerManager.monsterCount++;
 
         // Change the current phase to the next phase
         this.currentPhase = nextPhase;
     }
 
     private void chasePlayer() {
-        // Calculate the distance between the Zombie and the player
+        // Calculate the distance between the Slime and the player
         double distance = Math.sqrt(Math.pow(GameManager.getInstance().player.getRow() - getRow(), 2) + Math.pow(GameManager.getInstance().player.getCol() - getCol(), 2));
 
         // Get the direction towards the player
@@ -125,8 +123,7 @@ public class SlimeBoss extends BaseMonsterPiece {
 
             // Attack the player
             attack(GameManager.getInstance().player);
-        } else if (distance <= VISION_RANGE) {
-            // If the player is within vision range but not attack range, move towards the player
+        } else {
             moveTowardsPlayer();
         }
 

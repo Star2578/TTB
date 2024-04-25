@@ -216,6 +216,8 @@ public class GameScene {
         }
     }
 
+
+
     private void gameStart() {
         // Initialize player at starting position
         player = GameManager.getInstance().player;
@@ -845,10 +847,15 @@ public class GameScene {
         gameManager.doorAt.clear();
 
         removeElements();
-        if (GameManager.getInstance().dungeonLevel % 5 != 0) {
-            normalRoom();
-        } else {
+        if (GameManager.getInstance().dungeonLevel == 1) {
+            BossRoom1();
+        }
+        else if (GameManager.getInstance().dungeonLevel % 10 == 0) {
+            BossRoom1();
+        } else if (GameManager.getInstance().dungeonLevel % 5 == 0) {
             safeRoom();
+        } else {
+            normalRoom();
         }
     }
 
@@ -878,8 +885,37 @@ public class GameScene {
         placePiece(player);
         placePiece(dealer);
         piecesPosition[7][9] = dealer;
+
+        // clear entity
+        environmentPieces.clear();
+//        initializeEnvironment();
     }
 
+    private void BossRoom1() {
+        placeDungeon(Config.BossRoom1);
+
+        SlimeBoss slimeBoss = new SlimeBoss();
+        slimeBoss.setRow(9);
+        slimeBoss.setCol(9);
+
+        player.setRow(13);
+        player.setCol(6);
+        player.setCurrentActionPoint(5);
+        player.setMaxActionPoint(5);
+
+        precomputeValidMoves();
+
+        placePiece(player);
+        placePiece(slimeBoss);
+        piecesPosition[9][9] = slimeBoss;
+
+        // clear entity
+        environmentPieces.clear();
+
+        // set gameManager
+        GameManager.getInstance().environmentPieces.add(slimeBoss);
+//        initializeEnvironment();
+    }
     private void startAutoCycle() {
         double delay = 1;
         autoCycleTurn = new Timeline(new KeyFrame(Duration.seconds(delay), cycle -> {
