@@ -90,15 +90,6 @@ public class GameManager {
     public GameManager() {
         player = new Knight(0, 0, 1);
         playerSkills = player.getSkills();
-        for (int i = 0; i < SKILL_SLOTS; i++) {
-            if (playerSkills[i] == null) {
-                if (i < skillUnlockedSlots) {
-                    playerSkills[i] = new EmptySkill();
-                } else {
-                    playerSkills[i] = new LockedSlot();
-                }
-            }
-        }
         boardPane = new GridPane();
         animationPane = new Pane();
 
@@ -124,15 +115,6 @@ public class GameManager {
         playerMoney = 0;
         dungeonLevel = 1; // start at 1 bro not 0
         player = playerClass;
-        for (int i = 0; i < SKILL_SLOTS; i++) {
-            if (playerSkills[i] == null) {
-                if (i < skillUnlockedSlots) {
-                    playerSkills[i] = new EmptySkill();
-                } else {
-                    playerSkills[i] = new LockedSlot();
-                }
-            }
-        }
         selectedItemTiles.clear();
         selectedMoveTiles.clear();
         selectedAttackTiles.clear();

@@ -48,7 +48,7 @@ public class Dealer extends BaseNpcPiece {
         importDialogues("res/dialogues/dealer-dialogue.json");
         talk("greetings"); // setup starting dialogue
 
-        setupAnimation(Config.DealerAnimationPath, 0, -10, 32, 48 , true);
+        setupAnimation(Config.DealerAnimationPath, 0, -10, 32, 48, true);
         setupShop();
     }
 
@@ -107,7 +107,7 @@ public class Dealer extends BaseNpcPiece {
     private void setupShop() {
         shopLayout = new VBox();
         shopLayout.setMinHeight(720);
-        shopLayout.setTranslateX(-300);
+        shopLayout.setTranslateX(-320);
 
         priceTag = new Text("Placeholder");
         priceTag.setStyle(
@@ -121,14 +121,14 @@ public class Dealer extends BaseNpcPiece {
         // Add shop components
         itemShopGrid = new GridPane();
         itemShopGrid.setBackground(Background.fill(Paint.valueOf("#262b44")));
-        itemShopGrid.setHgap(5);
-        itemShopGrid.setVgap(5);
+        itemShopGrid.setHgap(10);
+        itemShopGrid.setVgap(10);
         itemShopGrid.setPadding(new Insets(10));
 
         skillShopGrid = new GridPane();
         skillShopGrid.setBackground(Background.fill(Paint.valueOf("#262b44")));
-        skillShopGrid.setHgap(5);
-        skillShopGrid.setVgap(5);
+        skillShopGrid.setHgap(10);
+        skillShopGrid.setVgap(10);
         skillShopGrid.setPadding(new Insets(10));
 
         // setup item/skill in shop
@@ -145,9 +145,9 @@ public class Dealer extends BaseNpcPiece {
 
         overlayPane.setOnMouseMoved(event -> {
             // Update the position of the BoxOverlay to follow the mouse
-            itemInfoOverlay.updatePosition(event.getX(), event.getY(), -160, -190);
-            skillInfoOverlay.updatePosition(event.getX(), event.getY(), -160, -190);
-            priceTagPosition(event.getX(), event.getY(), 180, 150);
+            itemInfoOverlay.updatePosition(event.getX(), event.getY(), -160, -70);
+            skillInfoOverlay.updatePosition(event.getX(), event.getY(), -160, -70);
+            priceTagPosition(event.getX(), event.getY(), 200, 270);
         });
 
         shopLayout.getChildren().addAll(overlayPane);
@@ -402,20 +402,34 @@ public class Dealer extends BaseNpcPiece {
         skillShopGrid.getChildren().clear();
         int itemsPerRow = 4;
 
+        Label itemShopLabel = new Label("Item Shop");
+        itemShopLabel.setStyle(
+                "-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:18;" +
+                "-fx-text-fill:'white';");
+        itemShopGrid.add(itemShopLabel, 0, 0, 3, 1);
+
         // Add items to the item shop grid
         for (int i = 0; i < items_noDuplicate.size(); i++) {
             StackPane item = createItemFrame(items_noDuplicate.get(i));
             int row = i / itemsPerRow;
             int col = i % itemsPerRow;
-            itemShopGrid.add(item, col, row);
+            itemShopGrid.add(item, col, row+1);
         }
+
+        Label skillShopLabel = new Label("Skill Shop");
+        skillShopLabel.setStyle(
+                "-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:18;" +
+                "-fx-text-fill:'white';");
+        skillShopGrid.add(skillShopLabel, 0, 0, 3, 1);
 
         // Add skills to the skill shop grid
         for (int i = 0; i < skills_noDuplicate.size(); i++) {
             StackPane item = createSkillFrame(skills_noDuplicate.get(i));
             int row = i / itemsPerRow;
             int col = i % itemsPerRow;
-            skillShopGrid.add(item, col, row);
+            skillShopGrid.add(item, col, row+1);
         }
 
         Label slotSelectLabel = new Label("Select Skill Slot");
@@ -423,7 +437,7 @@ public class Dealer extends BaseNpcPiece {
                 "-fx-font-family:x16y32pxGridGazer;" +
                 "-fx-font-size:18;" +
                 "-fx-text-fill:'white';");
-        skillShopGrid.add(slotSelectLabel, 0, 2, 3, 1);
+        skillShopGrid.add(slotSelectLabel, 0, 3, 3, 1);
 
         for (int i = 0; i < GameManager.getInstance().skillUnlockedSlots; i++) {
             Button button = new Button(String.valueOf(i));
@@ -440,7 +454,42 @@ public class Dealer extends BaseNpcPiece {
             });
             int row = (skills_noDuplicate.size() + i) / itemsPerRow;
             int col = (skills_noDuplicate.size() + i) % itemsPerRow;
-            skillShopGrid.add(button, col, row+1);
+            skillShopGrid.add(button, col, row+2);
         }
+
+        Button buyItemSlot = new Button("Buy more Item Slot: " + (200 + ((GameManager.getInstance().itemUnlockedSlots) * 50)));
+        buyItemSlot.setPrefWidth(300);
+        buyItemSlot.setOnMouseClicked(mouseEvent -> {
+            int cost = 200 + ((GameManager.getInstance().itemUnlockedSlots) * 50);
+
+            if (GameManager.getInstance().playerMoney >= cost) {
+
+                GameManager.getInstance().itemUnlockedSlots += 1;
+                GameManager.getInstance().playerMoney -= cost;
+
+                updateShop();
+                GUIManager.getInstance().updateGUI();
+            }
+        });
+        Button buySkillSlot = new Button("Buy more Skill Slot:" + (200 + (GameManager.getInstance().skillUnlockedSlots * 50)));
+        buySkillSlot.setOnMouseClicked(mouseEvent -> {
+            int cost = 200 + (GameManager.getInstance().skillUnlockedSlots * 50);
+
+            if (GameManager.getInstance().playerMoney >= cost && GameManager.getInstance().skillUnlockedSlots < GameManager.getInstance().SKILL_SLOTS) {
+
+                GameManager.getInstance().skillUnlockedSlots += 1;
+                GameManager.getInstance().playerMoney -= cost;
+
+                GUIManager.getInstance().skillSelectDisplay.updateSkillSelect();
+                updateShop();
+                GUIManager.getInstance().updateGUI();
+            }
+        });
+        buySkillSlot.setPrefWidth(300);
+
+        // buy item slot
+        itemShopGrid.add(buyItemSlot, 0, 3, 4, 1);
+        // buy skill slot
+        skillShopGrid.add(buySkillSlot, 0, 6, 4, 1);
     }
 }
