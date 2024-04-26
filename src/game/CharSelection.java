@@ -21,8 +21,10 @@ import logic.GameManager;
 import logic.ImageScaler;
 import logic.SceneManager;
 import logic.SoundManager;
+import pieces.player.Archer;
 import pieces.player.BasePlayerPiece;
 import pieces.player.Knight;
+import pieces.player.Wizard;
 import skills.BaseSkill;
 import utils.Config;
 
@@ -57,9 +59,8 @@ public class CharSelection {
         scrollPane.setPrefSize(780,350);
         BasePlayerPiece[] characterList = {
                 new Knight(0,0,0),
-                new Knight(0,0,0),
-                new Knight(0,0,0),
-                new Knight(0,0,0)
+                new Archer(0,0,0),
+                new Wizard(0,0,0)
         };
         scrollPane.setContent(getCharContainer(characterList));
         scrollPane.setLayoutX(20);

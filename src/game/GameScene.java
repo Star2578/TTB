@@ -418,7 +418,7 @@ public class GameScene {
                             int rowD = (int) coordinate.getX();
                             int colD = (int) coordinate.getY();
 
-                            dungeonFloor[rowD][colD].setImage(imageScaler.resample(new Image(Config.DoorPath), 2));
+                            dungeonFloor[rowD][colD].setImage(ImageScaler.resample(new Image(Config.DoorPath), 2));
                         }
                     }
                 });
