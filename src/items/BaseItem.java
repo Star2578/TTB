@@ -22,13 +22,13 @@ public class BaseItem {
 
     protected String sfxPath;
 
+
     protected BaseItem(String name, Color nameColor, String iconPath, String description, Config.Rarity rarity, String sfxPath, Color backgroundColor) {
-        ImageScaler imageScaler = new ImageScaler();
 
         this.name = name;
         this.nameColor = nameColor;
         this.icon = new ImageView(iconPath);
-        this.frame = new ImageView(imageScaler.resample(new Image(Config.FramePath), 2));
+        this.frame = new ImageView(ImageScaler.resample(new Image(Config.FramePath), 2));
         this.description = description;
         this.rarity = rarity;
         this.price = priceGenerator();

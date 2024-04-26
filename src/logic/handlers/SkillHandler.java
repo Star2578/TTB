@@ -15,7 +15,6 @@ public class SkillHandler {
     private static ImageView[][] selectionFloor;
     private static ArrayList<Point2D> selectedTiles;
     private static boolean[][] validMovesCache;
-    private static ImageScaler imageScaler = new ImageScaler();
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
 
     public static void showValidSkillRange(int playerRow, int playerCol, BaseSkill skillSelected) {
@@ -34,7 +33,7 @@ public class SkillHandler {
                     }
                     selectedTiles.add(new Point2D(newRow, newCol));
                     // Highlight or mark the square to indicate it's within the skill range
-                    selectionFloor[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidSkillPath), 2)); // Set texture to indicate valid skill
+                    selectionFloor[newRow][newCol].setImage(ImageScaler.resample(new Image(Config.ValidSkillPath), 2)); // Set texture to indicate valid skill
                 }
             }
         }

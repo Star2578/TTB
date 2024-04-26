@@ -35,7 +35,7 @@ public class ImageScaler {
         return output;
     }
 
-    public Image resample(Image input) {
+    public static Image resample(Image input) {
         return resample(input, SCALE_FACTOR);
     }
 }

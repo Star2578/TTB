@@ -1,5 +1,6 @@
 package pieces.player;
 
+import items.BaseItem;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
@@ -15,6 +16,10 @@ import skills.BaseSkill;
 import utils.Config;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import static utils.Config.*;
@@ -262,4 +267,24 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         EffectBuffs.put(buff_name, buff_duration);
         System.out.println(buff_name + " adding");
     }
+
+    public static BasePlayerPiece createNewInstance(BasePlayerPiece player) {
+        try {
+            // Get the class of the item
+            Class<? extends BasePlayerPiece> playerClass = player.getClass();
+
+            // Get the constructor of the item class
+            Constructor<? extends BasePlayerPiece> constructor = playerClass.getDeclaredConstructor();
+
+            // Make the constructor accessible, as it may be private
+            constructor.setAccessible(true);
+
+            // Instantiate a new instance of the item class using the constructor
+            return constructor.newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            System.out.println("Error when creating new instance @Dealer :" + e.getMessage());; // Handle the exception appropriately
+        }
+        return null;
+    }
+
 }

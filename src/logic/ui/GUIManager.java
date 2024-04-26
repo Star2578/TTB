@@ -27,7 +27,6 @@ public class GUIManager {
 
     private TurnManager turnManager;
     private BasePlayerPiece player;
-    private ImageScaler imageScaler;
     private VBox playerOptionsMenu;
     private VBox rightSideUI;
     private Display currentDisplay;
@@ -65,7 +64,6 @@ public class GUIManager {
     public void initialize() {
         this.turnManager = TurnManager.getInstance();
         this.player = GameManager.getInstance().player;
-        this.imageScaler = new ImageScaler();
 
         inventoryDisplay = new InventoryDisplay();
         skillSelectDisplay = new SkillSelectDisplay();
@@ -105,7 +103,7 @@ public class GUIManager {
         playerCharacterFrame.setAlignment(Pos.CENTER);
 
         // Player Character Image
-        ImageView playerCharacterImage = new ImageView(imageScaler.resample(new Image(Config.KnightPath), 2));
+        ImageView playerCharacterImage = new ImageView(ImageScaler.resample(new Image(Config.KnightPath), 2));
         playerCharacterImage.setPreserveRatio(true);
         playerCharacterImage.setFitWidth(70);
 
@@ -302,6 +300,6 @@ public class GUIManager {
         skillSelectDisplay.disableFrame();
     }
     public void deselectFrame(ImageView frameView) {
-        frameView.setImage(imageScaler.resample(new Image(Config.FramePath), 2));
+        frameView.setImage(ImageScaler.resample(new Image(Config.FramePath), 2));
     }
 }

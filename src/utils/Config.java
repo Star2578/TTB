@@ -106,6 +106,16 @@ public class Config {
     public static String sfx_failedSound = "res/SFX/failed/8bit-blip4.wav";
     public static String sfx_deadSound = "res/SFX/monster/dead/explosion_03.wav";
 
+
+    // UI image, icon, ...
+    public static String ui_heart_icon = "ui/heart_icon.png";
+    public static String ui_sword_icon = "ui/sword_icon.png";
+    public static String ui_mana_icon = "ui/mana_icon.png";
+    public static String ui_stamina_icon = "ui/stamina_icon.png";
+    public static String ui_charInfo_box = "ui/char_info_box.png";
+
+
+
     public enum ENTITY_TYPE {
         PLAYER, MONSTER, TRAP, NPC, WALL
     }

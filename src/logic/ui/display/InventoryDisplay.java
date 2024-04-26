@@ -25,7 +25,6 @@ import utils.*;
 public class InventoryDisplay implements Display {
     private VBox view;
     private VBox usableItemsSection;
-    private ImageScaler imageScaler = new ImageScaler();
     private ItemInfoOverlay itemInfoOverlay = new ItemInfoOverlay();
 
     private Button useItem;
@@ -147,7 +146,7 @@ public class InventoryDisplay implements Display {
     private StackPane createItemFrame(BaseItem item) {
         StackPane itemFrame = new StackPane();
 
-        Image itemIcon = imageScaler.resample(item.getIcon().getImage(), 2);
+        Image itemIcon = ImageScaler.resample(item.getIcon().getImage(), 2);
         ImageView frameView = item.getFrame();
 
         if (!(item instanceof EmptyItem)) {
@@ -178,7 +177,7 @@ public class InventoryDisplay implements Display {
                     }
                     GameManager.getInstance().gameScene.resetSelection(3);
                 }
-                item.getFrame().setImage(imageScaler.resample(new Image(Config.FrameSelectedPath), 2));
+                item.getFrame().setImage(ImageScaler.resample(new Image(Config.FrameSelectedPath), 2));
                 GameManager.getInstance().selectedItem = item;
             });
 

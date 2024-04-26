@@ -31,7 +31,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class Dealer extends BaseNpcPiece {
-    private ImageScaler imageScaler = new ImageScaler();
+
     private List<BaseItem> items_noDuplicate = new ArrayList<>(); // contain items that already on the shop, so there won't be any duplicate
     private List<BaseSkill> skills_noDuplicate = new ArrayList<>(); // contain skills that already on the shop, so there won't be any duplicate
     private SkillInfoOverlay skillInfoOverlay = new SkillInfoOverlay();
@@ -156,7 +156,7 @@ public class Dealer extends BaseNpcPiece {
     private StackPane createItemFrame(BaseItem item) {
         StackPane itemFrame = new StackPane();
 
-        Image itemIcon = imageScaler.resample(item.getIcon().getImage(), 2);
+        Image itemIcon = ImageScaler.resample(item.getIcon().getImage(), 2);
         ImageView frameView = item.getFrame();
 
         if (!(item instanceof EmptyItem)) {
@@ -236,7 +236,7 @@ public class Dealer extends BaseNpcPiece {
         StackPane skillFrame = new StackPane();
 
         // Scale Skill Icon
-        Image skillIcon = imageScaler.resample(skill.getIcon().getImage(), 2);
+        Image skillIcon = ImageScaler.resample(skill.getIcon().getImage(), 2);
         ImageView frameView = skill.getFrame();
 
         skillFrame.setAlignment(Pos.CENTER);

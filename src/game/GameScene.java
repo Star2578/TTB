@@ -48,7 +48,6 @@ public class GameScene {
     private GUIManager guiManager;
     private GameLoop gameLoop;
     private TurnManager turnManager;
-    private ImageScaler imageScaler = new ImageScaler();
     private DungeonGenerator dungeonGenerator;
     private Timeline autoCycleTurn;
 
@@ -246,7 +245,7 @@ public class GameScene {
                 floor.setFitWidth(SQUARE_SIZE);
                 floor.setFitHeight(SQUARE_SIZE);
 
-                floor.setImage(imageScaler.resample(new Image(Config.FloorPath), 2)); // Set texture of dungeon floor
+                floor.setImage(ImageScaler.resample(new Image(Config.FloorPath), 2)); // Set texture of dungeon floor
                 gridPane.add(floor, col, row);
                 dungeonFloor[row][col] = floor;
 
@@ -871,7 +870,7 @@ public class GameScene {
             int row = (int) coordinate.getX();
             int col = (int) coordinate.getY();
 
-            dungeonFloor[row][col].setImage(imageScaler.resample(new Image(Config.FloorPath), 2));
+            dungeonFloor[row][col].setImage(ImageScaler.resample(new Image(Config.FloorPath), 2));
         }
         gameManager.doorAt.clear();
 

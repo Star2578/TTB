@@ -14,7 +14,6 @@ public class SpawnerManager {
     public static SpawnerManager instance;
     private GameManager gameManager = GameManager.getInstance();
     private ImageView[][] dungeonFloor;
-    private ImageScaler imageScaler = new ImageScaler();
     private double doorProbability = 5.0; // probability that the door to next dungeon floor would spawn
     public int monsterCount;
     public int freeSquareCount;
@@ -63,7 +62,7 @@ public class SpawnerManager {
 
         // Door spawn successful
         System.out.println("Door spawned at row " + row + ", col " + col);
-        dungeonFloor[row][col].setImage(imageScaler.resample(new Image(Config.DoorPath), 2));
+        dungeonFloor[row][col].setImage(ImageScaler.resample(new Image(Config.DoorPath), 2));
         gameManager.doorAt.add(new Point2D(row, col));
     }
 

@@ -28,10 +28,9 @@ public abstract class BaseNpcPiece extends BasePiece {
 
     public BaseNpcPiece(String name, String portraitPath, int defaultDirection) {
         super(Config.ENTITY_TYPE.NPC, new ImageView(Config.PlaceholderPath), 0, 0, defaultDirection);
-        ImageScaler imageScaler = new ImageScaler();
 
         this.name = name;
-        this.portrait = imageScaler.resample(new Image(portraitPath), 2);
+        this.portrait = ImageScaler.resample(new Image(portraitPath), 2);
     }
 
     protected void importDialogues(String jsonFilePath) {
