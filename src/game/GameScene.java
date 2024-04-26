@@ -997,7 +997,7 @@ public class GameScene {
             SkillHandler.showValidSkillRange(player.getRow(), player.getCol(), toUse);
             GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.HandCursor);
             gameManager.selectedSkill = toUse;
-            toUse.getFrame().setImage(imageScaler.resample(new Image(Config.FrameSelectedPath), 2));
+            toUse.getFrame().setImage(ImageScaler.resample(new Image(Config.FrameSelectedPath), 2));
             System.out.println("Selected " + toUse.getName() + " skill");
         }
     }
