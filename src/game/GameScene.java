@@ -83,6 +83,7 @@ public class GameScene {
 
     public GameScene() {
 
+
         root = new BorderPane();
         root.setStyle("-fx-background-color: #1c0a05;");
         scene = new Scene(root, 1280, 720);

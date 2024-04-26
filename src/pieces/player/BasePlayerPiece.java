@@ -39,9 +39,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     protected final int ATTACK_COST = 1;
     protected int attackRange = 1;
 
-    // Animations
-    protected int currentDirection;
-
 
     // Buffs
     protected int buffturn;
@@ -109,6 +106,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         }
     }
     public void changeDirection(int direction) {
+
 
         if (direction != 1 && direction != -1) {
             return;

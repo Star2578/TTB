@@ -22,6 +22,7 @@ public class EffectManager {
     public enum TYPE{
         AROUND_SELF,
         ON_TARGET,
+        ON_SELF
 
     }
     private static EffectManager instance;
@@ -97,6 +98,25 @@ public class EffectManager {
 
             //scale effect size + direction
             effect.imageView.setScaleX(config.scale * player.getCurrentDirection());
+            effect.imageView.setScaleY(config.scale);
+
+            //set effect on enemy position
+            effect.imageView.setX(target.getCol()*SQUARE_SIZE + config.offsetX);
+            effect.imageView.setY(target.getRow()*SQUARE_SIZE + config.offsetY);
+
+            effect.imageView.toFront();
+            effect.imageView.setDisable(true);
+
+            effect.start();
+        }
+        else if(typeEnum == TYPE.ON_SELF){
+            //effect will occur on target position
+
+            //add effect to pane
+            EffectManager.getInstance().effectPane.getChildren().add(effect.imageView);
+
+            //scale effect size + direction
+            effect.imageView.setScaleX(config.scale);
             effect.imageView.setScaleY(config.scale);
 
             //set effect on enemy position
