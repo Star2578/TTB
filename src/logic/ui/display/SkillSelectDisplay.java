@@ -49,7 +49,7 @@ public class SkillSelectDisplay implements Display{
         view.getChildren().addAll(skillSelectorGrid);
     }
 
-    private void updateSkillSelect() {
+    public void updateSkillSelect() {
         skillSelectorGrid.getChildren().clear();
         BaseSkill[] playerSkills = GameManager.getInstance().playerSkills;
         // Add skill frames
@@ -57,15 +57,17 @@ public class SkillSelectDisplay implements Display{
         int col = 0;
 
         for (int i = 0; i < GameManager.getInstance().SKILL_SLOTS; i++) {
+            StackPane skillFrame;
             if (playerSkills[i] == null) {
-                if (i < GameManager.getInstance().unlockedSlots) {
-                    playerSkills[i] = new EmptySkill();
+                if (i < GameManager.getInstance().skillUnlockedSlots) {
+                    skillFrame = createSkillFrame(new EmptySkill());
                 } else {
-                    playerSkills[i] = new LockedSlot();
+                    skillFrame = createSkillFrame(new LockedSlot());
                 }
+            } else {
+                skillFrame = createSkillFrame(playerSkills[i]);
             }
 
-            StackPane skillFrame = createSkillFrame(playerSkills[i]);;
             skillSelectorGrid.add(skillFrame, col, row); // Add to the grid
             col++;
             if (col == 4) { // Adjust column count as needed

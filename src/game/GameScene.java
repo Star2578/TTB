@@ -30,6 +30,7 @@ import pieces.npcs.BaseNpcPiece;
 import pieces.npcs.Dealer;
 import pieces.player.*;
 import pieces.wall.*;
+import skills.BaseSkill;
 import utils.Config;
 import utils.Usable;
 
@@ -490,7 +491,7 @@ public class GameScene {
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     // Perform the attack on the monster
                     if (enoughMana && enoughActionPoint) {
-                        GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedSkill.getName() + " on " + monsterPiece.getClass().getSimpleName());
+                        GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName(), GameManager.getInstance().selectedSkill.getNameColor());
                         gameManager.selectedSkill.perform(monsterPiece);
                     } else {
                         SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
@@ -747,10 +748,14 @@ public class GameScene {
                 case LEFT:
                 case RIGHT:
                     if (!isPlayerPieceSelected && player.canAct()) {
+                        System.out.println("I can act here!!! " + player.canAct());
+                        System.out.println("player piece selected!!!" + isPlayerPieceSelected);
                         resetSelectionAll();
                         isPlayerPieceSelected = true;
                         MovementHandler.showValidMoves(player.getRow(), player.getCol());
-                    } else if (player.canAct()) {
+                    } else if (player.canAct() && isPlayerPieceSelected) {
+                        System.out.println("I can act here " + player.canAct());
+                        System.out.println("player piece selected" + isPlayerPieceSelected);
                         // Determine direction based on key pressed
                         int rowDelta = 0;
                         int colDelta = 0;
@@ -795,9 +800,33 @@ public class GameScene {
                         AttackHandler.showValidAttackRange(GameManager.getInstance().player.getRow() , GameManager.getInstance().player.getCol());
                     }
                     break;
+                case DIGIT1:
+                    handleSkillShortcut(1);
+                    break;
+                case DIGIT2:
+                    handleSkillShortcut(2);
+                    break;
+                case DIGIT3:
+                    handleSkillShortcut(3);
+                    break;
+                case DIGIT4:
+                    handleSkillShortcut(4);
+                    break;
+                case DIGIT5:
+                    handleSkillShortcut(5);
+                    break;
+                case DIGIT6:
+                    handleSkillShortcut(6);
+                    break;
+                case DIGIT7:
+                    handleSkillShortcut(7);
+                    break;
+                case DIGIT8:
+                    handleSkillShortcut(8);
+                    break;
                 case F1:
-//                    removeElements();
-                    GUIManager.getInstance().eventLogDisplay.addLog("Hello World!");
+                    gameManager.playerMoney += 1000;
+                    GUIManager.getInstance().updateGUI();
                     break;
                 case F2:
                     generateNewFloor();
@@ -934,5 +963,42 @@ public class GameScene {
         resetSelection(1);
         resetSelection(2);
         resetSelection(3);
+    }
+
+    private void handleSkillShortcut(int slot) {
+        BaseSkill toUse = player.getSkills()[slot-1];
+
+        if (toUse != null) {
+            GameManager.getInstance().gameScene.resetSelection(0);
+            GameManager.getInstance().gameScene.resetSelection(1);
+            GameManager.getInstance().gameScene.resetSelection(3);
+
+            // trigger skill selection
+            if (GameManager.getInstance().selectedSkill != null) {
+                if (GameManager.getInstance().selectedSkill == toUse && toUse.castOnSelf() && GameManager.getInstance().fastUse) {
+                    boolean enoughMana = player.getCurrentMana() >= GameManager.getInstance().selectedSkill.getManaCost();
+                    boolean enoughActionPoint = player.getCurrentActionPoint() >= GameManager.getInstance().selectedSkill.getActionPointCost();
+
+                    if (enoughMana && enoughActionPoint) {
+                        GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName(), GameManager.getInstance().selectedSkill.getNameColor());
+                        GameManager.getInstance().selectedSkill.perform(GameManager.getInstance().player);
+                    } else {
+                        SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+                        System.out.println("Not enough mana or action point");
+                    }
+
+                    GameManager.getInstance().gameScene.resetSelection(2);
+                    return;
+                }
+                GameManager.getInstance().gameScene.resetSelection(2);
+            }
+
+            // show range
+            SkillHandler.showValidSkillRange(player.getRow(), player.getCol(), toUse);
+            GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.HandCursor);
+            gameManager.selectedSkill = toUse;
+            toUse.getFrame().setImage(imageScaler.resample(new Image(Config.FrameSelectedPath), 2));
+            System.out.println("Selected " + toUse.getName() + " skill");
+        }
     }
 }

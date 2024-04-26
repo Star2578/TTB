@@ -108,7 +108,7 @@ public class InventoryDisplay implements Display {
 
         int itemsPerRow = 4;
         int totalItems = 0;
-        int maxItems = GameManager.getInstance().itemSlots;
+        int maxItems = GameManager.getInstance().itemUnlockedSlots;
 
         // Add items to the item grid
         for (BaseItem item : GameManager.getInstance().inventory) {
