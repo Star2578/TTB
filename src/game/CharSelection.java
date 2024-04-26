@@ -85,7 +85,7 @@ public class CharSelection {
             // switch bgm
             SoundManager.getInstance().changeBackgroundMusic(Config.bgm_8_bit_adventure);
             //start and switch to the game scene
-            GameManager.getInstance().GameStart(new Knight(0, 0, 1));
+            GameManager.getInstance().GameStart(selectedCard.charData);
             SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getGameScene());
         });
 
