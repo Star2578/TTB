@@ -32,38 +32,39 @@ public class Dart extends BaseSkill implements Attack {
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
 
+                //=========<SKILL EFFECT>====================================================================
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                                GameManager.getInstance().player ,
+                                target.getRow(), target.getCol(),
+                                EffectManager.getInstance().createInPlaceEffects(4) ,
+                                new EffectConfig(0 , -16 , 24 , 1.1) );
+                //===========================================================================================
+
                 int currentRow = GameManager.getInstance().player.getRow();
                 int currentCol = GameManager.getInstance().player.getCol();
-                int dRow = target.getRow() - currentRow;
-                int dCol = target.getCol() - currentCol;
-                int directionRow = dRow;
-                int directionCol = dCol;
+                int directionRow = target.getRow() - currentRow;
+                int directionCol = target.getCol() - currentCol;
                 // Normalize the direction
                 if (directionRow != 0) directionRow /= Math.abs(directionRow);
                 if (directionCol != 0) directionCol /= Math.abs(directionCol);
 
-                for (int i = 1;i <= KNOCKBACK; i++){
+                for (int i = 1; i <= KNOCKBACK; i++) {
                     int newRow = target.getRow() + directionRow * i;
                     int newCol = target.getCol() + directionCol * i;
                     if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) {
                         break;
                     }
                     GameManager.getInstance().piecesPosition[target.getRow()][target.getCol()] = null;
+                    target.moveWithTransition(newRow, newCol);
                     target.setRow(newRow);
                     target.setCol(newCol);
                     GameManager.getInstance().piecesPosition[newRow][newCol] = target;
                 }
 
+
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
-                //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
-                                GameManager.getInstance().player ,
-                                target ,
-                                EffectManager.getInstance().createInPlaceEffects(1) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
-                //===========================================================================================
             }
         }
     }

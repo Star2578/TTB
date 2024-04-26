@@ -6,6 +6,8 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
+import logic.effect.EffectConfig;
+import logic.effect.EffectManager;
 import logic.ui.GUIManager;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
@@ -65,9 +67,18 @@ public class Zombie extends BaseMonsterPiece{
         updateState();
         if (getStun() > 0) {
             setStun(getStun() - 1);
+            //=========<SKILL EFFECT>====================================================================
+            EffectManager.getInstance()
+                    .renderEffect( EffectManager.TYPE.ON_SELF ,
+                            GameManager.getInstance().player ,
+                            getRow(), getCol(),
+                            EffectManager.getInstance().createInPlaceEffects(8) ,
+                            new EffectConfig(-9 , -16 , 0 , 1.1) );
+            //===========================================================================================
             endAction = true;
             return;
         }
+        EffectManager.getInstance().clearDeadEffect();
         switch (currentState) {
             case NEUTRAL_ROAMING:
                 roamRandomly();

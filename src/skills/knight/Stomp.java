@@ -15,7 +15,7 @@ import utils.Config;
 
 public class Stomp extends BaseSkill implements Attack {
     private BasePiece target;
-    private final int DAMAGE = 10;
+    private final int DAMAGE = 6;
     public Stomp() {
         super("Stomp", Color.DARKRED, 2, 2, "The Knight brings their armored boot crashing down, sending shockwaves rippling through the ground.", Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav");
         icon = new ImageView(Config.StompPath);
@@ -33,20 +33,33 @@ public class Stomp extends BaseSkill implements Attack {
                     int newRow = this.target.getRow() + i;
                     int newCol = this.target.getCol() + j;
                     BasePiece target = GameManager.getInstance().piecesPosition[newRow][newCol];
+
                     if (target instanceof BaseMonsterPiece monsterPiece) {
                         monsterPiece.takeDamage(DAMAGE);
                         monsterPiece.setStun(monsterPiece.getStun() + 1);
+                        if (!monsterPiece.isAlive()) {
+                            GameManager.getInstance().gameScene.removePiece(monsterPiece);
+                        }
                     }
-                    System.out.println("Use " + name + " on " + newRow + " " + newCol);
+                    //=========<SKILL EFFECT>====================================================================
+                    if (!(target instanceof BasePlayerPiece)){
+                        EffectManager.getInstance()
+                                .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                                        GameManager.getInstance().player ,
+                                        newRow, newCol,
+                                        EffectManager.getInstance().createInPlaceEffects(3) ,
+                                        new EffectConfig(0 , -6 , 38 , 1.1) );
+                    }
+                    //===========================================================================================
                 }
 
             //=========<SKILL EFFECT>====================================================================
-            EffectManager.getInstance()
-                    .renderEffect( EffectManager.TYPE.AROUND_SELF ,
-                            GameManager.getInstance().player ,
-                            target ,
-                            EffectManager.getInstance().createInPlaceEffects(1) ,
-                            new EffectConfig(0 , -16 , 24 , 1.1) );
+//            EffectManager.getInstance()
+//                    .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+//                            GameManager.getInstance().player ,
+//                            target,
+//                            EffectManager.getInstance().createInPlaceEffects(1) ,
+//                            new EffectConfig(0 , -16 , 24 , 1.1) );
             //===========================================================================================
         }
     }

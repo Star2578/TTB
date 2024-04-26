@@ -89,7 +89,7 @@ public class Archer extends BasePlayerPiece {
         EffectManager.getInstance()
                 .renderEffect( EffectManager.TYPE.ON_TARGET ,
                         this ,
-                        monsterPiece ,
+                        monsterPiece.getRow(), monsterPiece.getCol(),
                         EffectManager.getInstance().createInPlaceEffects(0) ,
                         new EffectConfig(0 , 8 , 0 , 1.25) );
 

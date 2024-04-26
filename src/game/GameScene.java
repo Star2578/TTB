@@ -465,11 +465,6 @@ public class GameScene {
                     SoundManager.getInstance().playSoundEffect(Config.sfx_attackSound);
                     player.attack(monsterPiece);
                     GUIManager.getInstance().eventLogDisplay.addLog("Player attack " + monsterPiece.getClass().getSimpleName() + " at (" + row + ", " + col + ")");
-                    if (!monsterPiece.isAlive()) {
-                        removePiece(monsterPiece);
-                        environmentPieces.remove(monsterPiece);
-                        gameManager.totalKillThisRun++;
-                    }
                 }
             }
             resetSelection(1);
@@ -493,11 +488,6 @@ public class GameScene {
                     } else {
                         SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                         System.out.println("Not enough mana or action point");
-                    }
-                    if (!monsterPiece.isAlive()) {
-                        removePiece(monsterPiece);
-                        environmentPieces.remove(monsterPiece);
-                        gameManager.totalKillThisRun++;
                     }
                 } else if (piecesPosition[row][col] instanceof BasePlayerPiece playerPiece) {
                     if (gameManager.selectedSkill.castOnSelf()) {
@@ -707,7 +697,7 @@ public class GameScene {
         animationPane.getChildren().clear();
     }
 
-    private void removePiece(BasePiece toRemove) {
+    public void removePiece(BasePiece toRemove) {
         int row = toRemove.getRow();
         int col = toRemove.getCol();
 
@@ -720,6 +710,7 @@ public class GameScene {
 
         // Set the corresponding entry in the pieces array to null
         piecesPosition[row][col] = null;
+        environmentPieces.remove(toRemove);
     }
 
 

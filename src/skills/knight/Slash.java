@@ -35,7 +35,7 @@ public class Slash extends BaseSkill implements Attack {
                 EffectManager.getInstance()
                         .renderEffect( EffectManager.TYPE.AROUND_SELF ,
                                 GameManager.getInstance().player ,
-                                target ,
+                                target.getRow(), target.getCol(),
                                 EffectManager.getInstance().createInPlaceEffects(1) ,
                                 new EffectConfig(0 , -16 , 24 , 1.1) );
                 //===========================================================================================

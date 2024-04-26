@@ -1,7 +1,11 @@
 package pieces.enemies;
 
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpawnerManager;
+import logic.effect.EffectConfig;
+import logic.effect.EffectManager;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
@@ -140,6 +144,7 @@ public class Necromancer extends BaseMonsterPiece{
     public void summonZombie(int row, int col) {
         System.out.println("Summon zombie");
 
+
         SpawnerManager spawnerManager = SpawnerManager.getInstance();
 
         Zombie zombie = new Zombie();
@@ -154,6 +159,7 @@ public class Necromancer extends BaseMonsterPiece{
         zombie.animationImage.setY(row * SQUARE_SIZE + zombie.getOffsetX());
 
         GameManager.getInstance().environmentPieces.add(zombie);
+        zombie.endAction = true;
 
         GameManager.getInstance().animationPane.getChildren().add(zombie.animationImage);
 
@@ -171,7 +177,23 @@ public class Necromancer extends BaseMonsterPiece{
 
         // If the new position is valid, summon the Zombie there
         if ((GameManager.getInstance().piecesPosition[newRow][newCol] == null) && (GameManager.getInstance().isEmptySquare(newRow, newCol))) {
-            summonZombie(newRow, newCol);
+            //=========<SKILL EFFECT>====================================================================
+            EffectManager.getInstance()
+                    .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                            GameManager.getInstance().player ,
+                            newRow, newCol,
+                            EffectManager.getInstance().createInPlaceEffects(7) ,
+                            new EffectConfig(-8 , -40 , 0 , 1.1) );
+            //===========================================================================================
+
+            // Create a PauseTransition with a duration of 0.8 seconds
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.8));
+
+            // Set the action to perform after the pause
+            pause.setOnFinished(event -> summonZombie(newRow, newCol));
+
+            // Start the pause
+            pause.play();
         }
     }
 

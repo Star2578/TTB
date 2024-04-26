@@ -29,12 +29,15 @@ public class Config {
 
     // Enemies
     public static String DeadEffectPath = "sprites/enemies/dead_smoke.png";
+    public static String StunEffectPath = "sprites/enemies/stun_effect.png";
 
     public static String TinyAnimationPath = "sprites/enemies/tiny_sprite_sheet.png";
     public static String ZombieAnimationPath = "sprites/enemies/zombie_sprite_sheet.png";
     public static String BomberAnimationPath = "sprites/enemies/bomber_sprite_sheet.png";
     public static String BombAnimationPath = "sprites/objects/bomb/bomb_f0.png";
+    public static String BombExplosionPath = "sprites/objects/bomb/bombExplosion.png";
     public  static  String NecromancerPath = "sprites/enemies/necromancer_sprite_sheet.png";
+    public static String NecromancerSummonPath = "sprites/enemies/necromancer_summon_sprite_sheet.png";
     public  static  String SkeletonPath = "sprites/enemies/skeleton_sprite_sheet.png";
     public  static  String VampirePath = "sprites/enemies/vampire_sprite_sheet.png";
 
@@ -83,7 +86,11 @@ public class Config {
 
     // Attacks animation
     public static String meleeAttackPath = "sprites/attacks/common_melee_attack.png";
-    public static String skillSlashPath = "sprites/attacks/skill_slash.png";
+    // Knight Skills animation
+    public static String skillSlashPath = "sprites/skills/skill_knight/skill_slash.png";
+    public static String skillStompPath = "sprites/skills/skill_knight/skill_stomp.png";
+    public static String skillDartPath = "sprites/skills/skill_knight/skill_dart.png";
+    public static String skillHealPath = "sprites/skills/skill_knight/skill_heal.png";
 
     // BGM
     public static String bgm_8_bit_adventure = "res/BGM/8_Bit_Adventure.wav";
@@ -99,7 +106,7 @@ public class Config {
     public static String sfx_deadSound = "res/SFX/monster/dead/explosion_03.wav";
 
     public enum ENTITY_TYPE {
-        PLAYER, MONSTER, TRAP, NPC, WALL
+        PLAYER, MONSTER, TRAP, NPC, WALL, EMPTY
     }
 
     public enum Rarity {

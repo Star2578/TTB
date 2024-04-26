@@ -155,6 +155,11 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         SpawnerManager.getInstance().trySpawnDoor(getRow(), getCol());
         GameManager.getInstance().playerMoney += moneyDrop;
         GUIManager.getInstance().updateGUI();
+        GameManager.getInstance().totalKillThisRun++;
+
+        // remove monster when death
+        GameManager.getInstance().gameScene.removePiece(this);
+
         // To call when this monster died
         GUIManager.getInstance().eventLogDisplay.addLog("Player killed " + this.getClass().getSimpleName());
         //=====<dead effect>=========================================
@@ -168,7 +173,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
                 EffectManager.getInstance()
                         .renderEffect( EffectManager.TYPE.ON_TARGET ,
                                 GameManager.getInstance().player ,
-                                this ,
+                                getRow(), getCol(),
                                 EffectManager.getInstance().createInPlaceEffects(2) ,
                                 new EffectConfig(0 , 0 , 0 , 1.25) );
             });

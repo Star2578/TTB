@@ -22,7 +22,7 @@ public class BasePiece {
     protected int offsetX=0;
     protected int offsetY=0;
 
-    protected BasePiece(Config.ENTITY_TYPE type, ImageView texture, int row, int col, int defaultDirection) {
+    public BasePiece(Config.ENTITY_TYPE type, ImageView texture, int row, int col, int defaultDirection) {
         this.type = type;
         this.texture = texture;
         this.row = row;

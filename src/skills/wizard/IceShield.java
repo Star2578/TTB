@@ -45,7 +45,7 @@ public class IceShield extends BaseSkill implements Buff {
             EffectManager.getInstance()
                     .renderEffect( EffectManager.TYPE.ON_TARGET ,
                             GameManager.getInstance().player ,
-                            target ,
+                            target.getRow(), target.getCol(),
                             EffectManager.getInstance().createInPlaceEffects(1) ,
                             new EffectConfig(0 , -16 , 24 , 1.1) );
             //===========================================================================================
