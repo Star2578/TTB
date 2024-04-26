@@ -746,10 +746,14 @@ public class GameScene {
                 case LEFT:
                 case RIGHT:
                     if (!isPlayerPieceSelected && player.canAct()) {
+                        System.out.println("I can act here!!! " + player.canAct());
+                        System.out.println("player piece selected!!!" + isPlayerPieceSelected);
                         resetSelectionAll();
                         isPlayerPieceSelected = true;
                         MovementHandler.showValidMoves(player.getRow(), player.getCol());
-                    } else if (player.canAct()) {
+                    } else if (player.canAct() && isPlayerPieceSelected) {
+                        System.out.println("I can act here " + player.canAct());
+                        System.out.println("player piece selected" + isPlayerPieceSelected);
                         // Determine direction based on key pressed
                         int rowDelta = 0;
                         int colDelta = 0;

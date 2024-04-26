@@ -25,7 +25,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     protected int currentMana;
     protected int maxMana;
     protected int attackDamage;
-    protected boolean animationFinished = true;
 
     protected boolean canAct; // status
     protected BaseSkill[] skills; // skill list
@@ -101,7 +100,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         GUIManager.getInstance().updateGUI();
 
         // Auto End Turn when player is out of action point
-        if (this.currentActionPoint == 0 && GameManager.getInstance().autoEndTurn && animationFinished) {
+        if (this.currentActionPoint == 0 && GameManager.getInstance().autoEndTurn && canAct) {
             if (TurnManager.getInstance().isPlayerTurn) TurnManager.getInstance().endPlayerTurn();
         }
     }
@@ -121,7 +120,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void moveWithTransition(int row , int col){
         //stop player from do other action
         setCanAct(false);
-        animationFinished = false;
         spriteAnimation.changeAnimation(4 , 2);
         //slowly move to target col,row
         moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
@@ -139,7 +137,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
             animationImage.translateYProperty().set(offsetY);
             //now player can do actions
             spriteAnimation.changeAnimation(4 , 0);
-            setCanAct(true);
             GUIManager.getInstance().enableButton();
             setRow(row);
             setCol(col);
@@ -152,7 +149,12 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
                 }
             }
 
-            animationFinished = true; // Finish animation
+            // Auto End Turn when player is out of action point
+            if (this.currentActionPoint == 0 && GameManager.getInstance().autoEndTurn) {
+                if (TurnManager.getInstance().isPlayerTurn) TurnManager.getInstance().endPlayerTurn();
+            } else {
+                setCanAct(true);
+            }
         });
         moveTransition.play();
     }
