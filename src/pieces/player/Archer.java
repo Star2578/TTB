@@ -90,7 +90,7 @@ public class Archer extends BasePlayerPiece {
                         this ,
                         monsterPiece.getRow(), monsterPiece.getCol(),
                         EffectManager.getInstance().createInPlaceEffects(12) ,
-                        new EffectConfig(-2 , -4 , 32 , 1.7) );
+                        new EffectConfig(-2 , -4 , 32 , 1.4) );
         //===========================================================================================
 
         System.out.println("Attack success");
