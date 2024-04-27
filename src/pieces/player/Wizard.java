@@ -43,8 +43,6 @@ public class Wizard extends BasePlayerPiece{
         //add skill
         skills[0] = new Fireball();
         skills[1] = new IceShield();
-        skills[2] = new RainOfFire();
-        skills[3] = new DragonFire();
         //TODO===========
 
         //configs values for animation

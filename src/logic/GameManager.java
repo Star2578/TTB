@@ -12,8 +12,18 @@ import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.player.*;
 import skills.*;
+import skills.archer.Halt;
+import skills.archer.Snipe;
+import skills.archer.Targetlock;
+import skills.archer.Teleport;
+import skills.knight.Dart;
 import skills.knight.Heal;
 import skills.knight.Slash;
+import skills.knight.Stomp;
+import skills.wizard.DragonFire;
+import skills.wizard.Fireball;
+import skills.wizard.IceShield;
+import skills.wizard.RainOfFire;
 import utils.Config;
 
 import java.io.*;
@@ -81,7 +91,8 @@ public class GameManager {
     public List<Point2D> doorAt = new ArrayList<>(); // use to store where the door is at
 
     public final BaseSkill[] UNIVERSAL_SKILL_POOL = {
-        new Slash(), new Heal()
+        new Slash(), new Heal(), new Halt(), new Snipe(), new Targetlock(), new Teleport(), new Dart(), new Stomp(),
+            new DragonFire(), new Fireball(), new IceShield(), new RainOfFire()
     };
     public final BaseItem[] ITEM_POOL = {
         new BluePotion(), new GreenPotion(), new PurplePotion(), new RedPotion(), new YellowPotion()

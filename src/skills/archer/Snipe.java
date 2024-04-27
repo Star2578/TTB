@@ -17,12 +17,12 @@ public class Snipe extends BaseSkill implements Attack {
     public Snipe() {
 
         super("Snipe", Color.DARKRED,
-                1, 2,
-                "With unwavering focus and steady hands, the Archer selects a distant target, aligning their sight with unparalleled accuracy."
-                , Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav"
+                10, 10,
+                "Costly but Deadly"
+                , Config.Rarity.LEGENDARY, "res/SFX/skills/slash/PP_01.wav"
         );
         icon = new ImageView(Config.SnipePath);
-        range = 3;
+        range = 7;
     }
 
     @Override
