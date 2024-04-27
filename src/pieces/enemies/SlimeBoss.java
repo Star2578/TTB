@@ -1,9 +1,13 @@
 package pieces.enemies;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpawnerManager;
 import logic.ui.GUIManager;
+import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
 import pieces.wall.BaseWallPiece;
 import utils.Config;
@@ -18,10 +22,13 @@ public class SlimeBoss extends BaseMonsterPiece {
 
     private Phase currentPhase;
     private final int ATTACK_DAMAGE_FIRST_PHASE = 5;
-    private final int ATTACK_DAMAGE_SECOND_PHASE = 5;
+    private final int ATTACK_DAMAGE_SECOND_PHASE = 4;
     private final int ATTACK_DAMAGE_THIRD_PHASE = 3;
     private final double ATTACK_RANGE = 1.5;
+    private final int MOVE = 2;
+    private int MOVE_CNT = 0;
     private final int VISION_RANGE = 10;
+    private BasePiece[][] piecesPosition = GameManager.getInstance().piecesPosition;
 
     public SlimeBoss() {
         super(0, 0, 1);
@@ -31,12 +38,14 @@ public class SlimeBoss extends BaseMonsterPiece {
         this.currentPhase = Phase.FIRST;
 
         setupAnimation(Config.SlimePath4, 0, -10, 32, 32 , true);
+
     }
 
     @Override
     public void performAction() {
         endAction = false;
         updateState();
+        MOVE_CNT = 0;
         switch (currentPhase) {
             case FIRST, SECOND, THIRD:
                 chasePlayer();
@@ -49,14 +58,17 @@ public class SlimeBoss extends BaseMonsterPiece {
 
     @Override
     public void updateState() {
-        if (currentPhase == Phase.FIRST && getCurrentHealth() <= 0) {
+        if (currentPhase == Phase.FIRST && getCurrentHealth() <= 15) {
             splitSlime( 100, Phase.SECOND);
-        } else if (currentPhase == Phase.SECOND && getCurrentHealth() <= 0) {
+            onDeath();
+        } else if (currentPhase == Phase.SECOND && getCurrentHealth() <= 15) {
             splitSlime(50, Phase.THIRD);
+            onDeath();
         } else if (currentPhase == Phase.THIRD && getCurrentHealth() <= 0) {
             currentPhase = Phase.DEAD;
             onDeath();
         }
+        System.out.println("Slime Boss is in " + currentPhase);
     }
 
     @Override
@@ -78,56 +90,72 @@ public class SlimeBoss extends BaseMonsterPiece {
     private void splitSlime(int hp, Phase nextPhase) {
         //TODO===============
         // Logic to split the slime into smaller pieces
+        for(int i = 0; i < 2; i++) {
+            int row, col;
+            do {
+                row = (int) (Math.random() * BOARD_SIZE);
+                col = (int) (Math.random() * BOARD_SIZE);
+            } while (!isValidMoveSet(row, col) || piecesPosition[row][col] != null);
 
-        do {
-            row = (int) (Math.random() * BOARD_SIZE);
-            col = (int) (Math.random() * BOARD_SIZE);
-//        } while (!isValidMove(row, col) || piecesPosition[row][col] != null);
-        } while (!isValidMoveSet(row, col));
+            SpawnerManager spawnerManager = SpawnerManager.getInstance();
 
-        SpawnerManager spawnerManager = SpawnerManager.getInstance();
+            SlimeBoss smallerSlime = new SlimeBoss();
+            smallerSlime.setRow(row);
+            smallerSlime.setCol(col);
+            smallerSlime.setMaxHealth(hp);
+            smallerSlime.setCurrentHealth(hp);
+            smallerSlime.currentPhase = nextPhase;
 
-        SlimeBoss smallerSlime = new SlimeBoss();
-        smallerSlime.setRow(row);
-        smallerSlime.setCol(col);
-        smallerSlime.setMaxHealth(hp);
-        smallerSlime.setCurrentHealth(hp);
-        smallerSlime.currentPhase = nextPhase;
+            if (nextPhase == Phase.SECOND) {
+                setupAnimation(Config.WizardAnimationPath, 0, -10, 32, 32 , true);
+            }
 
-        GameManager.getInstance().piecesPosition[row][col] = smallerSlime;
+            piecesPosition[row][col] = smallerSlime;
 
-        smallerSlime.animationImage.setFitWidth(SQUARE_SIZE);
-        smallerSlime.animationImage.setX(col * SQUARE_SIZE + smallerSlime.getOffsetX());
-        smallerSlime.animationImage.setY(row * SQUARE_SIZE + smallerSlime.getOffsetY());
+            smallerSlime.animationImage.setFitWidth(SQUARE_SIZE);
+            smallerSlime.animationImage.setX(col * SQUARE_SIZE + smallerSlime.getOffsetX());
+            smallerSlime.animationImage.setY(row * SQUARE_SIZE + smallerSlime.getOffsetY());
 
-        GameManager.getInstance().environmentPieces.add(smallerSlime);
-        GameManager.getInstance().animationPane.getChildren().add(smallerSlime.animationImage);
-        spawnerManager.monsterCount++;
-
+            GameManager.getInstance().environmentPieces.add(smallerSlime);
+            GameManager.getInstance().animationPane.getChildren().add(smallerSlime.animationImage);
+            spawnerManager.monsterCount++;
+        }
         // Change the current phase to the next phase
         this.currentPhase = nextPhase;
     }
 
     private void chasePlayer() {
-        // Calculate the distance between the Slime and the player
-        double distance = Math.sqrt(Math.pow(GameManager.getInstance().player.getRow() - getRow(), 2) + Math.pow(GameManager.getInstance().player.getCol() - getCol(), 2));
+        Timeline timeline = new Timeline();
+        for(int i = 0; i < MOVE; i++) {
+            KeyFrame keyFrame = new KeyFrame(Duration.seconds(i), event -> {
+                // Calculate the distance between the Slime and the player
+                double distance = Math.sqrt(Math.pow(GameManager.getInstance().player.getRow() - getRow(), 2) + Math.pow(GameManager.getInstance().player.getCol() - getCol(), 2));
 
-        // Get the direction towards the player
-//        int dRow = Integer.compare(GameManager.getInstance().player.getRow(), getRow());
-        int dCol = Integer.compare(GameManager.getInstance().player.getCol(), getCol());
+                // Get the direction towards the player
+//            int dRow = Integer.compare(GameManager.getInstance().player.getRow(), getRow());
+                int dCol = Integer.compare(GameManager.getInstance().player.getCol(), getCol());
 
-        // If the player is within attack range, attempt to attack
-        if (distance <= ATTACK_RANGE) {
-            // Turn to face the player
-            changeDirection(dCol);
+                // If Boss already attacked, don't move
+                if (MOVE_CNT == 0) {
+                    // If the player is within attack range, attempt to attack
+                    if (distance <= ATTACK_RANGE) {
+                        // Turn to face the player
+                        changeDirection(dCol);
 
-            // Attack the player
-            attack(GameManager.getInstance().player);
-        } else {
-            moveTowardsPlayer();
+                        // Attack the player
+                        attack(GameManager.getInstance().player);
+                        MOVE_CNT++;
+                    } else {
+                        moveTowardsPlayer();
+                    }
+                }
+            });
+            timeline.getKeyFrames().add(keyFrame);
         }
+        timeline.setCycleCount(1);
+        timeline.play();
 
-        endAction = true;
+        timeline.setOnFinished(event -> endAction = true);
     }
 
     private void moveTowardsPlayer() {
