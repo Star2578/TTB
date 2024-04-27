@@ -6,6 +6,8 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
+import logic.effect.EffectConfig;
+import logic.effect.EffectManager;
 import logic.ui.GUIManager;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
@@ -106,6 +108,15 @@ public class Tiny extends BaseMonsterPiece{
     @Override
     public void attack(BasePlayerPiece playerPiece) {
         GUIManager.getInstance().eventLogDisplay.addLog("Attack Player for " + ATTACK_DAMAGE + " damage!");
+
+        //=========<NORMAL ATTACK EFFECT>====================================================================
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.ON_SELF ,
+                        GameManager.getInstance().player ,
+                        playerPiece.getRow(), playerPiece.getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(9) ,
+                        new EffectConfig(-34 , -52 , 0 , 1.5) );
+        //===========================================================================================
 
         playerPiece.takeDamage(ATTACK_DAMAGE);
     }

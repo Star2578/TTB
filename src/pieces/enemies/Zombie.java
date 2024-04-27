@@ -67,18 +67,9 @@ public class Zombie extends BaseMonsterPiece{
         updateState();
         if (getStun() > 0) {
             setStun(getStun() - 1);
-            //=========<SKILL EFFECT>====================================================================
-            EffectManager.getInstance()
-                    .renderEffect( EffectManager.TYPE.ON_SELF ,
-                            GameManager.getInstance().player ,
-                            getRow(), getCol(),
-                            EffectManager.getInstance().createInPlaceEffects(8) ,
-                            new EffectConfig(-9 , -16 , 0 , 1.1) );
-            //===========================================================================================
             endAction = true;
             return;
         }
-        EffectManager.getInstance().clearDeadEffect();
         switch (currentState) {
             case NEUTRAL_ROAMING:
                 roamRandomly();
@@ -118,6 +109,14 @@ public class Zombie extends BaseMonsterPiece{
     @Override
     public void attack(BasePlayerPiece playerPiece) {
         GUIManager.getInstance().eventLogDisplay.addLog("Attack Player at " + ATTACK_DAMAGE + " damage!");
+        //=========<NORMAL ATTACK EFFECT>====================================================================
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.ON_SELF ,
+                        GameManager.getInstance().player ,
+                        playerPiece.getRow(), playerPiece.getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(9) ,
+                        new EffectConfig(-34 , -52 , 0 , 1.5) );
+        //===========================================================================================
 
         playerPiece.takeDamage(ATTACK_DAMAGE);
     }

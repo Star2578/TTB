@@ -30,6 +30,7 @@ public class Config {
     // Enemies
     public static String DeadEffectPath = "sprites/enemies/dead_smoke.png";
     public static String StunEffectPath = "sprites/enemies/stun_effect.png";
+    public static String EnemiesNormalAttackPath = "sprites/enemies/enemies_normal_attack.png";
 
     public static String TinyAnimationPath = "sprites/enemies/tiny_sprite_sheet.png";
     public static String ZombieAnimationPath = "sprites/enemies/zombie_sprite_sheet.png";
@@ -40,6 +41,7 @@ public class Config {
     public static String NecromancerSummonPath = "sprites/enemies/necromancer_summon_sprite_sheet.png";
     public  static  String SkeletonPath = "sprites/enemies/skeleton_sprite_sheet.png";
     public  static  String VampirePath = "sprites/enemies/vampire_sprite_sheet.png";
+    public static String VampireSkillPath = "sprites/enemies/vampire_skill_sprite_sheet.png";
 
     // NPC
     public static String DealerPortraitPath = "sprites/npc/dealer_portrait.png";

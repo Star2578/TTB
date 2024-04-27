@@ -6,6 +6,9 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
+import logic.effect.Effect;
+import logic.effect.EffectConfig;
+import logic.effect.EffectManager;
 import logic.ui.GUIManager;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
@@ -113,6 +116,14 @@ public class Vampire extends BaseMonsterPiece{
             useSkill = false;
             return;
         }
+        //=========<NORMAL ATTACK EFFECT>====================================================================
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.ON_SELF ,
+                        GameManager.getInstance().player ,
+                        playerPiece.getRow(), playerPiece.getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(9) ,
+                        new EffectConfig(-34 , -52 , 0 , 1.5) );
+        //===========================================================================================
 
         playerPiece.takeDamage(ATTACK_DAMAGE);
         setCurrentHealth(getCurrentHealth()+1);
@@ -141,5 +152,22 @@ public class Vampire extends BaseMonsterPiece{
         int hp = getCurrentHealth();
         setCurrentHealth(playerPiece.getCurrentHealth());
         playerPiece.setCurrentHealth(hp);
+        //=========<SKILL EFFECT>====================================================================
+        // Heal Vampire
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.ON_TARGET,
+                        GameManager.getInstance().player ,
+                        getRow(), getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(5) ,
+                        new EffectConfig(0 , -12 , 0 , 1.7) );
+        //----------------------------------------------------------------------------------------------
+        // Attack Player
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.ON_SELF ,
+                        GameManager.getInstance().player ,
+                        playerPiece.getRow(), playerPiece.getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(10) ,
+                        new EffectConfig(-30 , -37 , 0 , 1.1) );
+        //===========================================================================================
     }
 }

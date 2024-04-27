@@ -60,7 +60,7 @@ public class EffectManager {
         effects.add(Skill_Dart);
         //Knight Skill Heal 5
         Effect Skill_Heal = new Effect(
-                new ImageView(new Image(Config.skillHealPath)) , 6 , 2 , 10 , 32 , 32 , 15 , false);
+                new ImageView(new Image(Config.skillHealPath)) , 6 , 2 , 10 , 32 , 32 , 11 , false);
         effects.add(Skill_Heal);
         //Bomb Explosion 6
         Effect Bomb_Explosion = new Effect(
@@ -72,9 +72,16 @@ public class EffectManager {
         effects.add(Necromancer_Summon);
         //Stun Effect 8
         Effect Stun_Effect = new Effect(
-                new ImageView(new Image(Config.StunEffectPath)) , 3 , 2 , 6 , 17 , 16 , 15 , true);
+                new ImageView(new Image(Config.StunEffectPath)) , 3 , 2 , 6 , 17 , 16 , 5 , true);
         effects.add(Stun_Effect);
-        Stun_Effect.canKill = true;
+        //Enemies Normal Attack 9
+        Effect Enemies_Normal_Attack = new Effect(
+                new ImageView(new Image(Config.EnemiesNormalAttackPath)) , 6 , 2 , 12 , 100 , 103 , 12 , false);
+        effects.add(Enemies_Normal_Attack);
+        //Vampire Skill 10
+        Effect Vampire_Skill_Effect = new Effect(
+                new ImageView(new Image(Config.VampireSkillPath)) , 6 , 4 , 24 , 100 , 102 , 12 , false);
+        effects.add(Vampire_Skill_Effect);
     }
 
     public Effect createInPlaceEffects(int index){
@@ -158,4 +165,6 @@ public class EffectManager {
     public void clearDeadEffect(){
         effects.removeIf(effect -> effect.canKill);
     }
+
+
 }

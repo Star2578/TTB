@@ -37,6 +37,14 @@ public class Stomp extends BaseSkill implements Attack {
                     if (target instanceof BaseMonsterPiece monsterPiece) {
                         monsterPiece.takeDamage(DAMAGE);
                         monsterPiece.setStun(monsterPiece.getStun() + 1);
+                        //=========<STUN EFFECT>====================================================================
+//                        EffectManager.getInstance()
+//                                .renderEffect( EffectManager.TYPE.ON_TARGET,
+//                                        GameManager.getInstance().player ,
+//                                        target.getRow(), target.getCol(),
+//                                        EffectManager.getInstance().createInPlaceEffects(8) ,
+//                                        new EffectConfig(-9 , -16 , 0 , 1.8) );
+                        //===========================================================================================
                         if (!monsterPiece.isAlive()) {
                             GameManager.getInstance().gameScene.removePiece(monsterPiece);
                         }
@@ -53,14 +61,6 @@ public class Stomp extends BaseSkill implements Attack {
                     //===========================================================================================
                 }
 
-            //=========<SKILL EFFECT>====================================================================
-//            EffectManager.getInstance()
-//                    .renderEffect( EffectManager.TYPE.AROUND_SELF ,
-//                            GameManager.getInstance().player ,
-//                            target,
-//                            EffectManager.getInstance().createInPlaceEffects(1) ,
-//                            new EffectConfig(0 , -16 , 24 , 1.1) );
-            //===========================================================================================
         }
     }
 

@@ -57,8 +57,6 @@ public class Dart extends BaseSkill implements Attack {
                     }
                     GameManager.getInstance().piecesPosition[target.getRow()][target.getCol()] = null;
                     target.moveWithTransition(newRow, newCol);
-                    target.setRow(newRow);
-                    target.setCol(newCol);
                     GameManager.getInstance().piecesPosition[newRow][newCol] = target;
                 }
 
