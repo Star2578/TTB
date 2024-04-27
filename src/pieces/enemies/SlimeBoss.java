@@ -12,6 +12,7 @@ import pieces.player.BasePlayerPiece;
 import pieces.wall.BaseWallPiece;
 import utils.Config;
 
+import static game.Setting.gameManager;
 import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
 
@@ -26,7 +27,7 @@ public class SlimeBoss extends BaseMonsterPiece {
     private final int ATTACK_DAMAGE_THIRD_PHASE = 3;
     private final double ATTACK_RANGE = 1.5;
     private final int MOVE = 2;
-    private int MOVE_CNT = 0;
+    private int ATK_CNT = 0;
     private final int VISION_RANGE = 10;
     private BasePiece[][] piecesPosition = GameManager.getInstance().piecesPosition;
 
@@ -37,15 +38,18 @@ public class SlimeBoss extends BaseMonsterPiece {
 
         this.currentPhase = Phase.FIRST;
 
-        setupAnimation(Config.SlimePath4, 0, -10, 32, 32 , true);
+        if(currentPhase == Phase.FIRST) {
+            setupAnimation(Config.SlimePath4, 0, -10, 32, 32 , true);
+        } else if (currentPhase == Phase.SECOND) {
 
+        }
     }
 
     @Override
     public void performAction() {
         endAction = false;
         updateState();
-        MOVE_CNT = 0;
+        ATK_CNT = 0;
         switch (currentPhase) {
             case FIRST, SECOND, THIRD:
                 chasePlayer();
@@ -58,12 +62,10 @@ public class SlimeBoss extends BaseMonsterPiece {
 
     @Override
     public void updateState() {
-        if (currentPhase == Phase.FIRST && getCurrentHealth() <= 15) {
+        if (currentPhase == Phase.FIRST && getCurrentHealth() <= 20) {
             splitSlime( 100, Phase.SECOND);
-            onDeath();
         } else if (currentPhase == Phase.SECOND && getCurrentHealth() <= 15) {
             splitSlime(50, Phase.THIRD);
-            onDeath();
         } else if (currentPhase == Phase.THIRD && getCurrentHealth() <= 0) {
             currentPhase = Phase.DEAD;
             onDeath();
@@ -90,6 +92,10 @@ public class SlimeBoss extends BaseMonsterPiece {
     private void splitSlime(int hp, Phase nextPhase) {
         //TODO===============
         // Logic to split the slime into smaller pieces
+        removePiece(this);
+        gameManager.environmentPieces.remove(this);
+
+
         for(int i = 0; i < 2; i++) {
             int row, col;
             do {
@@ -124,6 +130,21 @@ public class SlimeBoss extends BaseMonsterPiece {
         this.currentPhase = nextPhase;
     }
 
+    private void removePiece(BasePiece toRemove) {
+        int row = toRemove.getRow();
+        int col = toRemove.getCol();
+
+        // Remove the piece's ImageView from the boardPane
+        gameManager.boardPane.getChildren().remove(toRemove.getTexture());
+
+        // Remove the piece's ImageView from the animationPane
+        if (toRemove instanceof BaseMonsterPiece monsterPiece)
+            gameManager.animationPane.getChildren().remove(monsterPiece.animationImage);
+
+        // Set the corresponding entry in the pieces array to null
+        piecesPosition[row][col] = null;
+    }
+
     private void chasePlayer() {
         Timeline timeline = new Timeline();
         for(int i = 0; i < MOVE; i++) {
@@ -136,7 +157,7 @@ public class SlimeBoss extends BaseMonsterPiece {
                 int dCol = Integer.compare(GameManager.getInstance().player.getCol(), getCol());
 
                 // If Boss already attacked, don't move
-                if (MOVE_CNT == 0) {
+                if (ATK_CNT == 0) {
                     // If the player is within attack range, attempt to attack
                     if (distance <= ATTACK_RANGE) {
                         // Turn to face the player
@@ -144,7 +165,7 @@ public class SlimeBoss extends BaseMonsterPiece {
 
                         // Attack the player
                         attack(GameManager.getInstance().player);
-                        MOVE_CNT++;
+                        ATK_CNT++;
                     } else {
                         moveTowardsPlayer();
                     }
