@@ -2,6 +2,8 @@ package pieces.enemies;
 
 import logic.GameManager;
 import logic.SpawnerManager;
+import logic.effect.EffectConfig;
+import logic.effect.EffectManager;
 import logic.ui.GUIManager;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
@@ -18,7 +20,7 @@ public class Skeleton extends BaseMonsterPiece {
     private Skeleton.State currentState;
     private final double ATTACK_RANGE = 5.5; // Why it's .5? Because it's for diagonal
     private final int VISION_RANGE = 5;
-    private final int ATTACK_DAMAGE = 5;
+    private final int ATTACK_DAMAGE = 2;
 
     public Skeleton() {
         super(0, 0, 1);
@@ -98,6 +100,14 @@ public class Skeleton extends BaseMonsterPiece {
     @Override
     public void attack(BasePlayerPiece playerPiece) {
         System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
+        //=========<SKILL EFFECT>====================================================================
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.AROUND_SELF_ENEMY ,
+                        GameManager.getInstance().player ,
+                        getRow(), getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(12) ,
+                        new EffectConfig(-2 , -4 , 32 , 1.7) );
+        //===========================================================================================
 
         playerPiece.takeDamage(ATTACK_DAMAGE);
         GUIManager.getInstance().updateGUI();

@@ -22,7 +22,8 @@ public class EffectManager {
     public enum TYPE{
         AROUND_SELF,
         ON_TARGET,
-        ON_SELF
+        ON_SELF,
+        AROUND_SELF_ENEMY
 
     }
     private static EffectManager instance;
@@ -82,6 +83,14 @@ public class EffectManager {
         Effect Vampire_Skill_Effect = new Effect(
                 new ImageView(new Image(Config.VampireSkillPath)) , 6 , 4 , 24 , 100 , 102 , 12 , false);
         effects.add(Vampire_Skill_Effect);
+        //Necromancer Attack 11
+        Effect Necromancer_Attack = new Effect(
+                new ImageView(new Image(Config.NecromancerAttackPath)) , 10 , 2 , 16 , 40 , 32 , 12 , false);
+        effects.add(Necromancer_Attack);
+        //Skeleton Attack 12
+        Effect Skeleton_Attack = new Effect(
+                new ImageView(new Image(Config.SkeletonAttackPath)) , 5 , 1 , 5 , 39 , 36 , 12 , false);
+        effects.add(Skeleton_Attack);
     }
 
     public Effect createInPlaceEffects(int index){
@@ -153,6 +162,36 @@ public class EffectManager {
             //set effect on enemy position
             effect.imageView.setX(col*SQUARE_SIZE + config.offsetX);
             effect.imageView.setY(row*SQUARE_SIZE + config.offsetY);
+
+            effect.imageView.toFront();
+            effect.imageView.setDisable(true);
+
+            effect.start();
+        }else if (typeEnum == TYPE.AROUND_SELF_ENEMY){
+            //effect will occur around player, also rotate and face to target
+
+            EffectManager.getInstance().effectPane.getChildren().add( effect.imageView );
+
+            //find angle toward enemy
+            double x = GameManager.getInstance().player.getCol() - col;
+            double y = GameManager.getInstance().player.getRow() - row;
+            double angleRadian = Math.atan2(y , x);
+            double angleDegree = Math.atan2(y , x) * (180.0 / Math.PI);
+
+            //set effect position (angle is in account)
+            effect.imageView.setX(col*SQUARE_SIZE
+                    + (config.distanceFromOrigin * Math.cos(angleRadian) )
+                    + config.offsetX);
+            effect.imageView.setY(row*SQUARE_SIZE
+                    + (config.distanceFromOrigin * Math.sin(angleRadian) )
+                    + config.offsetY);
+
+            //rotate effect
+            effect.imageView.setRotate(angleDegree);
+
+            //scale effect size
+            effect.imageView.setScaleX(config.scale);
+            effect.imageView.setScaleY(config.scale);
 
             effect.imageView.toFront();
             effect.imageView.setDisable(true);

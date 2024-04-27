@@ -136,6 +136,14 @@ public class Necromancer extends BaseMonsterPiece{
     @Override
     public void attack(BasePlayerPiece playerPiece) {
         System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
+        //=========<SKILL EFFECT>====================================================================
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.AROUND_SELF_ENEMY ,
+                        GameManager.getInstance().player ,
+                        getRow(), getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(11) ,
+                        new EffectConfig(-2 , -5 , 42 , 1.3) );
+        //===========================================================================================
 
         playerPiece.takeDamage(ATTACK_DAMAGE);
         GUIManager.getInstance().updateGUI();

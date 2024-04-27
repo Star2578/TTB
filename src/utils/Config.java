@@ -39,7 +39,9 @@ public class Config {
     public static String BombExplosionPath = "sprites/objects/bomb/bombExplosion.png";
     public  static  String NecromancerPath = "sprites/enemies/necromancer_sprite_sheet.png";
     public static String NecromancerSummonPath = "sprites/enemies/necromancer_summon_sprite_sheet.png";
+    public static String NecromancerAttackPath = "sprites/enemies/necromancer_attack_sprite_sheet.png";
     public  static  String SkeletonPath = "sprites/enemies/skeleton_sprite_sheet.png";
+    public static String SkeletonAttackPath = "sprites/enemies/skeleton_attack_sprite_sheet.png";
     public  static  String VampirePath = "sprites/enemies/vampire_sprite_sheet.png";
     public static String VampireSkillPath = "sprites/enemies/vampire_skill_sprite_sheet.png";
 

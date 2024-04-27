@@ -23,7 +23,7 @@ public class SpawnerManager {
     public SpawnerManager() {
         initialize();
         monsterPool_1 = new BaseMonsterPiece[]{
-                new Bomber(), new Tiny(), new Zombie(), new Skeleton(), new Vampire(), new Necromancer()
+                /*new Bomber(), new Tiny(), new Zombie(),*/ new Skeleton()/*, new Vampire(), new Necromancer()*/
         };
     }
 
@@ -72,7 +72,7 @@ public class SpawnerManager {
     public void randomMonsterSpawnFromPool(BaseMonsterPiece[] pool, List<BasePiece> toAdd) {
         Random random = new Random();
 
-        int calculateMonster = freeSquareCount / 12;
+        int calculateMonster = /*freeSquareCount / 12*/3;
         System.out.println("Free square = " + freeSquareCount);
 
         // Add monsters from the pool to toAdd list
