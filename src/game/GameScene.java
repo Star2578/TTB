@@ -489,18 +489,20 @@ public class GameScene {
             if (gameManager.selectedSkill.validRange(row, col)) {
                 // Check if there is a monster on the clicked square
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
-                    // Perform the attack on the monster
-                    if (enoughMana && enoughActionPoint) {
-                        GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName(), GameManager.getInstance().selectedSkill.getNameColor());
-                        gameManager.selectedSkill.perform(monsterPiece);
-                    } else {
-                        SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
-                        System.out.println("Not enough mana or action point");
-                    }
-                    if (!monsterPiece.isAlive()) {
-                        removePiece(monsterPiece);
-                        environmentPieces.remove(monsterPiece);
-                        gameManager.totalKillThisRun++;
+                    if (gameManager.selectedSkill.castOnMonster()) {
+                        // Perform the attack on the monster
+                        if (enoughMana && enoughActionPoint) {
+                            GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName(), GameManager.getInstance().selectedSkill.getNameColor());
+                            gameManager.selectedSkill.perform(monsterPiece);
+                        } else {
+                            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+                            System.out.println("Not enough mana or action point");
+                        }
+                        if (!monsterPiece.isAlive()) {
+                            removePiece(monsterPiece);
+                            environmentPieces.remove(monsterPiece);
+                            gameManager.totalKillThisRun++;
+                        }
                     }
                 } else if (piecesPosition[row][col] instanceof BasePlayerPiece playerPiece) {
                     if (gameManager.selectedSkill.castOnSelf()) {
@@ -515,7 +517,7 @@ public class GameScene {
                     }
                 } else {
                     if (!gameManager.selectedSkill.castOnSelf() && !gameManager.selectedSkill.castOnMonster()) {
-                        if (enoughMana && enoughActionPoint & piecesPosition[row][col] == null) {
+                        if (enoughMana && enoughActionPoint && piecesPosition[row][col] == null) {
                             GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName(), GameManager.getInstance().selectedSkill.getNameColor());
                             gameManager.selectedSkill.perform(new Knight(row, col, 1)); // dummy target for row/col
                         } else {
