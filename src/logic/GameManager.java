@@ -151,6 +151,7 @@ public class GameManager {
         gameScene = new GameScene();
         // set new game scene
         SceneManager.getInstance().setGameScene(gameScene.getScene());
+        GUIManager.getInstance().updateCursor(gameScene.getScene(), Config.DefaultCursor);
         SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getGameScene());
     }
     public void GameOver() {

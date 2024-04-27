@@ -162,12 +162,6 @@ public class GameScene {
         // Define update logic
         updateLogic = () -> {
             // Update game state
-            if (!player.canAct()) {
-                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), Config.UnavailableCursor);
-            }
-            if (getScene().getCursor() == null) {
-                System.out.println("bruh null cursor");
-            }
         };
 
         // move action point display text around mouse cursor
