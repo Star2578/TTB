@@ -513,6 +513,16 @@ public class GameScene {
                             System.out.println("Not enough mana or action point");
                         }
                     }
+                } else {
+                    if (!gameManager.selectedSkill.castOnSelf() && !gameManager.selectedSkill.castOnMonster()) {
+                        if (enoughMana && enoughActionPoint) {
+                            GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName(), GameManager.getInstance().selectedSkill.getNameColor());
+                            gameManager.selectedSkill.perform(new Knight(row, col, 1)); // dummy target for row/col
+                        } else {
+                            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+                            System.out.println("Not enough mana or action point");
+                        }
+                    }
                 }
             }
             resetSelection(2);

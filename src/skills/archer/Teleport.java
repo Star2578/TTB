@@ -7,6 +7,9 @@ import pieces.BasePiece;
 import skills.BaseSkill;
 import utils.Config;
 
+import static utils.Config.BOARD_SIZE;
+import static utils.Config.SQUARE_SIZE;
+
 public class Teleport extends BaseSkill {
     private BasePiece target;
     public Teleport() {
@@ -28,6 +31,8 @@ public class Teleport extends BaseSkill {
         BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
         pieces[GameManager.getInstance().player.getRow()][GameManager.getInstance().player.getCol()] = null;
         pieces[target.getRow()][target.getCol()] = GameManager.getInstance().player;
+
+        GameManager.getInstance().player.moveWithTransition(target.getRow(), target.getCol());
 
 //        GameManager.getInstance().player.setRow(target.getRow());
 //        GameManager.getInstance().player.setCol(target.getCol());

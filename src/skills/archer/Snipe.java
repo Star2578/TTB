@@ -22,7 +22,7 @@ public class Snipe extends BaseSkill implements Attack {
                 , Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav"
         );
         icon = new ImageView(Config.SnipePath);
-        range = 7;
+        range = 3;
     }
 
     @Override
