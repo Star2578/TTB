@@ -108,6 +108,11 @@ public class Config {
     public static String skillStompPath = "sprites/skills/skill_knight/skill_stomp.png";
     public static String skillDartPath = "sprites/skills/skill_knight/skill_dart.png";
     public static String skillHealPath = "sprites/skills/skill_knight/skill_heal.png";
+    // Archer Skills animation
+    public static String skillTSnipePath = "sprites/skills/skill_archer/skill_snipe_preparing_burst.png";
+    public static String skillTSnipePath2 = "sprites/skills/skill_archer/skill_snipe_air_burst.png";
+    public static String skillTSnipePath3 = "sprites/skills/skill_archer/skill_snipe_air_explosion_startup.png";
+    public static String skillTSnipePath4 = "sprites/skills/skill_archer/skill_snipe_air_explosion.png";
 
     // BGM
     public static String bgm_8_bit_adventure = "res/BGM/8_Bit_Adventure.wav";

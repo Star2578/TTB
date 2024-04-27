@@ -16,7 +16,7 @@ public class Heal extends BaseSkill implements Healing {
     private BasePiece target;
     private final int HEAL = 5;
     public Heal() {
-        super("Heal", Color.DARKGREEN, 1, 10, "Rest for one turn to heal", Config.Rarity.COMMON, "res/SFX/skills/heal/8bit-powerup1.wav");
+        super("Heal", Color.DARKGREEN, 5, 10, "Rest for one turn to heal", Config.Rarity.COMMON, "res/SFX/skills/heal/8bit-powerup1.wav");
         icon = new ImageView(Config.HealPath);
         range = 0;
     }
@@ -59,7 +59,7 @@ public class Heal extends BaseSkill implements Healing {
                             GameManager.getInstance().player ,
                             GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
                             EffectManager.getInstance().createInPlaceEffects(5) ,
-                            new EffectConfig(0 , -12 , 0 , 1.7) );
+                            new EffectConfig(-48 , -52 , 0 , 1.2) );
             //===========================================================================================
         }
     }

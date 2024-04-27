@@ -187,7 +187,7 @@ public class Necromancer extends BaseMonsterPiece{
         if ((GameManager.getInstance().piecesPosition[newRow][newCol] == null) && (GameManager.getInstance().isEmptySquare(newRow, newCol))) {
             //=========<SKILL EFFECT>====================================================================
             EffectManager.getInstance()
-                    .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                    .renderEffect( EffectManager.TYPE.ON_SELF ,
                             GameManager.getInstance().player ,
                             newRow, newCol,
                             EffectManager.getInstance().createInPlaceEffects(7) ,

@@ -62,7 +62,7 @@ public class EffectManager {
         effects.add(Skill_Dart);
         //Knight Skill Heal 5
         Effect Skill_Heal = new Effect(
-                new ImageView(new Image(Config.skillHealPath)) , 6 , 2 , 10 , 32 , 32 , 11 , false);
+                new ImageView(new Image(Config.skillHealPath)) , 4 , 4 , 16 , 128 , 128 , 7 , false);
         effects.add(Skill_Heal);
         //Bomb Explosion 6
         Effect Bomb_Explosion = new Effect(
@@ -96,6 +96,22 @@ public class EffectManager {
         Effect Archer_Attack = new Effect(
                 new ImageView(new Image(Config.rangedAttackPath)) , 5 , 1 , 5 , 40 , 30 , 12 , false);
         effects.add(Archer_Attack);
+        //Archer Skill Snipe1 14
+        Effect Archer_Skill_Snipe1 = new Effect(
+                new ImageView(new Image(Config.skillTSnipePath)) , 4 , 3 , 10 , 48 , 32 , 12 , false);
+        effects.add(Archer_Skill_Snipe1);
+        //Archer Skill Snipe2 15
+        Effect Archer_Skill_Snipe2 = new Effect(
+                new ImageView(new Image(Config.skillTSnipePath2)) , 3 , 3 , 7 , 48 , 48 , 12 , false);
+        effects.add(Archer_Skill_Snipe2);
+        //Archer Skill Snipe3 16
+        Effect Archer_Skill_Snipe3 = new Effect(
+                new ImageView(new Image(Config.skillTSnipePath3)) , 3 , 3 , 8 , 32 , 32 , 12 , false);
+        effects.add(Archer_Skill_Snipe3);
+        //Archer Skill Snipe4 17
+        Effect Archer_Skill_Snipe4 = new Effect(
+                new ImageView(new Image(Config.skillTSnipePath4)) , 4 , 3 , 9 , 32 , 32 , 12 , false);
+        effects.add(Archer_Skill_Snipe4);
     }
 
     public Effect createInPlaceEffects(int index){
@@ -143,7 +159,7 @@ public class EffectManager {
             EffectManager.getInstance().effectPane.getChildren().add(effect.imageView);
 
             //scale effect size + direction
-            //effect.imageView.setScaleX(config.scale * player.getCurrentDirection());
+            effect.imageView.setScaleX(config.scale * player.getCurrentDirection());
             effect.imageView.setScaleY(config.scale);
 
             //set effect on enemy position

@@ -16,7 +16,7 @@ public class Targetlock extends BaseSkill implements Attack {
     private final int DAMAGE = 7;
     public Targetlock() {
         super("TargetLock", Color.DARKRED,
-                5, 2,
+                1, 2,
                 "Concentrate... Steady aim... SHOOT!",
                 Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav"
         );
@@ -34,14 +34,15 @@ public class Targetlock extends BaseSkill implements Attack {
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
-                //=========<SKILL EFFECT>====================================================================
+                //=========<ATTACK EFFECT>====================================================================
                 EffectManager.getInstance()
                         .renderEffect( EffectManager.TYPE.AROUND_SELF ,
                                 GameManager.getInstance().player ,
-                                target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(1) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
+                                monsterPiece.getRow(), monsterPiece.getCol(),
+                                EffectManager.getInstance().createInPlaceEffects(13) ,
+                                new EffectConfig(-6 , 0 , 18 , 1.5) );
                 //===========================================================================================
+
             }
         }
     }

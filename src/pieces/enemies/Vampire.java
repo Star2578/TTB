@@ -155,11 +155,11 @@ public class Vampire extends BaseMonsterPiece{
         //=========<SKILL EFFECT>====================================================================
         // Heal Vampire
         EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.ON_TARGET,
+                .renderEffect( EffectManager.TYPE.ON_SELF ,
                         GameManager.getInstance().player ,
                         getRow(), getCol(),
                         EffectManager.getInstance().createInPlaceEffects(5) ,
-                        new EffectConfig(0 , -12 , 0 , 1.7) );
+                        new EffectConfig(-48 , -52 , 0 , 1.2) );
         //----------------------------------------------------------------------------------------------
         // Attack Player
         EffectManager.getInstance()

@@ -36,6 +36,8 @@ public class Teleport extends BaseSkill {
 
 //        GameManager.getInstance().player.setRow(target.getRow());
 //        GameManager.getInstance().player.setCol(target.getCol());
+//        pieces[GameManager.getInstance().player.getRow()][GameManager.getInstance().player.getCol()] = GameManager.getInstance().player;
+
     }
 
     @Override
