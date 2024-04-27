@@ -30,6 +30,7 @@ import pieces.npcs.BaseNpcPiece;
 import pieces.npcs.Dealer;
 import pieces.player.*;
 import pieces.wall.*;
+import skills.BaseSkill;
 import utils.Config;
 import utils.Usable;
 
@@ -47,7 +48,6 @@ public class GameScene {
     private GUIManager guiManager;
     private GameLoop gameLoop;
     private TurnManager turnManager;
-    private ImageScaler imageScaler = new ImageScaler();
     private DungeonGenerator dungeonGenerator;
     private Timeline autoCycleTurn;
 
@@ -70,7 +70,7 @@ public class GameScene {
     private Scene scene;
     private Pane animationPane = gameManager.animationPane;
     private GridPane boardPane = gameManager.boardPane;
-    private GridPane tilePane = new GridPane(); 
+    private GridPane tilePane = new GridPane();
     private BorderPane root;
     private VBox rightPane; // Contain right side UI
     private VBox leftPane; // Contain left side UI
@@ -82,6 +82,7 @@ public class GameScene {
 
 
     public GameScene() {
+
 
         root = new BorderPane();
         root.setStyle("-fx-background-color: #1c0a05;");
@@ -132,8 +133,8 @@ public class GameScene {
         currentLevelText = new Text(String.valueOf(GameManager.getInstance().dungeonLevel));
         currentLevelText.setStyle(
                 "-fx-font-family:x16y32pxGridGazer;" +
-                "-fx-font-size:50;" +
-                "-fx-fill:'white';");
+                        "-fx-font-size:50;" +
+                        "-fx-fill:'white';");
         currentLevelText.setTranslateX(300);
         currentLevelText.setTranslateY(-290);
         centerPane.getChildren().add(currentLevelText);
@@ -161,9 +162,6 @@ public class GameScene {
         // Define update logic
         updateLogic = () -> {
             // Update game state
-            if (!player.canAct()) {
-                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), Config.UnavailableCursor);
-            }
         };
 
         // move action point display text around mouse cursor
@@ -216,6 +214,8 @@ public class GameScene {
         }
     }
 
+
+
     private void gameStart() {
         // Initialize player at starting position
         player = GameManager.getInstance().player;
@@ -243,7 +243,7 @@ public class GameScene {
                 floor.setFitWidth(SQUARE_SIZE);
                 floor.setFitHeight(SQUARE_SIZE);
 
-                floor.setImage(imageScaler.resample(new Image(Config.FloorPath), 2)); // Set texture of dungeon floor
+                floor.setImage(ImageScaler.resample(new Image(Config.FloorPath), 2)); // Set texture of dungeon floor
                 gridPane.add(floor, col, row);
                 dungeonFloor[row][col] = floor;
 
@@ -416,7 +416,7 @@ public class GameScene {
                             int rowD = (int) coordinate.getX();
                             int colD = (int) coordinate.getY();
 
-                            dungeonFloor[rowD][colD].setImage(imageScaler.resample(new Image(Config.DoorPath), 2));
+                            dungeonFloor[rowD][colD].setImage(ImageScaler.resample(new Image(Config.DoorPath), 2));
                         }
                     }
                 });
@@ -465,6 +465,11 @@ public class GameScene {
                     SoundManager.getInstance().playSoundEffect(Config.sfx_attackSound);
                     player.attack(monsterPiece);
                     GUIManager.getInstance().eventLogDisplay.addLog("Player attack " + monsterPiece.getClass().getSimpleName() + " at (" + row + ", " + col + ")");
+                    if (!monsterPiece.isAlive()) {
+                        removePiece(monsterPiece);
+                        environmentPieces.remove(monsterPiece);
+                        gameManager.totalKillThisRun++;
+                    }
                 }
             }
             resetSelection(1);
@@ -481,13 +486,20 @@ public class GameScene {
             if (gameManager.selectedSkill.validRange(row, col)) {
                 // Check if there is a monster on the clicked square
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
-                    // Perform the attack on the monster
-                    if (enoughMana && enoughActionPoint) {
-                        GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedSkill.getName() + " on " + monsterPiece.getClass().getSimpleName());
-                        gameManager.selectedSkill.perform(monsterPiece);
-                    } else {
-                        SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
-                        System.out.println("Not enough mana or action point");
+                    if (gameManager.selectedSkill.castOnMonster()) {
+                        // Perform the attack on the monster
+                        if (enoughMana && enoughActionPoint) {
+                            GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName(), GameManager.getInstance().selectedSkill.getNameColor());
+                            gameManager.selectedSkill.perform(monsterPiece);
+                        } else {
+                            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+                            System.out.println("Not enough mana or action point");
+                        }
+                        if (!monsterPiece.isAlive()) {
+                            removePiece(monsterPiece);
+                            environmentPieces.remove(monsterPiece);
+                            gameManager.totalKillThisRun++;
+                        }
                     }
                 } else if (piecesPosition[row][col] instanceof BasePlayerPiece playerPiece) {
                     if (gameManager.selectedSkill.castOnSelf()) {
@@ -495,6 +507,16 @@ public class GameScene {
                         if (enoughMana && enoughActionPoint) {
                             GUIManager.getInstance().eventLogDisplay.addLog("Player use " + gameManager.selectedSkill.getName());
                             gameManager.selectedSkill.perform(playerPiece);
+                        } else {
+                            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+                            System.out.println("Not enough mana or action point");
+                        }
+                    }
+                } else {
+                    if (!gameManager.selectedSkill.castOnSelf() && !gameManager.selectedSkill.castOnMonster()) {
+                        if (enoughMana && enoughActionPoint && piecesPosition[row][col] == null) {
+                            GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName(), GameManager.getInstance().selectedSkill.getNameColor());
+                            gameManager.selectedSkill.perform(new Knight(row, col, 1)); // dummy target for row/col
                         } else {
                             SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                             System.out.println("Not enough mana or action point");
@@ -613,12 +635,12 @@ public class GameScene {
         isPlayerPieceSelected = false;
 
         /**************************************************
-        *   type manual
-        *   0 = movement remove selected tiles
-        *   1 = attack remove selected tiles
-        *   2 = skill remove selected tiles
-        *   3 = item remove selected tiles
-        ***************************************************/
+         *   type manual
+         *   0 = movement remove selected tiles
+         *   1 = attack remove selected tiles
+         *   2 = skill remove selected tiles
+         *   3 = item remove selected tiles
+         ***************************************************/
 
         if(type == 0){
             //reset move Selected Tiles
@@ -697,7 +719,7 @@ public class GameScene {
         animationPane.getChildren().clear();
     }
 
-    public void removePiece(BasePiece toRemove) {
+    private void removePiece(BasePiece toRemove) {
         int row = toRemove.getRow();
         int col = toRemove.getCol();
 
@@ -710,7 +732,6 @@ public class GameScene {
 
         // Set the corresponding entry in the pieces array to null
         piecesPosition[row][col] = null;
-        environmentPieces.remove(toRemove);
     }
 
 
@@ -736,10 +757,14 @@ public class GameScene {
                 case LEFT:
                 case RIGHT:
                     if (!isPlayerPieceSelected && player.canAct()) {
+                        System.out.println("I can act here!!! " + player.canAct());
+                        System.out.println("player piece selected!!!" + isPlayerPieceSelected);
                         resetSelectionAll();
                         isPlayerPieceSelected = true;
                         MovementHandler.showValidMoves(player.getRow(), player.getCol());
-                    } else if (player.canAct()) {
+                    } else if (player.canAct() && isPlayerPieceSelected) {
+                        System.out.println("I can act here " + player.canAct());
+                        System.out.println("player piece selected" + isPlayerPieceSelected);
                         // Determine direction based on key pressed
                         int rowDelta = 0;
                         int colDelta = 0;
@@ -784,9 +809,33 @@ public class GameScene {
                         AttackHandler.showValidAttackRange(GameManager.getInstance().player.getRow() , GameManager.getInstance().player.getCol());
                     }
                     break;
+                case DIGIT1:
+                    handleSkillShortcut(1);
+                    break;
+                case DIGIT2:
+                    handleSkillShortcut(2);
+                    break;
+                case DIGIT3:
+                    handleSkillShortcut(3);
+                    break;
+                case DIGIT4:
+                    handleSkillShortcut(4);
+                    break;
+                case DIGIT5:
+                    handleSkillShortcut(5);
+                    break;
+                case DIGIT6:
+                    handleSkillShortcut(6);
+                    break;
+                case DIGIT7:
+                    handleSkillShortcut(7);
+                    break;
+                case DIGIT8:
+                    handleSkillShortcut(8);
+                    break;
                 case F1:
-//                    removeElements();
-                    GUIManager.getInstance().eventLogDisplay.addLog("Hello World!");
+                    gameManager.playerMoney += 1000;
+                    GUIManager.getInstance().updateGUI();
                     break;
                 case F2:
                     generateNewFloor();
@@ -831,15 +880,18 @@ public class GameScene {
             int row = (int) coordinate.getX();
             int col = (int) coordinate.getY();
 
-            dungeonFloor[row][col].setImage(imageScaler.resample(new Image(Config.FloorPath), 2));
+            dungeonFloor[row][col].setImage(ImageScaler.resample(new Image(Config.FloorPath), 2));
         }
         gameManager.doorAt.clear();
 
         removeElements();
-        if (GameManager.getInstance().dungeonLevel % 5 != 0) {
-            normalRoom();
-        } else {
+
+        if (GameManager.getInstance().dungeonLevel % 10 == 0) {
+            BossRoom1();
+        } else if (GameManager.getInstance().dungeonLevel % 5 == 0) {
             safeRoom();
+        } else {
+            normalRoom();
         }
     }
 
@@ -869,8 +921,37 @@ public class GameScene {
         placePiece(player);
         placePiece(dealer);
         piecesPosition[7][9] = dealer;
+
+        // clear entity
+        environmentPieces.clear();
+//        initializeEnvironment();
     }
 
+    private void BossRoom1() {
+        placeDungeon(Config.BossRoom1);
+
+        SlimeBoss slimeBoss = new SlimeBoss();
+        slimeBoss.setRow(9);
+        slimeBoss.setCol(9);
+
+        player.setRow(13);
+        player.setCol(6);
+        player.setCurrentActionPoint(5);
+        player.setMaxActionPoint(5);
+
+        precomputeValidMoves();
+
+        placePiece(player);
+        placePiece(slimeBoss);
+        piecesPosition[9][9] = slimeBoss;
+
+        // clear entity
+        environmentPieces.clear();
+
+        // set gameManager
+        GameManager.getInstance().environmentPieces.add(slimeBoss);
+//        initializeEnvironment();
+    }
     private void startAutoCycle() {
         double delay = 1;
         autoCycleTurn = new Timeline(new KeyFrame(Duration.seconds(delay), cycle -> {
@@ -891,5 +972,42 @@ public class GameScene {
         resetSelection(1);
         resetSelection(2);
         resetSelection(3);
+    }
+
+    private void handleSkillShortcut(int slot) {
+        BaseSkill toUse = player.getSkills()[slot-1];
+
+        if (toUse != null) {
+            GameManager.getInstance().gameScene.resetSelection(0);
+            GameManager.getInstance().gameScene.resetSelection(1);
+            GameManager.getInstance().gameScene.resetSelection(3);
+
+            // trigger skill selection
+            if (GameManager.getInstance().selectedSkill != null) {
+                if (GameManager.getInstance().selectedSkill == toUse && toUse.castOnSelf() && GameManager.getInstance().fastUse) {
+                    boolean enoughMana = player.getCurrentMana() >= GameManager.getInstance().selectedSkill.getManaCost();
+                    boolean enoughActionPoint = player.getCurrentActionPoint() >= GameManager.getInstance().selectedSkill.getActionPointCost();
+
+                    if (enoughMana && enoughActionPoint) {
+                        GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName(), GameManager.getInstance().selectedSkill.getNameColor());
+                        GameManager.getInstance().selectedSkill.perform(GameManager.getInstance().player);
+                    } else {
+                        SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+                        System.out.println("Not enough mana or action point");
+                    }
+
+                    GameManager.getInstance().gameScene.resetSelection(2);
+                    return;
+                }
+                GameManager.getInstance().gameScene.resetSelection(2);
+            }
+
+            // show range
+            SkillHandler.showValidSkillRange(player.getRow(), player.getCol(), toUse);
+            GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.HandCursor);
+            gameManager.selectedSkill = toUse;
+            toUse.getFrame().setImage(ImageScaler.resample(new Image(Config.FrameSelectedPath), 2));
+            System.out.println("Selected " + toUse.getName() + " skill");
+        }
     }
 }
