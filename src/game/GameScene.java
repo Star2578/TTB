@@ -515,7 +515,7 @@ public class GameScene {
                     }
                 } else {
                     if (!gameManager.selectedSkill.castOnSelf() && !gameManager.selectedSkill.castOnMonster()) {
-                        if (enoughMana && enoughActionPoint) {
+                        if (enoughMana && enoughActionPoint & piecesPosition[row][col] == null) {
                             GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName(), GameManager.getInstance().selectedSkill.getNameColor());
                             gameManager.selectedSkill.perform(new Knight(row, col, 1)); // dummy target for row/col
                         } else {
