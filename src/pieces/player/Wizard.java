@@ -39,6 +39,7 @@ public class Wizard extends BasePlayerPiece{
         currentHp = maxHp;
 
         attackDamage = 4; // Base attack for player
+        attackRange = 1;
 
         //add skill
         skills[0] = new Fireball();
@@ -57,7 +58,7 @@ public class Wizard extends BasePlayerPiece{
 
     @Override
     public boolean validAttack(int row, int col) {
-        return Math.abs(row - getRow()) <= 1 && Math.abs(col - getCol()) <= 1;
+        return Math.abs(row - getRow()) <= attackRange && Math.abs(col - getCol()) <= attackRange;
     }
 
     @Override

@@ -165,6 +165,9 @@ public class GameScene {
             if (!player.canAct()) {
                 GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), Config.UnavailableCursor);
             }
+            if (getScene().getCursor() == null) {
+                System.out.println("bruh null cursor");
+            }
         };
 
         // move action point display text around mouse cursor

@@ -33,6 +33,7 @@ public class Archer extends BasePlayerPiece {
         currentHp = maxHp;
 
         attackDamage = 5; // Base attack for player
+        attackRange = 4;
 
         //add skill
         skills[0] = new Targetlock();
@@ -58,7 +59,7 @@ public class Archer extends BasePlayerPiece {
         int currentRow = getRow();
         int currentCol = getCol();
 
-        return Math.abs(row - currentRow) <= 4 && Math.abs(col - currentCol) <= 4;
+        return Math.abs(row - currentRow) <= attackRange && Math.abs(col - currentCol) <= attackRange;
     }
 
     @Override

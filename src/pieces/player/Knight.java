@@ -33,6 +33,7 @@ public class Knight extends BasePlayerPiece {
         currentHp = maxHp;
 
         attackDamage = 3; // Base attack for player
+        attackRange = 1;
 
         //add skill
         skills[0] = new Slash();
@@ -58,7 +59,7 @@ public class Knight extends BasePlayerPiece {
         int currentRow = getRow();
         int currentCol = getCol();
 
-        return Math.abs(row - currentRow) <= 1 && Math.abs(col - currentCol) <= 1;
+        return Math.abs(row - currentRow) <= attackRange && Math.abs(col - currentCol) <= attackRange;
     }
 
     @Override
