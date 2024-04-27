@@ -100,7 +100,7 @@ public class Skeleton extends BaseMonsterPiece {
     @Override
     public void attack(BasePlayerPiece playerPiece) {
         System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
-        //=========<SKILL EFFECT>====================================================================
+        //=========<ATTACK EFFECT>====================================================================
         EffectManager.getInstance()
                 .renderEffect( EffectManager.TYPE.AROUND_SELF_ENEMY ,
                         GameManager.getInstance().player ,

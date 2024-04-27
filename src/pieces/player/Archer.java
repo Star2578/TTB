@@ -1,5 +1,6 @@
 package pieces.player;
 
+import logic.GameManager;
 import logic.ui.GUIManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
@@ -85,13 +86,14 @@ public class Archer extends BasePlayerPiece {
         //make player face to target
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
 
-        //attack effect
+        //=========<ATTACK EFFECT>====================================================================
         EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.ON_TARGET ,
-                        this ,
+                .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                        GameManager.getInstance().player ,
                         monsterPiece.getRow(), monsterPiece.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(0) ,
-                        new EffectConfig(0 , 8 , 0 , 1.25) );
+                        EffectManager.getInstance().createInPlaceEffects(12) ,
+                        new EffectConfig(-2 , -4 , 32 , 1.7) );
+        //===========================================================================================
 
         System.out.println("Attack success");
         GUIManager.getInstance().updateGUI();

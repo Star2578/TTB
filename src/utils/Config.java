@@ -90,6 +90,7 @@ public class Config {
 
     // Attacks animation
     public static String meleeAttackPath = "sprites/attacks/common_melee_attack.png";
+    public static String rangedAttackPath = "sprites/attacks/common_ranged_attack.png";
     // Knight Skills animation
     public static String skillSlashPath = "sprites/skills/skill_knight/skill_slash.png";
     public static String skillStompPath = "sprites/skills/skill_knight/skill_stomp.png";
