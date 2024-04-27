@@ -90,11 +90,9 @@ public class SlimeBoss extends BaseMonsterPiece {
     }
 
     private void splitSlime(int hp, Phase nextPhase) {
-        //TODO===============
-        // Logic to split the slime into smaller pieces
+        // Remove big slime
         removePiece(this);
         gameManager.environmentPieces.remove(this);
-
 
         for(int i = 0; i < 2; i++) {
             int row, col;
