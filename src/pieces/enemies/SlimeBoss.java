@@ -91,6 +91,7 @@ public class SlimeBoss extends BaseMonsterPiece {
 
     private void splitSlime(int hp, Phase nextPhase) {
         // Remove big slime
+        // test test test
         removePiece(this);
         gameManager.environmentPieces.remove(this);
 
