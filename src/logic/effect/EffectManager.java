@@ -95,6 +95,7 @@ public class EffectManager {
         //Archer Attack 13
         Effect Archer_Attack = new Effect(
                 new ImageView(new Image(Config.rangedAttackPath)) , 5 , 1 , 5 , 40 , 30 , 12 , false);
+        effects.add(Archer_Attack);
     }
 
     public Effect createInPlaceEffects(int index){
