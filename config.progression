@@ -1,6 +1,6 @@
 #Game Progression
-#Sat Apr 27 00:47:24 ICT 2024
-s_farthestLevelReach=0
-s_totalKill=0
-s_totalMoney=0
-s_totalMoves=0
+#Sat Apr 27 10:18:15 ICT 2024
+s_farthestLevelReach=2
+s_totalKill=3
+s_totalMoney=316
+s_totalMoves=32

@@ -27,8 +27,12 @@ public class Config {
     // Player
     public static String KnightPath = "sprites/player/Knight_Large.png";
     public static String KnightAnimationPath = "sprites/player/knight_sprite_sheet.png";
-    public static String ArcherAnimationPath = "sprites/player/Archer_sprite_sheet.png";
-    public static String WizardAnimationPath = "sprites/player/Wizard_sprite_sheet2.png";
+
+    public static String ArcherPath = "sprites/player/archer_large.png";
+    public static String ArcherAnimationPath = "sprites/player/archer_sprite_sheet.png";
+
+    public static String WizardPath = "sprites/player/wizard_large.png";
+    public static String WizardAnimationPath = "sprites/player/wizard_sprite_sheet2.png";
 
     // Enemies
     public static String DeadEffectPath = "sprites/enemies/dead_smoke.png";

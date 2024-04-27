@@ -1,5 +1,7 @@
 package pieces.player;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import logic.ui.GUIManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
@@ -39,7 +41,8 @@ public class Archer extends BasePlayerPiece {
         skills[3] = new Snipe();
 
         //configs values for animation
-        setupAnimation(Config.ArcherAnimationPath, 0, -12, 32, 48 , true);
+        setTexture(new ImageView(new Image(Config.ArcherPath))); //static image for icon, ...
+        setupAnimation(Config.ArcherAnimationPath, 0, -15, 32, 56 , true);
     }
 
     @Override

@@ -76,8 +76,6 @@ public class CharSelection {
                 new Knight(0,0,1),
                 new Archer(0,0,1),
                 new Wizard(0,0,1),
-                new Wizard(0,0,1),
-                new Wizard(0,0,1)
         };
         scrollPane.setContent(getCharContainer(characterList));
 //        scrollPane.setLayoutX(20);
@@ -103,12 +101,14 @@ public class CharSelection {
         playBtn.setLayoutX(920);
         playBtn.setLayoutY(600);
         playBtn.setOnAction(actionEvent -> {
-            SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
-            // switch bgm
-            SoundManager.getInstance().changeBackgroundMusic(Config.bgm_8_bit_adventure);
-            //start and switch to the game scene
-            GameManager.getInstance().GameStart(selectedCard.charData);
-            SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getGameScene());
+            if (selectedCard != null) {
+                SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
+                // switch bgm
+                SoundManager.getInstance().changeBackgroundMusic(Config.bgm_8_bit_adventure);
+                //start and switch to the game scene
+                GameManager.getInstance().GameStart(selectedCard.charData);
+                SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getGameScene());
+            }
         });
 
 

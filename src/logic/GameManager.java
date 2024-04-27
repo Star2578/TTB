@@ -116,6 +116,7 @@ public class GameManager {
         playerMoney = 0;
         dungeonLevel = 1; // start at 1 bro not 0
         player = playerClass;
+        playerSkills = player.getSkills();
         selectedItemTiles.clear();
         selectedMoveTiles.clear();
         selectedAttackTiles.clear();

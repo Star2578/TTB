@@ -458,7 +458,7 @@ public class Dealer extends BaseNpcPiece {
         }
 
         Button buyItemSlot = new Button("Buy more Item Slot  (" + (200 + ((GameManager.getInstance().itemUnlockedSlots) * 50)) + ")");
-        buyItemSlot.setPrefWidth(300);
+        buyItemSlot.setStyle("-fx-max-width: Infinity;");
         buyItemSlot.setOnMouseClicked(mouseEvent -> {
             int cost = 200 + ((GameManager.getInstance().itemUnlockedSlots) * 50);
 
@@ -472,6 +472,7 @@ public class Dealer extends BaseNpcPiece {
             }
         });
         Button buySkillSlot = new Button("Buy more Skill Slot  (" + (200 + (GameManager.getInstance().skillUnlockedSlots * 50)) + ")");
+        buySkillSlot.setStyle("-fx-max-width: Infinity;");
         buySkillSlot.setOnMouseClicked(mouseEvent -> {
             int cost = 200 + (GameManager.getInstance().skillUnlockedSlots * 50);
 
@@ -485,7 +486,6 @@ public class Dealer extends BaseNpcPiece {
                 GUIManager.getInstance().updateGUI();
             }
         });
-        buySkillSlot.setPrefWidth(300);
 
         // buy item slot
         itemShopGrid.add(buyItemSlot, 0, 3, 4, 1);

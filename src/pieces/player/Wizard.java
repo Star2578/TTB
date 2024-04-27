@@ -48,7 +48,8 @@ public class Wizard extends BasePlayerPiece{
         //TODO===========
 
         //configs values for animation
-        setupAnimation(Config.WizardAnimationPath, 0, -12, 32, 56, true);
+        setTexture(new ImageView(new Image(Config.WizardPath))); //static image for icon, ...
+        setupAnimation(Config.WizardAnimationPath, 0, -15, 32, 56, true);
     }
 
     @Override

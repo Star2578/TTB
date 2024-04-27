@@ -103,7 +103,7 @@ public class GUIManager {
         playerCharacterFrame.setAlignment(Pos.CENTER);
 
         // Player Character Image
-        ImageView playerCharacterImage = new ImageView(ImageScaler.resample(new Image(Config.KnightPath), 2));
+        ImageView playerCharacterImage = new ImageView(ImageScaler.resample(player.getTexture().getImage(), 2));
         playerCharacterImage.setPreserveRatio(true);
         playerCharacterImage.setFitWidth(70);
 
