@@ -457,6 +457,36 @@ public class Dealer extends BaseNpcPiece {
             skillShopGrid.add(button, col, row+2);
         }
 
+        Button rerollItem = new Button("Reroll Item  (250)");
+        rerollItem.setStyle("-fx-max-width: Infinity;");
+        rerollItem.setOnMouseClicked(mouseEvent -> {
+            int cost = 250;
+
+            if (GameManager.getInstance().playerMoney >= cost) {
+                GameManager.getInstance().playerMoney -= cost;
+
+                // reroll item
+                items_noDuplicate = getRandomItems(8);
+                updateShop();
+                GUIManager.getInstance().updateGUI();
+            }
+        });
+
+        Button rerollSkill = new Button("Reroll Skill  (250)");
+        rerollSkill.setStyle("-fx-max-width: Infinity;");
+        rerollSkill.setOnMouseClicked(mouseEvent -> {
+            int cost = 250;
+
+            if (GameManager.getInstance().playerMoney >= cost) {
+                GameManager.getInstance().playerMoney -= cost;
+
+                // reroll skill
+                skills_noDuplicate = getRandomSkills(8);
+                updateShop();
+                GUIManager.getInstance().updateGUI();
+            }
+        });
+
         Button buyItemSlot = new Button("Buy more Item Slot  (" + (200 + ((GameManager.getInstance().itemUnlockedSlots) * 50)) + ")");
         buyItemSlot.setStyle("-fx-max-width: Infinity;");
         buyItemSlot.setOnMouseClicked(mouseEvent -> {
@@ -467,6 +497,7 @@ public class Dealer extends BaseNpcPiece {
                 GameManager.getInstance().itemUnlockedSlots += 1;
                 GameManager.getInstance().playerMoney -= cost;
 
+                GUIManager.getInstance().updateGUI();
                 updateShop();
                 GUIManager.getInstance().updateGUI();
             }
@@ -489,7 +520,9 @@ public class Dealer extends BaseNpcPiece {
 
         // buy item slot
         itemShopGrid.add(buyItemSlot, 0, 3, 4, 1);
+        itemShopGrid.add(rerollItem, 0, 4, 4, 1);
         // buy skill slot
         skillShopGrid.add(buySkillSlot, 0, 6, 4, 1);
+        skillShopGrid.add(rerollSkill, 0, 7, 4, 1);
     }
 }

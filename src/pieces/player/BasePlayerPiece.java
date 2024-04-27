@@ -182,11 +182,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     }
     @Override
     public void setMaxHealth(int maxHealth) {
-        int maxHpBuffer = maxHp;
+        double percentage = (double) currentHp / maxHp;
         this.maxHp = Math.max(maxHealth, 1);
 
-        if (maxHp == maxHpBuffer) currentHp = maxHp;
-        if (maxHp < currentHp) currentHp = maxHp;
+        currentHp = (int) (maxHp * percentage);
 
         GUIManager.getInstance().updateGUI();
     }
