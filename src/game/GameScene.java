@@ -719,7 +719,7 @@ public class GameScene {
         animationPane.getChildren().clear();
     }
 
-    private void removePiece(BasePiece toRemove) {
+    public void removePiece(BasePiece toRemove) {
         int row = toRemove.getRow();
         int col = toRemove.getCol();
 

@@ -92,7 +92,7 @@ public class SlimeBoss extends BaseMonsterPiece {
     private void splitSlime(int hp, Phase nextPhase) {
         // Remove big slime
         // test test test
-        removePiece(this);
+        GameManager.getInstance().gameScene.removePiece(this);
         gameManager.environmentPieces.remove(this);
 
         for(int i = 0; i < 2; i++) {
@@ -127,21 +127,6 @@ public class SlimeBoss extends BaseMonsterPiece {
         }
         // Change the current phase to the next phase
         this.currentPhase = nextPhase;
-    }
-
-    private void removePiece(BasePiece toRemove) {
-        int row = toRemove.getRow();
-        int col = toRemove.getCol();
-
-        // Remove the piece's ImageView from the boardPane
-        gameManager.boardPane.getChildren().remove(toRemove.getTexture());
-
-        // Remove the piece's ImageView from the animationPane
-        if (toRemove instanceof BaseMonsterPiece monsterPiece)
-            gameManager.animationPane.getChildren().remove(monsterPiece.animationImage);
-
-        // Set the corresponding entry in the pieces array to null
-        piecesPosition[row][col] = null;
     }
 
     private void chasePlayer() {
