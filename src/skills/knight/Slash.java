@@ -16,7 +16,7 @@ public class Slash extends BaseSkill implements Attack {
     private BasePiece target;
     private final int DAMAGE = 10;
     public Slash() {
-        super("Slash", Color.DARKRED, 2, 2, "A true knight slash doesn't need a sword", Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav");
+        super("Slash", Color.DARKRED, 2, 2, "A true knight slash doesn't need a sword", Config.Rarity.RARE, "res/SFX/skills/slash/PP_01.wav");
         icon = new ImageView(Config.SlashPath);
         range = 1;
     }

@@ -60,7 +60,7 @@ public class MainMenu {
 
 
         //-------------------<play button>-----------------------------------------
-        playBtn= new Button("START");
+        playBtn= new Button("NEW GAME");
         playBtn.getStyleClass().add("btn");
         playBtn.setPrefWidth(250);
         playBtn.setLayoutX(515);
@@ -72,7 +72,8 @@ public class MainMenu {
             // switch bgm
             SoundManager.getInstance().changeBackgroundMusic(Config.bgm_8_bit_adventure);
             //start and switch to the game scene
-            GameManager.getInstance().GameStart(new Knight(0, 0, 1));
+
+            SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getCharSelectionScene());
         });
 
         //-------------------<setting button>-----------------------------------------
@@ -100,6 +101,7 @@ public class MainMenu {
             GameManager.getInstance().saveGame();
             SoundManager.getInstance().stopBackgroundMusic();
             Platform.exit();
+            System.exit(0);
         });
 
         //-------------------<put everything on scene>-----------------------------------------

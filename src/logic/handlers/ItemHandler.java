@@ -16,7 +16,6 @@ public class ItemHandler {
     private static ImageView[][] selectionFloor;
     private static ArrayList<Point2D> selectedTiles;
     private static boolean[][] validMovesCache;
-    private static ImageScaler imageScaler = new ImageScaler();
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
     public static void showValidItemRange(int playerRow, int playerCol, BaseItem itemSelected) {
         selectionFloor = gameManager.selectionFloor;
@@ -36,7 +35,7 @@ public class ItemHandler {
                         }
                         selectedTiles.add(new Point2D(newRow, newCol));
                         // Highlight or mark the square to indicate it's within the skill range
-                        selectionFloor[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidItemPath), 2)); // Set texture to indicate valid skill
+                        selectionFloor[newRow][newCol].setImage(ImageScaler.resample(new Image(Config.ValidItemPath), 2)); // Set texture to indicate valid skill
                     }
                 }
             }

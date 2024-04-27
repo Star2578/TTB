@@ -12,8 +12,18 @@ import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.player.*;
 import skills.*;
+import skills.archer.Halt;
+import skills.archer.Snipe;
+import skills.archer.Targetlock;
+import skills.archer.Teleport;
+import skills.knight.Dart;
 import skills.knight.Heal;
 import skills.knight.Slash;
+import skills.knight.Stomp;
+import skills.wizard.DragonFire;
+import skills.wizard.Fireball;
+import skills.wizard.IceShield;
+import skills.wizard.RainOfFire;
 import utils.Config;
 
 import java.io.*;
@@ -37,7 +47,7 @@ public class GameManager {
 
     // ------------ Progression --------------
     public int playerMoney = 0;
-    public int dungeonLevel = 0;
+    public int dungeonLevel = 1;
 
     public int totalKill = 0;
     public int totalKillThisRun = 0;
@@ -70,8 +80,8 @@ public class GameManager {
 
     // ----------- Skill -----------
     public final int SKILL_SLOTS = 8;
-    public int unlockedSlots = 4;
-    public int itemSlots = 4;
+    public int skillUnlockedSlots = 4;
+    public int itemUnlockedSlots = 4;
     public BaseSkill[] playerSkills; // List of skills player currently have
     public BaseSkill selectedSkill;
     public BaseItem selectedItem;
@@ -81,7 +91,8 @@ public class GameManager {
     public List<Point2D> doorAt = new ArrayList<>(); // use to store where the door is at
 
     public final BaseSkill[] UNIVERSAL_SKILL_POOL = {
-        new Slash(), new Heal()
+        new Slash(), new Heal(), new Halt(), new Snipe(), new Targetlock(), new Teleport(), new Dart(), new Stomp(),
+            new DragonFire(), new Fireball(), new IceShield(), new RainOfFire()
     };
     public final BaseItem[] ITEM_POOL = {
         new BluePotion(), new GreenPotion(), new PurplePotion(), new RedPotion(), new YellowPotion()
@@ -91,15 +102,6 @@ public class GameManager {
         player = new Knight(0, 0, 1);
 
         playerSkills = player.getSkills();
-        for (int i = 0; i < SKILL_SLOTS; i++) {
-            if (playerSkills[i] == null) {
-                if (i < unlockedSlots) {
-                    playerSkills[i] = new EmptySkill();
-                } else {
-                    playerSkills[i] = new LockedSlot();
-                }
-            }
-        }
         boardPane = new GridPane();
         animationPane = new Pane();
 
@@ -123,17 +125,9 @@ public class GameManager {
     public void GameStart(BasePlayerPiece playerClass) {
         // reset fields
         playerMoney = 0;
-        dungeonLevel = 0;
+        dungeonLevel = 1; // start at 1 bro not 0
         player = playerClass;
-        for (int i = 0; i < SKILL_SLOTS; i++) {
-            if (playerSkills[i] == null) {
-                if (i < unlockedSlots) {
-                    playerSkills[i] = new EmptySkill();
-                } else {
-                    playerSkills[i] = new LockedSlot();
-                }
-            }
-        }
+        playerSkills = player.getSkills();
         selectedItemTiles.clear();
         selectedMoveTiles.clear();
         selectedAttackTiles.clear();
@@ -150,12 +144,6 @@ public class GameManager {
         piecesPosition = new BasePiece[Config.BOARD_SIZE][Config.BOARD_SIZE];
         validMovesCache = new boolean[Config.BOARD_SIZE][Config.BOARD_SIZE];
 
-        inventory.add(new BluePotion()); // this is for testing
-        inventory.add(new RedPotion()); // this is for testing
-        inventory.add(new PurplePotion()); // this is for testing
-        inventory.add(new GreenPotion()); // this is for testing
-        inventory.add(new YellowPotion()); // this is for testing
-
         TurnManager.getInstance().initialize();
         SpawnerManager.getInstance().initialize();
         GUIManager.getInstance().initialize();
@@ -163,6 +151,7 @@ public class GameManager {
         gameScene = new GameScene();
         // set new game scene
         SceneManager.getInstance().setGameScene(gameScene.getScene());
+        GUIManager.getInstance().updateCursor(gameScene.getScene(), Config.DefaultCursor);
         SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getGameScene());
     }
     public void GameOver() {

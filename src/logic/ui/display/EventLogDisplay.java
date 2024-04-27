@@ -57,6 +57,20 @@ public class EventLogDisplay implements Display{
 
         Platform.runLater(() -> scrollPane.setVvalue(1.0));
     }
+    public void addLog(String msg, Color color) {
+        Text text = new Text(msg);
+        text.setStyle(
+                "-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:16;" +
+                "-fx-text-fill:'white';");
+        text.setFill(color);
+        text.setWrappingWidth(260);
+
+        // Add new log text from the bottom
+        logContainer.getChildren().add(text);
+
+        Platform.runLater(() -> scrollPane.setVvalue(1.0));
+    }
 
     public void clearLog() {
         logContainer.getChildren().clear();

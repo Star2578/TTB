@@ -65,28 +65,35 @@ public class TurnManager {
     }
 
     public void startEnvironmentTurn() {
-        // Start the turn for the current environment piece
-        BasePiece currentPiece = environmentPieces.get(currentEnvironmentPieceIndex);
-        System.out.println("Environment Turn Start for " + currentEnvironmentPieceIndex + " " + currentPiece.getClass().getSimpleName());
+        if (!environmentPieces.isEmpty()) {
+            // Start the turn for the current environment piece
+            BasePiece currentPiece = environmentPieces.get(currentEnvironmentPieceIndex);
+            System.out.println("Environment Turn Start for " + currentEnvironmentPieceIndex + " " + currentPiece.getClass().getSimpleName());
 
-        if (currentPiece instanceof BaseMonsterPiece) {
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(DELAY_BETWEEN_ENVIRONMENT), event -> {
-                ((BaseMonsterPiece) currentPiece).performAction(); // Perform action for monsters after a delay
+            if (currentPiece instanceof BaseMonsterPiece) {
+                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(DELAY_BETWEEN_ENVIRONMENT), event -> {
+                    ((BaseMonsterPiece) currentPiece).performAction(); // Perform action for monsters after a delay
 
-                // waiting for the currentPiece to finished it actions
-                waitTimeline = new Timeline(new KeyFrame(Duration.millis(100), evt -> {
-                    if (!((BaseMonsterPiece) currentPiece).isEndAction()) {
-                        // Continue waiting
-                        return;
-                    }
-                    // Move to the next environment piece
-                    cycleNextEnvironment();
+                    // waiting for the currentPiece to finished it actions
+                    waitTimeline = new Timeline(new KeyFrame(Duration.millis(100), evt -> {
+                        if (!((BaseMonsterPiece) currentPiece).isEndAction()) {
+                            // Continue waiting
+                            return;
+                        }
+                        // Move to the next environment piece
+                        cycleNextEnvironment();
+                    }));
+                    waitTimeline.setCycleCount(Timeline.INDEFINITE);
+                    waitTimeline.play();
                 }));
-                waitTimeline.setCycleCount(Timeline.INDEFINITE);
-                waitTimeline.play();
-            }));
 
-            timeline.play();
+                timeline.play();
+            }
+        } else {
+            EffectManager.getInstance().clearDeadEffect(); // remove unused effect
+            currentEnvironmentPieceIndex = 0;
+            startPlayerTurn();
+            GUIManager.getInstance().enableButton();
         }
     }
 

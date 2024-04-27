@@ -1,0 +1,47 @@
+@font-face {
+    font-family: "x8y12pxTheStrongGamer";
+    src: url("/font/x8y12pxTheStrongGamer.ttf");
+}
+
+@font-face {
+    font-family: "x12y16pxSolidLinker";
+    src: url("/font/x12y16pxSolidLinker.ttf");
+}
+
+@font-face {
+    font-family: "x16y32pxGridGazer";
+    src: url("/font/x16y32pxGridGazer.ttf");
+}
+
+#charNameText{
+    -fx-font-family:"x16y32pxGridGazer";
+    -fx-font-size: 64px;
+    -fx-fill: "#c4c4c4";
+}
+
+#scrollPane{
+  -fx-background-insets: 0, 0, 1, 2;
+
+}
+
+.button{
+    -fx-font-family:x16y32pxGridGazer;
+    -fx-font-size:16;
+    -fx-pref-width:100;
+    -fx-background-color:#DFDFDF;
+    -fx-border-width:3;
+    -fx-border-style:solid outside;
+    -fx-border-color:#323232;
+    -fx-border-radius:1;
+    -fx-focus-color:transparent;
+
+}
+.button:hover{
+    -fx-background-color:#9E9E9E;
+}
+.button:pressed{
+    -fx-text-fill:#610202;
+    -fx-background-color:#747277;
+    -fx-border-color:#212121;
+}
+

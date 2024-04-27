@@ -1,9 +1,11 @@
 package pieces.player;
 
+import items.BaseItem;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import logic.*;
 import logic.ui.GUIManager;
@@ -14,6 +16,10 @@ import skills.BaseSkill;
 import utils.Config;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import static utils.Config.*;
@@ -27,16 +33,12 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     protected int currentMana;
     protected int maxMana;
     protected int attackDamage;
-    protected boolean animationFinished = true;
 
     protected boolean canAct; // status
     protected BaseSkill[] skills; // skill list
     protected final int ATTACK_COST = 1;
     protected int attackRange = 1;
 
-    // Animations
-    protected SpriteAnimation meleeAttackAnimation;
-    public ImageView meleeAttackImage;
 
     // Buffs
     protected int buffturn;
@@ -70,14 +72,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         spriteAnimation=new SpriteAnimation(animationImage,4,0,4,width,height,6 , loop);
         spriteAnimation.start();
 
-        //attack animation for player
-        meleeAttackImage = new ImageView(new Image(Config.meleeAttackPath));
-        meleeAttackImage.setPreserveRatio(true);
-        meleeAttackImage.setFitWidth(50);
-        meleeAttackImage.setDisable(true);
-        meleeAttackImage.setVisible(true);
-        meleeAttackAnimation = new SpriteAnimation(meleeAttackImage , 5 , 1 , 5 , 37 , 32 , 8 , false);
-
         //setup moveTranslate behaviour
         moveTransition = new TranslateTransition();
         moveTransition.setNode(animationImage);
@@ -107,11 +101,12 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         GUIManager.getInstance().updateGUI();
 
         // Auto End Turn when player is out of action point
-        if (this.currentActionPoint == 0 && GameManager.getInstance().autoEndTurn && animationFinished) {
+        if (this.currentActionPoint == 0 && GameManager.getInstance().autoEndTurn && canAct) {
             if (TurnManager.getInstance().isPlayerTurn) TurnManager.getInstance().endPlayerTurn();
         }
     }
     public void changeDirection(int direction) {
+
 
         if (direction != 1 && direction != -1) {
             return;
@@ -127,7 +122,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void moveWithTransition(int row , int col){
         //stop player from do other action
         setCanAct(false);
-        animationFinished = false;
         spriteAnimation.changeAnimation(4 , 2);
         //slowly move to target col,row
         moveTransition.setToX( (col-getCol()) * SQUARE_SIZE + offsetX);
@@ -145,7 +139,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
             animationImage.translateYProperty().set(offsetY);
             //now player can do actions
             spriteAnimation.changeAnimation(4 , 0);
-            setCanAct(true);
             GUIManager.getInstance().enableButton();
             setRow(row);
             setCol(col);
@@ -153,11 +146,17 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
             for (Point2D coordinate : GameManager.getInstance().doorAt) {
                 if (coordinate.getX() == getRow() && coordinate.getY() == getCol()) {
                     GameManager.getInstance().gameScene.generateNewFloor();
+                    GUIManager.getInstance().eventLogDisplay.addLog("Going deeper...", Color.PALEVIOLETRED);
                     break;
                 }
             }
 
-            animationFinished = true; // Finish animation
+            // Auto End Turn when player is out of action point
+            if (this.currentActionPoint == 0 && GameManager.getInstance().autoEndTurn) {
+                if (TurnManager.getInstance().isPlayerTurn) TurnManager.getInstance().endPlayerTurn();
+            } else {
+                setCanAct(true);
+            }
         });
         moveTransition.play();
     }
@@ -183,11 +182,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     }
     @Override
     public void setMaxHealth(int maxHealth) {
-        int maxHpBuffer = maxHp;
+        double percentage = (double) currentHp / maxHp;
         this.maxHp = Math.max(maxHealth, 1);
 
-        if (maxHp == maxHpBuffer) currentHp = maxHp;
-        if (maxHp < currentHp) currentHp = maxHp;
+        currentHp = (int) (maxHp * percentage);
 
         GUIManager.getInstance().updateGUI();
     }
@@ -266,4 +264,24 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         EffectBuffs.put(buff_name, buff_duration);
         System.out.println(buff_name + " adding");
     }
+
+    public static BasePlayerPiece createNewInstance(BasePlayerPiece player) {
+        try {
+            // Get the class of the item
+            Class<? extends BasePlayerPiece> playerClass = player.getClass();
+
+            // Get the constructor of the item class
+            Constructor<? extends BasePlayerPiece> constructor = playerClass.getDeclaredConstructor();
+
+            // Make the constructor accessible, as it may be private
+            constructor.setAccessible(true);
+
+            // Instantiate a new instance of the item class using the constructor
+            return constructor.newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            System.out.println("Error when creating new instance @Dealer :" + e.getMessage());; // Handle the exception appropriately
+        }
+        return null;
+    }
+
 }

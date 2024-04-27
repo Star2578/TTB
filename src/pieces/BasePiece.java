@@ -69,6 +69,7 @@ public class BasePiece {
     public int getCurrentDirection() {
         return currentDirection;
     }
+    public void setTexture(ImageView texture){ this.texture = texture; }
 
     protected void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height , boolean loop) {
         //===================<animation section>==========================================

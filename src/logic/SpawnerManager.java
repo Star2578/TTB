@@ -14,16 +14,19 @@ public class SpawnerManager {
     public static SpawnerManager instance;
     private GameManager gameManager = GameManager.getInstance();
     private ImageView[][] dungeonFloor;
-    private ImageScaler imageScaler = new ImageScaler();
     private double doorProbability = 5.0; // probability that the door to next dungeon floor would spawn
     public int monsterCount;
     public int freeSquareCount;
     public BaseMonsterPiece[] monsterPool_1; // monster pool for area 1
+    public BaseMonsterPiece[] monsterPool_2; // Boss monster pool for Boss area
 
     public SpawnerManager() {
         initialize();
         monsterPool_1 = new BaseMonsterPiece[]{
                 new Bomber(), new Tiny(), new Zombie(), new Skeleton(), new Vampire(), new Necromancer()
+        };
+        monsterPool_2 = new BaseMonsterPiece[]{
+            new SlimeBoss()
         };
     }
 
@@ -59,7 +62,7 @@ public class SpawnerManager {
 
         // Door spawn successful
         System.out.println("Door spawned at row " + row + ", col " + col);
-        dungeonFloor[row][col].setImage(imageScaler.resample(new Image(Config.DoorPath), 2));
+        dungeonFloor[row][col].setImage(ImageScaler.resample(new Image(Config.DoorPath), 2));
         gameManager.doorAt.add(new Point2D(row, col));
     }
 

@@ -21,11 +21,18 @@ public class Config {
     public static String HandCursor = "sprites/cursors/Megabyte Games Mouse Cursor Pack/16x16/png/cursor-pointer-18.png";
     public static String HandClickCursor = "sprites/cursors/Megabyte Games Mouse Cursor Pack/16x16/png/cursor-pointer-18-click.png";
 
+    // Player shadow
+    public static String FootShadowPath = "sprites/char_floor_shadow.png";
+
     // Player
-    public static String KnightLargePath = "sprites/player/Knight_Large.png";
+    public static String KnightPath = "sprites/player/Knight_Large.png";
     public static String KnightAnimationPath = "sprites/player/knight_sprite_sheet.png";
-    public static String ArcherAnimationPath = "sprites/player/Archer_sprite_sheet.png";
-    public static String WizardAnimationPath = "sprites/player/Wizard_sprite_sheet2.png";
+
+    public static String ArcherPath = "sprites/player/archer_large.png";
+    public static String ArcherAnimationPath = "sprites/player/archer_sprite_sheet.png";
+
+    public static String WizardPath = "sprites/player/wizard_large.png";
+    public static String WizardAnimationPath = "sprites/player/wizard_sprite_sheet2.png";
 
     // Enemies
     public static String DeadEffectPath = "sprites/enemies/dead_smoke.png";
@@ -44,6 +51,11 @@ public class Config {
     public static String SkeletonAttackPath = "sprites/enemies/skeleton_attack_sprite_sheet.png";
     public  static  String VampirePath = "sprites/enemies/vampire_sprite_sheet.png";
     public static String VampireSkillPath = "sprites/enemies/vampire_skill_sprite_sheet.png";
+    public  static  String SlimePath = "sprites/enemies/slimeboss_sprite_sheet.png";
+    public  static  String SlimePath2 = "sprites/enemies/slimeboss_sprite_sheet2.png";
+    public  static  String SlimePath3 = "sprites/enemies/slime3.png";
+    public  static  String SlimePath4 = "sprites/enemies/slimeboss4.png";
+
 
     // NPC
     public static String DealerPortraitPath = "sprites/npc/dealer_portrait.png";
@@ -110,6 +122,16 @@ public class Config {
     public static String sfx_failedSound = "res/SFX/failed/8bit-blip4.wav";
     public static String sfx_deadSound = "res/SFX/monster/dead/explosion_03.wav";
 
+
+    // UI image, icon, ...
+    public static String ui_heart_icon = "ui/heart_icon.png";
+    public static String ui_sword_icon = "ui/sword_icon.png";
+    public static String ui_mana_icon = "ui/mana_icon.png";
+    public static String ui_stamina_icon = "ui/stamina_icon.png";
+    public static String ui_charInfo_box = "ui/char_info_box.png";
+    public static String ui_charSelect_box = "ui/char_selection_box.png";
+
+
     public enum ENTITY_TYPE {
         PLAYER, MONSTER, TRAP, NPC, WALL, EMPTY
     }
@@ -160,6 +182,30 @@ public class Config {
             {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
             {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
             {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
+            {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
+            {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
+            {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'}
+    };
+
+    public static final char[][] BossRoom1 = {
+            {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
+            {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
+            {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
+            {'#', '#', '#', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '#', '#', '#'},
             {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
             {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
             {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'}

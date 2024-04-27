@@ -16,7 +16,6 @@ public class AttackHandler {
     private static boolean[][] validMovesCache;
     private static ArrayList<Point2D> selectedTiles;
     private static ImageView[][] selectionFloor;
-    private static ImageScaler imageScaler = new ImageScaler();
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
 
     public static void showValidAttackRange(int playerRow, int playerCol) {
@@ -37,7 +36,7 @@ public class AttackHandler {
                     if (validMovesCache[newRow][newCol] && player.validAttack(newRow, newCol)) {
                         selectedTiles.add(new Point2D(newRow , newCol));
                         // Highlight or mark the square to indicate it's within the attack range
-                        selectionFloor[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidAttackPath), 2)); // Set texture to indicate valid attack
+                        selectionFloor[newRow][newCol].setImage(ImageScaler.resample(new Image(Config.ValidAttackPath), 2)); // Set texture to indicate valid attack
                     }
                 }
             }

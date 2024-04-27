@@ -27,14 +27,13 @@ public abstract class BaseSkill {
     protected String sfxPath;
 
     protected BaseSkill(String name, Color nameColor, int manaCost, int actionPointCost, String description, Config.Rarity rarity, String sfxPath) {
-        ImageScaler imageScaler = new ImageScaler();
 
         this.name = name;
         this.nameColor = nameColor;
         this.manaCost = manaCost;
         this.actionPointCost = actionPointCost;
         this.description = description;
-        this.frame = new ImageView(imageScaler.resample(new Image(Config.FramePath), 2));
+        this.frame = new ImageView(ImageScaler.resample(new Image(Config.FramePath), 2));
         this.rarity = rarity;
         this.price = priceGenerator();
         this.sfxPath = sfxPath;

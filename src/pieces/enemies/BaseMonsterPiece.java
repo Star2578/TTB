@@ -2,6 +2,7 @@ package pieces.enemies;
 
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.SpawnerManager;
@@ -161,7 +162,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         GameManager.getInstance().gameScene.removePiece(this);
 
         // To call when this monster died
-        GUIManager.getInstance().eventLogDisplay.addLog("Player killed " + this.getClass().getSimpleName());
+        GUIManager.getInstance().eventLogDisplay.addLog("Player killed " + this.getClass().getSimpleName() + " !!!!", Color.CRIMSON);
         //=====<dead effect>=========================================
         new Thread(()->{
             try {

@@ -1,6 +1,8 @@
 package pieces.player;
 
 import logic.SoundManager;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import logic.ui.GUIManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
@@ -31,14 +33,14 @@ public class Knight extends BasePlayerPiece {
         currentHp = maxHp;
 
         attackDamage = 3; // Base attack for player
+        attackRange = 1;
 
         //add skill
         skills[0] = new Slash();
-        skills[1] = new Heal();
-        skills[2] = new Dart();
-        skills[3] = new Stomp();
+        skills[1] = new Stomp();
 
         //configs values for animation
+        setTexture(new ImageView(new Image(Config.KnightPath))); //static image for icon, ...
         setupAnimation(Config.KnightAnimationPath, 0, -15, 32, 56 , true);
     }
 
@@ -57,7 +59,7 @@ public class Knight extends BasePlayerPiece {
         int currentRow = getRow();
         int currentCol = getCol();
 
-        return Math.abs(row - currentRow) <= 1 && Math.abs(col - currentCol) <= 1;
+        return Math.abs(row - currentRow) <= attackRange && Math.abs(col - currentCol) <= attackRange;
     }
 
     @Override

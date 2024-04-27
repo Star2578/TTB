@@ -26,7 +26,6 @@ public class SkillSelectDisplay implements Display{
     private VBox view;
 
     private GridPane skillSelectorGrid;
-    private ImageScaler imageScaler = new ImageScaler();
     private SkillInfoOverlay skillInfoOverlay = new SkillInfoOverlay();
     private ImageView frameView;
 
@@ -49,7 +48,7 @@ public class SkillSelectDisplay implements Display{
         view.getChildren().addAll(skillSelectorGrid);
     }
 
-    private void updateSkillSelect() {
+    public void updateSkillSelect() {
         skillSelectorGrid.getChildren().clear();
         BaseSkill[] playerSkills = GameManager.getInstance().playerSkills;
         // Add skill frames
@@ -57,15 +56,17 @@ public class SkillSelectDisplay implements Display{
         int col = 0;
 
         for (int i = 0; i < GameManager.getInstance().SKILL_SLOTS; i++) {
+            StackPane skillFrame;
             if (playerSkills[i] == null) {
-                if (i < GameManager.getInstance().unlockedSlots) {
-                    playerSkills[i] = new EmptySkill();
+                if (i < GameManager.getInstance().skillUnlockedSlots) {
+                    skillFrame = createSkillFrame(new EmptySkill());
                 } else {
-                    playerSkills[i] = new LockedSlot();
+                    skillFrame = createSkillFrame(new LockedSlot());
                 }
+            } else {
+                skillFrame = createSkillFrame(playerSkills[i]);
             }
 
-            StackPane skillFrame = createSkillFrame(playerSkills[i]);;
             skillSelectorGrid.add(skillFrame, col, row); // Add to the grid
             col++;
             if (col == 4) { // Adjust column count as needed
@@ -80,7 +81,7 @@ public class SkillSelectDisplay implements Display{
         StackPane skillFrame = new StackPane();
 
         // Scale Skill Icon
-        Image skillIcon = imageScaler.resample(skill.getIcon().getImage(), 2);
+        Image skillIcon = ImageScaler.resample(skill.getIcon().getImage(), 2);
         frameView = skill.getFrame();
 
         skillFrame.setAlignment(Pos.CENTER);
@@ -121,7 +122,7 @@ public class SkillSelectDisplay implements Display{
                 SkillHandler.showValidSkillRange(player.getRow(), player.getCol(), skill);
                 GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.HandCursor);
                 GameManager.getInstance().selectedSkill = skill;
-                skill.getFrame().setImage(imageScaler.resample(new Image(Config.FrameSelectedPath), 2));
+                skill.getFrame().setImage(ImageScaler.resample(new Image(Config.FrameSelectedPath), 2));
                 System.out.println("Selected " + skill.getName() + " skill");
             });
 

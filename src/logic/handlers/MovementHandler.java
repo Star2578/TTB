@@ -20,7 +20,6 @@ public class MovementHandler {
     private static boolean[][] validMovesCache;
     private static ArrayList<Point2D> selectedTiles;
     private static ImageView[][] selectionFloor;
-    private static ImageScaler imageScaler = new ImageScaler();
 
     private static int newDirection = 1;
     private static int bufferDirection = newDirection;
@@ -43,7 +42,7 @@ public class MovementHandler {
                         //add tile pos to be remove later to a list
                         selectedTiles.add(new Point2D(newRow , newCol));
                         // Highlight or mark the square to indicate it's within the movement range
-                        selectionFloor[newRow][newCol].setImage(imageScaler.resample(new Image(Config.ValidMovePath), 2)); // Set texture to indicate valid move
+                        selectionFloor[newRow][newCol].setImage(ImageScaler.resample(new Image(Config.ValidMovePath), 2)); // Set texture to indicate valid move
                     }
                 }
             }

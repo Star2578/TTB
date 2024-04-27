@@ -25,6 +25,7 @@ public class EffectManager {
         ON_SELF,
         AROUND_SELF_ENEMY
 
+
     }
     private static EffectManager instance;
 

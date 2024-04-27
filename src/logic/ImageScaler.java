@@ -8,7 +8,7 @@ import javafx.scene.image.WritableImage;
 public class ImageScaler {
     private static final int SCALE_FACTOR = 1;
 
-    public Image resample(Image input, int scaleFactor) {
+    public static Image resample(Image input, int scaleFactor) {
         final int W = (int) input.getWidth();
         final int H = (int) input.getHeight();
         final int S = scaleFactor;
@@ -35,7 +35,7 @@ public class ImageScaler {
         return output;
     }
 
-    public Image resample(Image input) {
+    public static Image resample(Image input) {
         return resample(input, SCALE_FACTOR);
     }
 }

@@ -1,6 +1,7 @@
 package pieces.player;
 
-import logic.GameManager;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import logic.ui.GUIManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
@@ -28,19 +29,16 @@ public class Archer extends BasePlayerPiece {
         maxMana = 15;
         currentMana = maxMana;
 
-        maxHp = 15;
-        currentHp = maxHp;
-
         attackDamage = 5; // Base attack for player
+        attackRange = 4;
 
         //add skill
         skills[0] = new Targetlock();
-        skills[1] = new Teleport();
-        skills[2] = new Halt();
-        skills[3] = new Snipe();
+        skills[1] = new Snipe();
 
         //configs values for animation
-        setupAnimation(Config.ArcherAnimationPath, 0, -12, 32, 48 , true);
+        setTexture(new ImageView(new Image(Config.ArcherPath))); //static image for icon, ...
+        setupAnimation(Config.ArcherAnimationPath, 0, -15, 32, 56 , true);
     }
 
     @Override
@@ -58,7 +56,7 @@ public class Archer extends BasePlayerPiece {
         int currentRow = getRow();
         int currentCol = getCol();
 
-        return Math.abs(row - currentRow) <= 4 && Math.abs(col - currentCol) <= 4;
+        return Math.abs(row - currentRow) <= attackRange && Math.abs(col - currentCol) <= attackRange;
     }
 
     @Override
@@ -89,7 +87,7 @@ public class Archer extends BasePlayerPiece {
         //=========<ATTACK EFFECT>====================================================================
         EffectManager.getInstance()
                 .renderEffect( EffectManager.TYPE.AROUND_SELF ,
-                        GameManager.getInstance().player ,
+                        this ,
                         monsterPiece.getRow(), monsterPiece.getCol(),
                         EffectManager.getInstance().createInPlaceEffects(12) ,
                         new EffectConfig(-2 , -4 , 32 , 1.7) );

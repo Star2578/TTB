@@ -39,16 +39,16 @@ public class Wizard extends BasePlayerPiece{
         currentHp = maxHp;
 
         attackDamage = 4; // Base attack for player
+        attackRange = 1;
 
         //add skill
         skills[0] = new Fireball();
         skills[1] = new IceShield();
-        skills[2] = new RainOfFire();
-        skills[3] = new DragonFire();
         //TODO===========
 
         //configs values for animation
-        setupAnimation(Config.WizardAnimationPath, 0, -12, 32, 56, true);
+        setTexture(new ImageView(new Image(Config.WizardPath))); //static image for icon, ...
+        setupAnimation(Config.WizardAnimationPath, 0, -15, 32, 56, true);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class Wizard extends BasePlayerPiece{
 
     @Override
     public boolean validAttack(int row, int col) {
-        return Math.abs(row - getRow()) <= 1 && Math.abs(col - getCol()) <= 1;
+        return Math.abs(row - getRow()) <= attackRange && Math.abs(col - getCol()) <= attackRange;
     }
 
     @Override

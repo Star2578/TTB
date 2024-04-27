@@ -7,13 +7,16 @@ import pieces.BasePiece;
 import skills.BaseSkill;
 import utils.Config;
 
+import static utils.Config.BOARD_SIZE;
+import static utils.Config.SQUARE_SIZE;
+
 public class Teleport extends BaseSkill {
     private BasePiece target;
     public Teleport() {
         super("Teleport", Color.DARKRED,
                 7, 2,
                 "Teleport to a chosen location",
-                Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav"
+                Config.Rarity.EPIC, "res/SFX/skills/slash/PP_01.wav"
         );
         icon = new ImageView(Config.TeleportPath);
         range = 5; // Set the range to 5
@@ -28,6 +31,8 @@ public class Teleport extends BaseSkill {
         BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
         pieces[GameManager.getInstance().player.getRow()][GameManager.getInstance().player.getCol()] = null;
         pieces[target.getRow()][target.getCol()] = GameManager.getInstance().player;
+
+        GameManager.getInstance().player.moveWithTransition(target.getRow(), target.getCol());
 
 //        GameManager.getInstance().player.setRow(target.getRow());
 //        GameManager.getInstance().player.setCol(target.getCol());
