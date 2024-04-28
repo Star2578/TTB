@@ -61,7 +61,12 @@ public class TurnManager {
         GameManager.getInstance().gameScene.resetSelection(1);
         GameManager.getInstance().gameScene.resetSelection(2);
         currentEnvironmentPieceIndex = 0;
+
+        EffectManager.getInstance().updateEffectTimer(); //update effect lifetime
+        EffectManager.getInstance().clearDeadEffect(); // remove timeout effect every turn
+
         startEnvironmentTurn();
+
     }
 
     public void startEnvironmentTurn() {
@@ -104,7 +109,6 @@ public class TurnManager {
         // Move to the next environment piece
         currentEnvironmentPieceIndex++;
         if (currentEnvironmentPieceIndex >= environmentPieces.size()) {
-            EffectManager.getInstance().clearDeadEffect(); // remove unused effect
             currentEnvironmentPieceIndex = 0;
             startPlayerTurn();
             GUIManager.getInstance().enableButton();
