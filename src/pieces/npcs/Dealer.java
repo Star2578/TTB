@@ -331,22 +331,27 @@ public class Dealer extends BaseNpcPiece {
     private List<BaseSkill> getRandomSkills(int count) {
         List<BaseSkill> randomSkills = new ArrayList<>();
         List<BaseSkill> playerOwned = Arrays.asList(GameManager.getInstance().playerSkills);
-        BaseSkill[] pool = GameManager.getInstance().UNIVERSAL_SKILL_POOL;
+        List<BaseSkill> classSpecifics = Arrays.asList(GameManager.getInstance().player.getClassSpecifics());
+        BaseSkill[] pool = GameManager.getInstance().SKILL_POOL;
         Random random = new Random();
 
         for (int i = 0; i < count; i++) {
-            List<BaseSkill> availableSkills = Arrays.stream(pool)
-                    .filter(skill -> !skills_noDuplicate.contains(skill) && !playerOwned.contains(skill))
-                    .toList();
+            List<BaseSkill> availableSkills = new ArrayList<>();
+            availableSkills.addAll(Arrays.asList(pool));
+            availableSkills.addAll(classSpecifics);
+            availableSkills.removeAll(playerOwned);
+            availableSkills.removeAll(randomSkills);
 
             // Randomly select a skill from the available skills
-            BaseSkill randomSkill = availableSkills.get(random.nextInt(availableSkills.size()));
+            if (!availableSkills.isEmpty()) {
+                BaseSkill randomSkill = availableSkills.get(random.nextInt(availableSkills.size()));
 
-            // Create a new instance of the randomly selected skill
-            BaseSkill skill = createNewInstance(randomSkill);
+                // Create a new instance of the randomly selected skill
+                BaseSkill skill = createNewInstance(randomSkill);
 
-            // Add the new skill instance to the list of random skills
-            randomSkills.add(skill);
+                // Add the new skill instance to the list of random skills
+                randomSkills.add(skill);
+            }
         }
 
         return randomSkills;

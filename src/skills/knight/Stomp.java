@@ -16,7 +16,7 @@ import utils.Config;
 public class Stomp extends BaseSkill implements Attack {
     private BasePiece target;
     private final int DAMAGE = 6;
-    private final int STUN_DURATION = 1;
+    int STUN_DURATION = 1;
     public Stomp() {
         super("Stomp", Color.DARKRED, 2, 2, "The Knight brings their armored boot crashing down, sending shockwaves rippling through the ground.", Config.Rarity.RARE, "res/SFX/skills/slash/PP_01.wav");
         icon = new ImageView(Config.StompPath);

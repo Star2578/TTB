@@ -16,7 +16,7 @@ public class RainOfFire extends BaseSkill implements Attack {
     private final int DAMAGE = 6;
     public RainOfFire() {
         super("Rain of Fire", Color.DARKORANGE,
-                10, 2,
+                1, 2,
                 "Summon a rain of fire above the enemies for  2 x 2 range around the enemy",
                 Config.Rarity.LEGENDARY, "res/SFX/skills/slash/PP_01.wav");
 

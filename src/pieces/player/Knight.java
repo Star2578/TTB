@@ -7,7 +7,10 @@ import logic.ui.GUIManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.enemies.BaseMonsterPiece;
+import skills.archer.Halt;
+import skills.archer.Rolling;
 import skills.archer.Snipe;
+import skills.archer.Targetlock;
 import skills.knight.Dart;
 import skills.knight.Heal;
 import skills.knight.Slash;
@@ -38,6 +41,12 @@ public class Knight extends BasePlayerPiece {
         //add skill
         skills[0] = new Slash();
         skills[1] = new Heal();
+
+        // class specifics skills
+        classSpecifics[0] = new Slash();
+        classSpecifics[1] = new Heal();
+        classSpecifics[2] = new Dart();
+        classSpecifics[3] = new Stomp();
 
         //configs values for animation
         setTexture(new ImageView(new Image(Config.KnightPath))); //static image for icon, ...

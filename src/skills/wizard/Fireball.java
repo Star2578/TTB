@@ -13,7 +13,7 @@ import utils.Config;
 
 public class Fireball extends BaseSkill implements Attack {
     private BasePiece target;
-    private final int DAMAGE = 8;
+    private final int DAMAGE = 12;
     public Fireball() {
         super("Fireball", Color.RED,
                 5, 2,

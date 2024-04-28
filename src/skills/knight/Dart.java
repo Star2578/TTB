@@ -15,10 +15,10 @@ import utils.Config;
 
 public class Dart extends BaseSkill implements Attack {
     private BasePiece target;
-    private final int DAMAGE = 3;
+    private final int DAMAGE = 5;
     private final int KNOCKBACK = 2;
     public Dart() {
-        super("Dart", Color.DARKRED, 2, 2, "With a deft flick of their wrist, they send forth a piercing strike that packs a wallop, knocking back adversaries with formidable force.", Config.Rarity.UNCOMMON, "res/SFX/skills/slash/PP_01.wav");
+        super("Dart", Color.DARKRED, 4, 0, "With a deft flick of their wrist, they send forth a piercing strike that packs a wallop, knocking back adversaries with formidable force.", Config.Rarity.UNCOMMON, "res/SFX/skills/slash/PP_01.wav");
         icon = new ImageView(Config.DartPath);
         range = 1;
     }

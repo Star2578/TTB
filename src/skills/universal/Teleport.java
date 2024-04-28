@@ -1,4 +1,4 @@
-package skills.archer;
+package skills.universal;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -57,7 +57,6 @@ public class Teleport extends BaseSkill {
         animationImage.translateXProperty().set(player.getOffsetX());
         animationImage.translateYProperty().set(player.getOffsetY());
         animationImage.setViewOrder(BOARD_SIZE - target.getRow());
-
     }
 
     @Override
