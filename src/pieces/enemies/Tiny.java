@@ -14,6 +14,7 @@ import utils.Config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static utils.Config.BOARD_SIZE;
@@ -64,19 +65,37 @@ public class Tiny extends BaseMonsterPiece{
     public void performAction() {
         endAction = false;
         updateState();
-        if (getStun() > 0) {
-            setStun(getStun() - 1);
-            endAction = true;
-            return;
+
+        if(EffectBuffs != null) {
+            if(EffectBuffs.containsKey("Stun")) {
+                endAction = true;
+                System.out.println("Stunned");
+            }else {
+                switch (currentState) {
+                    case NEUTRAL_ROAMING:
+                        roamRandomly();
+                        break;
+                    case AGGRESSIVE:
+                        chasePlayer();
+                        break;
+                }
+            }
         }
-        switch (currentState) {
-            case NEUTRAL_ROAMING:
-                roamRandomly();
-                break;
-            case AGGRESSIVE:
-                chasePlayer();
-                break;
+
+        // Check if the player has any effect
+        for(Map.Entry<String, Integer> entry : EffectBuffs.entrySet()) {
+            String BuffName = entry.getKey();
+            int duration = EffectBuffs.get(BuffName);
+            if (duration > 0) {
+                duration--; // Decrement the duration
+                EffectBuffs.put(BuffName, duration);
+            }
+            if (duration == 0) {
+                EffectBuffs.remove(BuffName);
+            }
+            System.out.println(BuffName + " " + duration);
         }
+
     }
 
     private void chasePlayer() {

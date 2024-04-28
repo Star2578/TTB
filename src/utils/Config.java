@@ -103,7 +103,9 @@ public class Config {
     // Attacks animation
     public static String meleeAttackPath = "sprites/attacks/common_melee_attack.png";
     public static String rangedAttackPath = "sprites/attacks/common_ranged_attack.png";
-    public static String rangedAttackPath2 = "sprites/attacks/commom_ranged_attack2.png";
+    public static String rangedAttackTakeDamagePath = "sprites/attacks/common_ranged_attack_take_damage.png";
+    public static String magicAttackPath = "sprites/attacks/common_magic_attack.png";
+    public static String magicAttackTakeDamagePath = "sprites/attacks/common_magic_attack_take_damage.png";
     // Knight Skills animation
     public static String skillSlashPath = "sprites/skills/skill_knight/skill_slash.png";
     public static String skillStompPath = "sprites/skills/skill_knight/skill_stomp.png";
@@ -117,6 +119,10 @@ public class Config {
     public static String skillTargetlockPath = "sprites/skills/skill_archer/skill_targetlock.png";
     public static String skillHaltPath = "sprites/skills/skill_archer/skill_halt.png";
     public static String skillTeleportPath = "sprites/skills/skill_archer/skill_teleport.png";
+    // Wizard Skills animation
+    public static String skillFireballPath = "sprites/skills/skill_wizard/skill_fireball.png";
+    public static String skillRainOfFirePath = "sprites/skills/skill_wizard/skill_rain_of_fire.png";
+    public static String skillDragonFirePath = "sprites/skills/skill_wizard/skill_dragon_fire.png";
 
     // BGM
     public static String bgm_8_bit_adventure = "res/BGM/8_Bit_Adventure.wav";

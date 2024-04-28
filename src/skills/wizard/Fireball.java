@@ -41,8 +41,16 @@ public class Fireball extends BaseSkill implements Attack {
                         .renderEffect( EffectManager.TYPE.AROUND_SELF ,
                                 GameManager.getInstance().player ,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(1) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
+                                EffectManager.getInstance().createInPlaceEffects(24) ,
+                                new EffectConfig(0 , -3 , 34 , 1.2) );
+                //===========================================================================================
+                //=========<SKILL EFFECT TAKE DAMAGE>====================================================================
+                EffectManager.getInstance()
+                        .renderEffect(EffectManager.TYPE.ON_SELF,
+                                GameManager.getInstance().player,
+                                monsterPiece.getRow(), monsterPiece.getCol(),
+                                EffectManager.getInstance().createInPlaceEffects(23),
+                                new EffectConfig(-16, -19, 0, 1));
                 //===========================================================================================
             }
         }

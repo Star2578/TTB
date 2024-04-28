@@ -39,11 +39,13 @@ public class Wizard extends BasePlayerPiece{
         currentHp = maxHp;
 
         attackDamage = 4; // Base attack for player
-        attackRange = 1;
+        attackRange = 2;
 
         //add skill
         skills[0] = new Fireball();
         skills[1] = new IceShield();
+        skills[2] = new RainOfFire();
+        skills[3] = new DragonFire();
         //TODO===========
 
         //configs values for animation
@@ -97,12 +99,22 @@ public class Wizard extends BasePlayerPiece{
         monsterPiece.takeDamage(getAttackDamage());
 
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
+        // ----------------------Attack Animation----------------------
         EffectManager.getInstance()
                 .renderEffect(EffectManager.TYPE.AROUND_SELF,
                         this,
                         monsterPiece.getRow(), monsterPiece.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(0),
-                        new EffectConfig(0, 8, 0, 1.25));
+                        EffectManager.getInstance().createInPlaceEffects(22),
+                        new EffectConfig(8, 8, 32, 1.4));
+        // -------------------------------------------------------------
+        // ----------------------Attack Take Damage Animation----------------------
+        EffectManager.getInstance()
+                .renderEffect(EffectManager.TYPE.ON_TARGET,
+                        this,
+                        monsterPiece.getRow(), monsterPiece.getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(23),
+                        new EffectConfig(-16, -19, 0, 1));
+        // -------------------------------------------------------------
 
         System.out.println("Attack success");
         GUIManager.getInstance().updateGUI();

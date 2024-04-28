@@ -3,6 +3,7 @@ package pieces.enemies;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
@@ -12,9 +13,7 @@ import logic.ui.GUIManager;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
@@ -65,19 +64,45 @@ public class Zombie extends BaseMonsterPiece{
     public void performAction() {
         endAction = false;
         updateState();
-        if (getStun() > 0) {
-            setStun(getStun() - 1);
-            endAction = true;
-            return;
+
+        if(EffectBuffs != null) {
+            if(EffectBuffs.containsKey("Stun")) {
+                endAction = true;
+                //=========<STUN EFFECT>====================================================================
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.ON_SELF ,
+                                GameManager.getInstance().player ,
+                                getRow(), getCol(),
+                                EffectManager.getInstance().createInPlaceEffects(8) ,
+                                new EffectConfig(12 , -4 , 0 , 1.6) );
+                //===========================================================================================
+                System.out.println("Stunned");
+            }else {
+                switch (currentState) {
+                    case NEUTRAL_ROAMING:
+                        roamRandomly();
+                        break;
+                    case AGGRESSIVE:
+                        chasePlayer();
+                        break;
+                }
+            }
         }
-        switch (currentState) {
-            case NEUTRAL_ROAMING:
-                roamRandomly();
-                break;
-            case AGGRESSIVE:
-                chasePlayer();
-                break;
+
+        // Check if the player has any effect
+        for(Map.Entry<String, Integer> entry : EffectBuffs.entrySet()) {
+            String BuffName = entry.getKey();
+            int duration = EffectBuffs.get(BuffName);
+            if (duration > 0) {
+                duration--; // Decrement the duration
+                EffectBuffs.put(BuffName, duration);
+            }
+            if (duration == 0) {
+                EffectBuffs.remove(BuffName);
+            }
+            System.out.println(BuffName + " " + duration);
         }
+
     }
 
     private void chasePlayer() {
@@ -138,4 +163,5 @@ public class Zombie extends BaseMonsterPiece{
             move(newRow, newCol);
         }
     }
+
 }

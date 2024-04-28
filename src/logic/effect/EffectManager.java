@@ -98,7 +98,7 @@ public class EffectManager {
         effects.add(Archer_Attack_Arrow);
         //Archer Attack 14
         Effect Archer_Attack = new Effect(
-                new ImageView(new Image(Config.rangedAttackPath2)) , 4 , 1 , 4 , 31 , 28 , 8 , false);
+                new ImageView(new Image(Config.rangedAttackTakeDamagePath)) , 4 , 1 , 4 , 31 , 28 , 8 , false);
         effects.add(Archer_Attack);
         //Archer Skill Snipe1 15
         Effect Archer_Skill_Snipe1 = new Effect(
@@ -128,6 +128,26 @@ public class EffectManager {
         Effect Archer_Skill_Teleport = new Effect(
                 new ImageView(new Image(Config.skillTeleportPath)) , 4 , 1 , 4 , 32 , 32 , 10 , false);
         effects.add(Archer_Skill_Teleport);
+        //Wizard Attack 22
+        Effect Wizard_Attack = new Effect(
+                new ImageView(new Image(Config.magicAttackPath)) , 2 , 1 , 2 , 15 , 11 , 8 , false);
+        effects.add(Wizard_Attack);
+        //Wizard Attack take damage 23
+        Effect Wizard_Attack_TakeDamage = new Effect(
+                new ImageView(new Image(Config.magicAttackTakeDamagePath)) , 4 , 4 , 14 , 64 , 64 , 8 , false);
+        effects.add(Wizard_Attack_TakeDamage);
+        //Wizard Skill Fireball 24
+        Effect Wizard_Skill_Fireball = new Effect(
+                new ImageView(new Image(Config.skillFireballPath)) , 4 , 1 , 4 , 33 , 30 , 10 , false);
+        effects.add(Wizard_Skill_Fireball);
+        //Wizard Skill Rain of Fire 25
+        Effect Wizard_Skill_RainOfFire = new Effect(
+                new ImageView(new Image(Config.skillRainOfFirePath)) , 3 , 1 , 3 , 32 , 46 , 10 , false);
+        effects.add(Wizard_Skill_RainOfFire);
+        //Wizard Skill Dragon Fire 26
+        Effect Wizard_Skill_DragonFire = new Effect(
+                new ImageView(new Image(Config.skillDragonFirePath)) , 4 , 1 , 4 , 32 , 31 , 10 , false);
+        effects.add(Wizard_Skill_DragonFire);
     }
 
     public Effect createInPlaceEffects(int index){

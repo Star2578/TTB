@@ -16,6 +16,7 @@ import utils.Config;
 public class Stomp extends BaseSkill implements Attack {
     private BasePiece target;
     private final int DAMAGE = 6;
+    private final int STUN_DURATION = 1;
     public Stomp() {
         super("Stomp", Color.DARKRED, 2, 2, "The Knight brings their armored boot crashing down, sending shockwaves rippling through the ground.", Config.Rarity.RARE, "res/SFX/skills/slash/PP_01.wav");
         icon = new ImageView(Config.StompPath);
@@ -36,15 +37,8 @@ public class Stomp extends BaseSkill implements Attack {
 
                     if (target instanceof BaseMonsterPiece monsterPiece) {
                         monsterPiece.takeDamage(DAMAGE);
-                        monsterPiece.setStun(monsterPiece.getStun() + 1);
-                        //=========<STUN EFFECT>====================================================================
-//                        EffectManager.getInstance()
-//                                .renderEffect( EffectManager.TYPE.ON_TARGET,
-//                                        GameManager.getInstance().player ,
-//                                        target.getRow(), target.getCol(),
-//                                        EffectManager.getInstance().createInPlaceEffects(8) ,
-//                                        new EffectConfig(-9 , -16 , 0 , 1.8) );
-                        //===========================================================================================
+                        monsterPiece.addBuff(STUN_DURATION, "Stun");
+                        System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
                         if (!monsterPiece.isAlive()) {
                             GameManager.getInstance().gameScene.removePiece(monsterPiece);
                         }
