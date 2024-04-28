@@ -18,6 +18,7 @@ import skills.knight.Stomp;
 import utils.Config;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
@@ -74,6 +75,19 @@ public class Knight extends BasePlayerPiece {
     @Override
     public void startTurn() {
         setCanAct(true);
+        // Check if the player has any effect
+        for(Map.Entry<String, Integer> entry : EffectBuffs.entrySet()) {
+            String BuffName = entry.getKey();
+            int duration = EffectBuffs.get(BuffName);
+            if (duration > 0) {
+                duration--; // Decrement the duration
+                EffectBuffs.put(BuffName, duration);
+            }
+            if (duration == 0) {
+                EffectBuffs.remove(BuffName);
+            }
+            System.out.println(BuffName + " " + duration);
+        }
         setCurrentMana(getCurrentMana() + 1); // Knight restore 1 mana every turn
         setCurrentActionPoint(getMaxActionPoint());
     }

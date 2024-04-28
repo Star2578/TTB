@@ -3,6 +3,7 @@ package skills.universal;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
+import logic.SoundManager;
 import pieces.BasePiece;
 import skills.BaseSkill;
 import utils.Config;
@@ -39,6 +40,7 @@ public class Teleport extends BaseSkill {
     public void perform(BasePiece target) {
         this.target = target;
         teleport();
+        SoundManager.getInstance().playSoundEffect(sfxPath);
     }
 
     @Override

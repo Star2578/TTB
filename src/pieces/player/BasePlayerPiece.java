@@ -95,6 +95,18 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
      ******************************************/
     @Override
     public void takeDamage(int damage) {
+        //Check if the player has any effect
+        if(EffectBuffs != null) {
+            if(EffectBuffs.containsKey("Ice Shield")) {
+                damage = (damage * 70) / 100;
+                System.out.println("Damage reduced by 30% : " + damage);
+            }
+            if(EffectBuffs.containsKey("Rho Aias")) {
+                damage = (damage * 20) / 100;
+                System.out.println("Damage reduced by 80% : " + damage);
+            }
+        }
+
         setCurrentHealth(currentHp - damage);
         SoundManager.getInstance().playSoundEffect(sfx_hurtSound);
         GUIManager.getInstance().updateGUI();
@@ -238,7 +250,11 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         return maxMana;
     }
     public void setMaxMana(int maxMana) {
+        double percentage = (double) currentMana / maxMana;
         this.maxMana = Math.max(1, maxMana);
+
+        currentMana = (int) (maxMana * percentage);
+
         GUIManager.getInstance().updateGUI();
     }
     public void setCurrentActionPoint(int currentActionPoint) {

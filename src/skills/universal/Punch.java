@@ -6,33 +6,30 @@ import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
+import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
-import pieces.player.BasePlayerPiece;
 import skills.BaseSkill;
 import utils.Attack;
 import utils.Config;
-import utils.Healing;
 
-public class HolyLight extends BaseSkill implements Healing, Attack {
+public class Punch extends BaseSkill implements Attack {
     private BasePiece target;
 
-    private final int DAMAGE = 4;
-    private final int HEAL = 4;
+    private final int DAMAGE = 3;
+    private final int KNOCKBACK = 2;
+    public Punch() {
+        super("Punch", Color.ORANGE, 1, 2,
+                "10% chances to knock enemy back", Config.Rarity.UNCOMMON, Config.sfx_attackSound);
 
-    public HolyLight() {
-        super("Holy Light", Color.GOLD, 4, 4,
-                "The light will burn the enemy and heal thou wounds", Config.Rarity.RARE, Config.sfx_holyMagicSound);
-
-        icon = new ImageView(Config.HolyLightPath);
-        range = 2;
+        icon = new ImageView(Config.PunchPath);
+        range = 1;
     }
 
     @Override
     public void perform(BasePiece target) {
         this.target = target;
         attack();
-        heal();
         SoundManager.getInstance().playSoundEffect(sfxPath);
     }
 
@@ -55,7 +52,6 @@ public class HolyLight extends BaseSkill implements Healing, Attack {
         return true;
     }
 
-    @Override
     public void attack() {
         if (target != null && target != GameManager.getInstance().player) {
             // Perform Attack
@@ -63,6 +59,32 @@ public class HolyLight extends BaseSkill implements Healing, Attack {
                 monsterPiece.takeDamage(DAMAGE);
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
+
+                // Check for knockback
+                double knockChance = Math.random() * 100; // Generate a random number between 0 and 100
+                if (knockChance <= 10) { // 10% chance for knockback
+                    int currentRow = target.getRow();
+                    int currentCol = target.getCol();
+                    int directionRow = GameManager.getInstance().player.getRow() - currentRow;
+                    int directionCol = GameManager.getInstance().player.getCol() - currentCol;
+                    // Normalize the direction
+                    if (directionRow != 0) directionRow /= Math.abs(directionRow);
+                    if (directionCol != 0) directionCol /= Math.abs(directionCol);
+
+                    int newRow = 0;
+                    int newCol = 0;
+                    for (int i = 1; i <= KNOCKBACK; i++) {
+                        newRow = GameManager.getInstance().player.getRow() + directionRow * i;
+                        newCol = GameManager.getInstance().player.getCol() + directionCol * i;
+                        if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) {
+                            break;
+                        }
+                    }
+
+                    GameManager.getInstance().piecesPosition[GameManager.getInstance().player.getRow()][GameManager.getInstance().player.getCol()] = null;
+                    GameManager.getInstance().player.moveWithTransition(newRow, newCol);
+                    GameManager.getInstance().piecesPosition[newRow][newCol] = GameManager.getInstance().player;
+                }
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
                 //=========<SKILL EFFECT>====================================================================
@@ -80,30 +102,5 @@ public class HolyLight extends BaseSkill implements Healing, Attack {
     @Override
     public int getAttack() {
         return DAMAGE;
-    }
-
-    @Override
-    public void heal() {
-        if (target != null) {
-            if (target instanceof BasePlayerPiece playerPiece) {
-                int currentHealth = playerPiece.getCurrentHealth();
-
-                playerPiece.setCurrentHealth(currentHealth + HEAL);
-
-                //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_TARGET ,
-                                GameManager.getInstance().player ,
-                                GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(5) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
-                //===========================================================================================
-            }
-        }
-    }
-
-    @Override
-    public int getHeal() {
-        return HEAL;
     }
 }

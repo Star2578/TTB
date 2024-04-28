@@ -12,24 +12,24 @@ import skills.BaseSkill;
 import utils.Attack;
 import utils.Config;
 
-public class BloodPact extends BaseSkill implements Attack {
+public class TripleStrike extends BaseSkill implements Attack {
     private BasePiece target;
 
-    private final int HEALTH_COST = 5;
-    private final int DAMAGE = 20;
-    public BloodPact() {
-        super("Blood Pact", Color.CRIMSON, 2, 0,
-                "Just 5 of your HP for immense power", Config.Rarity.EPIC, Config.sfx_darkMagicSound);
+    public TripleStrike() {
+        super("Triple Strike", Color.DEEPPINK, 7, 3,
+                "Attack 3 times, scale by your normal attack", Config.Rarity.LEGENDARY, Config.sfx_attackSound);
 
-        icon = new ImageView(Config.BloodPactPath);
-        range = 3;
+        icon = new ImageView(Config.TripleStrikePath);
+        range = 1;
     }
 
     @Override
     public void perform(BasePiece target) {
         this.target = target;
-        attack();
-        SoundManager.getInstance().playSoundEffect(sfxPath);
+        for (int i = 0; i < 3; i++) {
+            attack();
+            SoundManager.getInstance().playSoundEffect(sfxPath);
+        }
     }
 
     @Override
@@ -56,18 +56,18 @@ public class BloodPact extends BaseSkill implements Attack {
         if (target != null && target != GameManager.getInstance().player) {
             // Perform Attack
             if (target instanceof BaseMonsterPiece monsterPiece) {
-                monsterPiece.takeDamage(DAMAGE);
-                GameManager.getInstance().player.takeDamage(HEALTH_COST);
+                monsterPiece.takeDamage(GameManager.getInstance().player.getAttackDamage());
+                GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
                 //=========<SKILL EFFECT>====================================================================
-//                EffectManager.getInstance()
-//                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
-//                                GameManager.getInstance().player ,
-//                                target.getRow(), target.getCol(),
-//                                EffectManager.getInstance().createInPlaceEffects(1) ,
-//                                new EffectConfig(0 , -16 , 24 , 1.1) );
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                                GameManager.getInstance().player ,
+                                target.getRow(), target.getCol(),
+                                EffectManager.getInstance().createInPlaceEffects(1) ,
+                                new EffectConfig(0 , -16 , 24 , 1.1) );
                 //===========================================================================================
             }
         }
@@ -75,6 +75,6 @@ public class BloodPact extends BaseSkill implements Attack {
 
     @Override
     public int getAttack() {
-        return DAMAGE;
+        return GameManager.getInstance().player.getAttackDamage();
     }
 }

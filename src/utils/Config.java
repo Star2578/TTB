@@ -98,6 +98,16 @@ public class Config {
     public static String BloodPactPath = "sprites/skills/icons/Universal/BloodPact.png";
     public static String RollingPath = "sprites/skills/icons/Universal/Rolling.png";
     public static String LesserHealPath = "sprites/skills/icons/Universal/LesserHeal.png";
+    public static String RhoAiasPath = "sprites/skills/icons/Universal/Rho_Aias.png";
+    public static String HammerFallPath = "sprites/skills/icons/Universal/HammerFall.png";
+    public static String AmbushPath = "sprites/skills/icons/Universal/Ambush.png";
+    public static String BindPath = "sprites/skills/icons/Universal/Bind.png";
+    public static String BloodLustPath = "sprites/skills/icons/Universal/BloodLust.png";
+    public static String KickPath = "sprites/skills/icons/Universal/Kick.png";
+    public static String NarcissisticPath = "sprites/skills/icons/Universal/Narcissistic.png";
+    public static String PunchPath = "sprites/skills/icons/Universal/Punch.png";
+    public static String StaticShockPath = "sprites/skills/icons/Universal/StaticShock.png";
+    public static String TripleStrikePath = "sprites/skills/icons/Universal/TripleStrike.png";
 
     // Potion Icons
     public static String BluePotionPath = "sprites/potions/blue_potion.png";

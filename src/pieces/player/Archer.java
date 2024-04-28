@@ -12,6 +12,8 @@ import skills.archer.Snipe;
 import skills.archer.Targetlock;
 import utils.Config;
 
+import java.util.Map;
+
 public class Archer extends BasePlayerPiece {
     public Archer(int row, int col, int defaultDirection) {
         super(row, col, defaultDirection);
@@ -64,6 +66,19 @@ public class Archer extends BasePlayerPiece {
     @Override
     public void startTurn() {
         setCanAct(true);
+        // Check if the player has any effect
+        for(Map.Entry<String, Integer> entry : EffectBuffs.entrySet()) {
+            String BuffName = entry.getKey();
+            int duration = EffectBuffs.get(BuffName);
+            if (duration > 0) {
+                duration--; // Decrement the duration
+                EffectBuffs.put(BuffName, duration);
+            }
+            if (duration == 0) {
+                EffectBuffs.remove(BuffName);
+            }
+            System.out.println(BuffName + " " + duration);
+        }
         setCurrentMana(getCurrentMana() + 1); // Archer restore 1 mana every turn
         setCurrentActionPoint(getMaxActionPoint());
     }

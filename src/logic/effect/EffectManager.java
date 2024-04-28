@@ -60,7 +60,7 @@ public class EffectManager {
         Effect Skill_Dart = new Effect(
                 new ImageView(new Image(Config.skillDartPath)) , 3 , 1 , 3 , 32 , 44 , 15 , false);
         effects.add(Skill_Dart);
-        //Knight Skill Heal 5
+        //Skill Heal 5
         Effect Skill_Heal = new Effect(
                 new ImageView(new Image(Config.skillHealPath)) , 6 , 2 , 10 , 32 , 32 , 11 , false);
         effects.add(Skill_Heal);
@@ -96,6 +96,7 @@ public class EffectManager {
         Effect Archer_Attack = new Effect(
                 new ImageView(new Image(Config.rangedAttackPath)) , 5 , 1 , 5 , 40 , 30 , 12 , false);
         effects.add(Archer_Attack);
+
     }
 
     public Effect createInPlaceEffects(int index){

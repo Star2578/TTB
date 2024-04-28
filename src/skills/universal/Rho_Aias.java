@@ -1,4 +1,4 @@
-package skills.wizard;
+package skills.universal;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -7,24 +7,20 @@ import logic.SoundManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
-import pieces.enemies.BaseMonsterPiece;
 import pieces.player.BasePlayerPiece;
 import skills.BaseSkill;
-import utils.Attack;
 import utils.Buff;
 import utils.Config;
 
-public class IceShield extends BaseSkill implements Buff {
+public class Rho_Aias extends BaseSkill implements Buff {
     private BasePiece target;
-    private final int BUFF_DURATION = 3;
-    public IceShield() {
-        super("Ice Shield", Color.DARKCYAN,
-                5, 2,
-                "Summon Ice Shield that Decrease Damage by 30% for 2 turns",
-                Config.Rarity.RARE , "res/SFX/skills/slash/PP_01.wav"
-        );
-        icon = new ImageView(Config.IceShieldPath);
-        range = 0;
+
+    private final int BUFF_DURATION = 1;
+    public Rho_Aias() {
+        super("Rho Aias", Color.PINK, 10, 2,
+                "Reduce incoming damage by 80% for 1 turn", Config.Rarity.LEGENDARY, "");
+
+        icon = new ImageView(Config.RhoAiasPath);
     }
 
     @Override
@@ -48,10 +44,18 @@ public class IceShield extends BaseSkill implements Buff {
                     .renderEffect( EffectManager.TYPE.ON_TARGET ,
                             GameManager.getInstance().player ,
                             target.getRow(), target.getCol(),
-                            EffectManager.getInstance().createInPlaceEffects(1) ,
+                            EffectManager.getInstance().createInPlaceEffects(5) ,
                             new EffectConfig(0 , -16 , 24 , 1.1) );
             //===========================================================================================
         }
+    }
+
+    @Override
+    public boolean validRange(int row, int col) {
+        // Only valid at player's square
+        BasePlayerPiece player = GameManager.getInstance().player;
+
+        return player.getRow() == row && player.getCol() == col;
     }
 
     @Override
@@ -62,14 +66,6 @@ public class IceShield extends BaseSkill implements Buff {
     @Override
     public boolean castOnMonster() {
         return false;
-    }
-
-    @Override
-    public boolean validRange(int row, int col) {
-        // Only valid at player's square
-        BasePlayerPiece player = GameManager.getInstance().player;
-
-        return player.getRow() == row && player.getCol() == col;
     }
 
     @Override

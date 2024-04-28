@@ -12,17 +12,16 @@ import skills.BaseSkill;
 import utils.Attack;
 import utils.Config;
 
-public class BloodPact extends BaseSkill implements Attack {
+public class Bind extends BaseSkill implements Attack {
     private BasePiece target;
 
-    private final int HEALTH_COST = 5;
-    private final int DAMAGE = 20;
-    public BloodPact() {
-        super("Blood Pact", Color.CRIMSON, 2, 0,
-                "Just 5 of your HP for immense power", Config.Rarity.EPIC, Config.sfx_darkMagicSound);
+    private final int DAMAGE = 1;
+    public Bind() {
+        super("Bind", Color.PALEGOLDENROD, 6, 1,
+                "crouch and tied target legs up, stun it for 3 turns", Config.Rarity.EPIC, Config.sfx_darkMagicSound);
 
-        icon = new ImageView(Config.BloodPactPath);
-        range = 3;
+        icon = new ImageView(Config.BindPath);
+        range = 1;
     }
 
     @Override
@@ -57,17 +56,19 @@ public class BloodPact extends BaseSkill implements Attack {
             // Perform Attack
             if (target instanceof BaseMonsterPiece monsterPiece) {
                 monsterPiece.takeDamage(DAMAGE);
-                GameManager.getInstance().player.takeDamage(HEALTH_COST);
+                // Stun monster 3 turn
+                monsterPiece.setStun(monsterPiece.getStun() + 3);
+                GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
                 //=========<SKILL EFFECT>====================================================================
-//                EffectManager.getInstance()
-//                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
-//                                GameManager.getInstance().player ,
-//                                target.getRow(), target.getCol(),
-//                                EffectManager.getInstance().createInPlaceEffects(1) ,
-//                                new EffectConfig(0 , -16 , 24 , 1.1) );
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                                GameManager.getInstance().player ,
+                                target.getRow(), target.getCol(),
+                                EffectManager.getInstance().createInPlaceEffects(1) ,
+                                new EffectConfig(0 , -16 , 24 , 1.1) );
                 //===========================================================================================
             }
         }

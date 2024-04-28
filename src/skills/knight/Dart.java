@@ -49,16 +49,19 @@ public class Dart extends BaseSkill implements Attack {
                 if (directionRow != 0) directionRow /= Math.abs(directionRow);
                 if (directionCol != 0) directionCol /= Math.abs(directionCol);
 
+                int newRow = 0;
+                int newCol = 0;
                 for (int i = 1; i <= KNOCKBACK; i++) {
-                    int newRow = target.getRow() + directionRow * i;
-                    int newCol = target.getCol() + directionCol * i;
+                    newRow = GameManager.getInstance().player.getRow() + directionRow * i;
+                    newCol = GameManager.getInstance().player.getCol() + directionCol * i;
                     if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) {
                         break;
                     }
-                    GameManager.getInstance().piecesPosition[target.getRow()][target.getCol()] = null;
-                    target.moveWithTransition(newRow, newCol);
-                    GameManager.getInstance().piecesPosition[newRow][newCol] = target;
                 }
+
+                GameManager.getInstance().piecesPosition[GameManager.getInstance().player.getRow()][GameManager.getInstance().player.getCol()] = null;
+                GameManager.getInstance().player.moveWithTransition(newRow, newCol);
+                GameManager.getInstance().piecesPosition[newRow][newCol] = GameManager.getInstance().player;
 
 
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
