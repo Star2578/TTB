@@ -20,7 +20,7 @@ public class Punch extends BaseSkill implements Attack {
     private final int KNOCKBACK = 2;
     public Punch() {
         super("Punch", Color.ORANGE, 1, 2,
-                "10% chances to knock enemy back", Config.Rarity.UNCOMMON, Config.sfx_attackSound);
+                "50% chances to knock enemy back", Config.Rarity.UNCOMMON, Config.sfx_attackSound);
 
         icon = new ImageView(Config.PunchPath);
         range = 1;
@@ -62,7 +62,7 @@ public class Punch extends BaseSkill implements Attack {
 
                 // Check for knockback
                 double knockChance = Math.random() * 100; // Generate a random number between 0 and 100
-                if (knockChance <= 10) { // 10% chance for knockback
+                if (knockChance <= 50) { // 50% chance for knockback
                     int currentRow = target.getRow();
                     int currentCol = target.getCol();
                     int directionRow = GameManager.getInstance().player.getRow() - currentRow;
