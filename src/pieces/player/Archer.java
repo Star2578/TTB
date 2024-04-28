@@ -23,6 +23,9 @@ public class Archer extends BasePlayerPiece {
     public Archer(int row, int col, int defaultDirection) {
         super(row, col, defaultDirection);
 
+        maxHp = 15;
+        currentHp = maxHp;
+
         maxActionPoint = 10;
         currentActionPoint = maxActionPoint;
 

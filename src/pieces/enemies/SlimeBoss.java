@@ -39,7 +39,7 @@ public class SlimeBoss extends BaseMonsterPiece {
         this.currentPhase = Phase.FIRST;
 
         if(currentPhase == Phase.FIRST) {
-            setupAnimation(Config.SlimePath4, 0, -10, 32, 32 , true);
+            setupAnimation(Config.SlimePath4, 0, -10, 32, 46 , true);
         } else if (currentPhase == Phase.SECOND) {
 
         }
