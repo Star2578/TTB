@@ -17,7 +17,9 @@ public class EffectManager {
 
     private SpriteAnimation[] environmentEffects;
     private ArrayList<Effect> effects = new ArrayList<>();
+
     public Pane effectPane = new Pane();
+    public ArrayList<Effect> runningEffects = new ArrayList<>();
 
     public enum TYPE{
         AROUND_SELF,
@@ -104,7 +106,10 @@ public class EffectManager {
         return copy;
     }
 
-    public void renderEffect(Enum<TYPE> typeEnum, BasePlayerPiece player , int row , int col, SpriteAnimation effect , EffectConfig config){
+
+    public void renderEffect(Enum<TYPE> typeEnum, BasePlayerPiece player , int row , int col, Effect effect , EffectConfig config){
+
+        runningEffects.add(effect);
 
         if (typeEnum == TYPE.AROUND_SELF){
         //effect will occur around player, also rotate and face to target
@@ -207,8 +212,23 @@ public class EffectManager {
 
     }
 
+    //this method will clear effect in array if the effect is timeout/remains turn is 0
     public void clearDeadEffect(){
-        effects.removeIf(effect -> effect.canKill);
+
+        //clear effect display in effectPane
+        for(int i = 0 ; i < runningEffects.size() ; i++){
+            if(runningEffects.get(i).canKill || runningEffects.get(i).getTurnRemain() == 0){
+                effectPane.getChildren().remove(runningEffects.get(i).imageView);
+            }
+        }
+
+        //also remove from runningEffects
+        runningEffects.removeIf(effect -> (effect.canKill || effect.getTurnRemain() == 0));
+    }
+
+    //update effect turn remained
+    public void updateEffectTimer(){
+        runningEffects.forEach(effect -> effect.setTurnRemain( Math.max( 0 , effect.getTurnRemain()-1 ) ));
     }
 
 
