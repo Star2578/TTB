@@ -17,7 +17,7 @@ import utils.Healing;
 public class BloodLust extends BaseSkill implements Attack, Healing {
     private BasePiece target;
 
-    private final int DAMAGE = 10;
+    private final int DAMAGE = 9;
     private final int HEAL = 5;
     public BloodLust() {
         super("Blood Lust", Color.CRIMSON, 5, 5,
@@ -58,7 +58,11 @@ public class BloodLust extends BaseSkill implements Attack, Healing {
         if (target != null && target != GameManager.getInstance().player) {
             // Perform Attack
             if (target instanceof BaseMonsterPiece monsterPiece) {
-                monsterPiece.takeDamage(DAMAGE);
+                if (monsterPiece.getCurrentHealth() != monsterPiece.getMaxHealth()) {
+                    monsterPiece.takeDamage(DAMAGE + 5);
+                } else {
+                    monsterPiece.takeDamage(DAMAGE);
+                }
 
                 if (!monsterPiece.isAlive()){
                     heal();

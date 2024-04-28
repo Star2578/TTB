@@ -459,6 +459,8 @@ public class GameScene {
             if (player.validAttack(row, col)) {
                 // Check if there is a monster on the clicked square
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
+                    // turn to face monster
+                    player.changeDirection(player.getCol() - monsterPiece.getCol());
                     // Perform the attack on the monster
                     SoundManager.getInstance().playSoundEffect(Config.sfx_attackSound);
                     player.attack(monsterPiece);
@@ -485,6 +487,8 @@ public class GameScene {
                 // Check if there is a monster on the clicked square
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     if (gameManager.selectedSkill.castOnMonster()) {
+                        // turn to face monster
+                        player.changeDirection(player.getCol() - monsterPiece.getCol());
                         // Perform the attack on the monster
                         if (enoughMana && enoughActionPoint) {
                             GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName(), GameManager.getInstance().selectedSkill.getNameColor());
