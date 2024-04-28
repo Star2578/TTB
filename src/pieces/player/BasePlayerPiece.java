@@ -39,6 +39,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     protected boolean canAct; // status
     protected BaseSkill[] skills; // skill list
+    protected BaseSkill[] classSpecifics; // contain skill for specific class
     protected final int ATTACK_COST = 1;
     protected int attackRange = 1;
 
@@ -52,6 +53,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         canAct = false;
 
         skills = new BaseSkill[8]; // Player can have up to 8 skills
+        classSpecifics = new BaseSkill[4];
 
         this.currentHp = maxHp;
     }
@@ -275,6 +277,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public BaseSkill[] getSkills() {
         return skills;
     }
+    public BaseSkill[] getClassSpecifics() {
+        return classSpecifics;
+    }
+
     @Override
     public boolean isAlive() {
         return currentHp > 0;
@@ -308,5 +314,4 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         }
         return null;
     }
-
 }

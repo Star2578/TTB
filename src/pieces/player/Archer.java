@@ -7,17 +7,10 @@ import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.enemies.BaseMonsterPiece;
 import skills.archer.Halt;
+import skills.archer.Rolling;
 import skills.archer.Snipe;
 import skills.archer.Targetlock;
-import skills.archer.Teleport;
-import skills.knight.Heal;
-import skills.knight.Slash;
 import utils.Config;
-
-import java.util.ArrayList;
-
-import static utils.Config.BOARD_SIZE;
-import static utils.Config.SQUARE_SIZE;
 
 public class Archer extends BasePlayerPiece {
     public Archer(int row, int col, int defaultDirection) {
@@ -38,6 +31,12 @@ public class Archer extends BasePlayerPiece {
         //add skill
         skills[0] = new Targetlock();
         skills[1] = new Snipe();
+
+        // class specifics skills
+        classSpecifics[0] = new Targetlock();
+        classSpecifics[1] = new Halt();
+        classSpecifics[2] = new Snipe();
+        classSpecifics[3] = new Rolling();
 
         //configs values for animation
         setTexture(new ImageView(new Image(Config.ArcherPath))); //static image for icon, ...

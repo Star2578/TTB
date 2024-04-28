@@ -1,4 +1,4 @@
-package skills.archer;
+package skills.universal;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -33,9 +33,6 @@ public class Teleport extends BaseSkill {
         pieces[target.getRow()][target.getCol()] = GameManager.getInstance().player;
 
         GameManager.getInstance().player.moveWithTransition(target.getRow(), target.getCol());
-
-//        GameManager.getInstance().player.setRow(target.getRow());
-//        GameManager.getInstance().player.setCol(target.getCol());
     }
 
     @Override

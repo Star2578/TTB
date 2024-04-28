@@ -15,7 +15,7 @@ import utils.Config;
 
 public class IceShield extends BaseSkill implements Buff {
     private BasePiece target;
-    private final int BUFF_DURATION = 2;
+    private final int BUFF_DURATION = 3;
     public IceShield() {
         super("Ice Shield", Color.DARKCYAN,
                 5, 2,

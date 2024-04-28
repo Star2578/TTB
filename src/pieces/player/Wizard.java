@@ -9,6 +9,10 @@ import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import logic.ui.GUIManager;
 import pieces.enemies.BaseMonsterPiece;
+import skills.archer.Halt;
+import skills.archer.Rolling;
+import skills.archer.Snipe;
+import skills.archer.Targetlock;
 import skills.knight.Heal;
 import skills.knight.Slash;
 import skills.wizard.DragonFire;
@@ -44,7 +48,12 @@ public class Wizard extends BasePlayerPiece{
         //add skill
         skills[0] = new Fireball();
         skills[1] = new IceShield();
-        //TODO===========
+
+        // class specifics skills
+        classSpecifics[0] = new Fireball();
+        classSpecifics[1] = new IceShield();
+        classSpecifics[2] = new DragonFire();
+        classSpecifics[3] = new RainOfFire();
 
         //configs values for animation
         setTexture(new ImageView(new Image(Config.WizardPath))); //static image for icon, ...

@@ -78,7 +78,7 @@ public class Config {
     public static String UnlockedSkillIconPath = "sprites/skills/icons/skill_placeholder_unlocked.png";
     // Knight Icons
     public static String SlashPath = "sprites/skills/icons/Knight/slash.png";
-    public static String HealPath = "sprites/skills/icons/Knight/heal.png";
+    public static String HealPath = "sprites/skills/icons/Knight/Heal.png";
     public static String DartPath = "sprites/skills/icons/Knight/Dart.png";
     public static String StompPath = "sprites/skills/icons/Knight/Stomp.png";
     // Archer Icons
@@ -92,6 +92,12 @@ public class Config {
     public static String IceShieldPath = "sprites/skills/icons/Wizard/IceShield.png";
     public static String RainOfFirePath = "sprites/skills/icons/Wizard/RainOfFire.png";
     public static String DragonFirePath = "sprites/skills/icons/Wizard/DragonFire.png";
+
+    // Universal Skill Icons
+    public static String HolyLightPath = "sprites/skills/icons/Universal/HolyLight.png";
+    public static String BloodPactPath = "sprites/skills/icons/Universal/BloodPact.png";
+    public static String RollingPath = "sprites/skills/icons/Universal/Rolling.png";
+    public static String LesserHealPath = "sprites/skills/icons/Universal/LesserHeal.png";
 
     // Potion Icons
     public static String BluePotionPath = "sprites/potions/blue_potion.png";
@@ -121,6 +127,9 @@ public class Config {
     public static String sfx_buttonSound = "res/SFX/click/click.wav";
     public static String sfx_failedSound = "res/SFX/failed/8bit-blip4.wav";
     public static String sfx_deadSound = "res/SFX/monster/dead/explosion_03.wav";
+    public static String sfx_holyMagicSound = "res/SFX/skills/holylight/Retro Magic 06.wav";
+    public static String sfx_darkMagicSound = "res/SFX/skills/bloodpact/Retro Magic 54.wav";
+    public static String sfx_powerupSound = "res/SFX/skills/heal/8bit-powerup1.wav";
 
 
     // UI image, icon, ...
