@@ -39,7 +39,7 @@ public class SlimeBoss extends BaseMonsterPiece {
         this.currentPhase = Phase.FIRST;
 
         if(currentPhase == Phase.FIRST) {
-            setupAnimation(Config.SlimePath4, 0, -10, 32, 32 , true);
+            setupAnimation(Config.SlimePath4, 0, -10, 32, 46 , true);
         } else if (currentPhase == Phase.SECOND) {
 
         }
@@ -62,6 +62,7 @@ public class SlimeBoss extends BaseMonsterPiece {
 
     @Override
     public void updateState() {
+
         if (currentPhase == Phase.FIRST && getCurrentHealth() <= 20) {
             splitSlime( 100, Phase.SECOND);
         } else if (currentPhase == Phase.SECOND && getCurrentHealth() <= 15) {
@@ -95,7 +96,7 @@ public class SlimeBoss extends BaseMonsterPiece {
         GameManager.getInstance().gameScene.removePiece(this);
         gameManager.environmentPieces.remove(this);
 
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < nextPhase.ordinal() + 1; i++) {
             int row, col;
             do {
                 row = (int) (Math.random() * BOARD_SIZE);
@@ -112,7 +113,9 @@ public class SlimeBoss extends BaseMonsterPiece {
             smallerSlime.currentPhase = nextPhase;
 
             if (nextPhase == Phase.SECOND) {
-                setupAnimation(Config.WizardAnimationPath, 0, -10, 32, 32 , true);
+                smallerSlime.setupAnimation(Config.WizardAnimationPath, 0, -10, 32, 32 , true);
+            } else if (nextPhase == Phase.THIRD) {
+                smallerSlime.setupAnimation(Config.SkeletonPath, 0, -10, 32, 46 , true);
             }
 
             piecesPosition[row][col] = smallerSlime;

@@ -14,11 +14,11 @@ import utils.Config;
 
 public class Slash extends BaseSkill implements Attack {
     private BasePiece target;
-    private final int DAMAGE = 10;
+    private final int DAMAGE = 30;
     public Slash() {
-        super("Slash", Color.DARKRED, 2, 2, "A true knight slash doesn't need a sword", Config.Rarity.RARE, "res/SFX/skills/slash/PP_01.wav");
+        super("Slash", Color.DARKRED, 0, 0, "A true knight slash doesn't need a sword", Config.Rarity.RARE, "res/SFX/skills/slash/PP_01.wav");
         icon = new ImageView(Config.SlashPath);
-        range = 1;
+        range = 10;
     }
 
     @Override
