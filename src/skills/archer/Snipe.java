@@ -15,11 +15,11 @@ import utils.Config;
 
 public class Snipe extends BaseSkill implements Attack {
     private BasePiece target;
-    private final int DAMAGE = 1;
+    private final int DAMAGE = 18;
     public Snipe() {
 
         super("Snipe", Color.DARKRED,
-                1, 1,
+                12, 2,
                 "Costly but Deadly"
                 , Config.Rarity.LEGENDARY, "res/SFX/skills/slash/PP_01.wav"
         );
@@ -48,7 +48,7 @@ public class Snipe extends BaseSkill implements Attack {
                 .renderEffect( EffectManager.TYPE.AROUND_SELF ,
                         GameManager.getInstance().player ,
                         target.getRow(), target.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(14) ,
+                        EffectManager.getInstance().createInPlaceEffects(15) ,
                         new EffectConfig(-12 , -2 , 56 , 1.4) );
         //===========================================================================================
 
@@ -62,7 +62,7 @@ public class Snipe extends BaseSkill implements Attack {
                         .renderEffect( EffectManager.TYPE.AROUND_SELF ,
                                 GameManager.getInstance().player ,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(15) ,
+                                EffectManager.getInstance().createInPlaceEffects(16) ,
                                 new EffectConfig(-12 , -8 , 56 , 1.4) ));
                 //===========================================================================================);
 
@@ -100,7 +100,7 @@ public class Snipe extends BaseSkill implements Attack {
                     .renderEffect( EffectManager.TYPE.ON_SELF ,
                             GameManager.getInstance().player ,
                             newRow, newCol,
-                            EffectManager.getInstance().createInPlaceEffects(16) ,
+                            EffectManager.getInstance().createInPlaceEffects(17) ,
                             new EffectConfig(0 , -4 , 0 , 1.4) ));
             //===========================================================================================);
             // Start the pause
@@ -116,7 +116,7 @@ public class Snipe extends BaseSkill implements Attack {
                             .renderEffect( EffectManager.TYPE.ON_SELF ,
                                     GameManager.getInstance().player ,
                                     newRow, newCol,
-                                    EffectManager.getInstance().createInPlaceEffects(17) ,
+                                    EffectManager.getInstance().createInPlaceEffects(18) ,
                                     new EffectConfig(0 , -4 , 0 , 1.4) ));
             //===========================================================================================);
 
@@ -126,7 +126,14 @@ public class Snipe extends BaseSkill implements Attack {
             BasePiece piece = GameManager.getInstance().piecesPosition[newRow][newCol];
 
             if (piece instanceof BaseMonsterPiece monsterPiece) {
-                monsterPiece.takeDamage(getAttack());
+                // Create a PauseTransition with a duration of 2.5 seconds
+                PauseTransition pause3 = new PauseTransition(Duration.seconds(2.5));
+
+                pause3.setOnFinished(event ->
+                        monsterPiece.takeDamage(getAttack()));
+
+                // Start the pause
+                pause3.play();
             }
 
             System.out.println("Use " + name + " on " + newRow + " " + newCol);

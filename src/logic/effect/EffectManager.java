@@ -92,26 +92,42 @@ public class EffectManager {
         Effect Skeleton_Attack = new Effect(
                 new ImageView(new Image(Config.SkeletonAttackPath)) , 5 , 1 , 5 , 39 , 36 , 12 , false);
         effects.add(Skeleton_Attack);
-        //Archer Attack 13
-        Effect Archer_Attack = new Effect(
+        //Archer Attack (arrow) 13
+        Effect Archer_Attack_Arrow = new Effect(
                 new ImageView(new Image(Config.rangedAttackPath)) , 5 , 1 , 5 , 40 , 30 , 12 , false);
+        effects.add(Archer_Attack_Arrow);
+        //Archer Attack 14
+        Effect Archer_Attack = new Effect(
+                new ImageView(new Image(Config.rangedAttackPath2)) , 4 , 1 , 4 , 31 , 28 , 8 , false);
         effects.add(Archer_Attack);
-        //Archer Skill Snipe1 14
+        //Archer Skill Snipe1 15
         Effect Archer_Skill_Snipe1 = new Effect(
-                new ImageView(new Image(Config.skillTSnipePath)) , 4 , 3 , 10 , 48 , 32 , 12 , false);
+                new ImageView(new Image(Config.skillSnipePath)) , 4 , 3 , 10 , 48 , 32 , 12 , false);
         effects.add(Archer_Skill_Snipe1);
-        //Archer Skill Snipe2 15
+        //Archer Skill Snipe2 16
         Effect Archer_Skill_Snipe2 = new Effect(
-                new ImageView(new Image(Config.skillTSnipePath2)) , 3 , 3 , 7 , 48 , 48 , 12 , false);
+                new ImageView(new Image(Config.skillSnipePath2)) , 3 , 3 , 7 , 48 , 48 , 12 , false);
         effects.add(Archer_Skill_Snipe2);
-        //Archer Skill Snipe3 16
+        //Archer Skill Snipe3 17
         Effect Archer_Skill_Snipe3 = new Effect(
-                new ImageView(new Image(Config.skillTSnipePath3)) , 3 , 3 , 8 , 32 , 32 , 12 , false);
+                new ImageView(new Image(Config.skillSnipePath3)) , 3 , 3 , 8 , 32 , 32 , 12 , false);
         effects.add(Archer_Skill_Snipe3);
-        //Archer Skill Snipe4 17
+        //Archer Skill Snipe4 18
         Effect Archer_Skill_Snipe4 = new Effect(
-                new ImageView(new Image(Config.skillTSnipePath4)) , 4 , 3 , 9 , 32 , 32 , 12 , false);
+                new ImageView(new Image(Config.skillSnipePath4)) , 4 , 3 , 9 , 32 , 32 , 12 , false);
         effects.add(Archer_Skill_Snipe4);
+        //Archer Skill Targetlock 19
+        Effect Archer_Skill_Targetlock = new Effect(
+                new ImageView(new Image(Config.skillTargetlockPath)) , 3 , 1 , 3 , 32 , 32 , 10 , false);
+        effects.add(Archer_Skill_Targetlock);
+        //Archer Skill Halt 20
+        Effect Archer_Skill_Halt = new Effect(
+                new ImageView(new Image(Config.skillHaltPath)) , 4 , 1 , 4 , 32 , 31 , 10 , false);
+        effects.add(Archer_Skill_Halt);
+        //Archer Skill Teleport 21
+        Effect Archer_Skill_Teleport = new Effect(
+                new ImageView(new Image(Config.skillTeleportPath)) , 4 , 1 , 4 , 32 , 32 , 10 , false);
+        effects.add(Archer_Skill_Teleport);
     }
 
     public Effect createInPlaceEffects(int index){

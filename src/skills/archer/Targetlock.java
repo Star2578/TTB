@@ -42,6 +42,14 @@ public class Targetlock extends BaseSkill implements Attack {
                                 EffectManager.getInstance().createInPlaceEffects(13) ,
                                 new EffectConfig(-6 , 0 , 18 , 1.5) );
                 //===========================================================================================
+                //=========<SKILL EFFECT>====================================================================
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.ON_SELF ,
+                                GameManager.getInstance().player ,
+                                monsterPiece.getRow(), monsterPiece.getCol(),
+                                EffectManager.getInstance().createInPlaceEffects(19) ,
+                                new EffectConfig(1 , 0 , 0 , 1.5) );
+                //===========================================================================================
 
             }
         }

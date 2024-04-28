@@ -103,16 +103,20 @@ public class Config {
     // Attacks animation
     public static String meleeAttackPath = "sprites/attacks/common_melee_attack.png";
     public static String rangedAttackPath = "sprites/attacks/common_ranged_attack.png";
+    public static String rangedAttackPath2 = "sprites/attacks/commom_ranged_attack2.png";
     // Knight Skills animation
     public static String skillSlashPath = "sprites/skills/skill_knight/skill_slash.png";
     public static String skillStompPath = "sprites/skills/skill_knight/skill_stomp.png";
     public static String skillDartPath = "sprites/skills/skill_knight/skill_dart.png";
     public static String skillHealPath = "sprites/skills/skill_knight/skill_heal.png";
     // Archer Skills animation
-    public static String skillTSnipePath = "sprites/skills/skill_archer/skill_snipe_preparing_burst.png";
-    public static String skillTSnipePath2 = "sprites/skills/skill_archer/skill_snipe_air_burst.png";
-    public static String skillTSnipePath3 = "sprites/skills/skill_archer/skill_snipe_air_explosion_startup.png";
-    public static String skillTSnipePath4 = "sprites/skills/skill_archer/skill_snipe_air_explosion.png";
+    public static String skillSnipePath = "sprites/skills/skill_archer/skill_snipe_preparing_burst.png";
+    public static String skillSnipePath2 = "sprites/skills/skill_archer/skill_snipe_air_burst.png";
+    public static String skillSnipePath3 = "sprites/skills/skill_archer/skill_snipe_air_explosion_startup.png";
+    public static String skillSnipePath4 = "sprites/skills/skill_archer/skill_snipe_air_explosion.png";
+    public static String skillTargetlockPath = "sprites/skills/skill_archer/skill_targetlock.png";
+    public static String skillHaltPath = "sprites/skills/skill_archer/skill_halt.png";
+    public static String skillTeleportPath = "sprites/skills/skill_archer/skill_teleport.png";
 
     // BGM
     public static String bgm_8_bit_adventure = "res/BGM/8_Bit_Adventure.wav";

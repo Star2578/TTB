@@ -38,6 +38,8 @@ public class Archer extends BasePlayerPiece {
         //add skill
         skills[0] = new Snipe();
         skills[1] = new Teleport();
+        skills[2] = new Targetlock();
+        skills[3] = new Halt();
 
         //configs values for animation
         setTexture(new ImageView(new Image(Config.ArcherPath))); //static image for icon, ...
@@ -87,7 +89,7 @@ public class Archer extends BasePlayerPiece {
         //make player face to target
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
 
-        //=========<ATTACK EFFECT>====================================================================
+        //=========<ARROW EFFECT>====================================================================
         EffectManager.getInstance()
                 .renderEffect( EffectManager.TYPE.AROUND_SELF ,
                         this ,
@@ -95,6 +97,15 @@ public class Archer extends BasePlayerPiece {
                         EffectManager.getInstance().createInPlaceEffects(13) ,
                         new EffectConfig(-6 , 0 , 18 , 1.5) );
         //===========================================================================================
+        //=========<ATTACK EFFECT>====================================================================
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                        this ,
+                        monsterPiece.getRow(), monsterPiece.getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(14) ,
+                        new EffectConfig(3 , 0 , 0 , 1.2) );
+        //===========================================================================================
+
 
         System.out.println("Attack success");
         GUIManager.getInstance().updateGUI();
