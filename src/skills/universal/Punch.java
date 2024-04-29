@@ -89,11 +89,11 @@ public class Punch extends BaseSkill implements Attack {
 
                 //=========<SKILL EFFECT>====================================================================
                 EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                        .renderEffect( EffectManager.TYPE.ON_SELF ,
                                 GameManager.getInstance().player ,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(1) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
+                                EffectManager.getInstance().createInPlaceEffects(33) ,
+                                new EffectConfig(0 , -16 , 0 , 1.1) );
                 //===========================================================================================
             }
         }

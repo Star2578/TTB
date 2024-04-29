@@ -146,6 +146,9 @@ public class Config {
     public static String skillHolyLightPath = "sprites/skills/skill_universal/skill_holy_light.png";
     public static String skillRhoAiasPath = "sprites/skills/skill_universal/skill_rho_aias.png";
     public static String skillStaticShockPath = "sprites/skills/skill_universal/skill_static_shock.png";
+    public static String skillNarcissisticBuffActionPointPath = "sprites/skills/skill_universal/skill_narcissistic_buff_action_point.png";
+    public static String skillNarcissisticBuffAttackPath = "sprites/skills/skill_universal/skill_narcissistic_buff_attack.png";
+    public static String skillNarcissisticBuffHealthPath = "sprites/skills/skill_universal/skill_narcissistic_buff_health.png";
 
     // BGM
     public static String bgm_8_bit_adventure = "res/BGM/8_Bit_Adventure.wav";

@@ -1,7 +1,10 @@
 package skills.universal;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.Effect;

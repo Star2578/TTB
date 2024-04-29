@@ -5,6 +5,7 @@ import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import logic.GameManager;
 import logic.SpriteAnimation;
 
 public class Effect extends SpriteAnimation {
@@ -43,5 +44,6 @@ public class Effect extends SpriteAnimation {
     public int getTurnRemain(){
         return turnRemain;
     }
+
 
 }

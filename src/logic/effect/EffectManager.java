@@ -174,6 +174,19 @@ public class EffectManager {
         Effect Universal_Skill_StaticShock = new Effect(
                 new ImageView(new Image(Config.skillStaticShockPath)) , 13 , 1 , 13 , 64 , 64 , 10 , false);
         effects.add(Universal_Skill_StaticShock);
+        //Universal Skill Narcissistic Buff ActionPoint 33
+        Effect Universal_Skill_Narcissistic_Buff_ActionPoint = new Effect(
+                new ImageView(new Image(Config.skillNarcissisticBuffActionPointPath)) , 4 , 1 , 4 , 16 , 16 , 6 , false);
+        effects.add(Universal_Skill_Narcissistic_Buff_ActionPoint);
+        //Universal Skill Narcissistic Buff Attack 34
+        Effect Universal_Skill_Narcissistic_Buff_Attack = new Effect(
+                new ImageView(new Image(Config.skillNarcissisticBuffAttackPath)) , 4 , 1 , 4 , 16 , 16 , 6 , false);
+        effects.add(Universal_Skill_Narcissistic_Buff_Attack);
+        //Universal Skill Narcissistic Buff Health 35
+        Effect Universal_Skill_Narcissistic_Buff_Health = new Effect(
+                new ImageView(new Image(Config.skillNarcissisticBuffHealthPath)) , 4 , 1 , 4 , 16 , 16 , 6 , false);
+        effects.add(Universal_Skill_Narcissistic_Buff_Health);
+
 
     }
 
