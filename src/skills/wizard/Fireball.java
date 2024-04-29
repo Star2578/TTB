@@ -1,5 +1,6 @@
 package skills.wizard;
 
+import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
@@ -32,26 +33,37 @@ public class Fireball extends BaseSkill implements Attack {
         if (target != null && target != GameManager.getInstance().player) {
             // Perform Attack
             if (target instanceof BaseMonsterPiece monsterPiece) {
-                monsterPiece.takeDamage(DAMAGE);
+
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
                 //=========<SKILL EFFECT>====================================================================
                 EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                        .renderEffect( EffectManager.TYPE.BULLET_TO_TARGET ,
                                 GameManager.getInstance().player ,
                                 target.getRow(), target.getCol(),
                                 EffectManager.getInstance().createInPlaceEffects(24) ,
-                                new EffectConfig(0 , -3 , 34 , 1.2) );
+                                new EffectConfig(0 , -3 , 0 , 1.2) );
                 //===========================================================================================
+
                 //=========<SKILL EFFECT TAKE DAMAGE>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect(EffectManager.TYPE.ON_SELF,
-                                GameManager.getInstance().player,
-                                monsterPiece.getRow(), monsterPiece.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(23),
-                                new EffectConfig(-16, -19, 0, 1));
+                new Thread(()->{ //delay for a while
+                    try { Thread.sleep(400); }
+                    catch (InterruptedException e) { throw new RuntimeException(e); }
+                    Platform.runLater(()->{
+                        EffectManager.getInstance()
+                                .renderEffect(EffectManager.TYPE.ON_SELF,
+                                        GameManager.getInstance().player,
+                                        monsterPiece.getRow(), monsterPiece.getCol(),
+                                        EffectManager.getInstance().createInPlaceEffects(23),
+                                        new EffectConfig(-16, -19, 0, 1));
+
+                        monsterPiece.takeDamage(DAMAGE); //call it here, so that dead effect will be delayed
+                    });
+
+                }).start();
+
                 //===========================================================================================
             }
         }

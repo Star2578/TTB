@@ -1,10 +1,15 @@
 package logic.effect;
 
+import javafx.animation.Interpolator;
+import javafx.animation.Transition;
+import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
+import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import pieces.player.BasePlayerPiece;
@@ -12,6 +17,7 @@ import utils.Config;
 
 import java.util.ArrayList;
 
+import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
 
 public class EffectManager {
@@ -26,7 +32,8 @@ public class EffectManager {
         AROUND_SELF,
         ON_TARGET,
         ON_SELF,
-        AROUND_SELF_ENEMY
+        AROUND_SELF_ENEMY,
+        BULLET_TO_TARGET
 
 
     }
@@ -141,7 +148,7 @@ public class EffectManager {
         effects.add(Wizard_Attack_TakeDamage);
         //Wizard Skill Fireball 24
         Effect Wizard_Skill_Fireball = new Effect(
-                new ImageView(new Image(Config.skillFireballPath)) , 4 , 1 , 4 , 33 , 30 , 10 , false);
+                new ImageView(new Image(Config.skillFireballPath)) , 4 , 1 , 4 , 33 , 30 , 10 , true);
         effects.add(Wizard_Skill_Fireball);
         //Wizard Skill Rain of Fire 25
         Effect Wizard_Skill_RainOfFire = new Effect(
@@ -250,7 +257,8 @@ public class EffectManager {
             effect.imageView.setDisable(true);
 
             effect.start();
-        }else if(typeEnum == TYPE.ON_SELF){
+        }
+        else if(typeEnum == TYPE.ON_SELF){
             //effect will occur on target position
 
             //add effect to pane
@@ -268,7 +276,8 @@ public class EffectManager {
             effect.imageView.setDisable(true);
 
             effect.start();
-        }else if (typeEnum == TYPE.AROUND_SELF_ENEMY){
+        }
+        else if (typeEnum == TYPE.AROUND_SELF_ENEMY){
             //effect will occur around player, also rotate and face to target
 
             EffectManager.getInstance().effectPane.getChildren().add( effect.imageView );
@@ -299,7 +308,49 @@ public class EffectManager {
 
             effect.start();
         }
+        else if (typeEnum == TYPE.BULLET_TO_TARGET) {
 
+            EffectManager.getInstance().effectPane.getChildren().add(effect.imageView);
+
+            //find angle toward enemy
+            double x = - GameManager.getInstance().player.getCol() + col;
+            double y = - GameManager.getInstance().player.getRow() + row;
+            double angleRadian = Math.atan2(y, x);
+            double angleDegree = Math.atan2(y, x) * (180.0 / Math.PI);
+
+            //set effect position (angle is in account)
+            effect.imageView.setX(player.getCol() * SQUARE_SIZE
+                    + (config.distanceFromOrigin * Math.cos(angleRadian))
+                    + config.offsetX);
+            effect.imageView.setY(player.getRow() * SQUARE_SIZE
+                    + (config.distanceFromOrigin * Math.sin(angleRadian))
+                    + config.offsetY);
+            //scale effect size
+            effect.imageView.setScaleX(config.scale);
+            effect.imageView.setScaleY(config.scale);
+            //rotate effect
+            effect.imageView.setRotate(angleDegree);
+
+            //prepare transition behaviour for this effect
+            TranslateTransition moveTransition = new TranslateTransition();
+            moveTransition.setNode(effect.imageView);
+            moveTransition.setDuration(Duration.millis(400));
+            moveTransition.setCycleCount(1);
+            moveTransition.setInterpolator(Interpolator.EASE_IN);
+
+            //slowly move to target col,row
+            moveTransition.setToX((col - player.getCol()) * SQUARE_SIZE + config.offsetX);
+            moveTransition.setToY((row - player.getRow()) * SQUARE_SIZE + config.offsetY);
+
+            moveTransition.setOnFinished(actionEvent -> {
+                effectPane.getChildren().remove(effect.imageView);
+            });
+
+            effect.start();
+            moveTransition.play();
+        }
+
+        effect.imageView.toFront();
     }
 
     //this method will clear effect in array if the effect is timeout/remains turn is 0
