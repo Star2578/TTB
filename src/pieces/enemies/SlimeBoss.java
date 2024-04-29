@@ -1,16 +1,20 @@
 package pieces.enemies;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
-import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpawnerManager;
+import logic.effect.EffectConfig;
+import logic.effect.EffectManager;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
 import pieces.wall.BaseWallPiece;
 import utils.Config;
+
+import java.util.Map;
 
 import static game.Setting.gameManager;
 import static utils.Config.BOARD_SIZE;
@@ -28,7 +32,8 @@ public class SlimeBoss extends BaseMonsterPiece {
     private final double ATTACK_RANGE = 1.5;
     private final int MOVE = 2;
     private int ATK_CNT = 0;
-    private final int VISION_RANGE = 10;
+    private int Skill_CNT = 0;
+    private final int Spilt_range = 12;
     private BasePiece[][] piecesPosition = GameManager.getInstance().piecesPosition;
 
     public SlimeBoss() {
@@ -38,12 +43,7 @@ public class SlimeBoss extends BaseMonsterPiece {
 
         this.currentPhase = Phase.FIRST;
 
-        if(currentPhase == Phase.FIRST) {
-            setupAnimation(Config.SlimePath4, 0, -10, 32, 46 , true);
-        } else if (currentPhase == Phase.SECOND) {
-
-        }
-    }
+        setupAnimation(Config.SlimePath4, 0, -10, 32, 46 , true);  }
 
     @Override
     public void performAction() {
@@ -51,13 +51,45 @@ public class SlimeBoss extends BaseMonsterPiece {
         updateState();
         ATK_CNT = 0;
         switch (currentPhase) {
-            case FIRST, SECOND, THIRD:
-                chasePlayer();
+            case FIRST:
+                if(Skill_CNT >= 4) {
+                    // reset Skill_CNT
+                    SplitMucilage();
+                    Skill_CNT = 0;
+                }else {
+                    chasePlayer();
+                    Skill_CNT++;
+                }
+                System.out.println("Skill count: " + Skill_CNT);
+                break;
+            case SECOND, THIRD:
+                if(EffectBuffs != null) {
+                    if(EffectBuffs.containsKey("Stun")) {
+                        endAction = true;
+                        System.out.println("Stunned");}
+                }else {
+                    chasePlayer();
+                }
                 break;
             case DEAD:
                 // Handle the slime boss death, maybe some special effects or drops
                 break;
         }
+
+        // Check if the player has any effect
+        for(Map.Entry<String, Integer> entry : EffectBuffs.entrySet()) {
+            String BuffName = entry.getKey();
+            int duration = EffectBuffs.get(BuffName);
+            if (duration > 0) {
+                duration--; // Decrement the duration
+                EffectBuffs.put(BuffName, duration);
+            }
+            if (duration == 0) {
+                EffectBuffs.remove(BuffName);
+            }
+            System.out.println(BuffName + " " + duration);
+        }
+
     }
 
     @Override
@@ -86,16 +118,44 @@ public class SlimeBoss extends BaseMonsterPiece {
                 playerPiece.takeDamage(ATTACK_DAMAGE_THIRD_PHASE);
                 break;
         }
+
         GUIManager.getInstance().eventLogDisplay.addLog("Slime Boss dealt " + ATTACK_DAMAGE_FIRST_PHASE);
+    }
+
+    private void SplitMucilage() {
+        for(int i = 0; i < Spilt_range; i++) {
+            int row, col;
+            do {
+                row = (int) (Math.random() * BOARD_SIZE);
+                col = (int) (Math.random() * BOARD_SIZE);
+            } while (!isValidMoveSet(row, col) || piecesPosition[row][col] != null);
+
+            SlimeMucilage slimeMucile = new SlimeMucilage();
+
+            slimeMucile.setRow(row);
+            slimeMucile.setCol(col);
+            gameManager.piecesPosition[row][col] = slimeMucile;
+
+            slimeMucile.animationImage.setFitWidth(SQUARE_SIZE);
+            slimeMucile.animationImage.setX(col * SQUARE_SIZE + slimeMucile.getOffsetX());
+            slimeMucile.animationImage.setY(row * SQUARE_SIZE + slimeMucile.getOffsetY());
+
+            gameManager.environmentPieces.add(slimeMucile);
+            gameManager.animationPane.getChildren().add(slimeMucile.animationImage);
+
+            endAction = true;
+        }
     }
 
     private void splitSlime(int hp, Phase nextPhase) {
         // Remove big slime
-        // test test test
+        if(currentPhase == Phase.FIRST || currentPhase == Phase.SECOND) {
+            deadbomb();
+        }
         GameManager.getInstance().gameScene.removePiece(this);
         gameManager.environmentPieces.remove(this);
 
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < nextPhase.ordinal() + 1; i++) {
             int row, col;
             do {
                 row = (int) (Math.random() * BOARD_SIZE);
@@ -111,8 +171,11 @@ public class SlimeBoss extends BaseMonsterPiece {
             smallerSlime.setCurrentHealth(hp);
             smallerSlime.currentPhase = nextPhase;
 
+            //TODO : FIX ANIMATION PATH
             if (nextPhase == Phase.SECOND) {
-                setupAnimation(Config.WizardAnimationPath, 0, -10, 32, 32 , true);
+                smallerSlime.setupAnimation(Config.WizardAnimationPath, 0, -10, 32, 32 , true);
+            } else if (nextPhase == Phase.THIRD) {
+                smallerSlime.setupAnimation(Config.SkeletonPath, 0, -10, 32, 32 , true);
             }
 
             piecesPosition[row][col] = smallerSlime;
@@ -127,6 +190,57 @@ public class SlimeBoss extends BaseMonsterPiece {
         }
         // Change the current phase to the next phase
         this.currentPhase = nextPhase;
+    }
+    
+    private void deadbomb() {
+        BasePlayerPiece player = GameManager.getInstance().player;
+
+        //=========<SKILL EFFECT>====================================================================
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.ON_SELF ,
+                        GameManager.getInstance().player ,
+                        getRow(), getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(6) ,
+                        new EffectConfig(-9 , -16 , 0 , 1.1) );
+        //===========================================================================================
+
+        for (int dRow = -1; dRow <= 1; dRow++) {
+            for (int dCol = -1; dCol <= 1; dCol++) {
+                int newRow = getRow() + dRow;
+                int newCol = getCol() + dCol;
+                if (GameManager.getInstance().piecesPosition[newRow][newCol] instanceof BaseWallPiece) {
+                    System.out.println("wall obstacle");
+                    continue;
+                }
+
+                //=========<SKILL EFFECT>====================================================================
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.ON_SELF ,
+                                GameManager.getInstance().player ,
+                                newRow, newCol,
+                                EffectManager.getInstance().createInPlaceEffects(6) ,
+                                new EffectConfig(-9 , -16 , 0 , 1.1) );
+                //===========================================================================================
+
+                // Create a PauseTransition with a duration of 0.7 seconds
+                PauseTransition pause = new PauseTransition(Duration.seconds(0.7));
+
+                // Set the action to perform after the pause
+                int finalRow1 = newRow;
+                int finalCol1 = newCol;
+                pause.setOnFinished(event -> {
+                    if (GameManager.getInstance().piecesPosition[finalRow1][finalCol1] instanceof BasePlayerPiece) {
+                        player.takeDamage(10);
+                        GUIManager.getInstance().updateGUI();
+                    }
+                });
+
+                // Start the pause
+                pause.play();
+
+            }
+        }
+        
     }
 
     private void chasePlayer() {
