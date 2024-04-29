@@ -66,17 +66,10 @@ public class SlimeMucilage extends BaseMonsterPiece{
         endAction = true;
     }
 
-    private void removing() {
+    public void removing() {
         System.out.println("Bomb exploded");
 
         BasePlayerPiece player = GameManager.getInstance().player;
-//        if (player.getRow() == getRow() || player.getCol() == getCol()) {
-//            player.takeDamage(player.getCurrentHealth());
-//            GUIManager.getInstance().updateGUI();
-//        }
-//        ------------------------------------------------------------------------
-        // destroy itself after exploded
-
 
         //=========<SKILL EFFECT>====================================================================
         EffectManager.getInstance()

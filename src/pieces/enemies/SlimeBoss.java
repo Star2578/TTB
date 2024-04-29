@@ -1,13 +1,17 @@
 package pieces.enemies;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpawnerManager;
+import logic.effect.EffectConfig;
+import logic.effect.EffectManager;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
+import pieces.wall.BaseWallPiece;
 import utils.Config;
 
 import java.util.Map;
@@ -29,7 +33,7 @@ public class SlimeBoss extends BaseMonsterPiece {
     private final int MOVE = 2;
     private int ATK_CNT = 0;
     private int Skill_CNT = 0;
-    private final int Spilt_range = 10;
+    private final int Spilt_range = 12;
     private BasePiece[][] piecesPosition = GameManager.getInstance().piecesPosition;
 
     public SlimeBoss() {
@@ -145,6 +149,9 @@ public class SlimeBoss extends BaseMonsterPiece {
 
     private void splitSlime(int hp, Phase nextPhase) {
         // Remove big slime
+        if(currentPhase == Phase.FIRST || currentPhase == Phase.SECOND) {
+            deadbomb();
+        }
         GameManager.getInstance().gameScene.removePiece(this);
         gameManager.environmentPieces.remove(this);
 
@@ -183,6 +190,57 @@ public class SlimeBoss extends BaseMonsterPiece {
         }
         // Change the current phase to the next phase
         this.currentPhase = nextPhase;
+    }
+    
+    private void deadbomb() {
+        BasePlayerPiece player = GameManager.getInstance().player;
+
+        //=========<SKILL EFFECT>====================================================================
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.ON_SELF ,
+                        GameManager.getInstance().player ,
+                        getRow(), getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(6) ,
+                        new EffectConfig(-9 , -16 , 0 , 1.1) );
+        //===========================================================================================
+
+        for (int dRow = -1; dRow <= 1; dRow++) {
+            for (int dCol = -1; dCol <= 1; dCol++) {
+                int newRow = getRow() + dRow;
+                int newCol = getCol() + dCol;
+                if (GameManager.getInstance().piecesPosition[newRow][newCol] instanceof BaseWallPiece) {
+                    System.out.println("wall obstacle");
+                    continue;
+                }
+
+                //=========<SKILL EFFECT>====================================================================
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.ON_SELF ,
+                                GameManager.getInstance().player ,
+                                newRow, newCol,
+                                EffectManager.getInstance().createInPlaceEffects(6) ,
+                                new EffectConfig(-9 , -16 , 0 , 1.1) );
+                //===========================================================================================
+
+                // Create a PauseTransition with a duration of 0.7 seconds
+                PauseTransition pause = new PauseTransition(Duration.seconds(0.7));
+
+                // Set the action to perform after the pause
+                int finalRow1 = newRow;
+                int finalCol1 = newCol;
+                pause.setOnFinished(event -> {
+                    if (GameManager.getInstance().piecesPosition[finalRow1][finalCol1] instanceof BasePlayerPiece) {
+                        player.takeDamage(10);
+                        GUIManager.getInstance().updateGUI();
+                    }
+                });
+
+                // Start the pause
+                pause.play();
+
+            }
+        }
+        
     }
 
     private void chasePlayer() {
