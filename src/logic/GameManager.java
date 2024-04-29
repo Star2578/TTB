@@ -77,7 +77,6 @@ public class GameManager {
     public BaseSkill selectedSkill;
     public BaseItem selectedItem;
 
-    // -------------- Inventory --------------
     public List<BaseItem> inventory = new ArrayList<>();
     public List<Point2D> doorAt = new ArrayList<>(); // use to store where the door is at
 

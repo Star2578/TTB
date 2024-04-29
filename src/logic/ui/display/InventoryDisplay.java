@@ -118,13 +118,8 @@ public class InventoryDisplay implements Display {
             totalItems++;
         }
 
-        // Calculate the number of empty frames to add
-        int emptyFrames = itemsPerRow - (totalItems % itemsPerRow);
-        if (totalItems % itemsPerRow == 0 && totalItems > 0 || totalItems >= maxItems) {
-            emptyFrames = 0;
-        }
-
-        for (int i = 0; i < emptyFrames; i++) {
+        // Add empty frame till full
+        for (int i = 0; i < maxItems; i++) {
             StackPane emptyFrame = createItemFrame(new EmptyItem());
             int row = totalItems / itemsPerRow;
             int col = totalItems % itemsPerRow;
