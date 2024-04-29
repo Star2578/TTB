@@ -61,6 +61,7 @@ public class Bind extends BaseSkill implements Attack {
                 monsterPiece.addBuff(3,"Stun");
                 //=========<STUN EFFECT>====================================================================
                 Effect Stun = EffectManager.getInstance().createInPlaceEffects(8);
+                Stun.setOwner(target);
                 EffectManager.getInstance()
                         .renderEffect( EffectManager.TYPE.ON_SELF ,
                                 GameManager.getInstance().player ,

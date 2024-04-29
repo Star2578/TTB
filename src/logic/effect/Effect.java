@@ -7,12 +7,15 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
+import pieces.BasePiece;
+import pieces.enemies.BaseMonsterPiece;
 
 public class Effect extends SpriteAnimation {
 
     public boolean canKill = false;
     private static final int defaultTimeout = 30;
     private int turnRemain = 1;
+    private BasePiece owner;
 
 
     //constructor with parameters
@@ -45,5 +48,12 @@ public class Effect extends SpriteAnimation {
         return turnRemain;
     }
 
+    public void setOwner(BasePiece owner){
+        this.owner = owner;
+    }
+
+    public BasePiece getOwner(){
+        return owner;
+    }
 
 }

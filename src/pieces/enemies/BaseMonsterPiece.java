@@ -161,6 +161,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
 
         // To call when this monster died
         GUIManager.getInstance().eventLogDisplay.addLog("Player killed " + this.getClass().getSimpleName() + " !!!!", Color.CRIMSON);
+
         //=====<dead effect>=========================================
         new Thread(()->{
             try {
@@ -180,6 +181,8 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
 
         //=============================================================
 
+        //clear effect when monster's die early
+        EffectManager.getInstance().clearDeadEffect();
 
         System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
     }

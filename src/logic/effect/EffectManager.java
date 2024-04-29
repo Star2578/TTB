@@ -6,6 +6,7 @@ import javafx.scene.layout.Pane;
 import logic.GameManager;
 import logic.SpriteAnimation;
 import pieces.BasePiece;
+import pieces.enemies.BaseMonsterPiece;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 
@@ -306,13 +307,20 @@ public class EffectManager {
 
         //clear effect display in effectPane
         for(int i = 0 ; i < runningEffects.size() ; i++){
-            if(runningEffects.get(i).canKill || runningEffects.get(i).getTurnRemain() == 0){
+            Effect current = runningEffects.get(i);
+
+            if(current.canKill || current.getTurnRemain() == 0 || (current.getOwner()!=null && ( !((BaseMonsterPiece)current.getOwner()).isAlive()) ) ){
+                //effect is timeout or reach turn limit
                 effectPane.getChildren().remove(runningEffects.get(i).imageView);
             }
         }
 
         //also remove from runningEffects
-        runningEffects.removeIf(effect -> (effect.canKill || effect.getTurnRemain() == 0));
+        runningEffects.removeIf(effect -> (
+                effect.canKill ||
+                effect.getTurnRemain() == 0 ||
+                (effect.getOwner()!=null && ( !((BaseMonsterPiece) effect.getOwner()).isAlive()) )
+        ));
     }
 
     //update effect turn remained
