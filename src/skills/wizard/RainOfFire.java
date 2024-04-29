@@ -17,7 +17,7 @@ public class RainOfFire extends BaseSkill implements Attack {
     private final int DAMAGE = 6;
     public RainOfFire() {
         super("Rain of Fire", Color.DARKORANGE,
-                1, 5,
+                1, 2,
                 "Summon a rain of fire above the enemies for  2 x 2 range around the enemy",
                 Config.Rarity.LEGENDARY, "res/SFX/skills/slash/PP_01.wav");
 
@@ -53,16 +53,33 @@ public class RainOfFire extends BaseSkill implements Attack {
                 System.out.println("Attack at " + newRow + " " + (newCol-1));
                 System.out.println("Attack at " + (newRow-1) + " " + newCol);
 
-                //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
-                                GameManager.getInstance().player ,
-                                target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(1) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
-                //===========================================================================================
+                renderEffects(newRow, newCol);
+                renderEffects(newRow+1, newCol);
+                renderEffects(newRow, newCol+1);
+                renderEffects(newRow-1, newCol);
+                renderEffects(newRow, newCol-1);
+
             }
         }
+    }
+
+    private void renderEffects(int newRow, int newCol) {
+        //=========<SKILL EFFECT>====================================================================
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.ON_SELF ,
+                        GameManager.getInstance().player ,
+                        newRow, newCol,
+                        EffectManager.getInstance().createInPlaceEffects(25) ,
+                        new EffectConfig(0 , -16 , 34 , 1.2) );
+        //===========================================================================================
+        //=========<SKILL EFFECT TAKE DAMAGE>====================================================================
+        EffectManager.getInstance()
+                .renderEffect(EffectManager.TYPE.ON_SELF,
+                        GameManager.getInstance().player,
+                        newRow, newCol,
+                        EffectManager.getInstance().createInPlaceEffects(23),
+                        new EffectConfig(-16, -19, 0, 1));
+        //===========================================================================================
     }
 
     private boolean checkRange (int row, int col) {

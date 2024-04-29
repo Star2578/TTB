@@ -64,7 +64,7 @@ public class EffectManager {
         effects.add(Skill_Dart);
         //Skill Heal 5
         Effect Skill_Heal = new Effect(
-                new ImageView(new Image(Config.skillHealPath)) , 6 , 2 , 10 , 32 , 32 , 11 , false);
+                new ImageView(new Image(Config.skillHealPath)) , 4 , 4 , 16 , 128 , 128 , 7 , false);
         effects.add(Skill_Heal);
         //Bomb Explosion 6
         Effect Bomb_Explosion = new Effect(
@@ -94,10 +94,99 @@ public class EffectManager {
         Effect Skeleton_Attack = new Effect(
                 new ImageView(new Image(Config.SkeletonAttackPath)) , 5 , 1 , 5 , 39 , 36 , 12 , false);
         effects.add(Skeleton_Attack);
-        //Archer Attack 13
-        Effect Archer_Attack = new Effect(
+        //Archer Attack (arrow) 13
+        Effect Archer_Attack_Arrow = new Effect(
                 new ImageView(new Image(Config.rangedAttackPath)) , 5 , 1 , 5 , 40 , 30 , 12 , false);
+        effects.add(Archer_Attack_Arrow);
+        //Archer Attack 14
+        Effect Archer_Attack = new Effect(
+                new ImageView(new Image(Config.rangedAttackTakeDamagePath)) , 4 , 1 , 4 , 31 , 28 , 8 , false);
         effects.add(Archer_Attack);
+        //Archer Skill Snipe1 15
+        Effect Archer_Skill_Snipe1 = new Effect(
+                new ImageView(new Image(Config.skillSnipePath)) , 4 , 3 , 10 , 48 , 32 , 12 , false);
+        effects.add(Archer_Skill_Snipe1);
+        //Archer Skill Snipe2 16
+        Effect Archer_Skill_Snipe2 = new Effect(
+                new ImageView(new Image(Config.skillSnipePath2)) , 3 , 3 , 7 , 48 , 48 , 12 , false);
+        effects.add(Archer_Skill_Snipe2);
+        //Archer Skill Snipe3 17
+        Effect Archer_Skill_Snipe3 = new Effect(
+                new ImageView(new Image(Config.skillSnipePath3)) , 3 , 3 , 8 , 32 , 32 , 12 , false);
+        effects.add(Archer_Skill_Snipe3);
+        //Archer Skill Snipe4 18
+        Effect Archer_Skill_Snipe4 = new Effect(
+                new ImageView(new Image(Config.skillSnipePath4)) , 4 , 3 , 9 , 32 , 32 , 12 , false);
+        effects.add(Archer_Skill_Snipe4);
+        //Archer Skill Targetlock 19
+        Effect Archer_Skill_Targetlock = new Effect(
+                new ImageView(new Image(Config.skillTargetlockPath)) , 3 , 1 , 3 , 32 , 32 , 10 , false);
+        effects.add(Archer_Skill_Targetlock);
+        //Archer Skill Halt 20
+        Effect Archer_Skill_Halt = new Effect(
+                new ImageView(new Image(Config.skillHaltPath)) , 4 , 1 , 4 , 32 , 31 , 10 , false);
+        effects.add(Archer_Skill_Halt);
+        //Archer Skill Teleport 21
+        Effect Archer_Skill_Teleport = new Effect(
+                new ImageView(new Image(Config.skillTeleportPath)) , 4 , 1 , 4 , 32 , 32 , 10 , false);
+        effects.add(Archer_Skill_Teleport);
+        //Wizard Attack 22
+        Effect Wizard_Attack = new Effect(
+                new ImageView(new Image(Config.magicAttackPath)) , 2 , 1 , 2 , 15 , 11 , 8 , false);
+        effects.add(Wizard_Attack);
+        //Wizard Attack take damage 23
+        Effect Wizard_Attack_TakeDamage = new Effect(
+                new ImageView(new Image(Config.magicAttackTakeDamagePath)) , 4 , 4 , 14 , 64 , 64 , 8 , false);
+        effects.add(Wizard_Attack_TakeDamage);
+        //Wizard Skill Fireball 24
+        Effect Wizard_Skill_Fireball = new Effect(
+                new ImageView(new Image(Config.skillFireballPath)) , 4 , 1 , 4 , 33 , 30 , 10 , false);
+        effects.add(Wizard_Skill_Fireball);
+        //Wizard Skill Rain of Fire 25
+        Effect Wizard_Skill_RainOfFire = new Effect(
+                new ImageView(new Image(Config.skillRainOfFirePath)) , 3 , 1 , 3 , 32 , 46 , 10 , false);
+        effects.add(Wizard_Skill_RainOfFire);
+        //Wizard Skill Dragon Fire 26
+        Effect Wizard_Skill_DragonFire = new Effect(
+                new ImageView(new Image(Config.skillDragonFirePath)) , 4 , 1 , 4 , 32 , 31 , 10 , false);
+        effects.add(Wizard_Skill_DragonFire);
+        //Wizard Skill Ice Shield 27
+        Effect Wizard_Skill_IceShield = new Effect(
+                new ImageView(new Image(Config.skillIceShieldPath)) , 4 , 1 , 4 , 32 , 30 , 7 , false);
+        effects.add(Wizard_Skill_IceShield);
+        //Wizard Skill Ice Shield buff 28
+        Effect Wizard_Skill_IceShield_Buff = new Effect(
+                new ImageView(new Image(Config.skillIceShieldBuffPath)) , 6 , 1 , 6 , 16 , 22 , 7 , true);
+        effects.add(Wizard_Skill_IceShield_Buff);
+        //Universal Skill HammerFall 29
+        Effect Universal_Skill_HammerFall = new Effect(
+                new ImageView(new Image(Config.skillHammerFallPath)) , 6 , 1 , 6 , 16 , 15 , 10 , false);
+        effects.add(Universal_Skill_HammerFall);
+        //Universal Skill HolyLight 30
+        Effect Universal_Skill_HolyLight = new Effect(
+                new ImageView(new Image(Config.skillHolyLightPath)) , 16 , 1 , 16 , 48 , 48 , 10 , false);
+        effects.add(Universal_Skill_HolyLight);
+        //Universal Skill RhoAias 31
+        Effect Universal_Skill_RhoAias = new Effect(
+                new ImageView(new Image(Config.skillRhoAiasPath)) , 4 , 1 , 4 , 32 , 34 , 7 , false);
+        effects.add(Universal_Skill_RhoAias);
+        //Universal Skill StaticShock 32
+        Effect Universal_Skill_StaticShock = new Effect(
+                new ImageView(new Image(Config.skillStaticShockPath)) , 13 , 1 , 13 , 64 , 64 , 10 , false);
+        effects.add(Universal_Skill_StaticShock);
+        //Universal Skill Narcissistic Buff ActionPoint 33
+        Effect Universal_Skill_Narcissistic_Buff_ActionPoint = new Effect(
+                new ImageView(new Image(Config.skillNarcissisticBuffActionPointPath)) , 4 , 1 , 4 , 16 , 16 , 6 , false);
+        effects.add(Universal_Skill_Narcissistic_Buff_ActionPoint);
+        //Universal Skill Narcissistic Buff Attack 34
+        Effect Universal_Skill_Narcissistic_Buff_Attack = new Effect(
+                new ImageView(new Image(Config.skillNarcissisticBuffAttackPath)) , 4 , 1 , 4 , 16 , 16 , 6 , false);
+        effects.add(Universal_Skill_Narcissistic_Buff_Attack);
+        //Universal Skill Narcissistic Buff Health 35
+        Effect Universal_Skill_Narcissistic_Buff_Health = new Effect(
+                new ImageView(new Image(Config.skillNarcissisticBuffHealthPath)) , 4 , 1 , 4 , 16 , 16 , 6 , false);
+        effects.add(Universal_Skill_Narcissistic_Buff_Health);
+
 
     }
 

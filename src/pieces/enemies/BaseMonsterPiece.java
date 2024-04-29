@@ -14,9 +14,7 @@ import pieces.BaseStatus;
 import pieces.player.BasePlayerPiece;
 import utils.Config;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     private int currentHp;
@@ -27,7 +25,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     protected boolean[][] validMovesCache; // Cache of valid moves for the entire board
     protected int moneyDrop;
     protected Random random;
-    protected int stun = 0;
+    protected Map<String, Integer> EffectBuffs = new HashMap<>();
 
     public BaseMonsterPiece(int row, int col, int defaultDirection) {
         super(Config.ENTITY_TYPE.MONSTER, new ImageView(Config.PlaceholderPath), row, col, defaultDirection);
@@ -189,11 +187,17 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         return endAction;
     }
 
-    public int getStun() {
-        return stun;
+    public void addBuff(int buff_duration, String buff_name) {
+        if (EffectBuffs.containsKey(buff_name)) {
+            int duration = EffectBuffs.get(buff_name);
+            duration += buff_duration;
+            EffectBuffs.put(buff_name, duration);
+            return;
+        }else {
+            EffectBuffs.put(buff_name, buff_duration);
+        }
+
+        System.out.println(buff_name + " adding");
     }
 
-    public void setStun(int stun) {
-        this.stun = Math.max(0,stun);
-    }
 }

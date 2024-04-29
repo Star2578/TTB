@@ -4,7 +4,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
+import logic.effect.EffectConfig;
+import logic.effect.EffectManager;
 import pieces.BasePiece;
+import pieces.player.BasePlayerPiece;
 import skills.BaseSkill;
 import utils.Config;
 
@@ -25,15 +28,36 @@ public class Teleport extends BaseSkill {
 
     public void teleport() {
 
-        GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
-        GameManager.getInstance().player.decreaseMana(manaCost);
+        BasePlayerPiece player = GameManager.getInstance().player;
+
+        player.decreaseActionPoint(actionPointCost);
+        player.decreaseMana(manaCost);
+
+
+        //=========<SKILL EFFECT PHASE 1>====================================================================
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.ON_SELF ,
+                        player ,
+                        player.getRow(), player.getCol() ,
+                        EffectManager.getInstance().createInPlaceEffects(21) ,
+                        new EffectConfig(0 , -4 , 0 , 1.4) );
+        //===========================================================================================);
 
         // Teleport the player to the target position
         BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
-        pieces[GameManager.getInstance().player.getRow()][GameManager.getInstance().player.getCol()] = null;
-        pieces[target.getRow()][target.getCol()] = GameManager.getInstance().player;
+        pieces[player.getRow()][player.getCol()] = null;
+        pieces[target.getRow()][target.getCol()] = player;
 
-        GameManager.getInstance().player.moveWithTransition(target.getRow(), target.getCol());
+        // Directly set the player's position without any transition
+        player.setRow(target.getRow());
+        player.setCol(target.getCol());
+        ImageView animationImage = player.animationImage;
+        //move real coordinate to new col,row
+        animationImage.setX(target.getCol()*SQUARE_SIZE + player.getOffsetX());
+        animationImage.setY(target.getRow()*SQUARE_SIZE + player.getOffsetY());
+        animationImage.translateXProperty().set(player.getOffsetX());
+        animationImage.translateYProperty().set(player.getOffsetY());
+        animationImage.setViewOrder(BOARD_SIZE - target.getRow());
     }
 
     @Override

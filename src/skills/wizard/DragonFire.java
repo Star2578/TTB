@@ -17,7 +17,7 @@ public class DragonFire extends BaseSkill implements Attack {
     private final int DAMAGE = 15;
     public DragonFire() {
         super("Dragon Fire", Color.ORANGE,
-                15, 3,
+                15, 2,
                 "Ultimate Skill Summon a dragon fire to the enemies by Triangle AOE for 3 range ",
                 Config.Rarity.RARE, "res/SFX/skills/slash/PP_01.wav"
         );
@@ -26,34 +26,69 @@ public class DragonFire extends BaseSkill implements Attack {
         range = 3;
     }
 
-    @Override
-    public void attack() {
-        int currentRow = GameManager.getInstance().player.getRow();
-        int currentCol = GameManager.getInstance().player.getCol();
-        int directionRow = target.getRow() - currentRow;
-        int directionCol = target.getCol() - currentCol;
+@Override
+public void attack() {
+    int currentRow = GameManager.getInstance().player.getRow();
+    int currentCol = GameManager.getInstance().player.getCol();
+    int directionRow = target.getRow() - currentRow;
+    int directionCol = target.getCol() - currentCol;
 
-        GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
-        GameManager.getInstance().player.decreaseMana(manaCost);
+    GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
+    GameManager.getInstance().player.decreaseMana(manaCost);
 
-        // Normalize the direction
-        if (directionRow != 0) directionRow /= Math.abs(directionRow);
-        if (directionCol != 0) directionCol /= Math.abs(directionCol);
+    // Normalize the direction
+    directionRow = normalizeDirection(directionRow);
+    directionCol = normalizeDirection(directionCol);
 
-        // Perform the attack
-        for (int i = 1; i <= range; i++) {
-            int newRow = currentRow + directionRow * i;
-            int newCol = currentCol + directionCol * i;
+    // Perform the attack
+    for (int i = 1; i <= range; i++) {
+        performAttackInDirection(currentRow, currentCol, directionRow, directionCol, i);
+    }
+}
 
-            BasePiece piece = GameManager.getInstance().piecesPosition[newRow][newCol];
+    private int normalizeDirection(int direction) {
+        return direction != 0 ? direction / Math.abs(direction) : 0;
+    }
 
-            if (piece instanceof BaseMonsterPiece monsterPiece) {
-                monsterPiece.takeDamage(getAttack());
-            }
-            System.out.println(newRow + " " + newCol);
+    private void performAttackInDirection(int currentRow, int currentCol, int directionRow, int directionCol, int i) {
+        int newRow = currentRow + directionRow * i;
+        int newCol = currentCol + directionCol * i;
 
-            if (i == 2){
-                //------------------- X -------------------
+        BasePiece piece = GameManager.getInstance().piecesPosition[newRow][newCol];
+
+        if (piece instanceof BaseMonsterPiece monsterPiece) {
+            monsterPiece.takeDamage(getAttack());
+        }
+
+        renderEffects(newRow, newCol);
+
+        if (i == 2) {
+            performSecondaryAttack(newRow, newCol, directionRow, directionCol);
+        }
+
+        if (i == 3) {
+            performTertiaryAttack(newRow, newCol, directionRow, directionCol);
+        }
+    }
+
+    private void renderEffects(int newRow, int newCol) {
+        EffectManager.getInstance()
+                .renderEffect(EffectManager.TYPE.ON_SELF,
+                        GameManager.getInstance().player,
+                        newRow, newCol,
+                        EffectManager.getInstance().createInPlaceEffects(26),
+                        new EffectConfig(0, -16, 0, 1.2));
+
+        EffectManager.getInstance()
+                .renderEffect(EffectManager.TYPE.ON_SELF,
+                        GameManager.getInstance().player,
+                        newRow, newCol,
+                        EffectManager.getInstance().createInPlaceEffects(23),
+                        new EffectConfig(-16, -19, 0, 1));
+    }
+
+    private void performSecondaryAttack(int newRow, int newCol, int directionRow, int directionCol) {
+        //------------------- X -------------------
                 if(directionCol != 0 && directionRow != 0) {
                     BasePiece piece2 = GameManager.getInstance().piecesPosition[newRow - directionRow][newCol];
                     BasePiece piece3 = GameManager.getInstance().piecesPosition[newRow][newCol - directionCol];
@@ -63,6 +98,8 @@ public class DragonFire extends BaseSkill implements Attack {
                     if (piece3 instanceof BaseMonsterPiece monsterPiece3) {
                         monsterPiece3.takeDamage(getAttack());
                     }
+                    renderEffects(newRow - directionRow, newCol);
+                    renderEffects(newRow, newCol - directionCol);
                     System.out.println((newRow - directionRow) + " " + newCol);
                     System.out.println(newRow + " " + (newCol - directionCol));
                 }
@@ -77,6 +114,8 @@ public class DragonFire extends BaseSkill implements Attack {
                         if (piece3 instanceof BaseMonsterPiece monsterPiece3) {
                             monsterPiece3.takeDamage(getAttack());
                         }
+                        renderEffects(newRow, newCol+1);
+                        renderEffects(newRow, newCol-1);
                         System.out.println((newRow) + " " + (newCol+1));
                         System.out.println((newRow) + " " + (newCol-1));
                     }
@@ -89,31 +128,31 @@ public class DragonFire extends BaseSkill implements Attack {
                         if (piece3 instanceof BaseMonsterPiece monsterPiece3) {
                             monsterPiece3.takeDamage(getAttack());
                         }
+                        renderEffects(newRow+1, newCol);
+                        renderEffects(newRow-1, newCol);
                         System.out.println((newRow+1) + " " + (newCol));
                         System.out.println((newRow-1) + " " + (newCol));
                     }
                 }
-            }
+    }
 
-            if (i == 3){
-                // ------------------------- x ---------------------------
+    private void performTertiaryAttack(int newRow, int newCol, int directionRow, int directionCol) {
+        // Implementation of tertiary attack
+        // ------------------------- x ---------------------------
                 if(directionCol != 0 && directionRow != 0) {
-                    BasePiece piece4 = GameManager.getInstance().piecesPosition[newRow - directionRow][newCol];
-                    BasePiece piece5 = GameManager.getInstance().piecesPosition[newRow][newCol - directionCol];
-                    BasePiece piece6 = GameManager.getInstance().piecesPosition[newRow - directionRow * 2][newCol];
-                    BasePiece piece7 = GameManager.getInstance().piecesPosition[newRow][newCol - directionCol * 2];
+                    BasePiece piece4 = GameManager.getInstance().piecesPosition[newRow - directionRow * 2][newCol];
+                    BasePiece piece5 = GameManager.getInstance().piecesPosition[newRow][newCol - directionCol * 2];
+
                     if (piece4 instanceof BaseMonsterPiece monsterPiece4) {
                         monsterPiece4.takeDamage(getAttack());
                     }
                     if (piece5 instanceof BaseMonsterPiece monsterPiece5) {
                         monsterPiece5.takeDamage(getAttack());
                     }
-                    if (piece6 instanceof BaseMonsterPiece monsterPiece6) {
-                        monsterPiece6.takeDamage(getAttack());
-                    }
-                    if (piece7 instanceof BaseMonsterPiece monsterPiece7) {
-                        monsterPiece7.takeDamage(getAttack());
-                    }
+                    renderEffects(newRow - directionRow, newCol);
+                    renderEffects(newRow, newCol - directionCol);
+                    renderEffects(newRow - directionRow * 2, newCol);
+                    renderEffects(newRow, newCol - directionCol * 2);
                     System.out.println((newRow - directionRow) + " " + newCol);
                     System.out.println(newRow + " " + (newCol - directionCol));
                     System.out.println((newRow - directionRow * 2) + " " + newCol);
@@ -122,53 +161,43 @@ public class DragonFire extends BaseSkill implements Attack {
                 //-------------------- + --------------------
                 else {
                     if (directionCol == 0){
-                        BasePiece piece4 = GameManager.getInstance().piecesPosition[newRow][newCol+1];
-                        BasePiece piece5 = GameManager.getInstance().piecesPosition[newRow][newCol-1];
-                        BasePiece piece6 = GameManager.getInstance().piecesPosition[newRow][newCol+2];
-                        BasePiece piece7 = GameManager.getInstance().piecesPosition[newRow][newCol-2];
+                        BasePiece piece4 = GameManager.getInstance().piecesPosition[newRow][newCol+2];
+                        BasePiece piece5 = GameManager.getInstance().piecesPosition[newRow][newCol-2];
                         if (piece4 instanceof BaseMonsterPiece monsterPiece4) {
                             monsterPiece4.takeDamage(getAttack());
                         }
                         if (piece5 instanceof BaseMonsterPiece monsterPiece5) {
                             monsterPiece5.takeDamage(getAttack());
                         }
-                        if (piece6 instanceof BaseMonsterPiece monsterPiece6) {
-                            monsterPiece6.takeDamage(getAttack());
-                        }
-                        if (piece7 instanceof BaseMonsterPiece monsterPiece7) {
-                            monsterPiece7.takeDamage(getAttack());
-                        }
+                        renderEffects(newRow, newCol + 1);
+                        renderEffects(newRow, newCol - 1);
+                        renderEffects(newRow, newCol + 2);
+                        renderEffects(newRow, newCol - 2 );
                         System.out.println((newRow) + " " + (newCol + 1));
                         System.out.println(newRow + " " + (newCol - 1));
                         System.out.println((newRow) + " " + (newCol + 2));
                         System.out.println(newRow + " " + (newCol - 2 ));
                     }
                     else {
-                        BasePiece piece4 = GameManager.getInstance().piecesPosition[newRow+1][newCol];
-                        BasePiece piece5 = GameManager.getInstance().piecesPosition[newRow-1][newCol];
-                        BasePiece piece6 = GameManager.getInstance().piecesPosition[newRow+2][newCol];
-                        BasePiece piece7 = GameManager.getInstance().piecesPosition[newRow-2][newCol];
+                        BasePiece piece4 = GameManager.getInstance().piecesPosition[newRow+2][newCol];
+                        BasePiece piece5 = GameManager.getInstance().piecesPosition[newRow-2][newCol];
+
                         if (piece4 instanceof BaseMonsterPiece monsterPiece4) {
                             monsterPiece4.takeDamage(getAttack());
                         }
                         if (piece5 instanceof BaseMonsterPiece monsterPiece5) {
                             monsterPiece5.takeDamage(getAttack());
                         }
-                        if (piece6 instanceof BaseMonsterPiece monsterPiece6) {
-                            monsterPiece6.takeDamage(getAttack());
-                        }
-                        if (piece7 instanceof BaseMonsterPiece monsterPiece7) {
-                            monsterPiece7.takeDamage(getAttack());
-                        }
+                        renderEffects(newRow+1, newCol);
+                        renderEffects(newRow-1, newCol);
+                        renderEffects(newRow+2, newCol);
+                        renderEffects(newRow-2, newCol);
                         System.out.println((newRow+1) + " " + newCol );
                         System.out.println((newRow-1) + " " + (newCol ));
                         System.out.println((newRow+2) + " " + (newCol));
                         System.out.println((newRow-2) + " " + (newCol));
                     }
                 }
-            }
-
-        }
     }
 
     private boolean checkRange (int row, int col) {
@@ -206,8 +235,11 @@ public class DragonFire extends BaseSkill implements Attack {
     public boolean castOnMonster() {
         return true;
     }
+
     @Override
     public int getAttack() {
         return DAMAGE;
     }
 }
+
+

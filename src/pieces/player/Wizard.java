@@ -43,17 +43,17 @@ public class Wizard extends BasePlayerPiece{
         currentHp = maxHp;
 
         attackDamage = 4; // Base attack for player
-        attackRange = 1;
+        attackRange = 2;
 
         //add skill
         skills[0] = new Fireball();
         skills[1] = new IceShield();
-
         // class specifics skills
         classSpecifics[0] = new Fireball();
         classSpecifics[1] = new IceShield();
         classSpecifics[2] = new DragonFire();
         classSpecifics[3] = new RainOfFire();
+
 
         //configs values for animation
         setTexture(new ImageView(new Image(Config.WizardPath))); //static image for icon, ...
@@ -106,12 +106,22 @@ public class Wizard extends BasePlayerPiece{
         monsterPiece.takeDamage(getAttackDamage());
 
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
+        // ----------------------Attack Animation----------------------
         EffectManager.getInstance()
                 .renderEffect(EffectManager.TYPE.AROUND_SELF,
                         this,
                         monsterPiece.getRow(), monsterPiece.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(0),
-                        new EffectConfig(0, 8, 0, 1.25));
+                        EffectManager.getInstance().createInPlaceEffects(22),
+                        new EffectConfig(8, 8, 32, 1.4));
+        // -------------------------------------------------------------
+        // ----------------------Attack Take Damage Animation----------------------
+        EffectManager.getInstance()
+                .renderEffect(EffectManager.TYPE.ON_TARGET,
+                        this,
+                        monsterPiece.getRow(), monsterPiece.getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(23),
+                        new EffectConfig(-16, -19, 0, 1));
+        // -------------------------------------------------------------
 
         System.out.println("Attack success");
         GUIManager.getInstance().updateGUI();

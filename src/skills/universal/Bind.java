@@ -4,6 +4,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
+import logic.effect.Effect;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
@@ -57,18 +58,28 @@ public class Bind extends BaseSkill implements Attack {
             if (target instanceof BaseMonsterPiece monsterPiece) {
                 monsterPiece.takeDamage(DAMAGE);
                 // Stun monster 3 turn
-                monsterPiece.setStun(monsterPiece.getStun() + 3);
+                monsterPiece.addBuff(3,"Stun");
+                //=========<STUN EFFECT>====================================================================
+                Effect Stun = EffectManager.getInstance().createInPlaceEffects(8);
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.ON_SELF ,
+                                GameManager.getInstance().player ,
+                                target.getRow(), target.getCol(),
+                                Stun ,
+                                new EffectConfig(12 , -6 , 0 , 1.6) );
+                Stun.setTurnRemain(4);
+                //===========================================================================================
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
                 //=========<SKILL EFFECT>====================================================================
                 EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
-                                GameManager.getInstance().player ,
+                        .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                                GameManager.getInstance().player,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(1) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
+                                EffectManager.getInstance().createInPlaceEffects(0) ,
+                                new EffectConfig(0 , 8 , 0 , 1.25) );
                 //===========================================================================================
             }
         }

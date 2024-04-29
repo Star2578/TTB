@@ -27,12 +27,16 @@ public class Archer extends BasePlayerPiece {
         maxMana = 15;
         currentMana = maxMana;
 
+        maxHp = 10;
+        currentHp = maxHp;
+
         attackDamage = 5; // Base attack for player
         attackRange = 4;
 
         //add skill
         skills[0] = new Targetlock();
-        skills[1] = new Snipe();
+        skills[1] = new Rolling();
+        skills[2] = new Halt();
 
         // class specifics skills
         classSpecifics[0] = new Targetlock();
@@ -101,14 +105,23 @@ public class Archer extends BasePlayerPiece {
         //make player face to target
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
 
-        //=========<ATTACK EFFECT>====================================================================
+        //=========<ARROW EFFECT>====================================================================
         EffectManager.getInstance()
                 .renderEffect( EffectManager.TYPE.AROUND_SELF ,
                         this ,
                         monsterPiece.getRow(), monsterPiece.getCol(),
                         EffectManager.getInstance().createInPlaceEffects(13) ,
-                        new EffectConfig(-6 , -4 , 18 , 1.5) );
+                        new EffectConfig(-6 , 0 , 18 , 1.5) );
         //===========================================================================================
+        //=========<ATTACK EFFECT>====================================================================
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                        this ,
+                        monsterPiece.getRow(), monsterPiece.getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(14) ,
+                        new EffectConfig(3 , 0 , 0 , 1.2) );
+        //===========================================================================================
+
 
         System.out.println("Attack success");
         GUIManager.getInstance().updateGUI();

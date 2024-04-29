@@ -10,6 +10,7 @@ import utils.Config;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class Skeleton extends BaseMonsterPiece {
     private enum State {
@@ -58,20 +59,37 @@ public class Skeleton extends BaseMonsterPiece {
     public void performAction() {
         endAction = false;
         updateState();
-        if (getStun() > 0) {
-            setStun(getStun() - 1);
-            endAction = true;
-            return;
-        }
-        switch (currentState) {
-            case NEUTRAL_ROAMING: {
-                roamRandomly();
-                break;
+
+        if(EffectBuffs != null) {
+            if(EffectBuffs.containsKey("Stun")) {
+                endAction = true;
+                System.out.println("Stunned");
+            }else {
+                switch (currentState) {
+                    case NEUTRAL_ROAMING:
+                        roamRandomly();
+                        break;
+                    case AGGRESSIVE:
+                        chasePlayer();
+                        break;
+                }
             }
-            case AGGRESSIVE:
-                chasePlayer();
-                break;
         }
+
+        // Check if the player has any effect
+        for(Map.Entry<String, Integer> entry : EffectBuffs.entrySet()) {
+            String BuffName = entry.getKey();
+            int duration = EffectBuffs.get(BuffName);
+            if (duration > 0) {
+                duration--; // Decrement the duration
+                EffectBuffs.put(BuffName, duration);
+            }
+            if (duration == 0) {
+                EffectBuffs.remove(BuffName);
+            }
+            System.out.println(BuffName + " " + duration);
+        }
+
     }
 
     private void chasePlayer() {
@@ -107,6 +125,14 @@ public class Skeleton extends BaseMonsterPiece {
                         getRow(), getCol(),
                         EffectManager.getInstance().createInPlaceEffects(12) ,
                         new EffectConfig(-2 , -4 , 32 , 1.7) );
+        //===========================================================================================
+        //=========<Blood EFFECT>====================================================================
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.ON_SELF ,
+                        GameManager.getInstance().player ,
+                        playerPiece.getRow(), playerPiece.getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(9) ,
+                        new EffectConfig(-34 , -52 , 0 , 1.5) );
         //===========================================================================================
 
         playerPiece.takeDamage(ATTACK_DAMAGE);

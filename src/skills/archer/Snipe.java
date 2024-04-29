@@ -1,7 +1,9 @@
 package skills.archer;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
@@ -18,7 +20,7 @@ public class Snipe extends BaseSkill implements Attack {
     public Snipe() {
 
         super("Snipe", Color.DARKRED,
-                10, 10,
+                12, 2,
                 "Costly but Deadly"
                 , Config.Rarity.LEGENDARY, "res/SFX/skills/slash/PP_01.wav"
         );
@@ -42,6 +44,33 @@ public class Snipe extends BaseSkill implements Attack {
         if (dRow != 0) directionRow /= Math.abs(dRow);
         if (dCol != 0) directionCol /= Math.abs(dCol);
 
+        //=========<SKILL EFFECT PHASE 1>====================================================================
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                        GameManager.getInstance().player ,
+                        target.getRow(), target.getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(15) ,
+                        new EffectConfig(-12 , -2 , 56 , 1.4) );
+        //===========================================================================================
+
+        // Create a PauseTransition with a duration of 0.8 seconds
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.88));
+
+        // Set the action to perform after the pause
+        pause.setOnFinished(event ->
+                //=========<SKILL EFFECT PHASE 2>====================================================================
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                                GameManager.getInstance().player ,
+                                target.getRow(), target.getCol(),
+                                EffectManager.getInstance().createInPlaceEffects(16) ,
+                                new EffectConfig(-12 , -8 , 56 , 1.4) ));
+                //===========================================================================================);
+
+        // Start the pause
+        pause.play();
+
+
         for (int i = 1; i <= range; i++) {
             int newRow, newCol;
             int dAbsCol = Math.abs(dCol);
@@ -61,30 +90,55 @@ public class Snipe extends BaseSkill implements Attack {
                 break;
             }
 
+            // Create a PauseTransition with a duration of 1.4 seconds
+            PauseTransition pause1 = new PauseTransition(Duration.seconds(1.4));
+
+            // Set the action to perform after the pause
+            pause1.setOnFinished(event ->
+
+            //=========<SKILL EFFECT PHASE 3>====================================================================
+            EffectManager.getInstance()
+                    .renderEffect( EffectManager.TYPE.ON_SELF ,
+                            GameManager.getInstance().player ,
+                            newRow, newCol,
+                            EffectManager.getInstance().createInPlaceEffects(17) ,
+                            new EffectConfig(0 , -4 , 0 , 1.4) ));
+            //===========================================================================================);
+            // Start the pause
+            pause1.play();
+
+            // Create a PauseTransition with a duration of 2.4 seconds
+            PauseTransition pause2 = new PauseTransition(Duration.seconds(2.4));
+
+            // Set the action to perform after the pause
+            pause2.setOnFinished(event ->
+            //=========<SKILL EFFECT PHASE 4>====================================================================
+                    EffectManager.getInstance()
+                            .renderEffect( EffectManager.TYPE.ON_SELF ,
+                                    GameManager.getInstance().player ,
+                                    newRow, newCol,
+                                    EffectManager.getInstance().createInPlaceEffects(18) ,
+                                    new EffectConfig(0 , -4 , 0 , 1.4) ));
+            //===========================================================================================);
+
+            // Start the pause
+            pause2.play();
+
             BasePiece piece = GameManager.getInstance().piecesPosition[newRow][newCol];
 
             if (piece instanceof BaseMonsterPiece monsterPiece) {
-                monsterPiece.takeDamage(getAttack());
+                // Create a PauseTransition with a duration of 2.5 seconds
+                PauseTransition pause3 = new PauseTransition(Duration.seconds(2.5));
+
+                pause3.setOnFinished(event ->
+                        monsterPiece.takeDamage(getAttack()));
+
+                // Start the pause
+                pause3.play();
             }
 
             System.out.println("Use " + name + " on " + newRow + " " + newCol);
         }
-        // Perform the attack
-//        for (int i = 1; i <= range; i++) {
-//            int newRow = currentRow + directionRow * i;
-//            int newCol = currentCol + directionCol * i;
-//
-//            if (newRow < 0 || newRow >= Config.BOARD_SIZE || newCol < 0 || newCol >= Config.BOARD_SIZE) {
-//                break;
-//            }
-//
-//            BasePiece piece = GameManager.getInstance().piecesPosition[newRow][newCol];
-//            if (piece instanceof BaseMonsterPiece monsterPiece) {
-//                monsterPiece.takeDamage(getAttack());
-//            }
-//
-//            System.out.println("Use " + name + " on " + " " + newRow + " " + newCol);
-//        }
     }
 
     @Override

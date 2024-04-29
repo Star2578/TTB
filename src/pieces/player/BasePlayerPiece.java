@@ -308,7 +308,15 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     }
 
     public void addBuff(int buff_duration, String buff_name) {
-        EffectBuffs.put(buff_name, buff_duration);
+        if (EffectBuffs.containsKey(buff_name)) {
+            int duration = EffectBuffs.get(buff_name);
+            duration += buff_duration;
+            EffectBuffs.put(buff_name, duration);
+            return;
+        }else {
+            EffectBuffs.put(buff_name, buff_duration);
+        }
+
         System.out.println(buff_name + " adding");
     }
 
