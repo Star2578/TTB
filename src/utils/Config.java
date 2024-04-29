@@ -66,6 +66,7 @@ public class Config {
     public static String WallTileMapPath = "sprites/ground/wall_tile_map.png";
     public static String FloorPath = "sprites/ground/floor_1.png";
     public static String FloorHoverPath = "sprites/ground/floor_hover.png";
+    public static String FogPath = "sprites/ground/fog.png";
     public static String DoorPath = "sprites/ground/floor_2.png";
 
     public static String ValidMovePath = "sprites/ground/selected_floor_1.png";

@@ -51,6 +51,7 @@ public class GameManager {
 
     public GameScene gameScene;
     public Pane animationPane;
+    public GridPane fogPane;
 
     public BasePlayerPiece player; // Current player class in the game
     public GridPane boardPane; // The board pane to create the game's grid system
@@ -94,6 +95,7 @@ public class GameManager {
 
         playerSkills = player.getSkills();
         boardPane = new GridPane();
+        fogPane = new GridPane();
         animationPane = new Pane();
 
         settingProperties = new Properties();
@@ -128,6 +130,7 @@ public class GameManager {
         inventory.clear();
         environmentPieces.clear();
         boardPane = new GridPane();
+        fogPane = new GridPane();
         animationPane = new Pane();
         dungeonFloor = new ImageView[Config.BOARD_SIZE][Config.BOARD_SIZE];
         selectionFloor = new ImageView[Config.BOARD_SIZE][Config.BOARD_SIZE];
