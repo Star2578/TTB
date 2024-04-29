@@ -41,11 +41,11 @@ public class Rho_Aias extends BaseSkill implements Buff {
 
             //=========<SKILL EFFECT>====================================================================
             EffectManager.getInstance()
-                    .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                    .renderEffect( EffectManager.TYPE.ON_SELF ,
                             GameManager.getInstance().player ,
-                            target.getRow(), target.getCol(),
-                            EffectManager.getInstance().createInPlaceEffects(5) ,
-                            new EffectConfig(0 , -16 , 24 , 1.1) );
+                            GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
+                            EffectManager.getInstance().createInPlaceEffects(31) ,
+                            new EffectConfig(0 , -16 , 0 , 1.1) );
             //===========================================================================================
         }
     }

@@ -141,6 +141,11 @@ public class Config {
     public static String skillDragonFirePath = "sprites/skills/skill_wizard/skill_dragon_fire.png";
     public static String skillIceShieldPath = "sprites/skills/skill_wizard/skill_ice_shield.png";
     public static String skillIceShieldBuffPath = "sprites/skills/skill_wizard/skill_ice_shield_buff.png";
+    // Universal Skills animation
+    public  static String skillHammerFallPath = "sprites/skills/skill_universal/skill_hammer_fall.png";
+    public static String skillHolyLightPath = "sprites/skills/skill_universal/skill_holy_light.png";
+    public static String skillRhoAiasPath = "sprites/skills/skill_universal/skill_rho_aias.png";
+    public static String skillStaticShockPath = "sprites/skills/skill_universal/skill_static_shock.png";
 
     // BGM
     public static String bgm_8_bit_adventure = "res/BGM/8_Bit_Adventure.wav";

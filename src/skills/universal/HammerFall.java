@@ -79,11 +79,11 @@ public class HammerFall extends BaseSkill implements Attack {
 
                 //=========<SKILL EFFECT>====================================================================
                 EffectManager.getInstance()
-                        .renderEffect(EffectManager.TYPE.AROUND_SELF,
-                                GameManager.getInstance().player,
+                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                                GameManager.getInstance().player ,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(3),
-                                new EffectConfig(0, -16, 24, 1.1));
+                                EffectManager.getInstance().createInPlaceEffects(29) ,
+                                new EffectConfig(6 , 4 , 42 , 2.4) );
                 //===========================================================================================
             }
         }

@@ -15,6 +15,7 @@ import skills.knight.Dart;
 import skills.knight.Heal;
 import skills.knight.Slash;
 import skills.knight.Stomp;
+import skills.universal.*;
 import utils.Config;
 
 import java.util.ArrayList;
@@ -42,12 +43,14 @@ public class Knight extends BasePlayerPiece {
         //add skill
         skills[0] = new Slash();
         skills[1] = new Heal();
+        skills[2] = new StaticShock();
+        skills[3] = new TripleStrike();
 
         // class specifics skills
         classSpecifics[0] = new Slash();
         classSpecifics[1] = new Heal();
         classSpecifics[2] = new Dart();
-        classSpecifics[3] = new Stomp();
+        classSpecifics[3] = new HammerFall();
 
         //configs values for animation
         setTexture(new ImageView(new Image(Config.KnightPath))); //static image for icon, ...

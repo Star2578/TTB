@@ -158,6 +158,23 @@ public class EffectManager {
         Effect Wizard_Skill_IceShield_Buff = new Effect(
                 new ImageView(new Image(Config.skillIceShieldBuffPath)) , 6 , 1 , 6 , 16 , 22 , 7 , true);
         effects.add(Wizard_Skill_IceShield_Buff);
+        //Universal Skill HammerFall 29
+        Effect Universal_Skill_HammerFall = new Effect(
+                new ImageView(new Image(Config.skillHammerFallPath)) , 6 , 1 , 6 , 16 , 15 , 10 , false);
+        effects.add(Universal_Skill_HammerFall);
+        //Universal Skill HolyLight 30
+        Effect Universal_Skill_HolyLight = new Effect(
+                new ImageView(new Image(Config.skillHolyLightPath)) , 16 , 1 , 16 , 48 , 48 , 10 , false);
+        effects.add(Universal_Skill_HolyLight);
+        //Universal Skill RhoAias 31
+        Effect Universal_Skill_RhoAias = new Effect(
+                new ImageView(new Image(Config.skillRhoAiasPath)) , 4 , 1 , 4 , 32 , 34 , 7 , false);
+        effects.add(Universal_Skill_RhoAias);
+        //Universal Skill StaticShock 32
+        Effect Universal_Skill_StaticShock = new Effect(
+                new ImageView(new Image(Config.skillStaticShockPath)) , 13 , 1 , 13 , 64 , 64 , 10 , false);
+        effects.add(Universal_Skill_StaticShock);
+
     }
 
     public Effect createInPlaceEffects(int index){

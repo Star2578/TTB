@@ -1,7 +1,9 @@
 package skills.universal;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
@@ -27,8 +29,16 @@ public class TripleStrike extends BaseSkill implements Attack {
     public void perform(BasePiece target) {
         this.target = target;
         for (int i = 0; i < 3; i++) {
-            attack();
-            SoundManager.getInstance().playSoundEffect(sfxPath);
+            PauseTransition pause = new PauseTransition(Duration.seconds(i + 0.4));
+
+            // Set the action to perform after the pause
+            pause.setOnFinished(event -> {
+                attack();
+                SoundManager.getInstance().playSoundEffect(sfxPath);
+            });
+
+            // Start the pause
+            pause.play();
         }
     }
 
@@ -62,12 +72,13 @@ public class TripleStrike extends BaseSkill implements Attack {
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
                 //=========<SKILL EFFECT>====================================================================
+                //attack effect
                 EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
-                                GameManager.getInstance().player ,
+                        .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                                GameManager.getInstance().player,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(1) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
+                                EffectManager.getInstance().createInPlaceEffects(0) ,
+                                new EffectConfig(0 , 8 , 0 , 1.25) );
                 //===========================================================================================
             }
         }

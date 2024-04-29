@@ -67,11 +67,19 @@ public class HolyLight extends BaseSkill implements Healing, Attack {
 
                 //=========<SKILL EFFECT>====================================================================
                 EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                        .renderEffect( EffectManager.TYPE.ON_SELF ,
                                 GameManager.getInstance().player ,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(1) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
+                                EffectManager.getInstance().createInPlaceEffects(30) ,
+                                new EffectConfig(-6 , -18 , 0 , 1.1) );
+                //===========================================================================================
+                //=========<HEAL EFFECT>====================================================================
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.ON_SELF,
+                                GameManager.getInstance().player ,
+                                GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
+                                EffectManager.getInstance().createInPlaceEffects(5) ,
+                                new EffectConfig(-48 , -52 , 0 , 1.2) );
                 //===========================================================================================
             }
         }

@@ -4,6 +4,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
+import logic.effect.Effect;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
@@ -65,12 +66,14 @@ public class StaticShock extends BaseSkill implements Attack {
                         monsterPiece.takeDamage(DAMAGE);
                         monsterPiece.addBuff(1,"Stun");
                         //=========<STUN EFFECT>====================================================================
+                        Effect Stun = EffectManager.getInstance().createInPlaceEffects(8);
                         EffectManager.getInstance()
-                                .renderEffect( EffectManager.TYPE.ON_TARGET,
+                                .renderEffect( EffectManager.TYPE.ON_SELF ,
                                         GameManager.getInstance().player ,
                                         target.getRow(), target.getCol(),
-                                        EffectManager.getInstance().createInPlaceEffects(8) ,
-                                        new EffectConfig(-9 , -16 , 0 , 1.8) );
+                                        Stun ,
+                                        new EffectConfig(12 , -6 , 0 , 1.6) );
+                        Stun.setTurnRemain(2);
                         //===========================================================================================
                         if (!monsterPiece.isAlive()) {
                             GameManager.getInstance().gameScene.removePiece(monsterPiece);
@@ -79,11 +82,11 @@ public class StaticShock extends BaseSkill implements Attack {
                     //=========<SKILL EFFECT>====================================================================
                     if (!(target instanceof BasePlayerPiece)){
                         EffectManager.getInstance()
-                                .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                                .renderEffect( EffectManager.TYPE.ON_SELF ,
                                         GameManager.getInstance().player ,
                                         newRow, newCol,
-                                        EffectManager.getInstance().createInPlaceEffects(3) ,
-                                        new EffectConfig(0 , -6 , 38 , 1.1) );
+                                        EffectManager.getInstance().createInPlaceEffects(32) ,
+                                        new EffectConfig(-15 , -48 , 0 , 1.1) );
                     }
                     //===========================================================================================
                 }
