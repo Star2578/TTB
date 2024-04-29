@@ -28,6 +28,7 @@ public class SlimeBoss extends BaseMonsterPiece {
     private final double ATTACK_RANGE = 1.5;
     private final int MOVE = 2;
     private int ATK_CNT = 0;
+    private int Skill_CNT = 0;
     private final int VISION_RANGE = 10;
     private BasePiece[][] piecesPosition = GameManager.getInstance().piecesPosition;
 
@@ -38,11 +39,7 @@ public class SlimeBoss extends BaseMonsterPiece {
 
         this.currentPhase = Phase.FIRST;
 
-        if(currentPhase == Phase.FIRST) {
-            setupAnimation(Config.SlimePath4, 0, -10, 32, 46 , true);
-        } else if (currentPhase == Phase.SECOND) {
-
-        }
+        setupAnimation(Config.SlimePath4, 0, -10, 32, 46 , true);
     }
 
     @Override
@@ -51,7 +48,15 @@ public class SlimeBoss extends BaseMonsterPiece {
         updateState();
         ATK_CNT = 0;
         switch (currentPhase) {
-            case FIRST, SECOND, THIRD:
+            case FIRST:
+                chasePlayer();
+                break;
+            case SECOND, THIRD:
+                if (getStun() > 0) {
+                    setStun(getStun() - 1);
+                    endAction = true;
+                    return;
+                }
                 chasePlayer();
                 break;
             case DEAD:
@@ -78,6 +83,9 @@ public class SlimeBoss extends BaseMonsterPiece {
     public void attack(BasePlayerPiece playerPiece) {
         switch (currentPhase) {
             case FIRST:
+                if(Skill_CNT >= 2) {
+                    return;
+                }
                 playerPiece.takeDamage(ATTACK_DAMAGE_FIRST_PHASE);
                 break;
             case SECOND:
@@ -113,9 +121,9 @@ public class SlimeBoss extends BaseMonsterPiece {
             smallerSlime.currentPhase = nextPhase;
 
             if (nextPhase == Phase.SECOND) {
-                smallerSlime.setupAnimation(Config.WizardAnimationPath, 0, -10, 32, 32 , true);
+                smallerSlime.setupAnimation(Config.WizardAnimationPath, 0, -10, 32, 46 , true);
             } else if (nextPhase == Phase.THIRD) {
-                smallerSlime.setupAnimation(Config.SkeletonPath, 0, -10, 32, 46 , true);
+                smallerSlime.setupAnimation(Config.SkeletonPath, 0, -10, 32, 32 , true);
             }
 
             piecesPosition[row][col] = smallerSlime;
@@ -133,6 +141,7 @@ public class SlimeBoss extends BaseMonsterPiece {
     }
 
     private void chasePlayer() {
+        Skill_CNT++;
         Timeline timeline = new Timeline();
         for(int i = 0; i < MOVE; i++) {
             KeyFrame keyFrame = new KeyFrame(Duration.seconds(i), event -> {
