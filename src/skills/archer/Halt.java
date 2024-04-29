@@ -3,6 +3,8 @@ package skills.archer;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
+import logic.SoundManager;
+import logic.effect.Effect;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
@@ -14,6 +16,7 @@ import utils.Config;
 public class Halt extends BaseSkill implements Attack {
     private BasePiece target;
     private final int DAMAGE = 6;
+    private final int STUN_DURATION = 1;
     public Halt() {
         super("Halt", Color.DARKRED,
                 5, 2,
@@ -30,7 +33,17 @@ public class Halt extends BaseSkill implements Attack {
             if (target instanceof BaseMonsterPiece monsterPiece) {
                 monsterPiece.takeDamage(DAMAGE);
                 // Stun monster 1 turn
-                monsterPiece.addBuff(1, "Stun");
+                monsterPiece.addBuff(STUN_DURATION, "Stun");
+                //=========<STUN EFFECT>====================================================================
+                Effect Stun = EffectManager.getInstance().createInPlaceEffects(8);
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.ON_SELF ,
+                                GameManager.getInstance().player ,
+                                target.getRow(), target.getCol(),
+                                Stun ,
+                                new EffectConfig(12 , -6 , 0 , 1.6) );
+                Stun.setTurnRemain(STUN_DURATION+1);
+                //===========================================================================================
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
@@ -59,6 +72,7 @@ public class Halt extends BaseSkill implements Attack {
     public void perform(BasePiece target) {
         this.target = target;
         attack();
+        SoundManager.getInstance().playSoundEffect(sfxPath);
     }
 
     @Override

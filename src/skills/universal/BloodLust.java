@@ -14,25 +14,23 @@ import utils.Attack;
 import utils.Config;
 import utils.Healing;
 
-public class HolyLight extends BaseSkill implements Healing, Attack {
+public class BloodLust extends BaseSkill implements Attack, Healing {
     private BasePiece target;
 
-    private final int DAMAGE = 4;
-    private final int HEAL = 4;
+    private final int DAMAGE = 9;
+    private final int HEAL = 5;
+    public BloodLust() {
+        super("Blood Lust", Color.CRIMSON, 5, 5,
+                "More damage if target not at full health, heal if killed", Config.Rarity.LEGENDARY, Config.sfx_attackSound);
 
-    public HolyLight() {
-        super("Holy Light", Color.GOLD, 4, 4,
-                "The light will burn the enemy and heal thou wounds", Config.Rarity.RARE, Config.sfx_holyMagicSound);
-
-        icon = new ImageView(Config.HolyLightPath);
-        range = 2;
+        icon = new ImageView(Config.BloodLustPath);
+        range = 1;
     }
 
     @Override
     public void perform(BasePiece target) {
         this.target = target;
         attack();
-        heal();
         SoundManager.getInstance().playSoundEffect(sfxPath);
     }
 
@@ -60,7 +58,16 @@ public class HolyLight extends BaseSkill implements Healing, Attack {
         if (target != null && target != GameManager.getInstance().player) {
             // Perform Attack
             if (target instanceof BaseMonsterPiece monsterPiece) {
-                monsterPiece.takeDamage(DAMAGE);
+                if (monsterPiece.getCurrentHealth() != monsterPiece.getMaxHealth()) {
+                    monsterPiece.takeDamage(DAMAGE + 5);
+                } else {
+                    monsterPiece.takeDamage(DAMAGE);
+                }
+
+                if (!monsterPiece.isAlive()){
+                    heal();
+                }
+
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());

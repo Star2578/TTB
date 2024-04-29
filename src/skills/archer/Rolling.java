@@ -3,6 +3,7 @@ package skills.archer;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
+import logic.SoundManager;
 import pieces.BasePiece;
 import skills.BaseSkill;
 import utils.Config;
@@ -22,6 +23,7 @@ public class Rolling extends BaseSkill {
     public void perform(BasePiece target) {
         this.target = target;
         roll();
+        SoundManager.getInstance().playSoundEffect(sfxPath);
     }
 
     public void roll() {

@@ -86,7 +86,7 @@ public class Wizard extends BasePlayerPiece{
             }
             System.out.println(BuffName + " " + duration);
         }
-        setCurrentMana(getCurrentMana() + 1); // Wizard restore 1 mana every turn
+        setCurrentMana(getCurrentMana() + 3); // Wizard restore 3 mana every turn
         setCurrentActionPoint(getMaxActionPoint());
     }
 
@@ -131,13 +131,17 @@ public class Wizard extends BasePlayerPiece{
     public void takeDamage(int damage) {
         System.out.println("Damage taken: " + damage);
 
-        //Check if the player has any effect
-        if(EffectBuffs != null) {
-            if(EffectBuffs.containsKey("Ice Shield")) {
-                damage = (damage * 70) / 100;
-                System.out.println("Damage reduced by 30% : " + damage);
-            }
-        }
+//        //Check if the player has any effect
+//        if(EffectBuffs != null) {
+//            if(EffectBuffs.containsKey("Ice Shield")) {
+//                damage = (damage * 70) / 100;
+//                System.out.println("Damage reduced by 30% : " + damage);
+//            }
+//            if(EffectBuffs.containsKey("Rho Aias")) {
+//                damage = (damage * 20) / 100;
+//                System.out.println("Damage reduced by 80% : " + damage);
+//            }
+//        }
         super.takeDamage(damage);
 
 

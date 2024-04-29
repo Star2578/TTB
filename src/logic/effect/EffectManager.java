@@ -62,7 +62,7 @@ public class EffectManager {
         Effect Skill_Dart = new Effect(
                 new ImageView(new Image(Config.skillDartPath)) , 3 , 1 , 3 , 32 , 44 , 15 , false);
         effects.add(Skill_Dart);
-        //Knight Skill Heal 5
+        //Skill Heal 5
         Effect Skill_Heal = new Effect(
                 new ImageView(new Image(Config.skillHealPath)) , 4 , 4 , 16 , 128 , 128 , 7 , false);
         effects.add(Skill_Heal);
@@ -150,6 +150,14 @@ public class EffectManager {
         Effect Wizard_Skill_DragonFire = new Effect(
                 new ImageView(new Image(Config.skillDragonFirePath)) , 4 , 1 , 4 , 32 , 31 , 10 , false);
         effects.add(Wizard_Skill_DragonFire);
+        //Wizard Skill Ice Shield 27
+        Effect Wizard_Skill_IceShield = new Effect(
+                new ImageView(new Image(Config.skillIceShieldPath)) , 4 , 1 , 4 , 32 , 30 , 7 , false);
+        effects.add(Wizard_Skill_IceShield);
+        //Wizard Skill Ice Shield buff 28
+        Effect Wizard_Skill_IceShield_Buff = new Effect(
+                new ImageView(new Image(Config.skillIceShieldBuffPath)) , 6 , 1 , 6 , 16 , 22 , 7 , true);
+        effects.add(Wizard_Skill_IceShield_Buff);
     }
 
     public Effect createInPlaceEffects(int index){
@@ -200,7 +208,7 @@ public class EffectManager {
             EffectManager.getInstance().effectPane.getChildren().add(effect.imageView);
 
             //scale effect size + direction
-            effect.imageView.setScaleX(config.scale * player.getCurrentDirection());
+            //effect.imageView.setScaleX(config.scale * player.getCurrentDirection());
             effect.imageView.setScaleY(config.scale);
 
             //set effect on enemy position

@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
+import logic.effect.Effect;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import logic.ui.GUIManager;
@@ -68,14 +69,6 @@ public class Zombie extends BaseMonsterPiece{
         if(EffectBuffs != null) {
             if(EffectBuffs.containsKey("Stun")) {
                 endAction = true;
-                //=========<STUN EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_SELF ,
-                                GameManager.getInstance().player ,
-                                getRow(), getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(8) ,
-                                new EffectConfig(12 , -4 , 0 , 1.6) );
-                //===========================================================================================
                 System.out.println("Stunned");
             }else {
                 switch (currentState) {

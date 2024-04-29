@@ -10,7 +10,7 @@ import logic.SpriteAnimation;
 public class Effect extends SpriteAnimation {
 
     public boolean canKill = false;
-    private static final int defaultTimeout = 10;
+    private static final int defaultTimeout = 30;
     private int turnRemain = 1;
 
 

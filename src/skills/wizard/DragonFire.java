@@ -3,6 +3,7 @@ package skills.wizard;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
+import logic.SoundManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
@@ -213,6 +214,7 @@ public void attack() {
     public void perform(BasePiece target) {
         this.target = target;
         attack();
+        SoundManager.getInstance().playSoundEffect(sfxPath);
     }
 
     @Override

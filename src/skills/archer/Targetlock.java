@@ -3,6 +3,7 @@ package skills.archer;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
+import logic.SoundManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
@@ -16,7 +17,7 @@ public class Targetlock extends BaseSkill implements Attack {
     private final int DAMAGE = 7;
     public Targetlock() {
         super("TargetLock", Color.DARKRED,
-                1, 2,
+                1, 0,
                 "Concentrate... Steady aim... SHOOT!",
                 Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav"
         );
@@ -50,7 +51,6 @@ public class Targetlock extends BaseSkill implements Attack {
                                 EffectManager.getInstance().createInPlaceEffects(19) ,
                                 new EffectConfig(1 , 0 , 0 , 1.5) );
                 //===========================================================================================
-
             }
         }
     }
@@ -59,6 +59,7 @@ public class Targetlock extends BaseSkill implements Attack {
     public void perform(BasePiece target) {
         this.target = target;
         attack();
+        SoundManager.getInstance().playSoundEffect(sfxPath);
     }
 
     @Override
