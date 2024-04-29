@@ -2,15 +2,15 @@ package pieces.enemies;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpawnerManager;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
-import pieces.wall.BaseWallPiece;
 import utils.Config;
+
+import java.util.Map;
 
 import static game.Setting.gameManager;
 import static utils.Config.BOARD_SIZE;
@@ -29,7 +29,7 @@ public class SlimeBoss extends BaseMonsterPiece {
     private final int MOVE = 2;
     private int ATK_CNT = 0;
     private int Skill_CNT = 0;
-    private final int VISION_RANGE = 10;
+    private final int Spilt_range = 10;
     private BasePiece[][] piecesPosition = GameManager.getInstance().piecesPosition;
 
     public SlimeBoss() {
@@ -47,18 +47,49 @@ public class SlimeBoss extends BaseMonsterPiece {
         updateState();
         ATK_CNT = 0;
         switch (currentPhase) {
-            case FIRST, SECOND, THIRD:
-                chasePlayer();
+            case FIRST:
+                if(Skill_CNT >= 4) {
+                    // reset Skill_CNT
+                    SplitMucilage();
+                    Skill_CNT = 0;
+                }else {
+                    chasePlayer();
+                    Skill_CNT++;
+                }
+                System.out.println("Skill count: " + Skill_CNT);
+                break;
+            case SECOND, THIRD:
+                if(EffectBuffs != null) {
+                    if(EffectBuffs.containsKey("Stun")) {
+                        endAction = true;
+                        System.out.println("Stunned");}
+                }else {
+                    chasePlayer();
+                }
                 break;
             case DEAD:
                 // Handle the slime boss death, maybe some special effects or drops
                 break;
         }
+
+        // Check if the player has any effect
+        for(Map.Entry<String, Integer> entry : EffectBuffs.entrySet()) {
+            String BuffName = entry.getKey();
+            int duration = EffectBuffs.get(BuffName);
+            if (duration > 0) {
+                duration--; // Decrement the duration
+                EffectBuffs.put(BuffName, duration);
+            }
+            if (duration == 0) {
+                EffectBuffs.remove(BuffName);
+            }
+            System.out.println(BuffName + " " + duration);
+        }
+
     }
 
     @Override
     public void updateState() {
-
         if (currentPhase == Phase.FIRST && getCurrentHealth() <= 20) {
             splitSlime( 100, Phase.SECOND);
         } else if (currentPhase == Phase.SECOND && getCurrentHealth() <= 15) {
@@ -74,9 +105,6 @@ public class SlimeBoss extends BaseMonsterPiece {
     public void attack(BasePlayerPiece playerPiece) {
         switch (currentPhase) {
             case FIRST:
-                if(Skill_CNT >= 2) {
-                    return;
-                }
                 playerPiece.takeDamage(ATTACK_DAMAGE_FIRST_PHASE);
                 break;
             case SECOND:
@@ -86,12 +114,37 @@ public class SlimeBoss extends BaseMonsterPiece {
                 playerPiece.takeDamage(ATTACK_DAMAGE_THIRD_PHASE);
                 break;
         }
+
         GUIManager.getInstance().eventLogDisplay.addLog("Slime Boss dealt " + ATTACK_DAMAGE_FIRST_PHASE);
+    }
+
+    private void SplitMucilage() {
+        for(int i = 0; i < Spilt_range; i++) {
+            int row, col;
+            do {
+                row = (int) (Math.random() * BOARD_SIZE);
+                col = (int) (Math.random() * BOARD_SIZE);
+            } while (!isValidMoveSet(row, col) || piecesPosition[row][col] != null);
+
+            SlimeMucilage slimeMucile = new SlimeMucilage();
+
+            slimeMucile.setRow(row);
+            slimeMucile.setCol(col);
+            gameManager.piecesPosition[row][col] = slimeMucile;
+
+            slimeMucile.animationImage.setFitWidth(SQUARE_SIZE);
+            slimeMucile.animationImage.setX(col * SQUARE_SIZE + slimeMucile.getOffsetX());
+            slimeMucile.animationImage.setY(row * SQUARE_SIZE + slimeMucile.getOffsetY());
+
+            gameManager.environmentPieces.add(slimeMucile);
+            gameManager.animationPane.getChildren().add(slimeMucile.animationImage);
+
+            endAction = true;
+        }
     }
 
     private void splitSlime(int hp, Phase nextPhase) {
         // Remove big slime
-        // test test test
         GameManager.getInstance().gameScene.removePiece(this);
         gameManager.environmentPieces.remove(this);
 
@@ -111,8 +164,9 @@ public class SlimeBoss extends BaseMonsterPiece {
             smallerSlime.setCurrentHealth(hp);
             smallerSlime.currentPhase = nextPhase;
 
+            //TODO : FIX ANIMATION PATH
             if (nextPhase == Phase.SECOND) {
-                smallerSlime.setupAnimation(Config.WizardAnimationPath, 0, -10, 32, 46 , true);
+                smallerSlime.setupAnimation(Config.WizardAnimationPath, 0, -10, 32, 32 , true);
             } else if (nextPhase == Phase.THIRD) {
                 smallerSlime.setupAnimation(Config.SkeletonPath, 0, -10, 32, 32 , true);
             }
@@ -132,7 +186,6 @@ public class SlimeBoss extends BaseMonsterPiece {
     }
 
     private void chasePlayer() {
-        Skill_CNT++;
         Timeline timeline = new Timeline();
         for(int i = 0; i < MOVE; i++) {
             KeyFrame keyFrame = new KeyFrame(Duration.seconds(i), event -> {
