@@ -123,17 +123,21 @@ public class GameScene {
 
         // Center the game board using a StackPane
         centerPane = new StackPane();
-        centerPane.getChildren().addAll(boardPane , tilePane , animationPane , effectManager.effectPane, fogPane);
+        centerPane.getChildren().addAll(boardPane , tilePane , animationPane , effectManager.effectPane);
+
+        if (GameManager.getInstance().fogOfWar) centerPane.getChildren().addAll(fogPane);
 
         boardPane.setBackground(Background.fill(Color.GOLD));
         root.setCenter(centerPane);
 
         // this pane contain all fog
-        // setup fogPane
-        initFog(fogPane);
-        fogPane.setMinSize(GAME_SIZE, GAME_SIZE);
-        fogPane.setMaxSize(GAME_SIZE, GAME_SIZE);
-        fogPane.setDisable(true);
+        // setup fogPane if needed
+        if (GameManager.getInstance().fogOfWar) {
+            initFog(fogPane);
+            fogPane.setMinSize(GAME_SIZE, GAME_SIZE);
+            fogPane.setMaxSize(GAME_SIZE, GAME_SIZE);
+            fogPane.setDisable(true);
+        }
 
         // Current Level Text
         currentLevelText = new Text(String.valueOf(GameManager.getInstance().dungeonLevel));
@@ -216,7 +220,9 @@ public class GameScene {
         placeEntityRandomly(player);
         precomputeValidMoves();
         initializeEnvironment();
-        initFog(fogPane);
+
+        // fog of war only when play chose
+        if (GameManager.getInstance().fogOfWar) initFog(fogPane);
 
         turnManager = TurnManager.getInstance();
 

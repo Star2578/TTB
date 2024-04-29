@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
@@ -111,6 +112,31 @@ public class CharSelection {
             }
         });
 
+        VBox optionContainer = new VBox();
+        optionContainer.setLayoutX(630);
+        optionContainer.setLayoutY(520);
+        optionContainer.setSpacing(5);
+
+        //-------------------fog of war option -----------------------------
+        CheckBox fogOfWarCheckBox = new CheckBox("Fog of War");
+        fogOfWarCheckBox.setStyle(
+                "-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:20;" +
+                "-fx-text-fill:'white';");
+        fogOfWarCheckBox.setOnMouseClicked(mouseEvent -> {
+            GameManager.getInstance().fogOfWar = fogOfWarCheckBox.isSelected();
+        });
+        CheckBox moreMonsterCheckBox = new CheckBox("More Monsters");
+        moreMonsterCheckBox.setStyle(
+                "-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-size:20;" +
+                "-fx-text-fill:'white';");
+        moreMonsterCheckBox.setOnMouseClicked(mouseEvent -> {
+            GameManager.getInstance().moreMonster = moreMonsterCheckBox.isSelected();
+        });
+
+        // add options to optionContainer
+        optionContainer.getChildren().addAll(fogOfWarCheckBox, moreMonsterCheckBox);
 
         //-------------------<return button>-----------------------------------------
         returnBtn= new Button("Back");
@@ -132,6 +158,7 @@ public class CharSelection {
                 scrollPaneContainer,
                 charInfoBox,
                 playBtn,
+                optionContainer,
                 returnBtn
         );
     }

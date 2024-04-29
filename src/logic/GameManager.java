@@ -35,6 +35,10 @@ public class GameManager {
     public boolean displayDamageNumber;
     public boolean displayActionPointOnCursor;
 
+    // options
+    public boolean fogOfWar = false;
+    public boolean moreMonster = false;
+
     // ------------ Progression --------------
     public int playerMoney = 0;
     public int dungeonLevel = 1;
