@@ -17,7 +17,7 @@ import utils.Healing;
 public class HolyLight extends BaseSkill implements Healing, Attack {
     private BasePiece target;
 
-    private final int DAMAGE = 4;
+    private final int DAMAGE = 8;
     private final int HEAL = 4;
 
     public HolyLight() {
