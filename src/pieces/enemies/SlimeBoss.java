@@ -39,8 +39,7 @@ public class SlimeBoss extends BaseMonsterPiece {
 
         this.currentPhase = Phase.FIRST;
 
-        setupAnimation(Config.SlimePath4, 0, -10, 32, 46 , true);
-    }
+        setupAnimation(Config.SlimePath4, 0, -10, 32, 46 , true);  }
 
     @Override
     public void performAction() {
@@ -48,15 +47,7 @@ public class SlimeBoss extends BaseMonsterPiece {
         updateState();
         ATK_CNT = 0;
         switch (currentPhase) {
-            case FIRST:
-                chasePlayer();
-                break;
-            case SECOND, THIRD:
-                if (getStun() > 0) {
-                    setStun(getStun() - 1);
-                    endAction = true;
-                    return;
-                }
+            case FIRST, SECOND, THIRD:
                 chasePlayer();
                 break;
             case DEAD:

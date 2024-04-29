@@ -7,21 +7,19 @@ import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.enemies.BaseMonsterPiece;
 import skills.archer.Halt;
+import skills.archer.Rolling;
 import skills.archer.Snipe;
 import skills.archer.Targetlock;
-import skills.archer.Teleport;
-import skills.knight.Heal;
-import skills.knight.Slash;
 import utils.Config;
 
-import java.util.ArrayList;
-
-import static utils.Config.BOARD_SIZE;
-import static utils.Config.SQUARE_SIZE;
+import java.util.Map;
 
 public class Archer extends BasePlayerPiece {
     public Archer(int row, int col, int defaultDirection) {
         super(row, col, defaultDirection);
+
+        maxHp = 15;
+        currentHp = maxHp;
 
         maxActionPoint = 10;
         currentActionPoint = maxActionPoint;
@@ -29,12 +27,22 @@ public class Archer extends BasePlayerPiece {
         maxMana = 15;
         currentMana = maxMana;
 
+        maxHp = 10;
+        currentHp = maxHp;
+
         attackDamage = 5; // Base attack for player
         attackRange = 4;
 
         //add skill
         skills[0] = new Targetlock();
-        skills[1] = new Snipe();
+        skills[1] = new Rolling();
+        skills[2] = new Halt();
+
+        // class specifics skills
+        classSpecifics[0] = new Targetlock();
+        classSpecifics[1] = new Halt();
+        classSpecifics[2] = new Snipe();
+        classSpecifics[3] = new Rolling();
 
         //configs values for animation
         setTexture(new ImageView(new Image(Config.ArcherPath))); //static image for icon, ...
@@ -62,6 +70,19 @@ public class Archer extends BasePlayerPiece {
     @Override
     public void startTurn() {
         setCanAct(true);
+        // Check if the player has any effect
+        for(Map.Entry<String, Integer> entry : EffectBuffs.entrySet()) {
+            String BuffName = entry.getKey();
+            int duration = EffectBuffs.get(BuffName);
+            if (duration > 0) {
+                duration--; // Decrement the duration
+                EffectBuffs.put(BuffName, duration);
+            }
+            if (duration == 0) {
+                EffectBuffs.remove(BuffName);
+            }
+            System.out.println(BuffName + " " + duration);
+        }
         setCurrentMana(getCurrentMana() + 1); // Archer restore 1 mana every turn
         setCurrentActionPoint(getMaxActionPoint());
     }
@@ -84,14 +105,23 @@ public class Archer extends BasePlayerPiece {
         //make player face to target
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
 
-        //=========<ATTACK EFFECT>====================================================================
+        //=========<ARROW EFFECT>====================================================================
         EffectManager.getInstance()
                 .renderEffect( EffectManager.TYPE.AROUND_SELF ,
                         this ,
                         monsterPiece.getRow(), monsterPiece.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(12) ,
-                        new EffectConfig(-2 , -4 , 32 , 1.4) );
+                        EffectManager.getInstance().createInPlaceEffects(13) ,
+                        new EffectConfig(-6 , 0 , 18 , 1.5) );
         //===========================================================================================
+        //=========<ATTACK EFFECT>====================================================================
+        EffectManager.getInstance()
+                .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                        this ,
+                        monsterPiece.getRow(), monsterPiece.getCol(),
+                        EffectManager.getInstance().createInPlaceEffects(14) ,
+                        new EffectConfig(3 , 0 , 0 , 1.2) );
+        //===========================================================================================
+
 
         System.out.println("Attack success");
         GUIManager.getInstance().updateGUI();

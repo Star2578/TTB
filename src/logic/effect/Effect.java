@@ -5,12 +5,15 @@ import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import logic.GameManager;
 import logic.SpriteAnimation;
 
 public class Effect extends SpriteAnimation {
 
     public boolean canKill = false;
-    private static final int defaultTimeout = 10;
+    private static final int defaultTimeout = 30;
+    private int turnRemain = 1;
+
 
     //constructor with parameters
     public Effect(ImageView imageView, int columns, int rows, int totalFrames, int frameWidth, int frameHeight, float framesPerSecond, boolean loop) {
@@ -34,6 +37,13 @@ public class Effect extends SpriteAnimation {
         new Timeline(new KeyFrame(Duration.seconds(value), actionEvent ->canKill = true)).play();
     }
 
+    public void setTurnRemain(int turnDuration){
+        turnRemain = turnDuration;
+    }
+
+    public int getTurnRemain(){
+        return turnRemain;
+    }
 
 
 }

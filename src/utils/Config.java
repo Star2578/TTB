@@ -78,7 +78,7 @@ public class Config {
     public static String UnlockedSkillIconPath = "sprites/skills/icons/skill_placeholder_unlocked.png";
     // Knight Icons
     public static String SlashPath = "sprites/skills/icons/Knight/slash.png";
-    public static String HealPath = "sprites/skills/icons/Knight/heal.png";
+    public static String HealPath = "sprites/skills/icons/Knight/Heal.png";
     public static String DartPath = "sprites/skills/icons/Knight/Dart.png";
     public static String StompPath = "sprites/skills/icons/Knight/Stomp.png";
     // Archer Icons
@@ -93,6 +93,22 @@ public class Config {
     public static String RainOfFirePath = "sprites/skills/icons/Wizard/RainOfFire.png";
     public static String DragonFirePath = "sprites/skills/icons/Wizard/DragonFire.png";
 
+    // Universal Skill Icons
+    public static String HolyLightPath = "sprites/skills/icons/Universal/HolyLight.png";
+    public static String BloodPactPath = "sprites/skills/icons/Universal/BloodPact.png";
+    public static String RollingPath = "sprites/skills/icons/Universal/Rolling.png";
+    public static String LesserHealPath = "sprites/skills/icons/Universal/LesserHeal.png";
+    public static String RhoAiasPath = "sprites/skills/icons/Universal/Rho_Aias.png";
+    public static String HammerFallPath = "sprites/skills/icons/Universal/HammerFall.png";
+    public static String AmbushPath = "sprites/skills/icons/Universal/Ambush.png";
+    public static String BindPath = "sprites/skills/icons/Universal/Bind.png";
+    public static String BloodLustPath = "sprites/skills/icons/Universal/BloodLust.png";
+    public static String KickPath = "sprites/skills/icons/Universal/Kick.png";
+    public static String NarcissisticPath = "sprites/skills/icons/Universal/Narcissistic.png";
+    public static String PunchPath = "sprites/skills/icons/Universal/Punch.png";
+    public static String StaticShockPath = "sprites/skills/icons/Universal/StaticShock.png";
+    public static String TripleStrikePath = "sprites/skills/icons/Universal/TripleStrike.png";
+
     // Potion Icons
     public static String BluePotionPath = "sprites/potions/blue_potion.png";
     public static String RedPotionPath = "sprites/potions/red_potion.png";
@@ -103,11 +119,36 @@ public class Config {
     // Attacks animation
     public static String meleeAttackPath = "sprites/attacks/common_melee_attack.png";
     public static String rangedAttackPath = "sprites/attacks/common_ranged_attack.png";
+    public static String rangedAttackTakeDamagePath = "sprites/attacks/common_ranged_attack_take_damage.png";
+    public static String magicAttackPath = "sprites/attacks/common_magic_attack.png";
+    public static String magicAttackTakeDamagePath = "sprites/attacks/common_magic_attack_take_damage.png";
     // Knight Skills animation
     public static String skillSlashPath = "sprites/skills/skill_knight/skill_slash.png";
     public static String skillStompPath = "sprites/skills/skill_knight/skill_stomp.png";
     public static String skillDartPath = "sprites/skills/skill_knight/skill_dart.png";
     public static String skillHealPath = "sprites/skills/skill_knight/skill_heal.png";
+    // Archer Skills animation
+    public static String skillSnipePath = "sprites/skills/skill_archer/skill_snipe_preparing_burst.png";
+    public static String skillSnipePath2 = "sprites/skills/skill_archer/skill_snipe_air_burst.png";
+    public static String skillSnipePath3 = "sprites/skills/skill_archer/skill_snipe_air_explosion_startup.png";
+    public static String skillSnipePath4 = "sprites/skills/skill_archer/skill_snipe_air_explosion.png";
+    public static String skillTargetlockPath = "sprites/skills/skill_archer/skill_targetlock.png";
+    public static String skillHaltPath = "sprites/skills/skill_archer/skill_halt.png";
+    public static String skillTeleportPath = "sprites/skills/skill_archer/skill_teleport.png";
+    // Wizard Skills animation
+    public static String skillFireballPath = "sprites/skills/skill_wizard/skill_fireball.png";
+    public static String skillRainOfFirePath = "sprites/skills/skill_wizard/skill_rain_of_fire.png";
+    public static String skillDragonFirePath = "sprites/skills/skill_wizard/skill_dragon_fire.png";
+    public static String skillIceShieldPath = "sprites/skills/skill_wizard/skill_ice_shield.png";
+    public static String skillIceShieldBuffPath = "sprites/skills/skill_wizard/skill_ice_shield_buff.png";
+    // Universal Skills animation
+    public  static String skillHammerFallPath = "sprites/skills/skill_universal/skill_hammer_fall.png";
+    public static String skillHolyLightPath = "sprites/skills/skill_universal/skill_holy_light.png";
+    public static String skillRhoAiasPath = "sprites/skills/skill_universal/skill_rho_aias.png";
+    public static String skillStaticShockPath = "sprites/skills/skill_universal/skill_static_shock.png";
+    public static String skillNarcissisticBuffActionPointPath = "sprites/skills/skill_universal/skill_narcissistic_buff_action_point.png";
+    public static String skillNarcissisticBuffAttackPath = "sprites/skills/skill_universal/skill_narcissistic_buff_attack.png";
+    public static String skillNarcissisticBuffHealthPath = "sprites/skills/skill_universal/skill_narcissistic_buff_health.png";
 
     // BGM
     public static String bgm_8_bit_adventure = "res/BGM/8_Bit_Adventure.wav";
@@ -121,6 +162,9 @@ public class Config {
     public static String sfx_buttonSound = "res/SFX/click/click.wav";
     public static String sfx_failedSound = "res/SFX/failed/8bit-blip4.wav";
     public static String sfx_deadSound = "res/SFX/monster/dead/explosion_03.wav";
+    public static String sfx_holyMagicSound = "res/SFX/skills/holylight/Retro Magic 06.wav";
+    public static String sfx_darkMagicSound = "res/SFX/skills/bloodpact/Retro Magic 54.wav";
+    public static String sfx_powerupSound = "res/SFX/skills/heal/8bit-powerup1.wav";
 
 
     // UI image, icon, ...

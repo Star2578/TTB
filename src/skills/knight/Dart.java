@@ -15,10 +15,10 @@ import utils.Config;
 
 public class Dart extends BaseSkill implements Attack {
     private BasePiece target;
-    private final int DAMAGE = 3;
+    private final int DAMAGE = 5;
     private final int KNOCKBACK = 2;
     public Dart() {
-        super("Dart", Color.DARKRED, 2, 2, "With a deft flick of their wrist, they send forth a piercing strike that packs a wallop, knocking back adversaries with formidable force.", Config.Rarity.UNCOMMON, "res/SFX/skills/slash/PP_01.wav");
+        super("Dart", Color.DARKRED, 4, 0, "With a deft flick of their wrist, they send forth a piercing strike that packs a wallop, knocking back adversaries with formidable force.", Config.Rarity.UNCOMMON, "res/SFX/skills/slash/PP_01.wav");
         icon = new ImageView(Config.DartPath);
         range = 1;
     }
@@ -49,15 +49,22 @@ public class Dart extends BaseSkill implements Attack {
                 if (directionRow != 0) directionRow /= Math.abs(directionRow);
                 if (directionCol != 0) directionCol /= Math.abs(directionCol);
 
+                int tempRow = target.getRow();
+                int tempCol = target.getCol();
+
                 for (int i = 1; i <= KNOCKBACK; i++) {
                     int newRow = target.getRow() + directionRow * i;
                     int newCol = target.getCol() + directionCol * i;
                     if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) {
                         break;
                     }
-                    GameManager.getInstance().piecesPosition[target.getRow()][target.getCol()] = null;
+                    BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
+                    pieces[tempRow][tempCol] = null;
+                    pieces[newRow][newCol] = target;
+                    tempRow = newRow;
+                    tempCol = newCol;
+
                     target.moveWithTransition(newRow, newCol);
-                    GameManager.getInstance().piecesPosition[newRow][newCol] = target;
                 }
 
 

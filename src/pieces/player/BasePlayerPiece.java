@@ -1,7 +1,10 @@
 package pieces.player;
 
 import items.BaseItem;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -36,6 +39,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
     protected boolean canAct; // status
     protected BaseSkill[] skills; // skill list
+    protected BaseSkill[] classSpecifics; // contain skill for specific class
     protected final int ATTACK_COST = 1;
     protected int attackRange = 1;
 
@@ -49,6 +53,9 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         canAct = false;
 
         skills = new BaseSkill[8]; // Player can have up to 8 skills
+        classSpecifics = new BaseSkill[4];
+
+        this.currentHp = maxHp;
     }
 
 
@@ -88,6 +95,18 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
      ******************************************/
     @Override
     public void takeDamage(int damage) {
+        //Check if the player has any effect
+        if(EffectBuffs != null) {
+            if(EffectBuffs.containsKey("Ice Shield")) {
+                damage = (damage * 70) / 100;
+                System.out.println("Damage reduced by 30% : " + damage);
+            }
+            if(EffectBuffs.containsKey("Rho Aias")) {
+                damage = (damage * 20) / 100;
+                System.out.println("Damage reduced by 80% : " + damage);
+            }
+        }
+
         setCurrentHealth(currentHp - damage);
         SoundManager.getInstance().playSoundEffect(sfx_hurtSound);
         GUIManager.getInstance().updateGUI();
@@ -100,14 +119,24 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         this.currentActionPoint = Math.max(0, this.currentActionPoint - decrease);
         GUIManager.getInstance().updateGUI();
 
-        // Auto End Turn when player is out of action point
-        if (this.currentActionPoint == 0 && GameManager.getInstance().autoEndTurn && canAct) {
-            if (TurnManager.getInstance().isPlayerTurn) TurnManager.getInstance().endPlayerTurn();
-        }
+        Platform.runLater(() -> {
+            // Auto End Turn when player is out of action point
+            if (this.currentActionPoint == 0 && GameManager.getInstance().autoEndTurn) {
+                if (TurnManager.getInstance().isPlayerTurn) {
+                    // Add a delay before ending the player's turn
+                    Timeline timeline = new Timeline(
+                            new KeyFrame(Duration.seconds(1), event -> {
+                                TurnManager.getInstance().endPlayerTurn();
+                            })
+                    );
+                    timeline.play();
+                }
+            } else {
+                setCanAct(true);
+            }
+        });
     }
     public void changeDirection(int direction) {
-
-
         if (direction != 1 && direction != -1) {
             return;
         }
@@ -151,12 +180,22 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
                 }
             }
 
-            // Auto End Turn when player is out of action point
-            if (this.currentActionPoint == 0 && GameManager.getInstance().autoEndTurn) {
-                if (TurnManager.getInstance().isPlayerTurn) TurnManager.getInstance().endPlayerTurn();
-            } else {
-                setCanAct(true);
-            }
+            Platform.runLater(() -> {
+                // Auto End Turn when player is out of action point
+                if (this.currentActionPoint == 0 && GameManager.getInstance().autoEndTurn) {
+                    if (TurnManager.getInstance().isPlayerTurn) {
+                        // Add a delay before ending the player's turn
+                        Timeline timeline = new Timeline(
+                                new KeyFrame(Duration.seconds(1), event -> {
+                                    TurnManager.getInstance().endPlayerTurn();
+                                })
+                        );
+                        timeline.play();
+                    }
+                } else {
+                    setCanAct(true);
+                }
+            });
         });
         moveTransition.play();
     }
@@ -211,7 +250,11 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         return maxMana;
     }
     public void setMaxMana(int maxMana) {
+        double percentage = (double) currentMana / maxMana;
         this.maxMana = Math.max(1, maxMana);
+
+        currentMana = (int) (maxMana * percentage);
+
         GUIManager.getInstance().updateGUI();
     }
     public void setCurrentActionPoint(int currentActionPoint) {
@@ -250,6 +293,10 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public BaseSkill[] getSkills() {
         return skills;
     }
+    public BaseSkill[] getClassSpecifics() {
+        return classSpecifics;
+    }
+
     @Override
     public boolean isAlive() {
         return currentHp > 0;
@@ -261,7 +308,15 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     }
 
     public void addBuff(int buff_duration, String buff_name) {
-        EffectBuffs.put(buff_name, buff_duration);
+        if (EffectBuffs.containsKey(buff_name)) {
+            int duration = EffectBuffs.get(buff_name);
+            duration += buff_duration;
+            EffectBuffs.put(buff_name, duration);
+            return;
+        }else {
+            EffectBuffs.put(buff_name, buff_duration);
+        }
+
         System.out.println(buff_name + " adding");
     }
 
@@ -283,5 +338,4 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         }
         return null;
     }
-
 }

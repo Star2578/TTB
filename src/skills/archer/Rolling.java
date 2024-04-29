@@ -3,29 +3,31 @@ package skills.archer;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
+import logic.SoundManager;
 import pieces.BasePiece;
 import skills.BaseSkill;
 import utils.Config;
 
-import static utils.Config.BOARD_SIZE;
-import static utils.Config.SQUARE_SIZE;
-
-public class Teleport extends BaseSkill {
+public class Rolling extends BaseSkill {
     private BasePiece target;
-    public Teleport() {
-        super("Teleport", Color.DARKRED,
-                7, 2,
-                "Teleport to a chosen location",
-                Config.Rarity.EPIC, "res/SFX/skills/slash/PP_01.wav"
-        );
-        icon = new ImageView(Config.TeleportPath);
-        range = 5; // Set the range to 5
+
+    public Rolling() {
+        super("Rolling", Color.BROWN, 0, 2,
+                "Oldest trick in the book to disengage, or the opposite", Config.Rarity.UNCOMMON, Config.sfx_moveSound);
+
+        icon = new ImageView(Config.RollingPath);
+        range = 3;
     }
 
-    public void teleport() {
+    @Override
+    public void perform(BasePiece target) {
+        this.target = target;
+        roll();
+        SoundManager.getInstance().playSoundEffect(sfxPath);
+    }
 
+    public void roll() {
         GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
-        GameManager.getInstance().player.decreaseMana(manaCost);
 
         // Teleport the player to the target position
         BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
@@ -33,25 +35,17 @@ public class Teleport extends BaseSkill {
         pieces[target.getRow()][target.getCol()] = GameManager.getInstance().player;
 
         GameManager.getInstance().player.moveWithTransition(target.getRow(), target.getCol());
-
-//        GameManager.getInstance().player.setRow(target.getRow());
-//        GameManager.getInstance().player.setCol(target.getCol());
-    }
-
-    @Override
-    public void perform(BasePiece target) {
-        this.target = target;
-        teleport();
     }
 
     @Override
     public boolean validRange(int row, int col) {
-        // Valid Range for the skill
+        // Get the current row and column
         int currentRow = GameManager.getInstance().player.getRow();
         int currentCol = GameManager.getInstance().player.getCol();
 
-        // Check if the target is within range
-        return Math.abs(row - currentRow) <= range && Math.abs(col - currentCol) <= range;
+
+        // Check if the row or column is the same as the current position
+        return (row == currentRow || col == currentCol) && Math.abs(row - currentRow) <= range && Math.abs(col - currentCol) <= range;
     }
 
     @Override

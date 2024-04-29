@@ -59,7 +59,7 @@ public class Heal extends BaseSkill implements Healing {
                             GameManager.getInstance().player ,
                             GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
                             EffectManager.getInstance().createInPlaceEffects(5) ,
-                            new EffectConfig(0 , -12 , 0 , 1.7) );
+                            new EffectConfig(-48 , -52 , 0 , 1.2) );
             //===========================================================================================
         }
     }

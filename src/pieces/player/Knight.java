@@ -7,14 +7,19 @@ import logic.ui.GUIManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.enemies.BaseMonsterPiece;
+import skills.archer.Halt;
+import skills.archer.Rolling;
 import skills.archer.Snipe;
+import skills.archer.Targetlock;
 import skills.knight.Dart;
 import skills.knight.Heal;
 import skills.knight.Slash;
 import skills.knight.Stomp;
+import skills.universal.*;
 import utils.Config;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
@@ -38,6 +43,13 @@ public class Knight extends BasePlayerPiece {
         //add skill
         skills[0] = new Slash();
         skills[1] = new Heal();
+        skills[2] = new Narcissistic();
+
+        // class specifics skills
+        classSpecifics[0] = new Slash();
+        classSpecifics[1] = new Heal();
+        classSpecifics[2] = new Dart();
+        classSpecifics[3] = new HammerFall();
 
         //configs values for animation
         setTexture(new ImageView(new Image(Config.KnightPath))); //static image for icon, ...
@@ -65,6 +77,19 @@ public class Knight extends BasePlayerPiece {
     @Override
     public void startTurn() {
         setCanAct(true);
+        // Check if the player has any effect
+        for(Map.Entry<String, Integer> entry : EffectBuffs.entrySet()) {
+            String BuffName = entry.getKey();
+            int duration = EffectBuffs.get(BuffName);
+            if (duration > 0) {
+                duration--; // Decrement the duration
+                EffectBuffs.put(BuffName, duration);
+            }
+            if (duration == 0) {
+                EffectBuffs.remove(BuffName);
+            }
+            System.out.println(BuffName + " " + duration);
+        }
         setCurrentMana(getCurrentMana() + 1); // Knight restore 1 mana every turn
         setCurrentActionPoint(getMaxActionPoint());
     }

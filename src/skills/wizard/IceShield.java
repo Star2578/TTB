@@ -3,6 +3,8 @@ package skills.wizard;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
+import logic.SoundManager;
+import logic.effect.Effect;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
@@ -15,7 +17,7 @@ import utils.Config;
 
 public class IceShield extends BaseSkill implements Buff {
     private BasePiece target;
-    private final int BUFF_DURATION = 2;
+    private final int BUFF_DURATION = 3;
     public IceShield() {
         super("Ice Shield", Color.DARKCYAN,
                 5, 2,
@@ -30,6 +32,7 @@ public class IceShield extends BaseSkill implements Buff {
     public void perform(BasePiece target) {
         this.target = target;
         applyBuff();
+        SoundManager.getInstance().playSoundEffect(sfxPath);
     }
 
     @Override
@@ -43,12 +46,23 @@ public class IceShield extends BaseSkill implements Buff {
 
             //=========<SKILL EFFECT>====================================================================
             EffectManager.getInstance()
-                    .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                    .renderEffect( EffectManager.TYPE.ON_SELF ,
                             GameManager.getInstance().player ,
-                            target.getRow(), target.getCol(),
-                            EffectManager.getInstance().createInPlaceEffects(1) ,
-                            new EffectConfig(0 , -16 , 24 , 1.1) );
+                            GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
+                            EffectManager.getInstance().createInPlaceEffects(27) ,
+                            new EffectConfig(0 , -16 , 0 , 1.1) );
             //===========================================================================================
+            //=========<SKILL BUFF EFFECT>====================================================================
+//            Effect sheild = EffectManager.getInstance().createInPlaceEffects(28);
+//            EffectManager.getInstance()
+//                    .renderEffect( EffectManager.TYPE.ON_SELF ,
+//                            GameManager.getInstance().player ,
+//                            GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
+//                            sheild ,
+//                            new EffectConfig(3 , -16 , 0 , 1.4) );
+//            sheild.setTurnRemain(BUFF_DURATION+1);
+            //===========================================================================================
+
         }
     }
 

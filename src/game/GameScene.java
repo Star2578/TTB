@@ -49,7 +49,6 @@ public class GameScene {
     private GameLoop gameLoop;
     private TurnManager turnManager;
     private DungeonGenerator dungeonGenerator;
-    private Timeline autoCycleTurn;
 
 
 
@@ -63,7 +62,6 @@ public class GameScene {
     private BasePiece[][] piecesPosition = GameManager.getInstance().piecesPosition; // Where each entity locate
     private List<BasePiece> environmentPieces = gameManager.environmentPieces; // List of all environment pieces (monsters and traps)
     private boolean isPlayerPieceSelected = false;
-    private boolean autoCycle = false;
 
 
     //------------<UI>----------------------------------------------------
@@ -461,6 +459,8 @@ public class GameScene {
             if (player.validAttack(row, col)) {
                 // Check if there is a monster on the clicked square
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
+                    // turn to face monster
+                    player.changeDirection(player.getCol() - monsterPiece.getCol());
                     // Perform the attack on the monster
                     SoundManager.getInstance().playSoundEffect(Config.sfx_attackSound);
                     player.attack(monsterPiece);
@@ -487,6 +487,8 @@ public class GameScene {
                 // Check if there is a monster on the clicked square
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     if (gameManager.selectedSkill.castOnMonster()) {
+                        // turn to face monster
+                        player.changeDirection(player.getCol() - monsterPiece.getCol());
                         // Perform the attack on the monster
                         if (enoughMana && enoughActionPoint) {
                             GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName(), GameManager.getInstance().selectedSkill.getNameColor());
@@ -851,12 +853,9 @@ public class GameScene {
                     }
                     break;
                 case F4:
-                    autoCycle = !autoCycle;
-                    if (autoCycle) {
-                        startAutoCycle();
-                    } else {
-                        stopAutoCycle();
-                    }
+                    GameManager.getInstance().player.setCurrentHealth(GameManager.getInstance().player.getMaxHealth());
+                    GameManager.getInstance().player.setCurrentActionPoint(GameManager.getInstance().player.getMaxActionPoint());
+                    GameManager.getInstance().player.setCurrentMana(GameManager.getInstance().player.getMaxMana());
                     break;
                 case F5:
                     for (int i = 0; i < gameManager.inventory.size(); i++) {
@@ -951,20 +950,6 @@ public class GameScene {
         // set gameManager
         GameManager.getInstance().environmentPieces.add(slimeBoss);
 //        initializeEnvironment();
-    }
-    private void startAutoCycle() {
-        double delay = 1;
-        autoCycleTurn = new Timeline(new KeyFrame(Duration.seconds(delay), cycle -> {
-            if (turnManager.isPlayerTurn) turnManager.endPlayerTurn();
-        }));
-        autoCycleTurn.setCycleCount(Timeline.INDEFINITE);
-        autoCycleTurn.play();
-    }
-
-    private void stopAutoCycle() {
-        if (autoCycleTurn != null) {
-            autoCycleTurn.stop();
-        }
     }
 
     public void resetSelectionAll() {

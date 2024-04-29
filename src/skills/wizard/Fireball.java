@@ -3,6 +3,7 @@ package skills.wizard;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
+import logic.SoundManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
@@ -13,7 +14,7 @@ import utils.Config;
 
 public class Fireball extends BaseSkill implements Attack {
     private BasePiece target;
-    private final int DAMAGE = 8;
+    private final int DAMAGE = 12;
     public Fireball() {
         super("Fireball", Color.RED,
                 5, 2,
@@ -41,8 +42,16 @@ public class Fireball extends BaseSkill implements Attack {
                         .renderEffect( EffectManager.TYPE.AROUND_SELF ,
                                 GameManager.getInstance().player ,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(1) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
+                                EffectManager.getInstance().createInPlaceEffects(24) ,
+                                new EffectConfig(0 , -3 , 34 , 1.2) );
+                //===========================================================================================
+                //=========<SKILL EFFECT TAKE DAMAGE>====================================================================
+                EffectManager.getInstance()
+                        .renderEffect(EffectManager.TYPE.ON_SELF,
+                                GameManager.getInstance().player,
+                                monsterPiece.getRow(), monsterPiece.getCol(),
+                                EffectManager.getInstance().createInPlaceEffects(23),
+                                new EffectConfig(-16, -19, 0, 1));
                 //===========================================================================================
             }
         }
@@ -52,6 +61,7 @@ public class Fireball extends BaseSkill implements Attack {
     public void perform(BasePiece target) {
         this.target = target;
         attack();
+        SoundManager.getInstance().playSoundEffect(sfxPath);
     }
 
     @Override
