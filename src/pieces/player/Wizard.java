@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.SpriteAnimation;
+import logic.effect.Effect;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import logic.ui.GUIManager;
@@ -108,7 +109,7 @@ public class Wizard extends BasePlayerPiece{
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
         // ----------------------Attack Animation----------------------
         EffectManager.getInstance()
-                .renderEffect(EffectManager.TYPE.AROUND_SELF,
+                .renderEffect(EffectManager.TYPE.BULLET_TO_TARGET,
                         this,
                         monsterPiece.getRow(), monsterPiece.getCol(),
                         EffectManager.getInstance().createInPlaceEffects(22),
@@ -131,7 +132,7 @@ public class Wizard extends BasePlayerPiece{
     public void takeDamage(int damage) {
         System.out.println("Damage taken: " + damage);
 
-//        //Check if the player has any effect
+        //Check if the player has any effect
 //        if(EffectBuffs != null) {
 //            if(EffectBuffs.containsKey("Ice Shield")) {
 //                damage = (damage * 70) / 100;

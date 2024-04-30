@@ -107,11 +107,11 @@ public class Archer extends BasePlayerPiece {
 
         //=========<ARROW EFFECT>====================================================================
         EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                .renderEffect( EffectManager.TYPE.BULLET_TO_TARGET ,
                         this ,
                         monsterPiece.getRow(), monsterPiece.getCol(),
                         EffectManager.getInstance().createInPlaceEffects(13) ,
-                        new EffectConfig(-6 , 0 , 18 , 1.5) );
+                        new EffectConfig(-6 , 0 , -10 , 1.5) );
         //===========================================================================================
         //=========<ATTACK EFFECT>====================================================================
         EffectManager.getInstance()
