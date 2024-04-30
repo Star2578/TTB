@@ -88,6 +88,11 @@ public class PopupManager {
         newPopup.toFront();
         movingUp.play();
         fadeTransition.play();
+
+        //remove from game after it faded
+        new Timeline(new KeyFrame(Duration.millis(Math.max(PopupManager.DURATION, popupConfig.duration)) , event -> {
+            EffectManager.getInstance().effectPane.getChildren().remove(newPopup);
+        })).play();
     }
 }
 
@@ -103,9 +108,7 @@ class Popup extends HBox{
 
         this.setPrefSize(width, height);
 
-        new Timeline(new KeyFrame(Duration.millis(PopupManager.DURATION) , event -> {
-            EffectManager.getInstance().effectPane.getChildren().remove(this);
-        })).play();
+
 
     }
 }
