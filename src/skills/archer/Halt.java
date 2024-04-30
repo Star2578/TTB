@@ -45,6 +45,10 @@ public class Halt extends BaseSkill implements Attack {
                                 new EffectConfig(12 , -6 , 0 , 1.6) );
                 Stun.setTurnRemain(STUN_DURATION+1);
                 //===========================================================================================
+                if (!monsterPiece.isAlive()) {
+                    GameManager.getInstance().gameScene.removePiece(monsterPiece);
+                    EffectManager.getInstance().clearDeadEffect();
+                }
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());

@@ -82,6 +82,11 @@ public class Bind extends BaseSkill implements Attack {
                                 EffectManager.getInstance().createInPlaceEffects(0) ,
                                 new EffectConfig(0 , 8 , 0 , 1.25) );
                 //===========================================================================================
+
+                if (!monsterPiece.isAlive()) {
+                    GameManager.getInstance().gameScene.removePiece(monsterPiece);
+                    EffectManager.getInstance().clearDeadEffect();
+                }
             }
         }
     }
