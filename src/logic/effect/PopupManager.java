@@ -58,6 +58,7 @@ public class PopupManager {
 
         FadeTransition fadeTransition = new FadeTransition();
         fadeTransition.setNode( newPopup );
+        fadeTransition.setInterpolator(Interpolator.EASE_IN);
         fadeTransition.setDuration( Duration.millis(popupConfig.duration) );
         fadeTransition.setToValue(0);
 
