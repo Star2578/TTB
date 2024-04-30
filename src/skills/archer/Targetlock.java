@@ -32,7 +32,7 @@ public class Targetlock extends BaseSkill implements Attack {
         if (target != null && target != GameManager.getInstance().player) {
             // Perform Attack
             if (target instanceof BaseMonsterPiece monsterPiece) {
-                monsterPiece.takeDamage(DAMAGE);
+
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
@@ -59,8 +59,9 @@ public class Targetlock extends BaseSkill implements Attack {
                                     EffectManager.getInstance().createInPlaceEffects(19) ,
                                     new EffectConfig(1 , 0 , 0 , 1.5) );
                     //===========================================================================================
-                });
 
+                    monsterPiece.takeDamage(DAMAGE);
+                });
                 // Start the pause
                 pause.play();
 

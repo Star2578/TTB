@@ -33,7 +33,7 @@ public class Halt extends BaseSkill implements Attack {
         if (target != null && target != GameManager.getInstance().player) {
             // Perform Attack
             if (target instanceof BaseMonsterPiece monsterPiece) {
-                monsterPiece.takeDamage(DAMAGE);
+
 
 
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
@@ -61,6 +61,9 @@ public class Halt extends BaseSkill implements Attack {
                                     EffectManager.getInstance().createInPlaceEffects(20) ,
                                     new EffectConfig(1 , 0 , 0 , 1.2) );
                     //===========================================================================================
+
+                    monsterPiece.takeDamage(DAMAGE);
+
                     // Stun monster 1 turn
                     if (monsterPiece.isAlive()) {
                         monsterPiece.addBuff(STUN_DURATION, "Stun");

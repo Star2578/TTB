@@ -1,11 +1,15 @@
 package pieces.enemies;
 
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
+import logic.ImageScaler;
 import logic.SoundManager;
 import logic.SpawnerManager;
+import logic.effect.PopupConfig;
+import logic.effect.PopupManager;
 import logic.ui.GUIManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
@@ -128,6 +132,16 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     @Override
     public void setCurrentHealth(int health) {
         this.currentHp = Math.max(health, 0);
+
+        //========<damage number on hit>===============
+        PopupManager.createPopup(
+                this,
+                new PopupConfig(String.valueOf(-100) , PopupManager.DAMAGE_COLOR ,
+                        null ,
+                        16)
+        );
+        //=============================================
+
         if (currentHp == 0) onDeath();
     }
     @Override
