@@ -1,7 +1,9 @@
 package skills.archer;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.Effect;
@@ -32,23 +34,8 @@ public class Halt extends BaseSkill implements Attack {
             // Perform Attack
             if (target instanceof BaseMonsterPiece monsterPiece) {
                 monsterPiece.takeDamage(DAMAGE);
-                // Stun monster 1 turn
-                monsterPiece.addBuff(STUN_DURATION, "Stun");
-                //=========<STUN EFFECT>====================================================================
-                Effect Stun = EffectManager.getInstance().createInPlaceEffects(8);
-                Stun.setOwner(target);
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_SELF ,
-                                GameManager.getInstance().player ,
-                                target.getRow(), target.getCol(),
-                                Stun ,
-                                new EffectConfig(12 , -6 , 0 , 1.6) );
-                Stun.setTurnRemain(STUN_DURATION+1);
-                //===========================================================================================
-                if (!monsterPiece.isAlive()) {
-                    GameManager.getInstance().gameScene.removePiece(monsterPiece);
-                    EffectManager.getInstance().clearDeadEffect();
-                }
+
+
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
@@ -61,14 +48,44 @@ public class Halt extends BaseSkill implements Attack {
                                 EffectManager.getInstance().createInPlaceEffects(13) ,
                                 new EffectConfig(-6 , 0 , -10 , 1.5) );
                 //===========================================================================================
-                //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_SELF ,
-                                GameManager.getInstance().player ,
-                                monsterPiece.getRow(), monsterPiece.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(20) ,
-                                new EffectConfig(1 , 0 , 0 , 1.2) );
-                //===========================================================================================
+                // Create a PauseTransition with a duration of 0.45 seconds
+                PauseTransition pause = new PauseTransition(Duration.seconds(0.45));
+
+                // Set the action to perform after the pause
+                pause.setOnFinished(event -> {
+                    //=========<SKILL EFFECT>====================================================================
+                    EffectManager.getInstance()
+                            .renderEffect( EffectManager.TYPE.ON_SELF ,
+                                    GameManager.getInstance().player ,
+                                    monsterPiece.getRow(), monsterPiece.getCol(),
+                                    EffectManager.getInstance().createInPlaceEffects(20) ,
+                                    new EffectConfig(1 , 0 , 0 , 1.2) );
+                    //===========================================================================================
+                    // Stun monster 1 turn
+                    if (monsterPiece.isAlive()) {
+                        monsterPiece.addBuff(STUN_DURATION, "Stun");
+                        //=========<STUN EFFECT>====================================================================
+                        Effect Stun = EffectManager.getInstance().createInPlaceEffects(8);
+                        Stun.setOwner(target);
+                        EffectManager.getInstance()
+                                .renderEffect(EffectManager.TYPE.ON_SELF,
+                                        GameManager.getInstance().player,
+                                        target.getRow(), target.getCol(),
+                                        Stun,
+                                        new EffectConfig(12, -6, 0, 1.6));
+                        Stun.setTurnRemain(STUN_DURATION + 1);
+                        //===========================================================================================
+                    }
+                });
+
+                // Start the pause
+                pause.play();
+
+                if (!monsterPiece.isAlive()) {
+                    GameManager.getInstance().gameScene.removePiece(monsterPiece);
+                    EffectManager.getInstance().clearDeadEffect();
+                }
+
             }
         }
     }

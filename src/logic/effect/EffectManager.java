@@ -33,7 +33,8 @@ public class EffectManager {
         ON_TARGET,
         ON_SELF,
         AROUND_SELF_ENEMY,
-        BULLET_TO_TARGET
+        BULLET_TO_TARGET,
+        BULLET_TO_TARGET_ENEMY
 
 
     }
@@ -96,7 +97,7 @@ public class EffectManager {
         effects.add(Vampire_Skill_Effect);
         //Necromancer Attack 11
         Effect Necromancer_Attack = new Effect(
-                new ImageView(new Image(Config.NecromancerAttackPath)) , 10 , 2 , 16 , 40 , 32 , 12 , false);
+                new ImageView(new Image(Config.NecromancerAttackPath)) , 10 , 2 , 16 , 40 , 32 , 7 , false);
         effects.add(Necromancer_Attack);
         //Skeleton Attack 12
         Effect Skeleton_Attack = new Effect(
@@ -278,7 +279,7 @@ public class EffectManager {
             effect.start();
         }
         else if (typeEnum == TYPE.AROUND_SELF_ENEMY){
-            //effect will occur around player, also rotate and face to target
+            //effect will occur around enemy, also rotate and face to target
 
             EffectManager.getInstance().effectPane.getChildren().add( effect.imageView );
 
@@ -341,6 +342,46 @@ public class EffectManager {
             //slowly move to target col,row
             moveTransition.setToX((col - player.getCol()) * SQUARE_SIZE + config.offsetX);
             moveTransition.setToY((row - player.getRow()) * SQUARE_SIZE + config.offsetY);
+
+            moveTransition.setOnFinished(actionEvent -> {
+                effectPane.getChildren().remove(effect.imageView);
+            });
+
+            effect.start();
+            moveTransition.play();
+        } else if (typeEnum == TYPE.BULLET_TO_TARGET_ENEMY) {
+
+            EffectManager.getInstance().effectPane.getChildren().add(effect.imageView);
+
+            //find angle toward enemy
+            double x = GameManager.getInstance().player.getCol() - col;
+            double y = GameManager.getInstance().player.getRow() - row;
+            double angleRadian = Math.atan2(y , x);
+            double angleDegree = Math.atan2(y , x) * (180.0 / Math.PI);
+
+            //set effect position (angle is in account)
+            effect.imageView.setX(col*SQUARE_SIZE
+                    + (config.distanceFromOrigin * Math.cos(angleRadian) )
+                    + config.offsetX);
+            effect.imageView.setY(row*SQUARE_SIZE
+                    + (config.distanceFromOrigin * Math.sin(angleRadian) )
+                    + config.offsetY);
+            //scale effect size
+            effect.imageView.setScaleX(config.scale);
+            effect.imageView.setScaleY(config.scale);
+            //rotate effect
+            effect.imageView.setRotate(angleDegree);
+
+            //prepare transition behaviour for this effect
+            TranslateTransition moveTransition = new TranslateTransition();
+            moveTransition.setNode(effect.imageView);
+            moveTransition.setDuration(Duration.millis(400));
+            moveTransition.setCycleCount(1);
+            moveTransition.setInterpolator(Interpolator.EASE_IN);
+
+            //slowly move to target col,row
+            moveTransition.setToX((player.getCol() - col) * SQUARE_SIZE + config.offsetX);
+            moveTransition.setToY((player.getRow() - row) * SQUARE_SIZE + config.offsetY);
 
             moveTransition.setOnFinished(actionEvent -> {
                 effectPane.getChildren().remove(effect.imageView);

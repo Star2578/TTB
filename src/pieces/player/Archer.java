@@ -1,7 +1,10 @@
 package pieces.player;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
+import logic.GameManager;
 import logic.ui.GUIManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
@@ -113,15 +116,22 @@ public class Archer extends BasePlayerPiece {
                         EffectManager.getInstance().createInPlaceEffects(13) ,
                         new EffectConfig(-6 , 0 , -10 , 1.5) );
         //===========================================================================================
-        //=========<ATTACK EFFECT>====================================================================
-        EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.ON_TARGET ,
-                        this ,
-                        monsterPiece.getRow(), monsterPiece.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(14) ,
-                        new EffectConfig(3 , 0 , 0 , 1.2) );
-        //===========================================================================================
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.45));
 
+        // Set the action to perform after the pause
+        pause.setOnFinished(event -> {
+            //=========<ATTACK EFFECT>====================================================================
+            EffectManager.getInstance()
+                    .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                            this ,
+                            monsterPiece.getRow(), monsterPiece.getCol(),
+                            EffectManager.getInstance().createInPlaceEffects(14) ,
+                            new EffectConfig(3 , 0 , 0 , 1.2) );
+            //===========================================================================================
+        });
+
+        // Start the pause
+        pause.play();
 
         System.out.println("Attack success");
         GUIManager.getInstance().updateGUI();

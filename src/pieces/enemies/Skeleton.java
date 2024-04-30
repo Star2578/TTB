@@ -1,11 +1,15 @@
 package pieces.enemies;
 
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpawnerManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import logic.ui.GUIManager;
+import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
+import pieces.wall.BaseWallPiece;
 import utils.Config;
 
 import java.util.Arrays;
@@ -117,26 +121,99 @@ public class Skeleton extends BaseMonsterPiece {
 
     @Override
     public void attack(BasePlayerPiece playerPiece) {
-        System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
-        //=========<ATTACK EFFECT>====================================================================
-        EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.AROUND_SELF_ENEMY ,
-                        GameManager.getInstance().player ,
-                        getRow(), getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(12) ,
-                        new EffectConfig(-2 , -4 , 32 , 1.7) );
-        //===========================================================================================
-        //=========<Blood EFFECT>====================================================================
-        EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.ON_SELF ,
-                        GameManager.getInstance().player ,
-                        playerPiece.getRow(), playerPiece.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(9) ,
-                        new EffectConfig(-34 , -52 , 0 , 1.5) );
-        //===========================================================================================
+//        System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
+//        //=========<ATTACK EFFECT>====================================================================
+//        EffectManager.getInstance()
+//                .renderEffect( EffectManager.TYPE.AROUND_SELF_ENEMY ,
+//                        GameManager.getInstance().player ,
+//                        getRow(), getCol(),
+//                        EffectManager.getInstance().createInPlaceEffects(12) ,
+//                        new EffectConfig(-2 , -4 , 32 , 1.7) );
+//        //===========================================================================================
+//        //=========<Blood EFFECT>====================================================================
+//        EffectManager.getInstance()
+//                .renderEffect( EffectManager.TYPE.ON_SELF ,
+//                        GameManager.getInstance().player ,
+//                        playerPiece.getRow(), playerPiece.getCol(),
+//                        EffectManager.getInstance().createInPlaceEffects(9) ,
+//                        new EffectConfig(-34 , -52 , 0 , 1.5) );
+//        //===========================================================================================
+//
+//        playerPiece.takeDamage(ATTACK_DAMAGE);
+//        GUIManager.getInstance().updateGUI();
 
-        playerPiece.takeDamage(ATTACK_DAMAGE);
-        GUIManager.getInstance().updateGUI();
+        //-----------------------------------------------------------------------------
+
+        int currentRow = getRow();
+        int currentCol = getCol();
+        int dRow = playerPiece.getRow() - currentRow;
+        int dCol = playerPiece.getCol() - currentCol;
+        int directionRow = dRow;
+        int directionCol = dCol;
+
+        // Normalize the direction
+        if (dRow != 0) directionRow /= Math.abs(dRow);
+        if (dCol != 0) directionCol /= Math.abs(dCol);
+
+
+
+        for (int i = 1; i <= VISION_RANGE; i++) {
+            int newRow, newCol;
+            int dAbsCol = Math.abs(dCol);
+            int dAbsRow = Math.abs(dRow);
+
+            if (dAbsCol >= dAbsRow) {
+                int y = (int) Math.round(i * Math.tan(Math.atan2(dAbsRow, dAbsCol)));
+                newRow = currentRow + directionRow * y;
+                newCol = currentCol + directionCol * i;
+            } else {
+                int x = (int) Math.round(i * Math.tan(Math.atan2(dAbsCol, dAbsRow)));
+                newRow = currentRow + directionRow * i;
+                newCol = currentCol + directionCol * x;
+            }
+
+            BasePiece piece = GameManager.getInstance().piecesPosition[newRow][newCol];
+
+            if (newRow < 0 || newRow >= Config.BOARD_SIZE || newCol < 0 || newCol >= Config.BOARD_SIZE ||
+                piece instanceof BaseWallPiece) {
+                roamRandomly();
+                break;
+            }
+
+            if (piece instanceof BasePlayerPiece) {
+                playerPiece.takeDamage(ATTACK_DAMAGE);
+                //=========<ATTACK EFFECT>====================================================================
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.BULLET_TO_TARGET_ENEMY ,
+                                playerPiece ,
+                                getRow(), getCol(),
+                                EffectManager.getInstance().createInPlaceEffects(12) ,
+                                new EffectConfig(-2 , -4 , -10 , 1.7) );
+                //===========================================================================================
+
+                // Create a PauseTransition with a duration of 0.45 seconds
+                PauseTransition pause = new PauseTransition(Duration.seconds(0.45));
+
+                // Set the action to perform after the pause
+                pause.setOnFinished(event -> {
+                    //=========<Blood EFFECT>====================================================================
+                    EffectManager.getInstance()
+                            .renderEffect( EffectManager.TYPE.ON_SELF ,
+                                    GameManager.getInstance().player ,
+                                    playerPiece.getRow(), playerPiece.getCol(),
+                                    EffectManager.getInstance().createInPlaceEffects(9) ,
+                                    new EffectConfig(-34 , -52 , 0 , 1.5) );
+                    //===========================================================================================
+                });
+
+                // Start the pause
+                pause.play();
+
+                break;
+            }
+
+            System.out.println("Attack" + " on " + newRow + " " + newCol);
+        }
     }
 
 }

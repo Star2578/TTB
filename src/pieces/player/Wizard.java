@@ -1,9 +1,11 @@
 package pieces.player;
 
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import logic.GameManager;
 import logic.SpriteAnimation;
 import logic.effect.Effect;
 import logic.effect.EffectConfig;
@@ -115,14 +117,24 @@ public class Wizard extends BasePlayerPiece{
                         EffectManager.getInstance().createInPlaceEffects(22),
                         new EffectConfig(8, 8, 32, 1.4));
         // -------------------------------------------------------------
-        // ----------------------Attack Take Damage Animation----------------------
-        EffectManager.getInstance()
-                .renderEffect(EffectManager.TYPE.ON_TARGET,
-                        this,
-                        monsterPiece.getRow(), monsterPiece.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(23),
-                        new EffectConfig(-16, -19, 0, 1));
-        // -------------------------------------------------------------
+        // Create a PauseTransition with a duration of 0.2 seconds
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+
+        // Set the action to perform after the pause
+        pause.setOnFinished(event -> {
+            // ----------------------Attack Take Damage Animation----------------------
+            EffectManager.getInstance()
+                    .renderEffect(EffectManager.TYPE.ON_TARGET,
+                            this,
+                            monsterPiece.getRow(), monsterPiece.getCol(),
+                            EffectManager.getInstance().createInPlaceEffects(23),
+                            new EffectConfig(-16, -19, 0, 1));
+            // -------------------------------------------------------------
+        });
+
+        // Start the pause
+        pause.play();
+
 
         System.out.println("Attack success");
         GUIManager.getInstance().updateGUI();
