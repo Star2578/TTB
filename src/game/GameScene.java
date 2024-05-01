@@ -771,7 +771,6 @@ public class GameScene {
         piecesPosition[row][col] = null;
     }
 
-
     private void setupKeyEvents(Scene scene) {
         // Debug tool
         scene.setOnKeyPressed(event -> {

@@ -33,8 +33,9 @@ public class Bomber extends BaseMonsterPiece{
 
     public Bomber() {
         super(0, 0, 1);
-        setMaxHealth(10);
-        setCurrentHealth(getMaxHealth());
+
+        maxHp = 10;
+        currentHp = maxHp;
 
         currentState = Bomber.State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
 

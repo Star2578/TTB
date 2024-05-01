@@ -38,8 +38,9 @@ public class SlimeBoss extends BaseMonsterPiece {
 
     public SlimeBoss() {
         super(0, 0, 1);
-        setMaxHealth(200); // First phase
-        setCurrentHealth(getMaxHealth());
+
+        maxHp = 200; //First phase
+        currentHp = maxHp;
 
         this.currentPhase = Phase.FIRST;
 

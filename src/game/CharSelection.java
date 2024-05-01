@@ -100,18 +100,13 @@ public class CharSelection {
         playBtn.setId("playBtn");
         playBtn.setLayoutX(940);
         playBtn.setLayoutY(600);
-//        DropShadow ds1 = new DropShadow();
-//        ds1.setOffsetY(4.0f);
-//        ds1.setOffsetX(4.0f);
-//        ds1.setColor(Color.CORAL);
-
         playBtn.setOnAction(actionEvent -> {
             if (selectedCard != null) {
                 SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
                 // switch bgm
                 SoundManager.getInstance().changeBackgroundMusic(Config.bgm_8_bit_adventure);
                 //start and switch to the game scene
-                GameManager.getInstance().GameStart(selectedCard.charData);
+                GameManager.getInstance().GameStart(selectedCard.charData.createNewInstance());
                 SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getGameScene());
             }
         });

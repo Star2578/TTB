@@ -21,10 +21,10 @@ import utils.Config;
 import java.util.*;
 
 public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
-    private int currentHp;
-    private int maxHp;
-    private int currentDirection;
-    private boolean isAlive = true;
+    protected int currentHp;
+    protected int maxHp;
+    protected int currentDirection;
+    protected boolean isAlive = true;
     protected boolean endAction = false;
     protected boolean[][] validMovesCache; // Cache of valid moves for the entire board
     protected int moneyDrop;

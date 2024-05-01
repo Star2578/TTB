@@ -32,8 +32,8 @@ public class SlimeMucilage extends BaseMonsterPiece{
 
         currentState = State.COUNTDOWN; // Initially in the Neutral/Roaming State
 
-        setMaxHealth(1);
-        setCurrentHealth(getMaxHealth());
+        maxHp = 1;
+        currentHp = maxHp;
         //TODO : Change the animation path
         //configs values for animation
         setupAnimation(Config.BombAnimationPath, 0, 0, 32, 32 , true);

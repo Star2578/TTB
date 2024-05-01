@@ -29,8 +29,9 @@ public class Skeleton extends BaseMonsterPiece {
 
     public Skeleton() {
         super(0, 0, 1);
-        setMaxHealth(10);
-        setCurrentHealth(getMaxHealth());
+
+        maxHp = 10;
+        currentHp = maxHp;
 
         // Initially in the Neutral/Roaming State
         currentState = Skeleton.State.NEUTRAL_ROAMING;

@@ -33,8 +33,9 @@ public class Necromancer extends BaseMonsterPiece{
 
     public Necromancer() {
         super(0, 0, 1);
-        setMaxHealth(10);
-        setCurrentHealth(getMaxHealth());
+
+        maxHp = 10;
+        currentHp = maxHp;
 
         // Initially in the Neutral/Roaming State
         currentState = Necromancer.State.NEUTRAL_ROAMING;

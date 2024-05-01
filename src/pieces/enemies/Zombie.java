@@ -32,9 +32,9 @@ public class Zombie extends BaseMonsterPiece{
 
     public Zombie() {
         super(0, 0, 1);
-        setMaxHealth(10);
-        setCurrentHealth(getMaxHealth());
 
+        maxHp = 10;
+        currentHp = maxHp;
         // Initially in the Neutral/Roaming State
         currentState = State.NEUTRAL_ROAMING;
 
