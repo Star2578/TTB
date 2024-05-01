@@ -33,7 +33,7 @@ public class SlimeBoss extends BaseMonsterPiece {
     private final int MOVE = 2;
     private int ATK_CNT = 0;
     private int Skill_CNT = 0;
-    private final int Spilt_range = 12;
+    private final int Spilt_range = 20;
     private BasePiece[][] piecesPosition = GameManager.getInstance().piecesPosition;
 
     public SlimeBoss() {
