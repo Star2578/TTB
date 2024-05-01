@@ -272,7 +272,7 @@ public class GameScene {
         // Ensure opacity is within valid range
         opacity = Math.max(0, Math.min(opacity, MAX_FOG_OPACITY));
 
-        if (fog.getOpacity() != 0)
+//        if (fog.getOpacity() != 0)
         // Set fog opacity
             fog.setOpacity(opacity);
     }
@@ -949,10 +949,13 @@ public class GameScene {
         placeEntityRandomly(player);
         precomputeValidMoves();
         initializeEnvironment();
+        initFog(fogPane);
     }
 
     private void safeRoom() {
         placeDungeon(Config.safeRoom);
+
+        fogPane.getChildren().clear();
 
         Dealer dealer = new Dealer();
         dealer.setRow(7);
