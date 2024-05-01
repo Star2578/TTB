@@ -17,7 +17,7 @@ public class PopupManager {
     protected static final int POPUP_WIDTH = 50;
     protected static final int POPUP_HEIGHT = 20;
     protected static final int DURATION = 5000;
-    public static final String DAMAGE_COLOR = "#f51111";
+    public static final String DAMAGE_COLOR = "#f4f4f4";
     public static final String HEAL_COLOR = "#3ac718";
     public static final String BUFF_COLOR = "#19B3DA";
 
@@ -78,9 +78,9 @@ public class PopupManager {
 
         text.setText( popupConfig.text );
         text.setStyle(
-                "-fx-font-family:x16y32pxGridGazer;" +
+                "-fx-font-family:ThaleahFat;" +
                         "-fx-fill:" + (popupConfig.colorHex) + ";" +
-                        "-fx-font-size:" +(18 * popupConfig.scale)+ ";"
+                        "-fx-font-size:" +(28 * popupConfig.scale)+ ";"
         );
 
         //display on effectPane
@@ -100,15 +100,10 @@ class Popup extends HBox{
 
     /*
         Popup structure will be like:
-
             [ text | icon ]
      */
 
     public Popup(double width , double height){
-
         this.setPrefSize(width, height);
-
-
-
     }
 }

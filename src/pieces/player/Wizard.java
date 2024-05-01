@@ -107,7 +107,6 @@ public class Wizard extends BasePlayerPiece{
         }
 
         decreaseActionPoint(ATTACK_COST);
-        monsterPiece.takeDamage(getAttackDamage());
 
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
         // ----------------------Attack Animation----------------------
@@ -130,6 +129,7 @@ public class Wizard extends BasePlayerPiece{
                             monsterPiece.getRow(), monsterPiece.getCol(),
                             EffectManager.getInstance().createInPlaceEffects(23),
                             new EffectConfig(-16, -19, 0, 1));
+            monsterPiece.takeDamage(getAttackDamage());
             // -------------------------------------------------------------
         });
 

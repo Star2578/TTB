@@ -4,6 +4,9 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.StringBinding;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -63,4 +66,36 @@ public class Effect extends SpriteAnimation {
         return owner;
     }
 
+    public void bindToOwnerMovement(BasePiece owner){
+        setOwner(owner);
+        Effect thisEffect = this;
+
+        DoubleBinding xTranslate = new DoubleBinding(){
+            @Override
+            protected double computeValue() {return owner.animationImage.getTranslateX() ;}
+            {bind(owner.animationImage.translateXProperty(),  thisEffect.imageView.translateXProperty() );}
+        };
+        DoubleBinding xPosition = new DoubleBinding(){
+            @Override
+            protected double computeValue() {return owner.animationImage.getX() ;}
+            {bind(owner.animationImage.xProperty(),  thisEffect.imageView.xProperty() );}
+        };
+        DoubleBinding yTranslate = new DoubleBinding(){
+            @Override
+            protected double computeValue() {return owner.animationImage.getTranslateY();}
+            {bind(owner.animationImage.translateYProperty(),  thisEffect.imageView.translateYProperty() );}
+        };
+        DoubleBinding yPosition = new DoubleBinding(){
+            @Override
+            protected double computeValue() {return owner.animationImage.getY()  ;}
+            {bind(owner.animationImage.yProperty(),  thisEffect.imageView.yProperty() );}
+        };
+
+
+        thisEffect.imageView.translateXProperty().bind(xTranslate);
+        thisEffect.imageView.translateYProperty().bind(yTranslate);
+        thisEffect.imageView.xProperty().bind(xPosition);
+        thisEffect.imageView.yProperty().bind(yPosition);
+
+    }
 }

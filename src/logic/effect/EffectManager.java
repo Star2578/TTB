@@ -203,8 +203,7 @@ public class EffectManager {
         Effect copy = effects.get(index).clone();
         return copy;
     }
-
-
+    
     public void renderEffect(Enum<TYPE> typeEnum, BasePlayerPiece player , int row , int col, Effect effect , EffectConfig config){
 
         runningEffects.add(effect);
@@ -349,7 +348,8 @@ public class EffectManager {
 
             effect.start();
             moveTransition.play();
-        } else if (typeEnum == TYPE.BULLET_TO_TARGET_ENEMY) {
+        }
+        else if (typeEnum == TYPE.BULLET_TO_TARGET_ENEMY) {
 
             EffectManager.getInstance().effectPane.getChildren().add(effect.imageView);
 
