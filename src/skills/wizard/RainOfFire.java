@@ -73,12 +73,13 @@ public class RainOfFire extends BaseSkill implements Attack {
                         new EffectConfig(0 , -16 , 34 , 1.2) );
         //===========================================================================================
         //=========<SKILL EFFECT TAKE DAMAGE>====================================================================
-        EffectManager.getInstance()
-                .renderEffect(EffectManager.TYPE.ON_SELF,
-                        GameManager.getInstance().player,
-                        newRow, newCol,
-                        EffectManager.getInstance().createInPlaceEffects(23),
-                        new EffectConfig(-16, -19, 0, 1));
+        if (GameManager.getInstance().validMovesCache[newRow][newCol])
+            EffectManager.getInstance()
+                    .renderEffect(EffectManager.TYPE.ON_SELF,
+                            GameManager.getInstance().player,
+                            newRow, newCol,
+                            EffectManager.getInstance().createInPlaceEffects(23),
+                            new EffectConfig(-16, -19, 0, 1));
         //===========================================================================================
     }
 

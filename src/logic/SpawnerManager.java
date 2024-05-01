@@ -76,6 +76,8 @@ public class SpawnerManager {
         Random random = new Random();
 
         int calculateMonster = freeSquareCount / 12;
+        if (GameManager.getInstance().moreMonster) calculateMonster = freeSquareCount / 9; // more monster
+
         System.out.println("Free square = " + freeSquareCount);
 
         // Add monsters from the pool to toAdd list

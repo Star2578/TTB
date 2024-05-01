@@ -131,8 +131,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
                     );
                     timeline.play();
                 }
-            } else {
-                setCanAct(true);
             }
         });
     }
@@ -277,9 +275,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         return maxActionPoint;
     }
     public void setCanAct(boolean canAct) {
-        this.canAct = canAct;
-    }
-    public boolean canAct() {
         if (canAct && GameManager.getInstance().gameScene != null) {
             GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), DefaultCursor);
             if (GameManager.getInstance().selectedSkill != null || GameManager.getInstance().selectedItem != null) {
@@ -287,7 +282,13 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
             } else if (GUIManager.getInstance().isInAttackMode) {
                 GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), AttackCursor);
             }
+        } else if (!canAct &&  GameManager.getInstance().gameScene != null) {
+            GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), UnavailableCursor);
         }
+
+        this.canAct = canAct;
+    }
+    public boolean canAct() {
         return canAct;
     }
     public BaseSkill[] getSkills() {
@@ -320,22 +321,14 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         System.out.println(buff_name + " adding");
     }
 
-    public static BasePlayerPiece createNewInstance(BasePlayerPiece player) {
+    public BasePlayerPiece createNewInstance() {
         try {
-            // Get the class of the item
-            Class<? extends BasePlayerPiece> playerClass = player.getClass();
-
-            // Get the constructor of the item class
-            Constructor<? extends BasePlayerPiece> constructor = playerClass.getDeclaredConstructor();
-
-            // Make the constructor accessible, as it may be private
-            constructor.setAccessible(true);
-
-            // Instantiate a new instance of the item class using the constructor
-            return constructor.newInstance();
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            System.out.println("Error when creating new instance @Dealer :" + e.getMessage());; // Handle the exception appropriately
+            Constructor<? extends BasePlayerPiece> constructor = this.getClass().getConstructor(int.class, int.class, int.class);
+            return constructor.newInstance(getRow(), getCol(), 1);
+        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            System.out.println("Error createNewInstance of player: " + e.getMessage());
         }
         return null;
     }
+
 }

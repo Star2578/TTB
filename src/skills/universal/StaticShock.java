@@ -13,6 +13,7 @@ import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import pieces.player.BasePlayerPiece;
+import pieces.wall.BaseWallPiece;
 import skills.BaseSkill;
 import utils.Attack;
 import utils.Config;
@@ -85,14 +86,15 @@ public class StaticShock extends BaseSkill implements Attack {
                         }
                     }
                     //=========<SKILL EFFECT>====================================================================
-                    if (!(target instanceof BasePlayerPiece)){
-                        EffectManager.getInstance()
-                                .renderEffect( EffectManager.TYPE.ON_SELF ,
-                                        GameManager.getInstance().player ,
-                                        newRow, newCol,
-                                        EffectManager.getInstance().createInPlaceEffects(32) ,
-                                        new EffectConfig(-15 , -48 , 0 , 1.1) );
-                    }
+                    if (GameManager.getInstance().validMovesCache[newRow][newCol])
+                        if (!(target instanceof BasePlayerPiece)){
+                            EffectManager.getInstance()
+                                    .renderEffect( EffectManager.TYPE.ON_SELF ,
+                                            GameManager.getInstance().player ,
+                                            newRow, newCol,
+                                            EffectManager.getInstance().createInPlaceEffects(32) ,
+                                            new EffectConfig(-15 , -28 , 0 , 0.75) );
+                        }
                     //===========================================================================================
                 }
 

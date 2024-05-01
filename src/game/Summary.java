@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 import logic.GameManager;
 import logic.SceneManager;
 import logic.SoundManager;
+import pieces.player.BasePlayerPiece;
 import pieces.player.Knight;
 import utils.Config;
 
@@ -63,7 +64,7 @@ public class Summary {
             // Add action to retry the game
             System.out.println("Retry button clicked");
             SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
-            GameManager.getInstance().GameStart(new Knight(0, 0, 1));
+            GameManager.getInstance().GameStart(GameManager.getInstance().player.createNewInstance());
         });
 
         menuButton.setOnAction(e -> {
