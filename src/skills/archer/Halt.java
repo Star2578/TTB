@@ -69,13 +69,13 @@ public class Halt extends BaseSkill implements Attack {
                         monsterPiece.addBuff(STUN_DURATION, "Stun");
                         //=========<STUN EFFECT>====================================================================
                         Effect Stun = EffectManager.getInstance().createInPlaceEffects(8);
-                        Stun.setOwner(target);
                         EffectManager.getInstance()
                                 .renderEffect(EffectManager.TYPE.ON_SELF,
                                         GameManager.getInstance().player,
                                         target.getRow(), target.getCol(),
                                         Stun,
                                         new EffectConfig(12, -6, 0, 1.6));
+                        Stun.bindToOwnerMovement(target);
                         Stun.setTurnRemain(STUN_DURATION + 1);
                         //===========================================================================================
                     }

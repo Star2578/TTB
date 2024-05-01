@@ -103,7 +103,6 @@ public class Archer extends BasePlayerPiece {
         }
 
         decreaseActionPoint(ATTACK_COST);
-        monsterPiece.takeDamage(getAttackDamage());
 
         //make player face to target
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
@@ -127,6 +126,7 @@ public class Archer extends BasePlayerPiece {
                             monsterPiece.getRow(), monsterPiece.getCol(),
                             EffectManager.getInstance().createInPlaceEffects(14) ,
                             new EffectConfig(3 , 0 , 0 , 1.2) );
+            monsterPiece.takeDamage(getAttackDamage());
             //===========================================================================================
         });
 

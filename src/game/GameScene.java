@@ -86,7 +86,9 @@ public class GameScene {
         root = new BorderPane();
         root.setStyle("-fx-background-color: #1c0a05;");
         scene = new Scene(root, 1280, 720);
-        scene.getStylesheets().add(getClass().getResource("/CSSs/BottomLeftGUI.css").toExternalForm());
+        scene.getStylesheets().addAll(
+                getClass().getResource("/CSSs/BottomLeftGUI.css").toExternalForm() ,
+                getClass().getResource("/CSSs/Global.css").toExternalForm());
 
         tilePane.setMinSize(GAME_SIZE,GAME_SIZE);
         tilePane.setMaxSize(GAME_SIZE,GAME_SIZE);
@@ -788,6 +790,8 @@ public class GameScene {
     private void setupKeyEvents(Scene scene) {
         // Debug tool
         scene.setOnKeyPressed(event -> {
+
+
             switch (event.getCode()) {
                 case ESCAPE:
                     SceneManager.getInstance().switchSceneTo(Setting.setting(SceneManager.getInstance().getStage(), this.scene));
@@ -806,6 +810,7 @@ public class GameScene {
                 case DOWN:
                 case LEFT:
                 case RIGHT:
+
                     if (player.canAct()) {
                         if (!isPlayerPieceSelected) {
                             resetSelectionAll();
@@ -840,7 +845,6 @@ public class GameScene {
                             if (validMovesCache[rowToMove][colToMove] && player.validMove(rowToMove, colToMove) && piecesPosition[rowToMove][colToMove] == null) {
                                 // Move the player
                                 MovementHandler.movePlayer(player.getRow() + rowDelta, player.getCol() + colDelta);
-                                System.out.println("can act " + player.canAct());
                             } else {
                                 SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                                 System.out.println("Invalid move");

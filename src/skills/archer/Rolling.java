@@ -1,7 +1,6 @@
 package skills.archer;
 
-import javafx.animation.PathTransition;
-import javafx.animation.RotateTransition;
+import javafx.animation.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -17,8 +16,11 @@ import logic.effect.EffectManager;
 import logic.effect.PopupConfig;
 import logic.effect.PopupManager;
 import pieces.BasePiece;
+import pieces.player.BasePlayerPiece;
 import skills.BaseSkill;
 import utils.Config;
+
+import static utils.Config.SQUARE_SIZE;
 
 public class Rolling extends BaseSkill {
     private BasePiece target;
@@ -55,6 +57,7 @@ public class Rolling extends BaseSkill {
         rotateTransition.setFromAngle(0);
         rotateTransition.setToAngle(isRollLeft? -360 : 360);
         rotateTransition.play();
+
 
 
     }

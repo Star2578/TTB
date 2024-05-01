@@ -72,7 +72,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         //========<damage number on hit>===============
         PopupManager.createPopup(
                 this,
-                new PopupConfig( String.valueOf(-damage) , PopupManager.DAMAGE_COLOR ,
+                new PopupConfig( String.valueOf(damage) , PopupManager.DAMAGE_COLOR ,
                         null ,
                         16)
         );
