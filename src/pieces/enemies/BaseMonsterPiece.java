@@ -69,14 +69,6 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     public void takeDamage(int damage) {
         setCurrentHealth(currentHp - damage);
 
-        //========<damage number on hit>===============
-        PopupManager.createPopup(
-                this,
-                new PopupConfig( String.valueOf(damage) , PopupManager.DAMAGE_COLOR ,
-                        null ,
-                        16)
-        );
-        //=============================================
     }
     public void changeDirection(int direction) {
         if (direction != 1 && direction != -1) {
@@ -140,7 +132,31 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     }
     @Override
     public void setCurrentHealth(int health) {
-        this.currentHp = Math.max(health, 0);
+
+        //=======<popup when damaged/healed>=============
+        if(GameManager.getInstance().displayDamageNumber){
+            if(health < getCurrentHealth()){
+                PopupManager.createPopup(
+                        this ,
+                        new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
+                                PopupManager.DAMAGE_COLOR ,
+                                null ,
+                                1)
+                );
+            }
+            else{
+                PopupManager.createPopup(
+                        this ,
+                        new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
+                                PopupManager.HEAL_COLOR ,
+                                null ,
+                                1)
+                );
+            }
+        }
+        //===============================================
+
+        this.currentHp = Math.max( Math.min(getMaxHealth(),health) , 0);
         if (currentHp == 0) onDeath();
     }
     @Override

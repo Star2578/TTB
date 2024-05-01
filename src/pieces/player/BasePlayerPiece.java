@@ -217,24 +217,25 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     public void setCurrentHealth(int health) {
 
         //=======<popup when damaged/healed>=============
-        boolean isDecrease = (health < getCurrentHealth());
-        if(isDecrease){
-            PopupManager.createPopup(
-                    this ,
-                    new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
-                            PopupManager.DAMAGE_COLOR ,
-                            null ,
-                            1)
-            );
-        }
-        else{
-            PopupManager.createPopup(
-                    this ,
-                    new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
-                            PopupManager.HEAL_COLOR ,
-                            null ,
-                            1)
-            );
+        if(GameManager.getInstance().displayDamageNumber){
+            if(health < getCurrentHealth()){
+                PopupManager.createPopup(
+                        this ,
+                        new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
+                                PopupManager.DAMAGE_COLOR ,
+                                null ,
+                                1)
+                );
+            }
+            else{
+                PopupManager.createPopup(
+                        this ,
+                        new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
+                                PopupManager.HEAL_COLOR ,
+                                null ,
+                                1)
+                );
+            }
         }
         //===============================================
 
