@@ -91,11 +91,11 @@ public class GameScene {
         tilePane.setMinSize(GAME_SIZE,GAME_SIZE);
         tilePane.setMaxSize(GAME_SIZE,GAME_SIZE);
         tilePane.setDisable(true);
-        for(int i = 0 ; i < 20 ; i++){
-            //init grid size for tilePane
-            tilePane.getColumnConstraints().add(new ColumnConstraints(32));
-            tilePane.getRowConstraints().add(new RowConstraints(32));
-        }
+//        for(int i = 0 ; i < 20 ; i++){
+//            //init grid size for tilePane
+//            tilePane.getColumnConstraints().add(new ColumnConstraints(32));
+//            tilePane.getRowConstraints().add(new RowConstraints(32));
+//        }
 
 
         //this pane contains all animation-related nodes
@@ -272,8 +272,9 @@ public class GameScene {
         // Ensure opacity is within valid range
         opacity = Math.max(0, Math.min(opacity, MAX_FOG_OPACITY));
 
+        if (fog.getOpacity() != 0)
         // Set fog opacity
-        fog.setOpacity(opacity);
+            fog.setOpacity(opacity);
     }
 
     private void initFloor(GridPane gridPane) {
@@ -352,9 +353,10 @@ public class GameScene {
                             tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt((i+1)/8 , (i+1)%8) , col-1 , row-1);
                             break;
                         }
-                        if(i == jumpList.length-1){
-                            tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt(0 , 0 ) , col-1 , row-1);
-                        }
+//                        if(i == jumpList.length-1){
+////                            tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt(0 , 0 ) , col-1 , row-1);
+//                            tilePane.add( (new ImageView(ImageScaler.resample(new Image(Config.FogPath), 2))), col-1 , row-1);
+//                        }
                     }
                 }
             }
@@ -657,6 +659,7 @@ public class GameScene {
                 GUIManager.getInstance().eventLogDisplay.addLog("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
             } else {
+                SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                 System.out.println("Invalid move");
             }
             resetSelection(0);
@@ -803,44 +806,47 @@ public class GameScene {
                 case DOWN:
                 case LEFT:
                 case RIGHT:
-                    if (!isPlayerPieceSelected && player.canAct()) {
-                        resetSelectionAll();
-                        isPlayerPieceSelected = true;
-                        MovementHandler.showValidMoves(player.getRow(), player.getCol());
-                    } else if (player.canAct() && isPlayerPieceSelected) {
-                        // Determine direction based on key pressed
-                        int rowDelta = 0;
-                        int colDelta = 0;
-                        switch (event.getCode()) {
-                            case W:
-                            case UP:
-                                rowDelta = -1;
-                                break;
-                            case A:
-                            case LEFT:
-                                colDelta = -1;
-                                break;
-                            case S:
-                            case DOWN:
-                                rowDelta = 1;
-                                break;
-                            case D:
-                            case RIGHT:
-                                colDelta = 1;
-                                break;
-                        }
-
-                        int rowToMove = player.getRow() + rowDelta;
-                        int colToMove = player.getCol() + colDelta;
-
-                        if (validMovesCache[rowToMove][colToMove] && player.validMove(rowToMove, colToMove) && piecesPosition[rowToMove][colToMove] == null) {
-                            // Move the player
-                            MovementHandler.movePlayer(player.getRow() + rowDelta, player.getCol() + colDelta);
-                            System.out.println("can act " + player.canAct());
+                    if (player.canAct()) {
+                        if (!isPlayerPieceSelected) {
+                            resetSelectionAll();
+                            isPlayerPieceSelected = true;
+                            MovementHandler.showValidMoves(player.getRow(), player.getCol());
                         } else {
-                            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+                            // Determine direction based on key pressed
+                            int rowDelta = 0;
+                            int colDelta = 0;
+                            switch (event.getCode()) {
+                                case W:
+                                case UP:
+                                    rowDelta = -1;
+                                    break;
+                                case A:
+                                case LEFT:
+                                    colDelta = -1;
+                                    break;
+                                case S:
+                                case DOWN:
+                                    rowDelta = 1;
+                                    break;
+                                case D:
+                                case RIGHT:
+                                    colDelta = 1;
+                                    break;
+                            }
+
+                            int rowToMove = player.getRow() + rowDelta;
+                            int colToMove = player.getCol() + colDelta;
+
+                            if (validMovesCache[rowToMove][colToMove] && player.validMove(rowToMove, colToMove) && piecesPosition[rowToMove][colToMove] == null) {
+                                // Move the player
+                                MovementHandler.movePlayer(player.getRow() + rowDelta, player.getCol() + colDelta);
+                                System.out.println("can act " + player.canAct());
+                            } else {
+                                SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+                                System.out.println("Invalid move");
+                            }
+                            resetSelection(0);
                         }
-                        resetSelection(0);
                     }
                     break;
                 case V:

@@ -119,7 +119,7 @@ public class InventoryDisplay implements Display {
         }
 
         // Add empty frame till full
-        for (int i = 0; i < maxItems; i++) {
+        for (int i = 0; i < maxItems - GameManager.getInstance().inventory.size(); i++) {
             StackPane emptyFrame = createItemFrame(new EmptyItem());
             int row = totalItems / itemsPerRow;
             int col = totalItems % itemsPerRow;

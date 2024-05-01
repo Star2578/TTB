@@ -497,7 +497,7 @@ public class Dealer extends BaseNpcPiece {
         buyItemSlot.setOnMouseClicked(mouseEvent -> {
             int cost = 200 + ((GameManager.getInstance().itemUnlockedSlots) * 50);
 
-            if (GameManager.getInstance().playerMoney >= cost && GameManager.getInstance().itemUnlockedSlots < 12) {
+            if (GameManager.getInstance().playerMoney >= cost && GameManager.getInstance().itemUnlockedSlots < 8) {
 
                 GameManager.getInstance().itemUnlockedSlots += 1;
                 GameManager.getInstance().playerMoney -= cost;
@@ -524,7 +524,7 @@ public class Dealer extends BaseNpcPiece {
         });
 
         // buy item slot only if the slots unlocked are less than 12
-        if (GameManager.getInstance().itemUnlockedSlots < 12) {
+        if (GameManager.getInstance().itemUnlockedSlots < 8) {
             itemShopGrid.add(buyItemSlot, 0, 3, 4, 1);
         }
         // buy skill slot only if the slots unlocked are less than 8
