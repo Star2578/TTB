@@ -33,13 +33,14 @@ public class Narcissistic extends BaseSkill implements BuffHealth, BuffAttack, B
 
         // Randomly apply one of the three buffs
         Random random = new Random();
-        int randomBuff = random.nextInt(3);
+        int randomBuff = random.nextInt(4);
 
         if (target instanceof BasePlayerPiece) {
             switch (randomBuff) {
                 case 0 -> buffHealth();
                 case 1 -> buffAttack();
                 case 2 -> buffActionPoint();
+                case 3 -> buffMana();
             }
         }
         GameManager.getInstance().player.decreaseMana(manaCost);

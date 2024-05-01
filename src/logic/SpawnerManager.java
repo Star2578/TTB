@@ -51,7 +51,6 @@ public class SpawnerManager {
         if (spawnChance <= doorProbability || monsterCount == 0) {
             spawnDoor(row, col);
         } else {
-            System.out.println("Door spawn failed at row " + row + ", col " + col);
             increaseDoorChance();
         }
     }
@@ -61,7 +60,6 @@ public class SpawnerManager {
         doorProbability = 0;
 
         // Door spawn successful
-        System.out.println("Door spawned at row " + row + ", col " + col);
         dungeonFloor[row][col].setImage(ImageScaler.resample(new Image(Config.DoorPath), 2));
         gameManager.doorAt.add(new Point2D(row, col));
     }

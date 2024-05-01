@@ -3,10 +3,7 @@ package game;
 import items.BaseItem;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-
-
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -15,22 +12,24 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
-
 import logic.*;
 import logic.effect.EffectManager;
-import logic.handlers.*;
+import logic.handlers.AttackHandler;
+import logic.handlers.MovementHandler;
+import logic.handlers.SkillHandler;
 import logic.ui.GUIManager;
 import logic.ui.display.NpcDisplay;
 import pieces.BasePiece;
-import pieces.enemies.*;
+import pieces.enemies.BaseMonsterPiece;
+import pieces.enemies.SlimeBoss;
 import pieces.npcs.BaseNpcPiece;
 import pieces.npcs.Dealer;
-import pieces.player.*;
-import pieces.wall.*;
+import pieces.player.BasePlayerPiece;
+import pieces.player.Knight;
+import pieces.wall.BaseWallPiece;
 import skills.BaseSkill;
 import utils.Config;
 import utils.Usable;
@@ -67,7 +66,7 @@ public class GameScene {
     private boolean isPlayerPieceSelected = false;
 
 
-    //------------<UI>----------------------------------------------------
+    //------------<Pane layers>----------------------------------------------------
     private Scene scene;
     private Pane animationPane = gameManager.animationPane;
     private GridPane boardPane = gameManager.boardPane;
@@ -82,7 +81,6 @@ public class GameScene {
 
     public GameScene() {
 
-
         root = new BorderPane();
         root.setStyle("-fx-background-color: #1c0a05;");
         scene = new Scene(root, 1280, 720);
@@ -91,11 +89,6 @@ public class GameScene {
         tilePane.setMinSize(GAME_SIZE,GAME_SIZE);
         tilePane.setMaxSize(GAME_SIZE,GAME_SIZE);
         tilePane.setDisable(true);
-//        for(int i = 0 ; i < 20 ; i++){
-//            //init grid size for tilePane
-//            tilePane.getColumnConstraints().add(new ColumnConstraints(32));
-//            tilePane.getRowConstraints().add(new RowConstraints(32));
-//        }
 
 
         //this pane contains all animation-related nodes
@@ -272,7 +265,6 @@ public class GameScene {
         // Ensure opacity is within valid range
         opacity = Math.max(0, Math.min(opacity, MAX_FOG_OPACITY));
 
-//        if (fog.getOpacity() != 0)
         // Set fog opacity
             fog.setOpacity(opacity);
     }
@@ -324,7 +316,7 @@ public class GameScene {
         for (int row = 1; row < expandedLayout.length-1 ; row++) {
             for (int col = 1; col < expandedLayout[0].length-1 ; col++) {
                 if (expandedLayout[row][col] == '#') {
-                    //assign new wall object to piecesPosition & add texture to tilePane
+                    // assign new wall object to piecesPosition & add texture to tilePane
                     piecesPosition[row-1][col-1] = new BaseWallPiece(row-1, col-1);
                     // |  1|  2|  4| - tile around has its bit value
                     // |  8|  X| 16| - bitMask -> adjacent
@@ -353,10 +345,6 @@ public class GameScene {
                             tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt((i+1)/8 , (i+1)%8) , col-1 , row-1);
                             break;
                         }
-//                        if(i == jumpList.length-1){
-////                            tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt(0 , 0 ) , col-1 , row-1);
-//                            tilePane.add( (new ImageView(ImageScaler.resample(new Image(Config.FogPath), 2))), col-1 , row-1);
-//                        }
                     }
                 }
             }
@@ -379,8 +367,8 @@ public class GameScene {
             Text here = new Text("You're here!\nV");
             here.setStyle(
                     "-fx-font-family:x16y32pxGridGazer;" +
-                            "-fx-font-size:24;" +
-                            "-fx-fill:'white';");
+                    "-fx-font-size:24;" +
+                    "-fx-fill:'white';");
             here.setTextAlignment(TextAlignment.CENTER);
             here.setX(piece.getCol()*SQUARE_SIZE - 45);
             here.setY(piece.getRow()*SQUARE_SIZE - 30); // Adjust the Y position to place it above the player
@@ -443,14 +431,12 @@ public class GameScene {
                 // detect mouse enter/exit for squares
                 square.setOnMouseEntered(mouseEvent -> {
                     if (piecesPosition[finalRow][finalCol] instanceof Dealer) {
-                        System.out.println("Mouse on dealer");
                         GUIManager.getInstance().updateCursor(this.getScene(), Config.QuestionCursor);
                     }
                     square.setImage(new Image(Config.FloorHoverPath));
                 });
                 square.setOnMouseExited(mouseEvent -> {
                     if (piecesPosition[finalRow][finalCol] instanceof Dealer) {
-                        System.out.println("Mouse off dealer");
                         GUIManager.getInstance().updateCursor(this.getScene(), Config.DefaultCursor);
                     }
                     square.setImage(new Image(Config.FloorPath));
@@ -489,7 +475,6 @@ public class GameScene {
 
     private void handleSquareClick(int row, int col) {
         System.out.println("Clicked on square (" + row + ", " + col + ")");
-//        System.out.println("can act? " + player.canAct());
         if (!player.canAct()) {
             SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
 
@@ -974,7 +959,6 @@ public class GameScene {
 
         // clear entity
         environmentPieces.clear();
-//        initializeEnvironment();
     }
 
     private void BossRoom1() {
@@ -1000,7 +984,6 @@ public class GameScene {
 
         // set gameManager
         GameManager.getInstance().environmentPieces.add(slimeBoss);
-//        initializeEnvironment();
     }
 
     public void resetSelectionAll() {

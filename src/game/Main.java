@@ -52,10 +52,6 @@ public class Main extends Application {
             //terminate everything when close window
             @Override
             public void handle(WindowEvent t) {
-
-                //TODO: do something about SAVING PROGRESS before exit
-                //TODO: write your code here
-
                 Platform.exit();
                 System.exit(0);
             }
@@ -77,7 +73,6 @@ public class Main extends Application {
         GUIManager.getInstance().updateCursor(summary.getScene(), Config.DefaultCursor);
 
         // Show the primaryStage after configuring the fade transition
-        //primaryStage.setScene(mainMenu.getScene());
         fadeTransition.play(); // Start the fade-in animation
         primaryStage.show();
         primaryStage.setOnCloseRequest(event -> SoundManager.getInstance().stopBackgroundMusic());
