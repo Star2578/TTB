@@ -18,7 +18,7 @@ public class Dart extends BaseSkill implements Attack {
     private final int DAMAGE = 5;
     private final int KNOCKBACK = 2;
     public Dart() {
-        super("Dart", Color.DARKRED, 4, 0, "With a deft flick of their wrist, they send forth a piercing strike that packs a wallop, knocking back adversaries with formidable force.", Config.Rarity.UNCOMMON, "res/SFX/skills/slash/PP_01.wav");
+        super("Dart", Color.DARKRED, 4, 0, "Knock target 2 blocks away from you", Config.Rarity.UNCOMMON, "res/SFX/skills/slash/PP_01.wav");
         icon = new ImageView(Config.DartPath);
         range = 1;
     }

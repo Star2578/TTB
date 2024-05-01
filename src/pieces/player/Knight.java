@@ -43,14 +43,14 @@ public class Knight extends BasePlayerPiece {
         //add skill
         skills[0] = new Slash();
         skills[1] = new Heal();
-        skills[2] = new StaticShock();
-        skills[3] = new Bind();
+        skills[2] = new Dart();
+        skills[3] = new Stomp();
 
         // class specifics skills
         classSpecifics[0] = new Slash();
         classSpecifics[1] = new Heal();
         classSpecifics[2] = new Dart();
-        classSpecifics[3] = new HammerFall();
+        classSpecifics[3] = new Stomp();
 
         //configs values for animation
         setTexture(new ImageView(new Image(Config.KnightPath))); //static image for icon, ...
