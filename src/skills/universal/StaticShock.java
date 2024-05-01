@@ -70,6 +70,7 @@ public class StaticShock extends BaseSkill implements Attack {
                         monsterPiece.addBuff(1,"Stun");
                         //=========<STUN EFFECT>====================================================================
                         Effect Stun = EffectManager.getInstance().createInPlaceEffects(8);
+                        Stun.setOwner(target);
                         EffectManager.getInstance()
                                 .renderEffect( EffectManager.TYPE.ON_SELF ,
                                         GameManager.getInstance().player ,
@@ -80,6 +81,7 @@ public class StaticShock extends BaseSkill implements Attack {
                         //===========================================================================================
                         if (!monsterPiece.isAlive()) {
                             GameManager.getInstance().gameScene.removePiece(monsterPiece);
+                            EffectManager.getInstance().clearDeadEffect();
                         }
                     }
                     //=========<SKILL EFFECT>====================================================================

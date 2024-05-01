@@ -1,11 +1,15 @@
 package pieces.enemies;
 
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
+import logic.ImageScaler;
 import logic.SoundManager;
 import logic.SpawnerManager;
+import logic.effect.PopupConfig;
+import logic.effect.PopupManager;
 import logic.ui.GUIManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
@@ -64,6 +68,15 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     @Override
     public void takeDamage(int damage) {
         setCurrentHealth(currentHp - damage);
+
+        //========<damage number on hit>===============
+        PopupManager.createPopup(
+                this,
+                new PopupConfig( String.valueOf(-damage) , PopupManager.DAMAGE_COLOR ,
+                        null ,
+                        16)
+        );
+        //=============================================
     }
     public void changeDirection(int direction) {
         if (direction != 1 && direction != -1) {
@@ -161,6 +174,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
 
         // To call when this monster died
         GUIManager.getInstance().eventLogDisplay.addLog("Player killed " + this.getClass().getSimpleName() + " !!!!", Color.CRIMSON);
+
         //=====<dead effect>=========================================
         new Thread(()->{
             try {
@@ -180,6 +194,8 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
 
         //=============================================================
 
+        //clear effect when monster's die early
+        EffectManager.getInstance().clearDeadEffect();
 
         System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
     }

@@ -18,7 +18,7 @@ public class Bind extends BaseSkill implements Attack {
 
     private final int DAMAGE = 1;
     public Bind() {
-        super("Bind", Color.PALEGOLDENROD, 6, 1,
+        super("Bind", Color.PALEGOLDENROD, 0, 1,
                 "crouch and tied target legs up, stun it for 3 turns", Config.Rarity.EPIC, Config.sfx_darkMagicSound);
 
         icon = new ImageView(Config.BindPath);
@@ -61,6 +61,7 @@ public class Bind extends BaseSkill implements Attack {
                 monsterPiece.addBuff(3,"Stun");
                 //=========<STUN EFFECT>====================================================================
                 Effect Stun = EffectManager.getInstance().createInPlaceEffects(8);
+                Stun.setOwner(target);
                 EffectManager.getInstance()
                         .renderEffect( EffectManager.TYPE.ON_SELF ,
                                 GameManager.getInstance().player ,
@@ -81,6 +82,11 @@ public class Bind extends BaseSkill implements Attack {
                                 EffectManager.getInstance().createInPlaceEffects(0) ,
                                 new EffectConfig(0 , 8 , 0 , 1.25) );
                 //===========================================================================================
+
+                if (!monsterPiece.isAlive()) {
+                    GameManager.getInstance().gameScene.removePiece(monsterPiece);
+                    EffectManager.getInstance().clearDeadEffect();
+                }
             }
         }
     }

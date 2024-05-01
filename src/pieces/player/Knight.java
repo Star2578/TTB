@@ -43,7 +43,8 @@ public class Knight extends BasePlayerPiece {
         //add skill
         skills[0] = new Slash();
         skills[1] = new Heal();
-        skills[2] = new Narcissistic();
+        skills[2] = new StaticShock();
+        skills[3] = new Bind();
 
         // class specifics skills
         classSpecifics[0] = new Slash();
@@ -58,7 +59,7 @@ public class Knight extends BasePlayerPiece {
 
     @Override
     public boolean validMove(int row, int col) {
-        
+
         int currentRow = getRow();
         int currentCol = getCol();
 

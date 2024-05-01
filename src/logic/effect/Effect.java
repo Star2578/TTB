@@ -1,18 +1,28 @@
 package logic.effect;
 
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
+import pieces.BasePiece;
+import pieces.enemies.BaseMonsterPiece;
+
+import static utils.Config.SQUARE_SIZE;
 
 public class Effect extends SpriteAnimation {
 
     public boolean canKill = false;
     private static final int defaultTimeout = 30;
     private int turnRemain = 1;
+    private BasePiece owner;
+    private EffectConfig config;
+    public Pane effectPane = new Pane();
 
 
     //constructor with parameters
@@ -45,5 +55,12 @@ public class Effect extends SpriteAnimation {
         return turnRemain;
     }
 
+    public void setOwner(BasePiece owner){
+        this.owner = owner;
+    }
+
+    public BasePiece getOwner(){
+        return owner;
+    }
 
 }

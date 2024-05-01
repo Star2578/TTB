@@ -97,10 +97,14 @@ public class CharSelection {
 
         //-------------------<play button>-----------------------------------------
         playBtn= new Button("PLAY");
-        playBtn.getStyleClass().add("btn");
-        playBtn.setPrefWidth(250);
-        playBtn.setLayoutX(920);
+        playBtn.setId("playBtn");
+        playBtn.setLayoutX(940);
         playBtn.setLayoutY(600);
+//        DropShadow ds1 = new DropShadow();
+//        ds1.setOffsetY(4.0f);
+//        ds1.setOffsetX(4.0f);
+//        ds1.setColor(Color.CORAL);
+
         playBtn.setOnAction(actionEvent -> {
             if (selectedCard != null) {
                 SoundManager.getInstance().playSoundEffect(Config.sfx_buttonSound);
@@ -439,7 +443,8 @@ class SkillList extends VBox{
 
     //skill desc. component
     private Pane skillDescContainer;
-    private StackPane skillTextBox;
+    private VBox skillTextBox;
+    private Text skillNameText;
     private Text skillText;
     protected SkillStat skillStat;
 
@@ -461,24 +466,33 @@ class SkillList extends VBox{
         skillContainerLabel.setLayoutX(80);
         skillContainerLabel.setLayoutY(20);
 
-        skillTextBox = new StackPane();
-        skillTextBox.setPrefSize(280,120);
-        skillTextBox.setLayoutX(10);
-        skillTextBox.setLayoutY(25);
-        skillTextBox.setStyle("-fx-background-color:#cdcfd7");
-        skillTextBox.setPadding(new Insets(5));
+
         skillText = new Text("Click on skill to get details");
         skillText.setWrappingWidth(270);
         skillText.setStyle("-fx-font-family:x16y32pxGridGazer; -fx-font-size:18; -fx-fill:white;");
-        skillTextBox.getChildren().add(skillText);
+
+        skillNameText = new Text("");
+        skillNameText.setStyle("-fx-font-family:x16y32pxGridGazer; -fx-font-size:18; -fx-fill:#00fff4;");
+        skillNameText.setLayoutX(0);
+        skillNameText.setLayoutY(0);
+
+        skillTextBox = new VBox();
+        skillTextBox.setPrefSize(280,120);
+        skillTextBox.setLayoutX(10);
+        skillTextBox.setLayoutY(25);
+        skillTextBox.setStyle("-fx-background-color:#8f94a8");
+        skillTextBox.setPadding(new Insets(5));
+        skillTextBox.getChildren().addAll(skillNameText,skillText);
+        skillTextBox.setSpacing(4);
         StackPane.setAlignment(skillText,Pos.TOP_LEFT);
+        StackPane.setAlignment(skillNameText,Pos.TOP_LEFT);
+
 
         skillStat = new SkillStat();
         skillStat.setLayoutX(10);
         skillStat.setLayoutY(150);
 
         skillDescContainer.getChildren().addAll(skillContainerLabel,skillTextBox,skillStat);
-
 
         this.getChildren().addAll(
                 boxLabel,
@@ -491,15 +505,22 @@ class SkillList extends VBox{
     public void changeInfo(BasePlayerPiece piece){
         //set skill icon to current character's (as reference)
         skillDatas = piece.getSkills();
+        //                                    we access this
+        //                                         |
+        //                                         V
+        // skillContainer[ stackPane[ImageView skillIcon , ImageView frame] , stackPane[*,*] , stackPane[*,*] , ... ]
 
-        for(int i = 0; i<piece.getSkills().length ; i++){
-            if(skillDatas[i] == null) break;
-            //                                    we access this
-            //                                         |
-            //                                         V
-            // skillContainer[ stackPane[ImageView skillIcon , ImageView frame] , stackPane[*,*] , stackPane[*,*] , ... ]
-            ((ImageView)((StackPane) skillContainer.getChildren().get(i)).getChildren().get(0))
-                    .setImage(ImageScaler.resample(new Image(skillDatas[i].getIcon().getImage().getUrl()),2));
+        for(int i = 0; i<4 ; i++){
+            if(skillDatas[i] == null) {
+
+                ((ImageView)((StackPane) skillContainer.getChildren().get(i)).getChildren().get(0))
+                        .setImage(ImageScaler.resample(new Image(Config.LockedSkillIconPath),2));
+
+            }
+            else{
+                ((ImageView)((StackPane) skillContainer.getChildren().get(i)).getChildren().get(0))
+                        .setImage(ImageScaler.resample(new Image(skillDatas[i].getIcon().getImage().getUrl()),2));
+            }
         }
 
     }
@@ -549,6 +570,9 @@ class SkillList extends VBox{
     //clicked skill will call this to display its description
     public void displaySkill(int index){
 
+
+        if(skillDatas[index] == null) return;
+
         //reset selection frame
         for(int i = 0 ; i < 4 ; i++){
             if(i == index){
@@ -557,7 +581,9 @@ class SkillList extends VBox{
                 ((ImageView) ((StackPane) skillContainer.getChildren().get(i)).getChildren().get(1)).setImage(ImageScaler.resample(new Image(Config.FramePath),2));
             }
         }
+
         BaseSkill skill = skillDatas[index];
+        skillNameText.setText(skill.getName());
         skillText.setText(skill.getDescription());
         skillStat.changeSkillStat(skill);
     }
@@ -626,9 +652,9 @@ class SkillList extends VBox{
                 this.dmg.getChildren().get(0).setStyle("-fx-font-family:x16y32pxGridGazer; -fx-font-size:18; -fx-fill:#22c406;");
                 ((Text) this.dmg.getChildren().get(1)).setText( heal==0?"-":String.valueOf(heal) );
             }
-            else if(skill instanceof Buff){
+            else{
                 ((Text) this.dmg.getChildren().get(0)).setText("");
-                ((Text) this.dmg.getChildren().get(1)).setText( "" );
+                ((Text) this.dmg.getChildren().get(1)).setText("");
             }
 
             ((Text) this.mp.getChildren().get(1)).setText( skill.getManaCost()==0?"-":String.valueOf(skill.getManaCost()) );
