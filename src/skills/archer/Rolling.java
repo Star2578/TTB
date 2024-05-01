@@ -59,7 +59,6 @@ public class Rolling extends BaseSkill {
         rotateTransition.play();
 
 
-
     }
 
     @Override
