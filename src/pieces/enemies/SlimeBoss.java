@@ -44,7 +44,8 @@ public class SlimeBoss extends BaseMonsterPiece {
 
         this.currentPhase = Phase.FIRST;
 
-        setupAnimation(Config.SlimePath4, 0, -10, 32, 46 , true);  }
+        setupAnimation(Config.SlimePath4, 0, -10, 32, 46 , true);
+    }
 
     @Override
     public void performAction() {
@@ -64,11 +65,11 @@ public class SlimeBoss extends BaseMonsterPiece {
                 System.out.println("Skill count: " + Skill_CNT);
                 break;
             case SECOND, THIRD:
-                if(EffectBuffs != null) {
-                    if(EffectBuffs.containsKey("Stun")) {
+                if(EffectBuffs.containsKey("Stun")) {
                         endAction = true;
-                        System.out.println("Stunned");}
+                        System.out.println("Stunned");
                 }else {
+                    System.out.println("EffectBuffs is null");
                     chasePlayer();
                 }
                 break;
@@ -97,7 +98,7 @@ public class SlimeBoss extends BaseMonsterPiece {
     public void updateState() {
         if (currentPhase == Phase.FIRST && getCurrentHealth() <= 20) {
             splitSlime( 100, Phase.SECOND);
-        } else if (currentPhase == Phase.SECOND && getCurrentHealth() <= 15) {
+        } else if (currentPhase == Phase.SECOND && getCurrentHealth() <= 20) {
             splitSlime(50, Phase.THIRD);
         } else if (currentPhase == Phase.THIRD && getCurrentHealth() <= 0) {
             currentPhase = Phase.DEAD;
@@ -239,9 +240,11 @@ public class SlimeBoss extends BaseMonsterPiece {
                 // Start the pause
                 pause.play();
 
+
             }
         }
-        
+
+
     }
 
     private void chasePlayer() {
