@@ -59,7 +59,7 @@ public class IceShield extends BaseSkill implements Buff {
                             GameManager.getInstance().player ,
                             GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
                             shield ,
-                            new EffectConfig(3 , -16 , 0 , 1.4) );
+                            new EffectConfig(3 , -8 , 0 , 1.4) );
             shield.bindToOwnerMovement(GameManager.getInstance().player);
             shield.setTurnRemain(BUFF_DURATION+1);
             //===========================================================================================

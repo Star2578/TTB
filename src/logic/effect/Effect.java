@@ -58,6 +58,9 @@ public class Effect extends SpriteAnimation {
         return turnRemain;
     }
 
+    public void setConfig(EffectConfig config){this.config = config;}
+    public EffectConfig getConfig(){ return config;}
+
     public void setOwner(BasePiece owner){
         this.owner = owner;
     }
@@ -72,7 +75,7 @@ public class Effect extends SpriteAnimation {
 
         DoubleBinding xTranslate = new DoubleBinding(){
             @Override
-            protected double computeValue() {return owner.animationImage.getTranslateX() ;}
+            protected double computeValue() {return owner.animationImage.getTranslateX() + thisEffect.getConfig().offsetX ;}
             {bind(owner.animationImage.translateXProperty(),  thisEffect.imageView.translateXProperty() );}
         };
         DoubleBinding xPosition = new DoubleBinding(){
@@ -82,7 +85,7 @@ public class Effect extends SpriteAnimation {
         };
         DoubleBinding yTranslate = new DoubleBinding(){
             @Override
-            protected double computeValue() {return owner.animationImage.getTranslateY();}
+            protected double computeValue() {return owner.animationImage.getTranslateY() + thisEffect.getConfig().offsetY ;}
             {bind(owner.animationImage.translateYProperty(),  thisEffect.imageView.translateYProperty() );}
         };
         DoubleBinding yPosition = new DoubleBinding(){

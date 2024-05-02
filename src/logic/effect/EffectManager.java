@@ -206,6 +206,7 @@ public class EffectManager {
     
     public void renderEffect(Enum<TYPE> typeEnum, BasePlayerPiece player , int row , int col, Effect effect , EffectConfig config){
 
+        effect.setConfig(config);
         runningEffects.add(effect);
 
         if (typeEnum == TYPE.AROUND_SELF){
@@ -398,12 +399,10 @@ public class EffectManager {
     public void clearDeadEffect(){
 
         //clear effect display in effectPane
-        for(int i = 0 ; i < runningEffects.size() ; i++){
-            Effect current = runningEffects.get(i);
-
-            if(current.canKill || current.getTurnRemain() == 0 || (current.getOwner()!=null && ( !((BaseMonsterPiece)current.getOwner()).isAlive()) ) ){
+        for (Effect effect : runningEffects) {
+            if (effect.canKill || effect.getTurnRemain() == 0 || (effect.getOwner() != null && (!(effect.getOwner()).isAlive()))) {
                 //effect is timeout or reach turn limit
-                effectPane.getChildren().remove(runningEffects.get(i).imageView);
+                effectPane.getChildren().remove(effect.imageView);
             }
         }
 
@@ -411,7 +410,7 @@ public class EffectManager {
         runningEffects.removeIf(effect -> (
                 effect.canKill ||
                 effect.getTurnRemain() == 0 ||
-                (effect.getOwner()!=null && ( !((BaseMonsterPiece) effect.getOwner()).isAlive()) )
+                ( effect.getOwner()!=null && ( !(effect.getOwner()).isAlive()) )
         ));
     }
 

@@ -70,6 +70,7 @@ public class BasePiece {
         return currentDirection;
     }
     public void setTexture(ImageView texture){ this.texture = texture; }
+    public boolean isAlive(){return true;}
 
     protected void setupAnimation(String imgPath, int offsetX, int offsetY, int width, int height , boolean loop) {
         //===================<animation section>==========================================
