@@ -3,8 +3,6 @@ package game;
 import items.BaseItem;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-
-
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -14,22 +12,24 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
-
 import logic.*;
 import logic.effect.EffectManager;
-import logic.handlers.*;
+import logic.handlers.AttackHandler;
+import logic.handlers.MovementHandler;
+import logic.handlers.SkillHandler;
 import logic.ui.GUIManager;
 import logic.ui.display.NpcDisplay;
 import pieces.BasePiece;
-import pieces.enemies.*;
+import pieces.enemies.BaseMonsterPiece;
+import pieces.enemies.SlimeBoss;
 import pieces.npcs.BaseNpcPiece;
 import pieces.npcs.Dealer;
-import pieces.player.*;
-import pieces.wall.*;
+import pieces.player.BasePlayerPiece;
+import pieces.player.Knight;
+import pieces.wall.BaseWallPiece;
 import skills.BaseSkill;
 import utils.Config;
 import utils.Usable;
@@ -42,11 +42,13 @@ public class GameScene {
     private static final int SQUARE_SIZE = Config.SQUARE_SIZE;
     private static final int GAME_SIZE = Config.GAME_SIZE;
 
+    private static final double MAX_FOG_OPACITY = 1.0;
+    private static final double MAX_FOG_VIEW_DISTANT = 2;
+
     private GameManager gameManager = GameManager.getInstance();
     private EffectManager effectManager = EffectManager.getInstance();
     private BasePlayerPiece player;
     private GUIManager guiManager;
-    private GameLoop gameLoop;
     private TurnManager turnManager;
     private DungeonGenerator dungeonGenerator;
 
@@ -64,10 +66,11 @@ public class GameScene {
     private boolean isPlayerPieceSelected = false;
 
 
-    //------------<UI>----------------------------------------------------
+    //------------<Pane layers>----------------------------------------------------
     private Scene scene;
     private Pane animationPane = gameManager.animationPane;
     private GridPane boardPane = gameManager.boardPane;
+    private GridPane fogPane = gameManager.fogPane;
     private GridPane tilePane = new GridPane();
     private BorderPane root;
     private VBox rightPane; // Contain right side UI
@@ -75,26 +78,19 @@ public class GameScene {
     private StackPane centerPane; // Contain the game board
     private Text currentLevelText;
 
-    private Runnable renderLogic;
-    private Runnable updateLogic;
-
 
     public GameScene() {
-
 
         root = new BorderPane();
         root.setStyle("-fx-background-color: #1c0a05;");
         scene = new Scene(root, 1280, 720);
-        scene.getStylesheets().add(getClass().getResource("/CSSs/BottomLeftGUI.css").toExternalForm());
+        scene.getStylesheets().addAll(
+                getClass().getResource("/CSSs/BottomLeftGUI.css").toExternalForm() ,
+                getClass().getResource("/CSSs/Global.css").toExternalForm());
 
         tilePane.setMinSize(GAME_SIZE,GAME_SIZE);
         tilePane.setMaxSize(GAME_SIZE,GAME_SIZE);
         tilePane.setDisable(true);
-        for(int i = 0 ; i < 20 ; i++){
-            //init grid size for tilePane
-            tilePane.getColumnConstraints().add(new ColumnConstraints(32));
-            tilePane.getRowConstraints().add(new RowConstraints(32));
-        }
 
 
         //this pane contains all animation-related nodes
@@ -124,8 +120,19 @@ public class GameScene {
         centerPane = new StackPane();
         centerPane.getChildren().addAll(boardPane , tilePane , animationPane , effectManager.effectPane);
 
+        if (GameManager.getInstance().fogOfWar) centerPane.getChildren().addAll(fogPane);
+
         boardPane.setBackground(Background.fill(Color.GOLD));
         root.setCenter(centerPane);
+
+        // this pane contain all fog
+        // setup fogPane if needed
+        if (GameManager.getInstance().fogOfWar) {
+            initFog(fogPane);
+            fogPane.setMinSize(GAME_SIZE, GAME_SIZE);
+            fogPane.setMaxSize(GAME_SIZE, GAME_SIZE);
+            fogPane.setDisable(true);
+        }
 
         // Current Level Text
         currentLevelText = new Text(String.valueOf(GameManager.getInstance().dungeonLevel));
@@ -157,11 +164,6 @@ public class GameScene {
         leftPane.getChildren().addAll(guiManager.getPlayerOptionsMenu());
         leftPane.setPadding(new Insets(10));
 
-        // Define update logic
-        updateLogic = () -> {
-            // Update game state
-        };
-
         // move action point display text around mouse cursor
         scene.setOnMouseMoved(mouseEvent -> {
             GUIManager.getInstance().getActionPointDisplayText().setTranslateX(mouseEvent.getX() + 20);
@@ -174,18 +176,9 @@ public class GameScene {
                 resetSelectionAll();
             }
         });
-        // Define render logic
-        renderLogic = () -> {
-            // Render game graphics
-        };
-
-        // Create an instance of GameLoop with the update and render logic
-        gameLoop = new GameLoop(updateLogic, renderLogic);
-        gameLoop.start();
 
 
         // Set up the scene and stage
-        GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
         SceneManager.getInstance().setGameScene(scene); // Save this scene for later use
         setupMouseEvents();
         setupKeyEvents(scene); // Debug Tool
@@ -212,8 +205,6 @@ public class GameScene {
         }
     }
 
-
-
     private void gameStart() {
         // Initialize player at starting position
         player = GameManager.getInstance().player;
@@ -224,11 +215,59 @@ public class GameScene {
         precomputeValidMoves();
         initializeEnvironment();
 
+        // fog of war only when play chose
+        if (GameManager.getInstance().fogOfWar) initFog(fogPane);
+
         turnManager = TurnManager.getInstance();
 
         guiManager = GUIManager.getInstance();
 
         turnManager.startPlayerTurn();
+    }
+
+    private void initFog(GridPane gridPane) {
+        // Generate fog for fogPane grid
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                ImageView fog = new ImageView();
+
+                // set floor image into square size
+                fog.setFitWidth(SQUARE_SIZE);
+                fog.setFitHeight(SQUARE_SIZE);
+
+                fog.setImage(ImageScaler.resample(new Image(Config.FogPath), 2)); // Set texture of dungeon floor
+                gridPane.add(fog, col, row);
+
+                // Start timeline to update fog visibility continuously
+                startFogOpacityUpdate(fog);
+            }
+        }
+    }
+
+    // Method to start timeline for continuously updating fog opacity
+    private void startFogOpacityUpdate(ImageView fog) {
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(0.1), event -> {
+                    updateFogOpacity(fog, player.getRow(), player.getCol());
+                })
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    // Method to update fog opacity based on distance from player
+    private void updateFogOpacity(ImageView fog, int playerRow, int playerCol) {
+        // Calculate distance between fog square and player
+        double distance = Math.sqrt(Math.pow(playerRow - GridPane.getRowIndex(fog), 2) + Math.pow(playerCol - GridPane.getColumnIndex(fog), 2));
+
+        // Calculate opacity based on distance
+        double opacity = (distance / MAX_FOG_VIEW_DISTANT) - 1;
+
+        // Ensure opacity is within valid range
+        opacity = Math.max(0, Math.min(opacity, MAX_FOG_OPACITY));
+
+        // Set fog opacity
+            fog.setOpacity(opacity);
     }
 
     private void initFloor(GridPane gridPane) {
@@ -278,7 +317,7 @@ public class GameScene {
         for (int row = 1; row < expandedLayout.length-1 ; row++) {
             for (int col = 1; col < expandedLayout[0].length-1 ; col++) {
                 if (expandedLayout[row][col] == '#') {
-                    //assign new wall object to piecesPosition & add texture to tilePane
+                    // assign new wall object to piecesPosition & add texture to tilePane
                     piecesPosition[row-1][col-1] = new BaseWallPiece(row-1, col-1);
                     // |  1|  2|  4| - tile around has its bit value
                     // |  8|  X| 16| - bitMask -> adjacent
@@ -307,9 +346,6 @@ public class GameScene {
                             tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt((i+1)/8 , (i+1)%8) , col-1 , row-1);
                             break;
                         }
-                        if(i == jumpList.length-1){
-                            tilePane.add( ((BaseWallPiece)(piecesPosition[row-1][col-1])).getTileMap().getTileAt(0 , 0 ) , col-1 , row-1);
-                        }
                     }
                 }
             }
@@ -332,8 +368,8 @@ public class GameScene {
             Text here = new Text("You're here!\nV");
             here.setStyle(
                     "-fx-font-family:x16y32pxGridGazer;" +
-                            "-fx-font-size:24;" +
-                            "-fx-fill:'white';");
+                    "-fx-font-size:24;" +
+                    "-fx-fill:'white';");
             here.setTextAlignment(TextAlignment.CENTER);
             here.setX(piece.getCol()*SQUARE_SIZE - 45);
             here.setY(piece.getRow()*SQUARE_SIZE - 30); // Adjust the Y position to place it above the player
@@ -396,14 +432,12 @@ public class GameScene {
                 // detect mouse enter/exit for squares
                 square.setOnMouseEntered(mouseEvent -> {
                     if (piecesPosition[finalRow][finalCol] instanceof Dealer) {
-                        System.out.println("Mouse on dealer");
                         GUIManager.getInstance().updateCursor(this.getScene(), Config.QuestionCursor);
                     }
                     square.setImage(new Image(Config.FloorHoverPath));
                 });
                 square.setOnMouseExited(mouseEvent -> {
                     if (piecesPosition[finalRow][finalCol] instanceof Dealer) {
-                        System.out.println("Mouse off dealer");
                         GUIManager.getInstance().updateCursor(this.getScene(), Config.DefaultCursor);
                     }
                     square.setImage(new Image(Config.FloorPath));
@@ -442,7 +476,6 @@ public class GameScene {
 
     private void handleSquareClick(int row, int col) {
         System.out.println("Clicked on square (" + row + ", " + col + ")");
-//        System.out.println("can act? " + player.canAct());
         if (!player.canAct()) {
             SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
 
@@ -460,7 +493,7 @@ public class GameScene {
                 // Check if there is a monster on the clicked square
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     // turn to face monster
-                    player.changeDirection(player.getCol() - monsterPiece.getCol());
+                    player.changeDirection(Integer.compare(monsterPiece.getCol(), player.getCol()));
                     // Perform the attack on the monster
                     SoundManager.getInstance().playSoundEffect(Config.sfx_attackSound);
                     player.attack(monsterPiece);
@@ -488,7 +521,7 @@ public class GameScene {
                 if (piecesPosition[row][col] instanceof BaseMonsterPiece monsterPiece) {
                     if (gameManager.selectedSkill.castOnMonster()) {
                         // turn to face monster
-                        player.changeDirection(player.getCol() - monsterPiece.getCol());
+                        player.changeDirection(Integer.compare(monsterPiece.getCol(), player.getCol()));
                         // Perform the attack on the monster
                         if (enoughMana && enoughActionPoint) {
                             GUIManager.getInstance().eventLogDisplay.addLog("Player use " + GameManager.getInstance().selectedSkill.getName(), GameManager.getInstance().selectedSkill.getNameColor());
@@ -612,6 +645,7 @@ public class GameScene {
                 GUIManager.getInstance().eventLogDisplay.addLog("Moving player to square (" + row + ", " + col + ")");
                 MovementHandler.movePlayer(row, col);
             } else {
+                SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                 System.out.println("Invalid move");
             }
             resetSelection(0);
@@ -662,7 +696,7 @@ public class GameScene {
             }
             selectedAttackTiles.clear();
             GUIManager.getInstance().isInAttackMode = false;
-            GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
+//            GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
         }
         else if (type == 2) {
             //reset skill Selected Tiles
@@ -734,20 +768,24 @@ public class GameScene {
 
         // Set the corresponding entry in the pieces array to null
         piecesPosition[row][col] = null;
-    }
 
+        // remove from environment
+        environmentPieces.remove(toRemove);
+    }
 
     private void setupKeyEvents(Scene scene) {
         // Debug tool
         scene.setOnKeyPressed(event -> {
+
+
             switch (event.getCode()) {
                 case ESCAPE:
                     SceneManager.getInstance().switchSceneTo(Setting.setting(SceneManager.getInstance().getStage(), this.scene));
                     break;
                 case SHIFT:
                     System.out.println("Space pressed");
-                    turnManager.endPlayerTurn();
                     GameManager.getInstance().gameScene.resetSelectionAll();
+                    turnManager.endPlayerTurn();
                     GUIManager.getInstance().disableButton();
                     break;
                 case W:
@@ -758,47 +796,47 @@ public class GameScene {
                 case DOWN:
                 case LEFT:
                 case RIGHT:
-                    if (!isPlayerPieceSelected && player.canAct()) {
-                        System.out.println("I can act here!!! " + player.canAct());
-                        System.out.println("player piece selected!!!" + isPlayerPieceSelected);
-                        resetSelectionAll();
-                        isPlayerPieceSelected = true;
-                        MovementHandler.showValidMoves(player.getRow(), player.getCol());
-                    } else if (player.canAct() && isPlayerPieceSelected) {
-                        System.out.println("I can act here " + player.canAct());
-                        System.out.println("player piece selected" + isPlayerPieceSelected);
-                        // Determine direction based on key pressed
-                        int rowDelta = 0;
-                        int colDelta = 0;
-                        switch (event.getCode()) {
-                            case W:
-                            case UP:
-                                rowDelta = -1;
-                                break;
-                            case A:
-                            case LEFT:
-                                colDelta = -1;
-                                break;
-                            case S:
-                            case DOWN:
-                                rowDelta = 1;
-                                break;
-                            case D:
-                            case RIGHT:
-                                colDelta = 1;
-                                break;
-                        }
 
-                        int rowToMove = player.getRow() + rowDelta;
-                        int colToMove = player.getCol() + colDelta;
-
-                        if (validMovesCache[rowToMove][colToMove] && player.validMove(rowToMove, colToMove) && piecesPosition[rowToMove][colToMove] == null) {
-                            // Move the player
-                            MovementHandler.movePlayer(player.getRow() + rowDelta, player.getCol() + colDelta);
+                    if (player.canAct()) {
+                        if (!isPlayerPieceSelected) {
+                            resetSelectionAll();
+                            isPlayerPieceSelected = true;
+                            MovementHandler.showValidMoves(player.getRow(), player.getCol());
                         } else {
-                            SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+                            // Determine direction based on key pressed
+                            int rowDelta = 0;
+                            int colDelta = 0;
+                            switch (event.getCode()) {
+                                case W:
+                                case UP:
+                                    rowDelta = -1;
+                                    break;
+                                case A:
+                                case LEFT:
+                                    colDelta = -1;
+                                    break;
+                                case S:
+                                case DOWN:
+                                    rowDelta = 1;
+                                    break;
+                                case D:
+                                case RIGHT:
+                                    colDelta = 1;
+                                    break;
+                            }
+
+                            int rowToMove = player.getRow() + rowDelta;
+                            int colToMove = player.getCol() + colDelta;
+
+                            resetSelection(0); // DON'T MOVE THIS LINE, it's for unavailable cursor to work properly
+                            if (validMovesCache[rowToMove][colToMove] && player.validMove(rowToMove, colToMove) && piecesPosition[rowToMove][colToMove] == null) {
+                                // Move the player
+                                MovementHandler.movePlayer(player.getRow() + rowDelta, player.getCol() + colDelta);
+                            } else {
+                                SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
+                                System.out.println("Invalid move");
+                            }
                         }
-                        resetSelection(0);
                     }
                     break;
                 case V:
@@ -901,10 +939,13 @@ public class GameScene {
         placeEntityRandomly(player);
         precomputeValidMoves();
         initializeEnvironment();
+        initFog(fogPane);
     }
 
     private void safeRoom() {
         placeDungeon(Config.safeRoom);
+
+        fogPane.getChildren().clear();
 
         Dealer dealer = new Dealer();
         dealer.setRow(7);
@@ -923,7 +964,6 @@ public class GameScene {
 
         // clear entity
         environmentPieces.clear();
-//        initializeEnvironment();
     }
 
     private void BossRoom1() {
@@ -949,7 +989,6 @@ public class GameScene {
 
         // set gameManager
         GameManager.getInstance().environmentPieces.add(slimeBoss);
-//        initializeEnvironment();
     }
 
     public void resetSelectionAll() {

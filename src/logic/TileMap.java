@@ -3,6 +3,7 @@ package logic;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import utils.Config;
 
 public class TileMap {
     private Rectangle2D[][] tileMapGrids;
@@ -40,6 +41,8 @@ public class TileMap {
 
     public ImageView getTileAt(int row , int col){
         ImageView tile = new ImageView(tileMapImage);
+        tile.setFitWidth(Config.SQUARE_SIZE);
+        tile.setFitHeight(Config.SQUARE_SIZE);
         tile.setPreserveRatio(true);
         tile.setViewport(tileMapGrids[row][col]);
         return tile;

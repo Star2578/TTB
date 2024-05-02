@@ -1,16 +1,20 @@
 package pieces.player;
 
 import items.BaseItem;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.CubicCurveTo;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.util.Duration;
 import logic.*;
+import logic.effect.PopupConfig;
+import logic.effect.PopupManager;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
@@ -131,8 +135,6 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
                     );
                     timeline.play();
                 }
-            } else {
-                setCanAct(true);
             }
         });
     }
@@ -159,7 +161,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
 
         moveTransition.setOnFinished(actionEvent->{
             //set image layering depend on row
-            animationImage.setViewOrder(BOARD_SIZE - row);
+            animationImage.setViewOrder( (BOARD_SIZE - row)*10 );
             //move real coordinate to new col,row
             animationImage.setX(col*SQUARE_SIZE + offsetX);
             animationImage.setY(row*SQUARE_SIZE + offsetY);
@@ -213,8 +215,31 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     }
     @Override
     public void setCurrentHealth(int health) {
-        this.currentHp = Math.max(health, 0);
-        this.currentHp = Math.min(getMaxHealth(), currentHp);
+
+        //=======<popup when damaged/healed>=============
+        if(GameManager.getInstance().displayDamageNumber){
+            if(health < getCurrentHealth()){
+                PopupManager.createPopup(
+                        this ,
+                        new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
+                                PopupManager.DAMAGE_COLOR ,
+                                null ,
+                                1)
+                );
+            }
+            else{
+                PopupManager.createPopup(
+                        this ,
+                        new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
+                                PopupManager.HEAL_COLOR ,
+                                null ,
+                                1)
+                );
+            }
+        }
+        //===============================================
+
+        this.currentHp = Math.max( Math.min(getMaxHealth(),health) , 0);
         GUIManager.getInstance().updateGUI();
 
         if (currentHp == 0) onDeath();
@@ -277,17 +302,20 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         return maxActionPoint;
     }
     public void setCanAct(boolean canAct) {
+        System.out.println("Set Can Act to " + canAct);
+        if (GameManager.getInstance().gameScene != null) {
+            if (canAct) {
+                System.out.println("set default cursor");
+                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), DefaultCursor);
+            } else {
+                System.out.println("set unavailable cursor");
+                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), UnavailableCursor);
+            }
+        }
+
         this.canAct = canAct;
     }
     public boolean canAct() {
-        if (canAct && GameManager.getInstance().gameScene != null) {
-            GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), DefaultCursor);
-            if (GameManager.getInstance().selectedSkill != null || GameManager.getInstance().selectedItem != null) {
-                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), HandCursor);
-            } else if (GUIManager.getInstance().isInAttackMode) {
-                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), AttackCursor);
-            }
-        }
         return canAct;
     }
     public BaseSkill[] getSkills() {
@@ -304,7 +332,37 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
     @Override
     public void onDeath() {
         System.out.println("Game Over! You are dead!");
-        GameManager.getInstance().GameOver();
+
+        //do the Mario death animation
+        new Timeline(new KeyFrame(Duration.millis(500), event -> {
+            BasePlayerPiece playerPiece = GameManager.getInstance().player;
+            Path path = new Path();
+            path.getElements().add(new MoveTo(
+                    playerPiece.getCol()*SQUARE_SIZE + (playerPiece.animationImage.getFitWidth()/2) ,
+                    playerPiece.getRow()*SQUARE_SIZE + (playerPiece.animationImage.getFitHeight()/2) ));
+            path.getElements().add(new CubicCurveTo(
+                    playerPiece.getCol()*SQUARE_SIZE + (playerPiece.animationImage.getFitWidth()/2) + 80,
+                    playerPiece.getRow()*SQUARE_SIZE + (playerPiece.animationImage.getFitHeight()/2) - 500,
+                    playerPiece.getCol()*SQUARE_SIZE + (playerPiece.animationImage.getFitWidth()/2),
+                    playerPiece.getRow()*SQUARE_SIZE + (playerPiece.animationImage.getFitHeight()/2) + 700  ,
+                    playerPiece.getCol()*SQUARE_SIZE + (playerPiece.animationImage.getFitWidth()/2) + 100,
+                    playerPiece.getRow()*SQUARE_SIZE + (playerPiece.animationImage.getFitHeight()/2) + 700 ));
+            PathTransition pathTransition = new PathTransition();
+            pathTransition.setPath(path);
+            pathTransition.setNode(playerPiece.animationImage);
+            pathTransition.setDuration(Duration.millis(1000));
+            pathTransition.setInterpolator(Interpolator.SPLINE(0,0.3,1 ,0));
+
+            RotateTransition deathRotate = new RotateTransition(Duration.millis(800),GameManager.getInstance().player.animationImage);
+            deathRotate.setCycleCount(Animation.INDEFINITE);
+            deathRotate.setFromAngle(0);
+            deathRotate.setToAngle(360);
+
+            //show game over after player fall off scene
+            pathTransition.setOnFinished(event1->GameManager.getInstance().GameOver());
+            pathTransition.play();
+            deathRotate.play();
+        })).play();
     }
 
     public void addBuff(int buff_duration, String buff_name) {
@@ -320,22 +378,14 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         System.out.println(buff_name + " adding");
     }
 
-    public static BasePlayerPiece createNewInstance(BasePlayerPiece player) {
+    public BasePlayerPiece createNewInstance() {
         try {
-            // Get the class of the item
-            Class<? extends BasePlayerPiece> playerClass = player.getClass();
-
-            // Get the constructor of the item class
-            Constructor<? extends BasePlayerPiece> constructor = playerClass.getDeclaredConstructor();
-
-            // Make the constructor accessible, as it may be private
-            constructor.setAccessible(true);
-
-            // Instantiate a new instance of the item class using the constructor
-            return constructor.newInstance();
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            System.out.println("Error when creating new instance @Dealer :" + e.getMessage());; // Handle the exception appropriately
+            Constructor<? extends BasePlayerPiece> constructor = this.getClass().getConstructor(int.class, int.class, int.class);
+            return constructor.newInstance(getRow(), getCol(), 1);
+        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            System.out.println("Error createNewInstance of player: " + e.getMessage());
         }
         return null;
     }
+
 }

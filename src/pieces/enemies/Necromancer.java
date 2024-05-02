@@ -9,6 +9,7 @@ import logic.effect.EffectManager;
 import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.player.BasePlayerPiece;
+import pieces.wall.BaseWallPiece;
 import utils.Config;
 
 import java.util.Arrays;
@@ -32,8 +33,9 @@ public class Necromancer extends BaseMonsterPiece{
 
     public Necromancer() {
         super(0, 0, 1);
-        setMaxHealth(10);
-        setCurrentHealth(getMaxHealth());
+
+        maxHp = 10;
+        currentHp = maxHp;
 
         // Initially in the Neutral/Roaming State
         currentState = Necromancer.State.NEUTRAL_ROAMING;
@@ -153,18 +155,71 @@ public class Necromancer extends BaseMonsterPiece{
 
     @Override
     public void attack(BasePlayerPiece playerPiece) {
-        System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
-        //=========<SKILL EFFECT>====================================================================
-        EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.AROUND_SELF_ENEMY ,
-                        GameManager.getInstance().player ,
-                        getRow(), getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(11) ,
-                        new EffectConfig(-2 , -5 , 42 , 1.3) );
-        //===========================================================================================
+//        System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
+//        //=========<SKILL EFFECT>====================================================================
+//        EffectManager.getInstance()
+//                .renderEffect( EffectManager.TYPE.BULLET_TO_TARGET_ENEMY ,
+//                        GameManager.getInstance().player ,
+//                        getRow(), getCol(),
+//                        EffectManager.getInstance().createInPlaceEffects(11) ,
+//                        new EffectConfig(-2 , -5 , 0 , 1.3) );
+//        //===========================================================================================
+//
+//        playerPiece.takeDamage(ATTACK_DAMAGE);
+//        GUIManager.getInstance().updateGUI();
+        //---------------------------------------------------------------------------------
+        int currentRow = getRow();
+        int currentCol = getCol();
+        int dRow = playerPiece.getRow() - currentRow;
+        int dCol = playerPiece.getCol() - currentCol;
+        int directionRow = dRow;
+        int directionCol = dCol;
 
-        playerPiece.takeDamage(ATTACK_DAMAGE);
-        GUIManager.getInstance().updateGUI();
+        // Normalize the direction
+        if (dRow != 0) directionRow /= Math.abs(dRow);
+        if (dCol != 0) directionCol /= Math.abs(dCol);
+
+
+
+        for (int i = 1; i <= VISION_RANGE; i++) {
+            int newRow, newCol;
+            int dAbsCol = Math.abs(dCol);
+            int dAbsRow = Math.abs(dRow);
+
+            if (dAbsCol >= dAbsRow) {
+                int y = (int) Math.round(i * Math.tan(Math.atan2(dAbsRow, dAbsCol)));
+                newRow = currentRow + directionRow * y;
+                newCol = currentCol + directionCol * i;
+            } else {
+                int x = (int) Math.round(i * Math.tan(Math.atan2(dAbsCol, dAbsRow)));
+                newRow = currentRow + directionRow * i;
+                newCol = currentCol + directionCol * x;
+            }
+
+            BasePiece piece = GameManager.getInstance().piecesPosition[newRow][newCol];
+
+            if (newRow < 0 || newRow >= Config.BOARD_SIZE || newCol < 0 || newCol >= Config.BOARD_SIZE ||
+                    piece instanceof BaseWallPiece) {
+                roamRandomly();
+                break;
+            }
+
+            if (piece instanceof BasePlayerPiece) {
+                playerPiece.takeDamage(ATTACK_DAMAGE);
+                //=========<ATTACK EFFECT>====================================================================
+                EffectManager.getInstance()
+                        .renderEffect( EffectManager.TYPE.BULLET_TO_TARGET_ENEMY ,
+                                GameManager.getInstance().player ,
+                                getRow(), getCol(),
+                                EffectManager.getInstance().createInPlaceEffects(11) ,
+                                new EffectConfig(-2 , -5 , 0 , 1.3) );
+                //===========================================================================================
+                break;
+            }
+
+            System.out.println("Attack" + " on " + newRow + " " + newCol);
+        }
+
     }
 
     public void summonZombie(int row, int col) {

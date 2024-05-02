@@ -35,8 +35,9 @@ public class Vampire extends BaseMonsterPiece{
 
     public Vampire() {
         super(0, 0, 1);
-        setMaxHealth(11);
-        setCurrentHealth(getMaxHealth());
+
+        maxHp = 11;
+        currentHp = maxHp;
 
         // Initially in the Neutral/Roaming State
         currentState = State.NEUTRAL_ROAMING;

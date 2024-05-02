@@ -36,7 +36,7 @@ public class Setting {
         VBox.setMargin(backButton, new Insets(10));
 
         ScrollPane settingsRoot = new ScrollPane();
-//        settingsRoot.setMaxHeight(720);
+        settingsRoot.setMaxHeight(720);
         settingsRoot.setMaxWidth(1280);
         settingsRoot.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         settingsRoot.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -132,7 +132,6 @@ public class Setting {
         // Event listeners for option checkboxes
         fastUseCheckbox.setOnAction(event -> {
             // Handle the fast use on self option
-            // TODO
             GameManager.getInstance().fastUse = fastUseCheckbox.isSelected();
         });
 
@@ -143,7 +142,6 @@ public class Setting {
 
         displayDamageNumbersCheckbox.setOnAction(event -> {
             // Handle the display damage numbers option
-            // TODO
             GameManager.getInstance().displayDamageNumber = displayDamageNumbersCheckbox.isSelected();
         });
 

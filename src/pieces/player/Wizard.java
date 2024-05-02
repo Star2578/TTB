@@ -1,10 +1,13 @@
 package pieces.player;
 
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import logic.GameManager;
 import logic.SpriteAnimation;
+import logic.effect.Effect;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import logic.ui.GUIManager;
@@ -48,6 +51,7 @@ public class Wizard extends BasePlayerPiece{
         //add skill
         skills[0] = new Fireball();
         skills[1] = new IceShield();
+        skills[2] = new DragonFire();
         // class specifics skills
         classSpecifics[0] = new Fireball();
         classSpecifics[1] = new IceShield();
@@ -103,25 +107,35 @@ public class Wizard extends BasePlayerPiece{
         }
 
         decreaseActionPoint(ATTACK_COST);
-        monsterPiece.takeDamage(getAttackDamage());
 
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
         // ----------------------Attack Animation----------------------
         EffectManager.getInstance()
-                .renderEffect(EffectManager.TYPE.AROUND_SELF,
+                .renderEffect(EffectManager.TYPE.BULLET_TO_TARGET,
                         this,
                         monsterPiece.getRow(), monsterPiece.getCol(),
                         EffectManager.getInstance().createInPlaceEffects(22),
                         new EffectConfig(8, 8, 32, 1.4));
         // -------------------------------------------------------------
-        // ----------------------Attack Take Damage Animation----------------------
-        EffectManager.getInstance()
-                .renderEffect(EffectManager.TYPE.ON_TARGET,
-                        this,
-                        monsterPiece.getRow(), monsterPiece.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(23),
-                        new EffectConfig(-16, -19, 0, 1));
-        // -------------------------------------------------------------
+        // Create a PauseTransition with a duration of 0.2 seconds
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+
+        // Set the action to perform after the pause
+        pause.setOnFinished(event -> {
+            // ----------------------Attack Take Damage Animation----------------------
+            EffectManager.getInstance()
+                    .renderEffect(EffectManager.TYPE.ON_TARGET,
+                            this,
+                            monsterPiece.getRow(), monsterPiece.getCol(),
+                            EffectManager.getInstance().createInPlaceEffects(23),
+                            new EffectConfig(-16, -19, 0, 1));
+            monsterPiece.takeDamage(getAttackDamage());
+            // -------------------------------------------------------------
+        });
+
+        // Start the pause
+        pause.play();
+
 
         System.out.println("Attack success");
         GUIManager.getInstance().updateGUI();
@@ -131,7 +145,7 @@ public class Wizard extends BasePlayerPiece{
     public void takeDamage(int damage) {
         System.out.println("Damage taken: " + damage);
 
-//        //Check if the player has any effect
+        //Check if the player has any effect
 //        if(EffectBuffs != null) {
 //            if(EffectBuffs.containsKey("Ice Shield")) {
 //                damage = (damage * 70) / 100;

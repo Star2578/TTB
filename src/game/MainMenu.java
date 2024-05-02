@@ -72,7 +72,6 @@ public class MainMenu {
             // switch bgm
             SoundManager.getInstance().changeBackgroundMusic(Config.bgm_8_bit_adventure);
             //start and switch to the game scene
-
             SceneManager.getInstance().getStage().setScene(SceneManager.getInstance().getCharSelectionScene());
         });
 

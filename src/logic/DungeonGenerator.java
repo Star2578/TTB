@@ -120,8 +120,4 @@ public class DungeonGenerator {
     public char[][] getDungeonLayout() {
         return dungeon;
     }
-
-    public static void main(String[] args) {
-        DungeonGenerator generator = new DungeonGenerator();
-    }
 }

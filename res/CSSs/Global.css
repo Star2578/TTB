@@ -1,0 +1,24 @@
+@font-face {
+    font-family: "x8y12pxTheStrongGamer";
+    src: url("/font/x8y12pxTheStrongGamer.ttf");
+}
+
+@font-face {
+    font-family: "x12y16pxSolidLinker";
+    src: url("/font/x12y16pxSolidLinker.ttf");
+}
+
+@font-face {
+    font-family: "x16y32pxGridGazer";
+    src: url("/font/x16y32pxGridGazer.ttf");
+}
+
+@font-face {
+    font-family: "monogram";
+    src: url("/font/monogram.ttf");
+}
+
+@font-face {
+    font-family: "ThaleahFat";
+    src: url("/font/ThaleahFat.ttf");
+}
