@@ -177,43 +177,46 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     }
     @Override
     public void onDeath() {
-        isAlive = false;
-        SoundManager.getInstance().playSoundEffect(Config.sfx_deadSound);
-        SpawnerManager.getInstance().monsterCount--;
-        SpawnerManager.getInstance().trySpawnDoor(getRow(), getCol());
-        GameManager.getInstance().playerMoney += moneyDrop;
-        GUIManager.getInstance().updateGUI();
-        GameManager.getInstance().totalKillThisRun++;
+        // prevent continuous onDeath call
+        if (isAlive) {
+            isAlive = false;
+            SoundManager.getInstance().playSoundEffect(Config.sfx_deadSound);
+            SpawnerManager.getInstance().monsterCount--;
+            SpawnerManager.getInstance().trySpawnDoor(getRow(), getCol());
+            GameManager.getInstance().playerMoney += moneyDrop;
+            GUIManager.getInstance().updateGUI();
+            GameManager.getInstance().totalKillThisRun++;
 
-        // remove monster when death
-        GameManager.getInstance().gameScene.removePiece(this);
+            // remove monster when death
+            GameManager.getInstance().gameScene.removePiece(this);
 
-        // To call when this monster died
-        GUIManager.getInstance().eventLogDisplay.addLog("Player killed " + this.getClass().getSimpleName() + " !!!!", Color.CRIMSON);
+            // To call when this monster died
+            GUIManager.getInstance().eventLogDisplay.addLog("Player killed " + this.getClass().getSimpleName() + " !!!!", Color.CRIMSON);
 
-        //=====<dead effect>=========================================
-        new Thread(()->{
-            try {
-                Thread.sleep(150);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            Platform.runLater(()->{
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_TARGET ,
-                                GameManager.getInstance().player ,
-                                getRow(), getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(2) ,
-                                new EffectConfig(0 , 0 , 0 , 1.25) );
-            });
-        }).start();
+            //=====<dead effect>=========================================
+            new Thread(()->{
+                try {
+                    Thread.sleep(150);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                Platform.runLater(()->{
+                    EffectManager.getInstance()
+                            .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                                    GameManager.getInstance().player ,
+                                    getRow(), getCol(),
+                                    EffectManager.getInstance().createInPlaceEffects(2) ,
+                                    new EffectConfig(0 , 0 , 0 , 1.25) );
+                });
+            }).start();
 
-        //=============================================================
+            //=============================================================
 
-        //clear effect when monster's die early
-        EffectManager.getInstance().clearDeadEffect();
+            //clear effect when monster's die early
+            EffectManager.getInstance().clearDeadEffect();
 
-        System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
+            System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
+        }
     }
     public boolean isEndAction() {
         return endAction;

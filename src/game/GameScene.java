@@ -179,7 +179,6 @@ public class GameScene {
 
 
         // Set up the scene and stage
-        GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
         SceneManager.getInstance().setGameScene(scene); // Save this scene for later use
         setupMouseEvents();
         setupKeyEvents(scene); // Debug Tool
@@ -697,7 +696,7 @@ public class GameScene {
             }
             selectedAttackTiles.clear();
             GUIManager.getInstance().isInAttackMode = false;
-            GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
+//            GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
         }
         else if (type == 2) {
             //reset skill Selected Tiles
@@ -769,6 +768,9 @@ public class GameScene {
 
         // Set the corresponding entry in the pieces array to null
         piecesPosition[row][col] = null;
+
+        // remove from environment
+        environmentPieces.remove(toRemove);
     }
 
     private void setupKeyEvents(Scene scene) {
@@ -782,8 +784,8 @@ public class GameScene {
                     break;
                 case SHIFT:
                     System.out.println("Space pressed");
-                    turnManager.endPlayerTurn();
                     GameManager.getInstance().gameScene.resetSelectionAll();
+                    turnManager.endPlayerTurn();
                     GUIManager.getInstance().disableButton();
                     break;
                 case W:
@@ -826,6 +828,7 @@ public class GameScene {
                             int rowToMove = player.getRow() + rowDelta;
                             int colToMove = player.getCol() + colDelta;
 
+                            resetSelection(0); // DON'T MOVE THIS LINE, it's for unavailable cursor to work properly
                             if (validMovesCache[rowToMove][colToMove] && player.validMove(rowToMove, colToMove) && piecesPosition[rowToMove][colToMove] == null) {
                                 // Move the player
                                 MovementHandler.movePlayer(player.getRow() + rowDelta, player.getCol() + colDelta);
@@ -833,7 +836,6 @@ public class GameScene {
                                 SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                                 System.out.println("Invalid move");
                             }
-                            resetSelection(0);
                         }
                     }
                     break;

@@ -302,15 +302,15 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         return maxActionPoint;
     }
     public void setCanAct(boolean canAct) {
-        if (canAct && GameManager.getInstance().gameScene != null) {
-            GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), DefaultCursor);
-            if (GameManager.getInstance().selectedSkill != null || GameManager.getInstance().selectedItem != null) {
-                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), HandCursor);
-            } else if (GUIManager.getInstance().isInAttackMode) {
-                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), AttackCursor);
+        System.out.println("Set Can Act to " + canAct);
+        if (GameManager.getInstance().gameScene != null) {
+            if (canAct) {
+                System.out.println("set default cursor");
+                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), DefaultCursor);
+            } else {
+                System.out.println("set unavailable cursor");
+                GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), UnavailableCursor);
             }
-        } else if (!canAct &&  GameManager.getInstance().gameScene != null) {
-            GUIManager.getInstance().updateCursor(GameManager.getInstance().gameScene.getScene(), UnavailableCursor);
         }
 
         this.canAct = canAct;
