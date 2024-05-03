@@ -90,16 +90,16 @@ public class PopupMaker {
             EffectMaker.getInstance().effectPane.getChildren().remove(newPopup);
         })).play();
     }
-
-    class Popup extends HBox{
-    /*
-        Popup structure:
-            [ text | icon ]
-     */
-        public Popup(double width , double height){
-            this.setPrefSize(width, height);
-        }
-    }
-
 }
 
+class Popup extends HBox{
+
+    /*
+        Popup structure will be like:
+            [ text | icon ]
+     */
+
+    public Popup(double width , double height){
+        this.setPrefSize(width, height);
+    }
+}
