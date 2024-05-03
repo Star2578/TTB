@@ -10,7 +10,7 @@ import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import logic.*;
 import logic.gameUI.GUIManager;
-import scenes.CharSelection;
+import scenes.CharSelectionScene;
 import scenes.GameScene;
 import scenes.MainMenuScene;
 import scenes.SummaryScene;
@@ -21,7 +21,7 @@ public class Main extends Application {
     GameScene gameScene;
     MainMenuScene mainMenuScene;
     SummaryScene summaryScene;
-    CharSelection charSelection;
+    CharSelectionScene charSelectionScene;
 
     public static void main(String[] args) {
         launch(args);
@@ -37,7 +37,7 @@ public class Main extends Application {
         sceneManager.setStage(primaryStage);
 
         mainMenuScene = new MainMenuScene();
-        charSelection = new CharSelection();
+        charSelectionScene = new CharSelectionScene();
         gameScene = new GameScene();
         summaryScene = new SummaryScene();
         GameManager.getInstance().gameScene = gameScene;
@@ -45,7 +45,7 @@ public class Main extends Application {
         // Save these scene for later use
         SceneManager.getInstance().setMenuScene(mainMenuScene.getScene());
         SceneManager.getInstance().setGameScene(gameScene.getScene());
-        SceneManager.getInstance().setCharSelectionScene(charSelection.getScene());
+        SceneManager.getInstance().setCharSelectionScene(charSelectionScene.getScene());
         SceneManager.getInstance().setSummary(summaryScene);
 
 

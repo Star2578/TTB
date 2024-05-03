@@ -28,7 +28,7 @@ import pieces.Healable;
 
 import java.util.ArrayList;
 
-public class CharSelection {
+public class CharSelectionScene {
     private Scene scene;
     private Pane rootPane;
 
@@ -42,7 +42,7 @@ public class CharSelection {
     private static CharCard selectedCard;
 
 
-    public CharSelection(){
+    public CharSelectionScene(){
 
 
         rootPane = new Pane();
@@ -245,12 +245,12 @@ public class CharSelection {
 
             this.setOnMouseClicked(mouseEvent -> {
                 //card will being focused on clicked, assign clicked in selectedCard
-                if(CharSelection.selectedCard != this){
-                    if(CharSelection.selectedCard != null) CharSelection.selectedCard.setBackground(new Background(new BackgroundFill(Color.web("#e6dbc4") , new CornerRadii(5) , Insets.EMPTY)));
+                if(CharSelectionScene.selectedCard != this){
+                    if(CharSelectionScene.selectedCard != null) CharSelectionScene.selectedCard.setBackground(new Background(new BackgroundFill(Color.web("#e6dbc4") , new CornerRadii(5) , Insets.EMPTY)));
                     this.setBackground(new Background(new BackgroundFill(Color.GRAY,new CornerRadii(5),Insets.EMPTY)));
-                    CharSelection.selectedCard = this;
+                    CharSelectionScene.selectedCard = this;
 
-                    CharSelection.charInfoBox.changeCharInfo(CharSelection.selectedCard.charData);
+                    CharSelectionScene.charInfoBox.changeCharInfo(CharSelectionScene.selectedCard.charData);
                 }
             });
             //---------------------------------------------------------------
