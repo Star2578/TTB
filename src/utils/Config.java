@@ -136,7 +136,6 @@ public class Config {
     public static String skillTargetlockPath = "sprites/skills/skill_archer/skill_targetlock.png";
     public static String skillHaltPath = "sprites/skills/skill_archer/skill_halt.png";
     public static String skillTeleportPath = "sprites/skills/skill_archer/skill_teleport.png";
-    public static String skillRollWindPath = "sprites/skills/skill_Archer/skill_roll_wind.png";
 
     // Wizard Skills animation
     public static String skillFireballPath = "sprites/skills/skill_wizard/skill_fireball.png";

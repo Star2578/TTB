@@ -191,11 +191,6 @@ public class EffectManager {
                 new ImageView(new Image(Config.skillNarcissisticBuffHealthPath)) , 4 , 1 , 4 , 16 , 16 , 6 , false);
         effects.add(Universal_Skill_Narcissistic_Buff_Health);
 
-        //Archer Skill Roll Wind 36
-        Effect Archer_Skill_Roll_Wind = new Effect(
-                new ImageView(new Image(Config.skillRollWindPath)) , 16 , 1 , 16 , 128 , 128 , 24 , false);
-        effects.add(Archer_Skill_Roll_Wind);
-
     }
 
     public Effect createInPlaceEffects(int index){
