@@ -37,8 +37,7 @@ public class Archer extends BasePlayerPiece {
 
         //add skill
         skills[0] = new Targetlock();
-        skills[1] = new Rolling();
-        skills[2] = new Halt();
+        skills[1] = new Halt();
 
         // class specifics skills
         classSpecifics[0] = new Targetlock();

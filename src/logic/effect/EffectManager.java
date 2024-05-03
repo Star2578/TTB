@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
+import pieces.BasePiece;
 import pieces.players.BasePlayerPiece;
 import utils.Config;
 
@@ -30,7 +31,6 @@ public class EffectManager {
         AROUND_SELF_ENEMY,
         BULLET_TO_TARGET,
         BULLET_TO_TARGET_ENEMY
-
 
     }
     private static EffectManager instance;
@@ -198,7 +198,7 @@ public class EffectManager {
         return copy;
     }
     
-    public void renderEffect(Enum<TYPE> typeEnum, BasePlayerPiece player , int row , int col, Effect effect , EffectConfig config){
+    public void renderEffect(Enum<TYPE> typeEnum, BasePiece piece , int row , int col, Effect effect , EffectConfig config){
 
         effect.setConfig(config);
         runningEffects.add(effect);
@@ -314,10 +314,10 @@ public class EffectManager {
             double angleDegree = Math.atan2(y, x) * (180.0 / Math.PI);
 
             //set effect position (angle is in account)
-            effect.imageView.setX(player.getCol() * SQUARE_SIZE
+            effect.imageView.setX(piece.getCol() * SQUARE_SIZE
                     + (config.distanceFromOrigin * Math.cos(angleRadian))
                     + config.offsetX);
-            effect.imageView.setY(player.getRow() * SQUARE_SIZE
+            effect.imageView.setY(piece.getRow() * SQUARE_SIZE
                     + (config.distanceFromOrigin * Math.sin(angleRadian))
                     + config.offsetY);
             //scale effect size
@@ -334,8 +334,8 @@ public class EffectManager {
             moveTransition.setInterpolator(Interpolator.EASE_IN);
 
             //slowly move to target col,row
-            moveTransition.setToX((col - player.getCol()) * SQUARE_SIZE + config.offsetX);
-            moveTransition.setToY((row - player.getRow()) * SQUARE_SIZE + config.offsetY);
+            moveTransition.setToX((col - piece.getCol()) * SQUARE_SIZE + config.offsetX);
+            moveTransition.setToY((row - piece.getRow()) * SQUARE_SIZE + config.offsetY);
 
             moveTransition.setOnFinished(actionEvent -> {
                 effectPane.getChildren().remove(effect.imageView);
@@ -375,8 +375,8 @@ public class EffectManager {
             moveTransition.setInterpolator(Interpolator.EASE_IN);
 
             //slowly move to target col,row
-            moveTransition.setToX((player.getCol() - col) * SQUARE_SIZE + config.offsetX);
-            moveTransition.setToY((player.getRow() - row) * SQUARE_SIZE + config.offsetY);
+            moveTransition.setToX((piece.getCol() - col) * SQUARE_SIZE + config.offsetX);
+            moveTransition.setToY((piece.getRow() - row) * SQUARE_SIZE + config.offsetY);
 
             moveTransition.setOnFinished(actionEvent -> {
                 effectPane.getChildren().remove(effect.imageView);

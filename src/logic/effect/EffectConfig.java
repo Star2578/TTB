@@ -1,10 +1,10 @@
 package logic.effect;
 
 public class EffectConfig {
-    double offsetX;
-    double offsetY;
-    double distanceFromOrigin;
-    double scale;
+    public double offsetX;
+    public double offsetY;
+    public double distanceFromOrigin;
+    public double scale;
 
     public EffectConfig(double offsetX, double offSetY, double distanceFromOrigin, double scale) {
         this.offsetX = offsetX;

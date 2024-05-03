@@ -72,6 +72,7 @@ public class Kick extends BaseSkill implements Attackable {
                                 new EffectConfig(0 , -16 , 24 , 1.1) );
                 //===========================================================================================
 
+
                 int currentRow = target.getRow();
                 int currentCol = target.getCol();
                 int directionRow = GameManager.getInstance().player.getRow() - currentRow;
@@ -80,19 +81,22 @@ public class Kick extends BaseSkill implements Attackable {
                 if (directionRow != 0) directionRow /= Math.abs(directionRow);
                 if (directionCol != 0) directionCol /= Math.abs(directionCol);
 
-                int newRow = 0;
-                int newCol = 0;
+                int newRow=GameManager.getInstance().player.getRow();
+                int newCol = GameManager.getInstance().player.getCol();
                 for (int i = 1; i <= KNOCKBACK; i++) {
-                    newRow = GameManager.getInstance().player.getRow() + directionRow * i;
-                    newCol = GameManager.getInstance().player.getCol() + directionCol * i;
-                    if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) {
+                    if (!GameManager.getInstance().isEmptySquare(
+                                    GameManager.getInstance().player.getRow() + directionRow * i,
+                                    GameManager.getInstance().player.getRow() + directionRow * i)) {
                         break;
                     }
+                    newRow = GameManager.getInstance().player.getRow() + directionRow * i;
+                    newCol = GameManager.getInstance().player.getCol() + directionCol * i;
                 }
-
-                GameManager.getInstance().piecesPosition[GameManager.getInstance().player.getRow()][GameManager.getInstance().player.getCol()] = null;
+                BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
+                pieces[GameManager.getInstance().player.getRow()][GameManager.getInstance().player.getCol()] = null;
+                pieces[newRow][newCol] = GameManager.getInstance().player;
                 GameManager.getInstance().player.moveWithTransition(newRow, newCol);
-                GameManager.getInstance().piecesPosition[newRow][newCol] = GameManager.getInstance().player;
+                
             }
         }
     }
