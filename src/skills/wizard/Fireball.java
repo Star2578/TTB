@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
@@ -39,11 +39,11 @@ public class Fireball extends BaseSkill implements Attackable {
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
                 //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.BULLET_TO_TARGET ,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.BULLET_TO_TARGET ,
                                 GameManager.getInstance().player ,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(24) ,
+                                EffectMaker.getInstance().createInPlaceEffects(24) ,
                                 new EffectConfig(0 , -3 , 0 , 1.2) );
                 //===========================================================================================
 
@@ -52,11 +52,11 @@ public class Fireball extends BaseSkill implements Attackable {
                     try { Thread.sleep(400); }
                     catch (InterruptedException e) { throw new RuntimeException(e); }
                     Platform.runLater(()->{
-                        EffectManager.getInstance()
-                                .renderEffect(EffectManager.TYPE.ON_SELF,
+                        EffectMaker.getInstance()
+                                .renderEffect(EffectMaker.TYPE.ON_SELF,
                                         GameManager.getInstance().player,
                                         monsterPiece.getRow(), monsterPiece.getCol(),
-                                        EffectManager.getInstance().createInPlaceEffects(23),
+                                        EffectMaker.getInstance().createInPlaceEffects(23),
                                         new EffectConfig(-16, -19, 0, 1));
 
                         monsterPiece.takeDamage(DAMAGE); //call it here, so that dead effect will be delayed

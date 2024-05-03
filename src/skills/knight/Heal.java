@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.players.BasePlayerPiece;
 import skills.BaseSkill;
@@ -54,11 +54,11 @@ public class Heal extends BaseSkill implements Healable {
             player.decreaseMana(manaCost);
             player.decreaseActionPoint(actionPointCost);
             //=========<SKILL EFFECT>====================================================================
-            EffectManager.getInstance()
-                    .renderEffect( EffectManager.TYPE.ON_SELF,
+            EffectMaker.getInstance()
+                    .renderEffect( EffectMaker.TYPE.ON_SELF,
                             GameManager.getInstance().player ,
                             GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
-                            EffectManager.getInstance().createInPlaceEffects(5) ,
+                            EffectMaker.getInstance().createInPlaceEffects(5) ,
                             new EffectConfig(-48 , -52 , 0 , 1.2) );
             //===========================================================================================
         }

@@ -8,7 +8,7 @@ import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.Effect;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
@@ -41,11 +41,11 @@ public class Halt extends BaseSkill implements Attackable {
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
                 //=========<ATTACK EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.BULLET_TO_TARGET ,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.BULLET_TO_TARGET ,
                                 GameManager.getInstance().player ,
                                 monsterPiece.getRow(), monsterPiece.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(13) ,
+                                EffectMaker.getInstance().createInPlaceEffects(13) ,
                                 new EffectConfig(-6 , 0 , -10 , 1.5) );
                 //===========================================================================================
                 // Create a PauseTransition with a duration of 0.45 seconds
@@ -54,11 +54,11 @@ public class Halt extends BaseSkill implements Attackable {
                 // Set the action to perform after the pause
                 pause.setOnFinished(event -> {
                     //=========<SKILL EFFECT>====================================================================
-                    EffectManager.getInstance()
-                            .renderEffect( EffectManager.TYPE.ON_SELF ,
+                    EffectMaker.getInstance()
+                            .renderEffect( EffectMaker.TYPE.ON_SELF ,
                                     GameManager.getInstance().player ,
                                     monsterPiece.getRow(), monsterPiece.getCol(),
-                                    EffectManager.getInstance().createInPlaceEffects(20) ,
+                                    EffectMaker.getInstance().createInPlaceEffects(20) ,
                                     new EffectConfig(1 , 0 , 0 , 1.2) );
                     //===========================================================================================
 
@@ -68,9 +68,9 @@ public class Halt extends BaseSkill implements Attackable {
                     if (monsterPiece.isAlive()) {
                         monsterPiece.addBuff(STUN_DURATION, "Stun");
                         //=========<STUN EFFECT>====================================================================
-                        Effect Stun = EffectManager.getInstance().createInPlaceEffects(8);
-                        EffectManager.getInstance()
-                                .renderEffect(EffectManager.TYPE.ON_SELF,
+                        Effect Stun = EffectMaker.getInstance().createInPlaceEffects(8);
+                        EffectMaker.getInstance()
+                                .renderEffect(EffectMaker.TYPE.ON_SELF,
                                         GameManager.getInstance().player,
                                         target.getRow(), target.getCol(),
                                         Stun,
@@ -86,7 +86,7 @@ public class Halt extends BaseSkill implements Attackable {
 
                 if (!monsterPiece.isAlive()) {
                     GameManager.getInstance().gameScene.removePiece(monsterPiece);
-                    EffectManager.getInstance().clearDeadEffect();
+                    EffectMaker.getInstance().clearDeadEffect();
                 }
 
             }

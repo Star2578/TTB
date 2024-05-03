@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import logic.gameUI.GUIManager;
 import pieces.enemies.BaseMonsterPiece;
 import skills.wizard.DragonFire;
@@ -95,11 +95,11 @@ public class Wizard extends BasePlayerPiece{
 
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
         // ----------------------Attack Animation----------------------
-        EffectManager.getInstance()
-                .renderEffect(EffectManager.TYPE.BULLET_TO_TARGET,
+        EffectMaker.getInstance()
+                .renderEffect(EffectMaker.TYPE.BULLET_TO_TARGET,
                         this,
                         monsterPiece.getRow(), monsterPiece.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(22),
+                        EffectMaker.getInstance().createInPlaceEffects(22),
                         new EffectConfig(8, 8, 32, 1.4));
         // -------------------------------------------------------------
         // Create a PauseTransition with a duration of 0.2 seconds
@@ -108,11 +108,11 @@ public class Wizard extends BasePlayerPiece{
         // Set the action to perform after the pause
         pause.setOnFinished(event -> {
             // ----------------------Attack Take Damage Animation----------------------
-            EffectManager.getInstance()
-                    .renderEffect(EffectManager.TYPE.ON_TARGET,
+            EffectMaker.getInstance()
+                    .renderEffect(EffectMaker.TYPE.ON_TARGET,
                             this,
                             monsterPiece.getRow(), monsterPiece.getCol(),
-                            EffectManager.getInstance().createInPlaceEffects(23),
+                            EffectMaker.getInstance().createInPlaceEffects(23),
                             new EffectConfig(-16, -19, 0, 1));
             monsterPiece.takeDamage(getAttackDamage());
             // -------------------------------------------------------------

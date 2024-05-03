@@ -3,7 +3,7 @@ package logic;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import logic.gameUI.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
@@ -60,8 +60,8 @@ public class TurnManager {
         player.setCanAct(false);
         currentEnvironmentPieceIndex = 0;
 
-        EffectManager.getInstance().updateEffectTimer(); //update effect lifetime
-        EffectManager.getInstance().clearDeadEffect(); // remove timeout effect every turn
+        EffectMaker.getInstance().updateEffectTimer(); //update effect lifetime
+        EffectMaker.getInstance().clearDeadEffect(); // remove timeout effect every turn
 
         startEnvironmentTurn();
 
@@ -93,7 +93,7 @@ public class TurnManager {
                 timeline.play();
             }
         } else {
-            EffectManager.getInstance().clearDeadEffect(); // remove unused effect
+            EffectMaker.getInstance().clearDeadEffect(); // remove unused effect
             currentEnvironmentPieceIndex = 0;
             startPlayerTurn();
             GUIManager.getInstance().enableButton();

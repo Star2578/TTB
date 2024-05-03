@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import pieces.players.BasePlayerPiece;
@@ -73,11 +73,11 @@ public class BloodLust extends BaseSkill implements Attackable, Healable {
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
                 //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.AROUND_SELF ,
                                 GameManager.getInstance().player ,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(1) ,
+                                EffectMaker.getInstance().createInPlaceEffects(1) ,
                                 new EffectConfig(0 , -16 , 24 , 1.1) );
                 //===========================================================================================
             }
@@ -98,11 +98,11 @@ public class BloodLust extends BaseSkill implements Attackable, Healable {
                 playerPiece.setCurrentHealth(currentHealth + HEAL);
 
                 //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.ON_TARGET ,
                                 GameManager.getInstance().player ,
                                 GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(5) ,
+                                EffectMaker.getInstance().createInPlaceEffects(5) ,
                                 new EffectConfig(0 , -16 , 24 , 1.1) );
                 //===========================================================================================
             }

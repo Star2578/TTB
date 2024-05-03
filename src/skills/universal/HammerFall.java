@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import logic.gameUI.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
@@ -78,11 +78,11 @@ public class HammerFall extends BaseSkill implements Attackable {
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
                 //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.AROUND_SELF ,
                                 GameManager.getInstance().player ,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(29) ,
+                                EffectMaker.getInstance().createInPlaceEffects(29) ,
                                 new EffectConfig(6 , 4 , 42 , 3) );
                 //===========================================================================================
             }

@@ -12,7 +12,7 @@ import javafx.scene.shape.Path;
 import javafx.util.Duration;
 import logic.*;
 import logic.effect.PopupConfig;
-import logic.effect.PopupManager;
+import logic.effect.PopupMaker;
 import logic.gameUI.GUIManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
@@ -216,19 +216,19 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         //=======<popup when damaged/healed>=============
         if(GameManager.getInstance().displayDamageNumber){
             if(health < getCurrentHealth()){
-                PopupManager.createPopup(
+                PopupMaker.createPopup(
                         this.getRow() , this.getCol() ,
                         new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
-                                PopupManager.DAMAGE_COLOR ,
+                                PopupMaker.DAMAGE_COLOR ,
                                 null ,
                                 1)
                 );
             }
             else{
-                PopupManager.createPopup(
+                PopupMaker.createPopup(
                         this.getRow() , this.getCol() ,
                         new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
-                                PopupManager.HEAL_COLOR ,
+                                PopupMaker.HEAL_COLOR ,
                                 null ,
                                 1)
                 );

@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import pieces.players.BasePlayerPiece;
@@ -44,11 +44,11 @@ public class Stomp extends BaseSkill implements Attackable {
                     }
                     //=========<SKILL EFFECT>====================================================================
                     if (!(target instanceof BasePlayerPiece)){
-                        EffectManager.getInstance()
-                                .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                        EffectMaker.getInstance()
+                                .renderEffect( EffectMaker.TYPE.AROUND_SELF ,
                                         GameManager.getInstance().player ,
                                         newRow, newCol,
-                                        EffectManager.getInstance().createInPlaceEffects(3) ,
+                                        EffectMaker.getInstance().createInPlaceEffects(3) ,
                                         new EffectConfig(0 , -6 , 38 , 1.1) );
                     }
                     //===========================================================================================

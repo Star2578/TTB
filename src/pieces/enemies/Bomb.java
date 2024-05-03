@@ -4,7 +4,7 @@ import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import logic.gameUI.GUIManager;
 import pieces.players.BasePlayerPiece;
 import pieces.wall.BaseWallPiece;
@@ -74,11 +74,11 @@ public class Bomb extends BaseMonsterPiece{
 
 
         //=========<SKILL EFFECT>====================================================================
-            EffectManager.getInstance()
-                    .renderEffect( EffectManager.TYPE.ON_SELF ,
+            EffectMaker.getInstance()
+                    .renderEffect( EffectMaker.TYPE.ON_SELF ,
                             GameManager.getInstance().player ,
                             getRow(), getCol(),
-                            EffectManager.getInstance().createInPlaceEffects(6) ,
+                            EffectMaker.getInstance().createInPlaceEffects(6) ,
                             new EffectConfig(-9 , -16 , 0 , 1.1) );
         //===========================================================================================
 
@@ -99,11 +99,11 @@ public class Bomb extends BaseMonsterPiece{
                 }
                 if (left){
                     //=========<SKILL EFFECT>====================================================================
-                    EffectManager.getInstance()
-                            .renderEffect( EffectManager.TYPE.ON_SELF ,
+                    EffectMaker.getInstance()
+                            .renderEffect( EffectMaker.TYPE.ON_SELF ,
                                     GameManager.getInstance().player ,
                                     getRow(), col,
-                                    EffectManager.getInstance().createInPlaceEffects(6) ,
+                                    EffectMaker.getInstance().createInPlaceEffects(6) ,
                                     new EffectConfig(-9 , -16 , 0 , 1.1) );
                     //===========================================================================================
                 }
@@ -134,11 +134,11 @@ public class Bomb extends BaseMonsterPiece{
                 }
                 if (right){
                     //=========<SKILL EFFECT>====================================================================
-                    EffectManager.getInstance()
-                            .renderEffect( EffectManager.TYPE.ON_SELF ,
+                    EffectMaker.getInstance()
+                            .renderEffect( EffectMaker.TYPE.ON_SELF ,
                                     GameManager.getInstance().player ,
                                     getRow(), col1,
-                                    EffectManager.getInstance().createInPlaceEffects(6) ,
+                                    EffectMaker.getInstance().createInPlaceEffects(6) ,
                                     new EffectConfig(-9 , -16 , 0 , 1.1) );
                     //===========================================================================================
                 }
@@ -169,11 +169,11 @@ public class Bomb extends BaseMonsterPiece{
                 }
                 if (up){
                     //=========<SKILL EFFECT>====================================================================
-                    EffectManager.getInstance()
-                            .renderEffect( EffectManager.TYPE.ON_SELF ,
+                    EffectMaker.getInstance()
+                            .renderEffect( EffectMaker.TYPE.ON_SELF ,
                                     GameManager.getInstance().player ,
                                     row, getCol(),
-                                    EffectManager.getInstance().createInPlaceEffects(6) ,
+                                    EffectMaker.getInstance().createInPlaceEffects(6) ,
                                     new EffectConfig(-9 , -16 , 0 , 1.1) );
                     //===========================================================================================
                 }
@@ -203,11 +203,11 @@ public class Bomb extends BaseMonsterPiece{
                 }
                 if (down){
                     //=========<SKILL EFFECT>====================================================================
-                    EffectManager.getInstance()
-                            .renderEffect( EffectManager.TYPE.ON_SELF ,
+                    EffectMaker.getInstance()
+                            .renderEffect( EffectMaker.TYPE.ON_SELF ,
                                     GameManager.getInstance().player ,
                                     row1, getCol(),
-                                    EffectManager.getInstance().createInPlaceEffects(6) ,
+                                    EffectMaker.getInstance().createInPlaceEffects(6) ,
                                     new EffectConfig(-9 , -16 , 0 , 1.1) );
                     //===========================================================================================
                 }

@@ -6,10 +6,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import pieces.BasePiece;
 import utils.Config;
 
-public class PopupManager {
+public class PopupMaker {
 
     protected static final int POPUP_WIDTH = 50;
     protected static final int POPUP_HEIGHT = 20;
@@ -20,7 +19,7 @@ public class PopupManager {
 
 //    public static PopupManager instance;
 
-    public PopupManager(){
+    public PopupMaker(){
     }
 
 //    public static PopupManager getInstance(){
@@ -81,14 +80,14 @@ public class PopupManager {
         );
 
         //display on effectPane
-        EffectManager.getInstance().effectPane.getChildren().add(newPopup);
+        EffectMaker.getInstance().effectPane.getChildren().add(newPopup);
         newPopup.toFront();
         movingUp.play();
         fadeTransition.play();
 
         //remove from game after it faded
-        new Timeline(new KeyFrame(Duration.millis(Math.max(PopupManager.DURATION, popupConfig.duration)) , event -> {
-            EffectManager.getInstance().effectPane.getChildren().remove(newPopup);
+        new Timeline(new KeyFrame(Duration.millis(Math.max(PopupMaker.DURATION, popupConfig.duration)) , event -> {
+            EffectMaker.getInstance().effectPane.getChildren().remove(newPopup);
         })).play();
     }
 }

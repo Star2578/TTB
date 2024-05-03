@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
@@ -32,11 +32,11 @@ public class Dart extends BaseSkill implements Attackable {
                 GameManager.getInstance().player.decreaseMana(manaCost);
 
                 //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.AROUND_SELF ,
                                 GameManager.getInstance().player ,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(4) ,
+                                EffectMaker.getInstance().createInPlaceEffects(4) ,
                                 new EffectConfig(0 , -16 , 24 , 1.1) );
                 //===========================================================================================
 
