@@ -1,25 +1,13 @@
 package pieces.enemies;
 
-import javafx.animation.TranslateTransition;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.util.Duration;
 import logic.GameManager;
-import logic.SpriteAnimation;
-import logic.effect.Effect;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
-import logic.ui.GUIManager;
-import pieces.player.BasePlayerPiece;
+import logic.gameUI.GUIManager;
+import pieces.players.BasePlayerPiece;
 import utils.Config;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
-
-import static utils.Config.BOARD_SIZE;
-import static utils.Config.SQUARE_SIZE;
 
 public class Vampire extends BaseMonsterPiece{
     private enum State {

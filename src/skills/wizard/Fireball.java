@@ -10,10 +10,10 @@ import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
-import utils.Attack;
+import pieces.Attackable;
 import utils.Config;
 
-public class Fireball extends BaseSkill implements Attack {
+public class Fireball extends BaseSkill implements Attackable {
     private BasePiece target;
     private final int DAMAGE = 12;
     public Fireball() {
@@ -60,6 +60,7 @@ public class Fireball extends BaseSkill implements Attack {
                                         new EffectConfig(-16, -19, 0, 1));
 
                         monsterPiece.takeDamage(DAMAGE); //call it here, so that dead effect will be delayed
+
                     });
 
                 }).start();

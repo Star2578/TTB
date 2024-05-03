@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import pieces.BasePiece;
 import pieces.enemies.*;
 import utils.Config;
+import utils.ImageScaler;
 
 import java.util.List;
 import java.util.Random;

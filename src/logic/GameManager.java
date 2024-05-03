@@ -1,6 +1,6 @@
 package logic;
 
-import game.GameScene;
+import scenes.GameScene;
 import items.BaseItem;
 import items.potions.*;
 import javafx.geometry.Point2D;
@@ -8,12 +8,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import logic.ui.GUIManager;
+import logic.gameUI.GUIManager;
 import pieces.BasePiece;
-import pieces.player.*;
+import pieces.players.*;
+import pieces.wall.TileMap;
 import skills.*;
 import skills.universal.*;
-import skills.archer.Rolling;
 import utils.Config;
 
 import java.io.*;

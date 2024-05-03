@@ -1,7 +1,6 @@
 package logic.effect;
 
 import javafx.animation.Interpolator;
-import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -9,15 +8,11 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
-import logic.ui.GUIManager;
-import pieces.BasePiece;
-import pieces.enemies.BaseMonsterPiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import utils.Config;
 
 import java.util.ArrayList;
 
-import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
 
 public class EffectManager {
@@ -196,6 +191,10 @@ public class EffectManager {
                 new ImageView(new Image(Config.skillNarcissisticBuffHealthPath)) , 4 , 1 , 4 , 16 , 16 , 6 , false);
         effects.add(Universal_Skill_Narcissistic_Buff_Health);
 
+        //Archer Skill Roll Wind 36
+        Effect Archer_Skill_Roll_Wind = new Effect(
+                new ImageView(new Image(Config.skillRollWindPath)) , 16 , 1 , 16 , 128 , 128 , 24 , false);
+        effects.add(Archer_Skill_Roll_Wind);
 
     }
 

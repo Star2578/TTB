@@ -1,14 +1,11 @@
 package logic.effect;
 
 import javafx.animation.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import logic.ImageScaler;
 import pieces.BasePiece;
 import utils.Config;
 

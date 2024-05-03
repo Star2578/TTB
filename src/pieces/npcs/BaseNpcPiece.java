@@ -1,19 +1,14 @@
 package pieces.npcs;
 
 import com.google.gson.Gson;
-import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.util.Duration;
-import logic.GameManager;
-import logic.ImageScaler;
+import utils.ImageScaler;
 import logic.SpriteAnimation;
-import logic.ui.GUIManager;
-import logic.ui.display.NpcDisplay;
+import logic.gameUI.display.NpcDisplay;
 import pieces.BasePiece;
 import utils.Config;
 
-import java.io.Console;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;

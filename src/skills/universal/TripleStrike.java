@@ -11,10 +11,10 @@ import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
-import utils.Attack;
+import pieces.Attackable;
 import utils.Config;
 
-public class TripleStrike extends BaseSkill implements Attack {
+public class TripleStrike extends BaseSkill implements Attackable {
     private BasePiece target;
 
     public TripleStrike() {

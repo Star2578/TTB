@@ -9,10 +9,10 @@ import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
-import utils.Attack;
+import pieces.Attackable;
 import utils.Config;
 
-public class DragonFire extends BaseSkill implements Attack {
+public class DragonFire extends BaseSkill implements Attackable {
     private BasePiece target;
     private final int DAMAGE = 15;
     public DragonFire() {
@@ -145,12 +145,20 @@ public void attack() {
                 if(directionCol != 0 && directionRow != 0) {
                     BasePiece piece4 = GameManager.getInstance().piecesPosition[newRow - directionRow * 2][newCol];
                     BasePiece piece5 = GameManager.getInstance().piecesPosition[newRow][newCol - directionCol * 2];
+                    BasePiece piece6 = GameManager.getInstance().piecesPosition[newRow - directionRow][newCol];
+                    BasePiece piece7 = GameManager.getInstance().piecesPosition[newRow][newCol - directionCol];
 
                     if (piece4 instanceof BaseMonsterPiece monsterPiece4) {
                         monsterPiece4.takeDamage(getAttack());
                     }
                     if (piece5 instanceof BaseMonsterPiece monsterPiece5) {
                         monsterPiece5.takeDamage(getAttack());
+                    }
+                    if (piece6 instanceof BaseMonsterPiece monsterPiece6) {
+                        monsterPiece6.takeDamage(getAttack());
+                    }
+                    if (piece7 instanceof BaseMonsterPiece monsterPiece7) {
+                        monsterPiece7.takeDamage(getAttack());
                     }
                     renderEffects(newRow - directionRow, newCol);
                     renderEffects(newRow, newCol - directionCol);
@@ -166,11 +174,19 @@ public void attack() {
                     if (directionCol == 0){
                         BasePiece piece4 = GameManager.getInstance().piecesPosition[newRow][newCol+2];
                         BasePiece piece5 = GameManager.getInstance().piecesPosition[newRow][newCol-2];
+                        BasePiece piece6 = GameManager.getInstance().piecesPosition[newRow][newCol+1];
+                        BasePiece piece7 = GameManager.getInstance().piecesPosition[newRow][newCol-1];
                         if (piece4 instanceof BaseMonsterPiece monsterPiece4) {
                             monsterPiece4.takeDamage(getAttack());
                         }
                         if (piece5 instanceof BaseMonsterPiece monsterPiece5) {
                             monsterPiece5.takeDamage(getAttack());
+                        }
+                        if (piece6 instanceof BaseMonsterPiece monsterPiece6) {
+                            monsterPiece6.takeDamage(getAttack());
+                        }
+                        if (piece7 instanceof BaseMonsterPiece monsterPiece7) {
+                            monsterPiece7.takeDamage(getAttack());
                         }
                         renderEffects(newRow, newCol + 1);
                         renderEffects(newRow, newCol - 1);
@@ -184,12 +200,20 @@ public void attack() {
                     else {
                         BasePiece piece4 = GameManager.getInstance().piecesPosition[newRow+2][newCol];
                         BasePiece piece5 = GameManager.getInstance().piecesPosition[newRow-2][newCol];
+                        BasePiece piece6 = GameManager.getInstance().piecesPosition[newRow+1][newCol];
+                        BasePiece piece7 = GameManager.getInstance().piecesPosition[newRow-1][newCol];
 
                         if (piece4 instanceof BaseMonsterPiece monsterPiece4) {
                             monsterPiece4.takeDamage(getAttack());
                         }
                         if (piece5 instanceof BaseMonsterPiece monsterPiece5) {
                             monsterPiece5.takeDamage(getAttack());
+                        }
+                        if (piece6 instanceof BaseMonsterPiece monsterPiece6) {
+                            monsterPiece6.takeDamage(getAttack());
+                        }
+                        if (piece7 instanceof BaseMonsterPiece monsterPiece7) {
+                            monsterPiece7.takeDamage(getAttack());
                         }
                         renderEffects(newRow+1, newCol);
                         renderEffects(newRow-1, newCol);

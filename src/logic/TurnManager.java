@@ -4,12 +4,10 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import logic.effect.EffectManager;
-import logic.ui.GUIManager;
+import logic.gameUI.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
-import pieces.enemies.Tiny;
-import pieces.enemies.Zombie;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 
 import java.util.List;
 

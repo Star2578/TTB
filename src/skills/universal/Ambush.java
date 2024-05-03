@@ -9,11 +9,10 @@ import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
-import utils.Attack;
+import pieces.Attackable;
 import utils.Config;
-import utils.Healing;
 
-public class Ambush extends BaseSkill implements Attack {
+public class Ambush extends BaseSkill implements Attackable {
     private BasePiece target;
 
     private final int DAMAGE = 8;

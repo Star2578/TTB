@@ -8,13 +8,13 @@ import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import skills.BaseSkill;
-import utils.Attack;
+import pieces.Attackable;
 import utils.Config;
-import utils.Healing;
+import pieces.Healable;
 
-public class HolyLight extends BaseSkill implements Healing, Attack {
+public class HolyLight extends BaseSkill implements Healable, Attackable {
     private BasePiece target;
 
     private final int DAMAGE = 8;

@@ -6,13 +6,11 @@ import logic.GameManager;
 import logic.SpawnerManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
-import logic.ui.GUIManager;
 import pieces.BasePiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import pieces.wall.BaseWallPiece;
 import utils.Config;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 

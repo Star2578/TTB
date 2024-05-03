@@ -4,11 +4,11 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import pieces.BasePiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import utils.Config;
-import utils.RefillMana;
+import pieces.ManaRefillable;
 
-public class BluePotion extends BasePotion implements RefillMana {
+public class BluePotion extends BasePotion implements ManaRefillable {
     private final int MANA_REFILL = 4;
     private BasePiece target;
 

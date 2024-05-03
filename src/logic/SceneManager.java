@@ -1,17 +1,10 @@
 package logic;
 
-import game.Summary;
+import scenes.SummaryScene;
 import javafx.animation.FadeTransition;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import utils.Config;
 
 public class SceneManager {
 
@@ -21,7 +14,7 @@ public class SceneManager {
     private Scene menuScene;
     private Scene charSelectionScene;
     private Scene gameScene;
-    private Summary summary;
+    private SummaryScene summaryScene;
 
     private final int screenHeight;
     private final int screenWidth;
@@ -79,10 +72,10 @@ public class SceneManager {
         this.menuScene = menuScene;
     }
     public Scene getSummaryScene() {
-        return summary.getScene();
+        return summaryScene.getScene();
     }
-    public void setSummary(Summary summary) {
-        this.summary = summary;
+    public void setSummary(SummaryScene summaryScene) {
+        this.summaryScene = summaryScene;
     }
 
     public Scene getCharSelectionScene() {
