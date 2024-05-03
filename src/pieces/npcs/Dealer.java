@@ -16,12 +16,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import logic.GameManager;
-import logic.ImageScaler;
+import utils.ImageScaler;
 import logic.SoundManager;
-import logic.ui.GUIManager;
-import logic.ui.display.NpcDisplay;
-import logic.ui.overlay.ItemInfoOverlay;
-import logic.ui.overlay.SkillInfoOverlay;
+import logic.gameUI.GUIManager;
+import logic.gameUI.display.NpcDisplay;
+import logic.gameUI.overlay.ItemInfoOverlay;
+import logic.gameUI.overlay.SkillInfoOverlay;
+import pieces.*;
 import skills.BaseSkill;
 import skills.EmptySkill;
 import utils.*;
@@ -205,17 +206,17 @@ public class Dealer extends BaseNpcPiece {
                 itemInfoOverlay.getDesc().setText(item.getDescription());
 
                 itemInfoOverlay.getDataContainer().getChildren().clear();
-                if (item instanceof Attack r) {
+                if (item instanceof Attackable r) {
                     itemInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
-                }if (item instanceof Healing r) {
+                }if (item instanceof Healable r) {
                     itemInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
-                }if (item instanceof RefillMana r) {
+                }if (item instanceof ManaRefillable r) {
                     itemInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
-                }if (item instanceof BuffAttack r) {
+                }if (item instanceof AttackBuffable r) {
                     itemInfoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
-                }if (item instanceof BuffActionPoint r) {
+                }if (item instanceof ActionPointBuffable r) {
                     itemInfoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
-                }if (item instanceof BuffHealth r) {
+                }if (item instanceof HealthBuffable r) {
                     itemInfoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
                 }
             });
@@ -280,17 +281,17 @@ public class Dealer extends BaseNpcPiece {
                 skillInfoOverlay.newInfo("Action Point", Color.ORANGE, String.valueOf(skill.getActionPointCost()));
 
                 // Other skill info base on type
-                if (skill instanceof Attack r) {
+                if (skill instanceof Attackable r) {
                     skillInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
-                }if (skill instanceof Healing r) {
+                }if (skill instanceof Healable r) {
                     skillInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
-                }if (skill instanceof RefillMana r) {
+                }if (skill instanceof ManaRefillable r) {
                     skillInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
-                }if (skill instanceof BuffAttack r) {
+                }if (skill instanceof AttackBuffable r) {
                     skillInfoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
-                }if (skill instanceof BuffActionPoint r) {
+                }if (skill instanceof ActionPointBuffable r) {
                     skillInfoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
-                }if (skill instanceof BuffHealth r) {
+                }if (skill instanceof HealthBuffable r) {
                     skillInfoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
                 }
             });
@@ -497,12 +498,12 @@ public class Dealer extends BaseNpcPiece {
         buyItemSlot.setOnMouseClicked(mouseEvent -> {
             int cost = 200 + ((GameManager.getInstance().itemUnlockedSlots) * 50);
 
-            if (GameManager.getInstance().playerMoney >= cost) {
+            if (GameManager.getInstance().playerMoney >= cost && GameManager.getInstance().itemUnlockedSlots < 8) {
 
                 GameManager.getInstance().itemUnlockedSlots += 1;
                 GameManager.getInstance().playerMoney -= cost;
 
-                GUIManager.getInstance().updateGUI();
+                GUIManager.getInstance().inventoryDisplay.updateInventoryUI();
                 updateShop();
                 GUIManager.getInstance().updateGUI();
             }
@@ -512,7 +513,7 @@ public class Dealer extends BaseNpcPiece {
         buySkillSlot.setOnMouseClicked(mouseEvent -> {
             int cost = 200 + (GameManager.getInstance().skillUnlockedSlots * 50);
 
-            if (GameManager.getInstance().playerMoney >= cost && GameManager.getInstance().skillUnlockedSlots < GameManager.getInstance().SKILL_SLOTS) {
+            if (GameManager.getInstance().playerMoney >= cost && GameManager.getInstance().skillUnlockedSlots < 8) {
 
                 GameManager.getInstance().skillUnlockedSlots += 1;
                 GameManager.getInstance().playerMoney -= cost;
@@ -523,11 +524,16 @@ public class Dealer extends BaseNpcPiece {
             }
         });
 
-        // buy item slot
-        itemShopGrid.add(buyItemSlot, 0, 3, 4, 1);
+        // buy item slot only if the slots unlocked are less than 12
+        if (GameManager.getInstance().itemUnlockedSlots < 8) {
+            itemShopGrid.add(buyItemSlot, 0, 3, 4, 1);
+        }
+        // buy skill slot only if the slots unlocked are less than 8
+        if (GameManager.getInstance().skillUnlockedSlots < 8) {
+            skillShopGrid.add(buySkillSlot, 0, 6, 4, 1);
+        }
+
         itemShopGrid.add(rerollItem, 0, 4, 4, 1);
-        // buy skill slot
-        skillShopGrid.add(buySkillSlot, 0, 6, 4, 1);
         skillShopGrid.add(rerollSkill, 0, 7, 4, 1);
     }
 }

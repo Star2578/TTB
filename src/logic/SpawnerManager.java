@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import pieces.BasePiece;
 import pieces.enemies.*;
 import utils.Config;
+import utils.ImageScaler;
 
 import java.util.List;
 import java.util.Random;
@@ -51,7 +52,6 @@ public class SpawnerManager {
         if (spawnChance <= doorProbability || monsterCount == 0) {
             spawnDoor(row, col);
         } else {
-            System.out.println("Door spawn failed at row " + row + ", col " + col);
             increaseDoorChance();
         }
     }
@@ -61,7 +61,6 @@ public class SpawnerManager {
         doorProbability = 0;
 
         // Door spawn successful
-        System.out.println("Door spawned at row " + row + ", col " + col);
         dungeonFloor[row][col].setImage(ImageScaler.resample(new Image(Config.DoorPath), 2));
         gameManager.doorAt.add(new Point2D(row, col));
     }
@@ -76,6 +75,8 @@ public class SpawnerManager {
         Random random = new Random();
 
         int calculateMonster = freeSquareCount / 12;
+        if (GameManager.getInstance().moreMonster) calculateMonster = freeSquareCount / 9; // more monster
+
         System.out.println("Free square = " + freeSquareCount);
 
         // Add monsters from the pool to toAdd list

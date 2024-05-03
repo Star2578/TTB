@@ -9,10 +9,10 @@ import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
-import utils.Attack;
+import pieces.Attackable;
 import utils.Config;
 
-public class DragonFire extends BaseSkill implements Attack {
+public class DragonFire extends BaseSkill implements Attackable {
     private BasePiece target;
     private final int DAMAGE = 15;
     public DragonFire() {
@@ -72,19 +72,22 @@ public void attack() {
     }
 
     private void renderEffects(int newRow, int newCol) {
-        EffectManager.getInstance()
-                .renderEffect(EffectManager.TYPE.ON_SELF,
-                        GameManager.getInstance().player,
-                        newRow, newCol,
-                        EffectManager.getInstance().createInPlaceEffects(26),
-                        new EffectConfig(0, -16, 0, 1.2));
+        if (GameManager.getInstance().validMovesCache[newRow][newCol]) {
+            EffectManager.getInstance()
+                    .renderEffect(EffectManager.TYPE.ON_SELF,
+                            GameManager.getInstance().player,
+                            newRow, newCol,
+                            EffectManager.getInstance().createInPlaceEffects(26),
+                            new EffectConfig(0, -16, 0, 1.2));
 
-        EffectManager.getInstance()
-                .renderEffect(EffectManager.TYPE.ON_SELF,
-                        GameManager.getInstance().player,
-                        newRow, newCol,
-                        EffectManager.getInstance().createInPlaceEffects(23),
-                        new EffectConfig(-16, -19, 0, 1));
+
+            EffectManager.getInstance()
+                    .renderEffect(EffectManager.TYPE.ON_SELF,
+                            GameManager.getInstance().player,
+                            newRow, newCol,
+                            EffectManager.getInstance().createInPlaceEffects(23),
+                            new EffectConfig(-16, -19, 0, 1));
+        }
     }
 
     private void performSecondaryAttack(int newRow, int newCol, int directionRow, int directionCol) {

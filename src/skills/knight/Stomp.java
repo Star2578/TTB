@@ -8,12 +8,12 @@ import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import skills.BaseSkill;
-import utils.Attack;
+import pieces.Attackable;
 import utils.Config;
 
-public class Stomp extends BaseSkill implements Attack {
+public class Stomp extends BaseSkill implements Attackable {
     private BasePiece target;
     private final int DAMAGE = 6;
 

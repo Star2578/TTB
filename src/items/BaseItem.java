@@ -3,7 +3,7 @@ package items;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import logic.ImageScaler;
+import utils.ImageScaler;
 import utils.Config;
 
 import java.util.Random;

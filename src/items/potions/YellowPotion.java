@@ -4,12 +4,11 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import pieces.BasePiece;
-import pieces.player.BasePlayerPiece;
-import utils.BuffActionPoint;
+import pieces.players.BasePlayerPiece;
+import pieces.ActionPointBuffable;
 import utils.Config;
-import utils.Healing;
 
-public class YellowPotion extends BasePotion implements BuffActionPoint {
+public class YellowPotion extends BasePotion implements ActionPointBuffable {
     private final int MAX_ACTION_POINT = 1;
     private BasePiece target;
 

@@ -6,14 +6,14 @@ import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
-import pieces.BasePiece;
-import pieces.player.BasePlayerPiece;
+import pieces.*;
+import pieces.players.BasePlayerPiece;
 import skills.BaseSkill;
 import utils.*;
 
 import java.util.Random;
 
-public class Narcissistic extends BaseSkill implements BuffHealth, BuffAttack, BuffActionPoint, BuffMana {
+public class Narcissistic extends BaseSkill implements HealthBuffable, AttackBuffable, ActionPointBuffable, ManaBuffable {
     private BasePiece target;
 
     private final int MAX_HEALTH = 1;
@@ -33,13 +33,14 @@ public class Narcissistic extends BaseSkill implements BuffHealth, BuffAttack, B
 
         // Randomly apply one of the three buffs
         Random random = new Random();
-        int randomBuff = random.nextInt(3);
+        int randomBuff = random.nextInt(4);
 
         if (target instanceof BasePlayerPiece) {
             switch (randomBuff) {
                 case 0 -> buffHealth();
                 case 1 -> buffAttack();
                 case 2 -> buffActionPoint();
+                case 3 -> buffMana();
             }
         }
         GameManager.getInstance().player.decreaseMana(manaCost);

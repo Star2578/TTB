@@ -4,12 +4,11 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import pieces.BasePiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import utils.Config;
-import utils.Healing;
-import utils.RefillMana;
+import pieces.Healable;
 
-public class RedPotion extends BasePotion implements Healing {
+public class RedPotion extends BasePotion implements Healable {
     private final int HEALTH_REGEN = 5;
     private BasePiece target;
 

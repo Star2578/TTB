@@ -6,19 +6,18 @@ import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
-import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
-import utils.Attack;
+import pieces.Attackable;
 import utils.Config;
 
-public class Dart extends BaseSkill implements Attack {
+public class Dart extends BaseSkill implements Attackable {
     private BasePiece target;
     private final int DAMAGE = 5;
     private final int KNOCKBACK = 2;
     public Dart() {
-        super("Dart", Color.DARKRED, 4, 0, "With a deft flick of their wrist, they send forth a piercing strike that packs a wallop, knocking back adversaries with formidable force.", Config.Rarity.UNCOMMON, "res/SFX/skills/slash/PP_01.wav");
+        super("Dart", Color.DARKRED, 4, 0, "Knock target 2 blocks away from you", Config.Rarity.UNCOMMON, "res/SFX/skills/slash/PP_01.wav");
         icon = new ImageView(Config.DartPath);
         range = 1;
     }

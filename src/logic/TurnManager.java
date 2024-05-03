@@ -4,12 +4,10 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import logic.effect.EffectManager;
-import logic.ui.GUIManager;
+import logic.gameUI.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
-import pieces.enemies.Tiny;
-import pieces.enemies.Zombie;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 
 import java.util.List;
 
@@ -55,11 +53,11 @@ public class TurnManager {
 
         this.isPlayerTurn = false;
         // End the turn for the player
-        player.setCanAct(false);
         System.out.println("Player Turn End");
         GameManager.getInstance().gameScene.resetSelection(0);
         GameManager.getInstance().gameScene.resetSelection(1);
         GameManager.getInstance().gameScene.resetSelection(2);
+        player.setCanAct(false);
         currentEnvironmentPieceIndex = 0;
 
         EffectManager.getInstance().updateEffectTimer(); //update effect lifetime

@@ -6,21 +6,23 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.SpawnerManager;
-import logic.ui.GUIManager;
+import logic.effect.PopupConfig;
+import logic.effect.PopupManager;
+import logic.gameUI.GUIManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import utils.Config;
 
 import java.util.*;
 
 public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
-    private int currentHp;
-    private int maxHp;
-    private int currentDirection;
-    private boolean isAlive = true;
+    protected int currentHp;
+    protected int maxHp;
+    protected int currentDirection;
+    protected boolean isAlive = true;
     protected boolean endAction = false;
     protected boolean[][] validMovesCache; // Cache of valid moves for the entire board
     protected int moneyDrop;
@@ -64,6 +66,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     @Override
     public void takeDamage(int damage) {
         setCurrentHealth(currentHp - damage);
+
     }
     public void changeDirection(int direction) {
         if (direction != 1 && direction != -1) {
@@ -127,7 +130,31 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     }
     @Override
     public void setCurrentHealth(int health) {
-        this.currentHp = Math.max(health, 0);
+
+        //=======<popup when damaged/healed>=============
+        if(GameManager.getInstance().displayDamageNumber){
+            if(health < getCurrentHealth()){
+                PopupManager.createPopup(
+                        this ,
+                        new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
+                                PopupManager.DAMAGE_COLOR ,
+                                null ,
+                                1)
+                );
+            }
+            else{
+                PopupManager.createPopup(
+                        this ,
+                        new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
+                                PopupManager.HEAL_COLOR ,
+                                null ,
+                                1)
+                );
+            }
+        }
+        //===============================================
+
+        this.currentHp = Math.max( Math.min(getMaxHealth(),health) , 0);
         if (currentHp == 0) onDeath();
     }
     @Override
@@ -148,43 +175,46 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     }
     @Override
     public void onDeath() {
-        isAlive = false;
-        SoundManager.getInstance().playSoundEffect(Config.sfx_deadSound);
-        SpawnerManager.getInstance().monsterCount--;
-        SpawnerManager.getInstance().trySpawnDoor(getRow(), getCol());
-        GameManager.getInstance().playerMoney += moneyDrop;
-        GUIManager.getInstance().updateGUI();
-        GameManager.getInstance().totalKillThisRun++;
+        // prevent continuous onDeath call
+        if (isAlive) {
+            isAlive = false;
+            SoundManager.getInstance().playSoundEffect(Config.sfx_deadSound);
+            SpawnerManager.getInstance().monsterCount--;
+            SpawnerManager.getInstance().trySpawnDoor(getRow(), getCol());
+            GameManager.getInstance().playerMoney += moneyDrop;
+            GUIManager.getInstance().updateGUI();
+            GameManager.getInstance().totalKillThisRun++;
 
-        // remove monster when death
-        GameManager.getInstance().gameScene.removePiece(this);
+            // remove monster when death
+            GameManager.getInstance().gameScene.removePiece(this);
 
-        // To call when this monster died
-        GUIManager.getInstance().eventLogDisplay.addLog("Player killed " + this.getClass().getSimpleName() + " !!!!", Color.CRIMSON);
+            // To call when this monster died
+            GUIManager.getInstance().eventLogDisplay.addLog("Player killed " + this.getClass().getSimpleName() + " !!!!", Color.CRIMSON);
 
-        //=====<dead effect>=========================================
-        new Thread(()->{
-            try {
-                Thread.sleep(150);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            Platform.runLater(()->{
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_TARGET ,
-                                GameManager.getInstance().player ,
-                                getRow(), getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(2) ,
-                                new EffectConfig(0 , 0 , 0 , 1.25) );
-            });
-        }).start();
+            //=====<dead effect>=========================================
+            new Thread(()->{
+                try {
+                    Thread.sleep(150);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                Platform.runLater(()->{
+                    EffectManager.getInstance()
+                            .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                                    GameManager.getInstance().player ,
+                                    getRow(), getCol(),
+                                    EffectManager.getInstance().createInPlaceEffects(2) ,
+                                    new EffectConfig(0 , 0 , 0 , 1.25) );
+                });
+            }).start();
 
-        //=============================================================
+            //=============================================================
 
-        //clear effect when monster's die early
-        EffectManager.getInstance().clearDeadEffect();
+            //clear effect when monster's die early
+            EffectManager.getInstance().clearDeadEffect();
 
-        System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
+            System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
+        }
     }
     public boolean isEndAction() {
         return endAction;

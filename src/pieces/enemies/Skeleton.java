@@ -3,17 +3,13 @@ package pieces.enemies;
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 import logic.GameManager;
-import logic.SpawnerManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
-import logic.ui.GUIManager;
 import pieces.BasePiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import pieces.wall.BaseWallPiece;
 import utils.Config;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 public class Skeleton extends BaseMonsterPiece {
@@ -29,8 +25,9 @@ public class Skeleton extends BaseMonsterPiece {
 
     public Skeleton() {
         super(0, 0, 1);
-        setMaxHealth(10);
-        setCurrentHealth(getMaxHealth());
+
+        maxHp = 10;
+        currentHp = maxHp;
 
         // Initially in the Neutral/Roaming State
         currentState = Skeleton.State.NEUTRAL_ROAMING;
@@ -121,29 +118,6 @@ public class Skeleton extends BaseMonsterPiece {
 
     @Override
     public void attack(BasePlayerPiece playerPiece) {
-//        System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
-//        //=========<ATTACK EFFECT>====================================================================
-//        EffectManager.getInstance()
-//                .renderEffect( EffectManager.TYPE.AROUND_SELF_ENEMY ,
-//                        GameManager.getInstance().player ,
-//                        getRow(), getCol(),
-//                        EffectManager.getInstance().createInPlaceEffects(12) ,
-//                        new EffectConfig(-2 , -4 , 32 , 1.7) );
-//        //===========================================================================================
-//        //=========<Blood EFFECT>====================================================================
-//        EffectManager.getInstance()
-//                .renderEffect( EffectManager.TYPE.ON_SELF ,
-//                        GameManager.getInstance().player ,
-//                        playerPiece.getRow(), playerPiece.getCol(),
-//                        EffectManager.getInstance().createInPlaceEffects(9) ,
-//                        new EffectConfig(-34 , -52 , 0 , 1.5) );
-//        //===========================================================================================
-//
-//        playerPiece.takeDamage(ATTACK_DAMAGE);
-//        GUIManager.getInstance().updateGUI();
-
-        //-----------------------------------------------------------------------------
-
         int currentRow = getRow();
         int currentCol = getCol();
         int dRow = playerPiece.getRow() - currentRow;

@@ -12,10 +12,10 @@ import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
-import utils.Attack;
+import pieces.Attackable;
 import utils.Config;
 
-public class Halt extends BaseSkill implements Attack {
+public class Halt extends BaseSkill implements Attackable {
     private BasePiece target;
     private final int DAMAGE = 6;
     private final int STUN_DURATION = 1;
@@ -33,7 +33,7 @@ public class Halt extends BaseSkill implements Attack {
         if (target != null && target != GameManager.getInstance().player) {
             // Perform Attack
             if (target instanceof BaseMonsterPiece monsterPiece) {
-                monsterPiece.takeDamage(DAMAGE);
+
 
 
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
@@ -61,18 +61,21 @@ public class Halt extends BaseSkill implements Attack {
                                     EffectManager.getInstance().createInPlaceEffects(20) ,
                                     new EffectConfig(1 , 0 , 0 , 1.2) );
                     //===========================================================================================
+
+                    monsterPiece.takeDamage(DAMAGE);
+
                     // Stun monster 1 turn
                     if (monsterPiece.isAlive()) {
                         monsterPiece.addBuff(STUN_DURATION, "Stun");
                         //=========<STUN EFFECT>====================================================================
                         Effect Stun = EffectManager.getInstance().createInPlaceEffects(8);
-                        Stun.setOwner(target);
                         EffectManager.getInstance()
                                 .renderEffect(EffectManager.TYPE.ON_SELF,
                                         GameManager.getInstance().player,
                                         target.getRow(), target.getCol(),
                                         Stun,
                                         new EffectConfig(12, -6, 0, 1.6));
+                        Stun.bindToOwnerMovement(target);
                         Stun.setTurnRemain(STUN_DURATION + 1);
                         //===========================================================================================
                     }

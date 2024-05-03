@@ -8,15 +8,15 @@ import logic.GameManager;
 import logic.SpawnerManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
-import logic.ui.GUIManager;
+import logic.gameUI.GUIManager;
 import pieces.BasePiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import pieces.wall.BaseWallPiece;
 import utils.Config;
 
 import java.util.Map;
 
-import static game.Setting.gameManager;
+import static scenes.SettingScene.gameManager;
 import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
 
@@ -38,8 +38,9 @@ public class SlimeBoss extends BaseMonsterPiece {
 
     public SlimeBoss() {
         super(0, 0, 1);
-        setMaxHealth(200); // First phase
-        setCurrentHealth(getMaxHealth());
+
+        maxHp = 200; //First phase
+        currentHp = maxHp;
 
         this.currentPhase = Phase.FIRST;
 

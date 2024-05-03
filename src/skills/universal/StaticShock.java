@@ -1,10 +1,7 @@
 package skills.universal;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.Effect;
@@ -12,12 +9,12 @@ import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import skills.BaseSkill;
-import utils.Attack;
+import pieces.Attackable;
 import utils.Config;
 
-public class StaticShock extends BaseSkill implements Attack {
+public class StaticShock extends BaseSkill implements Attackable {
     private BasePiece target;
 
     private final int DAMAGE = 7;
@@ -85,14 +82,15 @@ public class StaticShock extends BaseSkill implements Attack {
                         }
                     }
                     //=========<SKILL EFFECT>====================================================================
-                    if (!(target instanceof BasePlayerPiece)){
-                        EffectManager.getInstance()
-                                .renderEffect( EffectManager.TYPE.ON_SELF ,
-                                        GameManager.getInstance().player ,
-                                        newRow, newCol,
-                                        EffectManager.getInstance().createInPlaceEffects(32) ,
-                                        new EffectConfig(-15 , -48 , 0 , 1.1) );
-                    }
+                    if (GameManager.getInstance().validMovesCache[newRow][newCol])
+                        if (!(target instanceof BasePlayerPiece)){
+                            EffectManager.getInstance()
+                                    .renderEffect( EffectManager.TYPE.ON_SELF ,
+                                            GameManager.getInstance().player ,
+                                            newRow, newCol,
+                                            EffectManager.getInstance().createInPlaceEffects(32) ,
+                                            new EffectConfig(-15 , -28 , 0 , 0.75) );
+                        }
                     //===========================================================================================
                 }
 

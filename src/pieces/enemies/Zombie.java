@@ -1,23 +1,13 @@
 package pieces.enemies;
 
-import javafx.animation.TranslateTransition;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import logic.GameManager;
-import logic.SpriteAnimation;
-import logic.effect.Effect;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
-import logic.ui.GUIManager;
-import pieces.player.BasePlayerPiece;
+import logic.gameUI.GUIManager;
+import pieces.players.BasePlayerPiece;
 import utils.Config;
 
 import java.util.*;
-
-import static utils.Config.BOARD_SIZE;
-import static utils.Config.SQUARE_SIZE;
 
 public class Zombie extends BaseMonsterPiece{
     private enum State {
@@ -32,9 +22,9 @@ public class Zombie extends BaseMonsterPiece{
 
     public Zombie() {
         super(0, 0, 1);
-        setMaxHealth(10);
-        setCurrentHealth(getMaxHealth());
 
+        maxHp = 10;
+        currentHp = maxHp;
         // Initially in the Neutral/Roaming State
         currentState = State.NEUTRAL_ROAMING;
 

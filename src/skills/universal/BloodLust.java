@@ -8,13 +8,13 @@ import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import skills.BaseSkill;
-import utils.Attack;
+import pieces.Attackable;
 import utils.Config;
-import utils.Healing;
+import pieces.Healable;
 
-public class BloodLust extends BaseSkill implements Attack, Healing {
+public class BloodLust extends BaseSkill implements Attackable, Healable {
     private BasePiece target;
 
     private final int DAMAGE = 9;

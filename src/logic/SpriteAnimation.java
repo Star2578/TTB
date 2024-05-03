@@ -21,10 +21,10 @@ public class SpriteAnimation extends AnimationTimer {
     protected int currentCol = 0;
     protected int currentRow = 0;
 
-    protected long lastFrame = 0;
+    protected long lastFrame;
 
     protected boolean isPause = true;
-    public boolean loop = true;
+    public boolean loop;
 
     public SpriteAnimation(ImageView imageView, int columns, int rows, int totalFrames, int frameWidth, int frameHeight, float framesPerSecond , boolean loop) {
         this.imageView = imageView;
@@ -75,7 +75,6 @@ public class SpriteAnimation extends AnimationTimer {
         }
     }
 
-
     public void changeAnimation(int totalCols , int targetRows ){
         //in our game Sprite sheet design : new row -> new sprite animation
         this.cols = totalCols;
@@ -85,7 +84,6 @@ public class SpriteAnimation extends AnimationTimer {
 
         imageView.setViewport(new Rectangle2D(0,currentRow*frameHeight , frameWidth , frameHeight));
     }
-
 
     @Override
     public SpriteAnimation clone(){

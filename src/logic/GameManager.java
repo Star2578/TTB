@@ -1,6 +1,6 @@
 package logic;
 
-import game.GameScene;
+import scenes.GameScene;
 import items.BaseItem;
 import items.potions.*;
 import javafx.geometry.Point2D;
@@ -8,12 +8,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import logic.ui.GUIManager;
+import logic.gameUI.GUIManager;
 import pieces.BasePiece;
-import pieces.player.*;
+import pieces.players.*;
+import pieces.wall.TileMap;
 import skills.*;
 import skills.universal.*;
-import skills.archer.Rolling;
 import utils.Config;
 
 import java.io.*;
@@ -35,6 +35,10 @@ public class GameManager {
     public boolean displayDamageNumber;
     public boolean displayActionPointOnCursor;
 
+    // options
+    public boolean fogOfWar = false;
+    public boolean moreMonster = false;
+
     // ------------ Progression --------------
     public int playerMoney = 0;
     public int dungeonLevel = 1;
@@ -51,6 +55,7 @@ public class GameManager {
 
     public GameScene gameScene;
     public Pane animationPane;
+    public GridPane fogPane;
 
     public BasePlayerPiece player; // Current player class in the game
     public GridPane boardPane; // The board pane to create the game's grid system
@@ -76,7 +81,6 @@ public class GameManager {
     public BaseSkill selectedSkill;
     public BaseItem selectedItem;
 
-    // -------------- Inventory --------------
     public List<BaseItem> inventory = new ArrayList<>();
     public List<Point2D> doorAt = new ArrayList<>(); // use to store where the door is at
 
@@ -94,6 +98,7 @@ public class GameManager {
 
         playerSkills = player.getSkills();
         boardPane = new GridPane();
+        fogPane = new GridPane();
         animationPane = new Pane();
 
         settingProperties = new Properties();
@@ -128,6 +133,7 @@ public class GameManager {
         inventory.clear();
         environmentPieces.clear();
         boardPane = new GridPane();
+        fogPane = new GridPane();
         animationPane = new Pane();
         dungeonFloor = new ImageView[Config.BOARD_SIZE][Config.BOARD_SIZE];
         selectionFloor = new ImageView[Config.BOARD_SIZE][Config.BOARD_SIZE];

@@ -1,7 +1,6 @@
 package logic.effect;
 
 import javafx.animation.Interpolator;
-import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -9,15 +8,11 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
-import logic.ui.GUIManager;
-import pieces.BasePiece;
-import pieces.enemies.BaseMonsterPiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import utils.Config;
 
 import java.util.ArrayList;
 
-import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
 
 public class EffectManager {
@@ -196,6 +191,10 @@ public class EffectManager {
                 new ImageView(new Image(Config.skillNarcissisticBuffHealthPath)) , 4 , 1 , 4 , 16 , 16 , 6 , false);
         effects.add(Universal_Skill_Narcissistic_Buff_Health);
 
+        //Archer Skill Roll Wind 36
+        Effect Archer_Skill_Roll_Wind = new Effect(
+                new ImageView(new Image(Config.skillRollWindPath)) , 16 , 1 , 16 , 128 , 128 , 24 , false);
+        effects.add(Archer_Skill_Roll_Wind);
 
     }
 
@@ -203,10 +202,10 @@ public class EffectManager {
         Effect copy = effects.get(index).clone();
         return copy;
     }
-
-
+    
     public void renderEffect(Enum<TYPE> typeEnum, BasePlayerPiece player , int row , int col, Effect effect , EffectConfig config){
 
+        effect.setConfig(config);
         runningEffects.add(effect);
 
         if (typeEnum == TYPE.AROUND_SELF){
@@ -349,7 +348,8 @@ public class EffectManager {
 
             effect.start();
             moveTransition.play();
-        } else if (typeEnum == TYPE.BULLET_TO_TARGET_ENEMY) {
+        }
+        else if (typeEnum == TYPE.BULLET_TO_TARGET_ENEMY) {
 
             EffectManager.getInstance().effectPane.getChildren().add(effect.imageView);
 
@@ -398,12 +398,10 @@ public class EffectManager {
     public void clearDeadEffect(){
 
         //clear effect display in effectPane
-        for(int i = 0 ; i < runningEffects.size() ; i++){
-            Effect current = runningEffects.get(i);
-
-            if(current.canKill || current.getTurnRemain() == 0 || (current.getOwner()!=null && ( !((BaseMonsterPiece)current.getOwner()).isAlive()) ) ){
+        for (Effect effect : runningEffects) {
+            if (effect.canKill || effect.getTurnRemain() == 0 || (effect.getOwner() != null && (!(effect.getOwner()).isAlive()))) {
                 //effect is timeout or reach turn limit
-                effectPane.getChildren().remove(runningEffects.get(i).imageView);
+                effectPane.getChildren().remove(effect.imageView);
             }
         }
 
@@ -411,7 +409,7 @@ public class EffectManager {
         runningEffects.removeIf(effect -> (
                 effect.canKill ||
                 effect.getTurnRemain() == 0 ||
-                (effect.getOwner()!=null && ( !((BaseMonsterPiece) effect.getOwner()).isAlive()) )
+                ( effect.getOwner()!=null && ( !(effect.getOwner()).isAlive()) )
         ));
     }
 

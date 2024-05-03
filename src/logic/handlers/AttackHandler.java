@@ -4,8 +4,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import logic.GameManager;
-import logic.ImageScaler;
-import pieces.player.BasePlayerPiece;
+import utils.ImageScaler;
+import pieces.players.BasePlayerPiece;
 import utils.Config;
 
 import java.util.ArrayList;

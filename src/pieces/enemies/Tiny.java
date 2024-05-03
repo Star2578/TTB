@@ -1,24 +1,13 @@
 package pieces.enemies;
 
-import javafx.animation.TranslateTransition;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.util.Duration;
 import logic.GameManager;
-import logic.SpriteAnimation;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
-import logic.ui.GUIManager;
-import pieces.player.BasePlayerPiece;
+import logic.gameUI.GUIManager;
+import pieces.players.BasePlayerPiece;
 import utils.Config;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
-
-import static utils.Config.BOARD_SIZE;
-import static utils.Config.SQUARE_SIZE;
 
 public class Tiny extends BaseMonsterPiece{
     private enum State {
@@ -33,8 +22,9 @@ public class Tiny extends BaseMonsterPiece{
 
     public Tiny() {
         super(0, 0, 1);
-        setMaxHealth(10);
-        setCurrentHealth(getMaxHealth());
+
+        maxHp = 10;
+        currentHp = maxHp;
 
         currentState = State.NEUTRAL_ROAMING; // Initially in the Neutral/Roaming State
 

@@ -4,7 +4,7 @@ import items.BaseItem;
 import javafx.scene.paint.Color;
 import pieces.BasePiece;
 import utils.Config;
-import utils.Usable;
+import items.Usable;
 
 public abstract class BasePotion extends BaseItem implements Usable {
     public BasePotion(String name, Color nameColor, String iconPath, String description, Config.Rarity rarity, String sfxPath, Color backgroundColor) {

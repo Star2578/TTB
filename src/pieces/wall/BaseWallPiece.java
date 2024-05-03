@@ -1,9 +1,7 @@
 package pieces.wall;
 
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import logic.GameManager;
-import logic.TileMap;
 import pieces.BasePiece;
 import utils.Config;
 
