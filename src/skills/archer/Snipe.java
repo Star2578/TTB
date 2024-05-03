@@ -7,7 +7,7 @@ import javafx.util.Duration;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
@@ -45,11 +45,11 @@ public class Snipe extends BaseSkill implements Attackable {
         if (dCol != 0) directionCol /= Math.abs(dCol);
 
         //=========<SKILL EFFECT PHASE 1>====================================================================
-        EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+        EffectMaker.getInstance()
+                .renderEffect( EffectMaker.TYPE.AROUND_SELF ,
                         GameManager.getInstance().player ,
                         target.getRow(), target.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(15) ,
+                        EffectMaker.getInstance().createInPlaceEffects(15) ,
                         new EffectConfig(-12 , -2 , 56 , 1.4) );
         //===========================================================================================
 
@@ -59,11 +59,11 @@ public class Snipe extends BaseSkill implements Attackable {
         // Set the action to perform after the pause
         pause.setOnFinished(event ->
                 //=========<SKILL EFFECT PHASE 2>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.AROUND_SELF ,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.AROUND_SELF ,
                                 GameManager.getInstance().player ,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(16) ,
+                                EffectMaker.getInstance().createInPlaceEffects(16) ,
                                 new EffectConfig(-12 , -8 , 56 , 1.4) ));
                 //===========================================================================================);
 
@@ -97,11 +97,11 @@ public class Snipe extends BaseSkill implements Attackable {
             pause1.setOnFinished(event ->
 
             //=========<SKILL EFFECT PHASE 3>====================================================================
-            EffectManager.getInstance()
-                    .renderEffect( EffectManager.TYPE.ON_SELF ,
+            EffectMaker.getInstance()
+                    .renderEffect( EffectMaker.TYPE.ON_SELF ,
                             GameManager.getInstance().player ,
                             newRow, newCol,
-                            EffectManager.getInstance().createInPlaceEffects(17) ,
+                            EffectMaker.getInstance().createInPlaceEffects(17) ,
                             new EffectConfig(0 , -4 , 0 , 1.4) ));
             //===========================================================================================);
             // Start the pause
@@ -113,11 +113,11 @@ public class Snipe extends BaseSkill implements Attackable {
             // Set the action to perform after the pause
             pause2.setOnFinished(event ->
             //=========<SKILL EFFECT PHASE 4>====================================================================
-                    EffectManager.getInstance()
-                            .renderEffect( EffectManager.TYPE.ON_SELF ,
+                    EffectMaker.getInstance()
+                            .renderEffect( EffectMaker.TYPE.ON_SELF ,
                                     GameManager.getInstance().player ,
                                     newRow, newCol,
-                                    EffectManager.getInstance().createInPlaceEffects(18) ,
+                                    EffectMaker.getInstance().createInPlaceEffects(18) ,
                                     new EffectConfig(0 , -4 , 0 , 1.4) ));
             //===========================================================================================);
 

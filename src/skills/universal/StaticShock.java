@@ -6,7 +6,7 @@ import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.Effect;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import pieces.players.BasePlayerPiece;
@@ -66,10 +66,10 @@ public class StaticShock extends BaseSkill implements Attackable {
                         monsterPiece.takeDamage(DAMAGE);
                         monsterPiece.addBuff(1,"Stun");
                         //=========<STUN EFFECT>====================================================================
-                        Effect Stun = EffectManager.getInstance().createInPlaceEffects(8);
+                        Effect Stun = EffectMaker.getInstance().createInPlaceEffects(8);
                         Stun.setOwner(target);
-                        EffectManager.getInstance()
-                                .renderEffect( EffectManager.TYPE.ON_SELF ,
+                        EffectMaker.getInstance()
+                                .renderEffect( EffectMaker.TYPE.ON_SELF ,
                                         GameManager.getInstance().player ,
                                         target.getRow(), target.getCol(),
                                         Stun ,
@@ -78,17 +78,17 @@ public class StaticShock extends BaseSkill implements Attackable {
                         //===========================================================================================
                         if (!monsterPiece.isAlive()) {
                             GameManager.getInstance().gameScene.removePiece(monsterPiece);
-                            EffectManager.getInstance().clearDeadEffect();
+                            EffectMaker.getInstance().clearDeadEffect();
                         }
                     }
                     //=========<SKILL EFFECT>====================================================================
                     if (GameManager.getInstance().validMovesCache[newRow][newCol])
                         if (!(target instanceof BasePlayerPiece)){
-                            EffectManager.getInstance()
-                                    .renderEffect( EffectManager.TYPE.ON_SELF ,
+                            EffectMaker.getInstance()
+                                    .renderEffect( EffectMaker.TYPE.ON_SELF ,
                                             GameManager.getInstance().player ,
                                             newRow, newCol,
-                                            EffectManager.getInstance().createInPlaceEffects(32) ,
+                                            EffectMaker.getInstance().createInPlaceEffects(32) ,
                                             new EffectConfig(-15 , -28 , 0 , 0.75) );
                         }
                     //===========================================================================================

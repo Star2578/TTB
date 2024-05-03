@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
@@ -65,20 +65,20 @@ public class RainOfFire extends BaseSkill implements Attackable {
 
     private void renderEffects(int newRow, int newCol) {
         //=========<SKILL EFFECT>====================================================================
-        EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.ON_SELF ,
+        EffectMaker.getInstance()
+                .renderEffect( EffectMaker.TYPE.ON_SELF ,
                         GameManager.getInstance().player ,
                         newRow, newCol,
-                        EffectManager.getInstance().createInPlaceEffects(25) ,
+                        EffectMaker.getInstance().createInPlaceEffects(25) ,
                         new EffectConfig(0 , -16 , 34 , 1.2) );
         //===========================================================================================
         //=========<SKILL EFFECT TAKE DAMAGE>====================================================================
         if (GameManager.getInstance().validMovesCache[newRow][newCol])
-            EffectManager.getInstance()
-                    .renderEffect(EffectManager.TYPE.ON_SELF,
+            EffectMaker.getInstance()
+                    .renderEffect(EffectMaker.TYPE.ON_SELF,
                             GameManager.getInstance().player,
                             newRow, newCol,
-                            EffectManager.getInstance().createInPlaceEffects(23),
+                            EffectMaker.getInstance().createInPlaceEffects(23),
                             new EffectConfig(-16, -19, 0, 1));
         //===========================================================================================
     }

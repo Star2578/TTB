@@ -16,7 +16,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import logic.*;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import logic.handlers.AttackHandler;
 import logic.handlers.MovementHandler;
 import logic.handlers.SkillHandler;
@@ -48,7 +48,7 @@ public class GameScene {
     private static final double MAX_FOG_VIEW_DISTANT = 2;
 
     private GameManager gameManager = GameManager.getInstance();
-    private EffectManager effectManager = EffectManager.getInstance();
+    private EffectMaker effectMaker = EffectMaker.getInstance();
     private BasePlayerPiece player;
     private GUIManager guiManager;
     private TurnManager turnManager;
@@ -103,9 +103,9 @@ public class GameScene {
 
         //this pane contains all effect animation node
         //placed transparently over boardPane
-        effectManager.effectPane.setMaxWidth(SQUARE_SIZE*BOARD_SIZE);
-        effectManager.effectPane.setMaxHeight(SQUARE_SIZE*BOARD_SIZE);
-        effectManager.effectPane.setDisable(true);
+        effectMaker.effectPane.setMaxWidth(SQUARE_SIZE*BOARD_SIZE);
+        effectMaker.effectPane.setMaxHeight(SQUARE_SIZE*BOARD_SIZE);
+        effectMaker.effectPane.setDisable(true);
 
         rightPane = new VBox(); // Pane for right area
         rightPane.setBackground(Background.fill(Color.DARKRED));
@@ -120,7 +120,7 @@ public class GameScene {
 
         // Center the game board using a StackPane
         centerPane = new StackPane();
-        centerPane.getChildren().addAll(boardPane , tilePane , animationPane , effectManager.effectPane);
+        centerPane.getChildren().addAll(boardPane , tilePane , animationPane , effectMaker.effectPane);
 
         if (GameManager.getInstance().fogOfWar) centerPane.getChildren().addAll(fogPane);
 

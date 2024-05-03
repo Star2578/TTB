@@ -6,7 +6,7 @@ import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.Effect;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.players.BasePlayerPiece;
 import skills.BaseSkill;
@@ -43,17 +43,17 @@ public class IceShield extends BaseSkill implements Buffable {
             System.out.println("Use " + name + " on " + player.getClass().getSimpleName());
 
             //=========<SKILL EFFECT>====================================================================
-            EffectManager.getInstance()
-                    .renderEffect( EffectManager.TYPE.ON_SELF ,
+            EffectMaker.getInstance()
+                    .renderEffect( EffectMaker.TYPE.ON_SELF ,
                             GameManager.getInstance().player ,
                             GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
-                            EffectManager.getInstance().createInPlaceEffects(27) ,
+                            EffectMaker.getInstance().createInPlaceEffects(27) ,
                             new EffectConfig(0 , -16 , 0 , 1.1) );
             //===========================================================================================
             //=========<SKILL BUFF EFFECT>====================================================================
-            Effect shield = EffectManager.getInstance().createInPlaceEffects(28);
-            EffectManager.getInstance()
-                    .renderEffect( EffectManager.TYPE.ON_SELF ,
+            Effect shield = EffectMaker.getInstance().createInPlaceEffects(28);
+            EffectMaker.getInstance()
+                    .renderEffect( EffectMaker.TYPE.ON_SELF ,
                             GameManager.getInstance().player ,
                             GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
                             shield ,

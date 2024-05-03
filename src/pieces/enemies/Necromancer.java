@@ -5,7 +5,7 @@ import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpawnerManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.players.BasePlayerPiece;
 import pieces.wall.BaseWallPiece;
@@ -205,11 +205,11 @@ public class Necromancer extends BaseMonsterPiece{
             if (piece instanceof BasePlayerPiece) {
                 playerPiece.takeDamage(ATTACK_DAMAGE);
                 //=========<ATTACK EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.BULLET_TO_TARGET_ENEMY ,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.BULLET_TO_TARGET_ENEMY ,
                                 GameManager.getInstance().player ,
                                 getRow(), getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(11) ,
+                                EffectMaker.getInstance().createInPlaceEffects(11) ,
                                 new EffectConfig(-2 , -5 , 0 , 1.3) );
                 //===========================================================================================
                 break;
@@ -257,11 +257,11 @@ public class Necromancer extends BaseMonsterPiece{
         // If the new position is valid, summon the Zombie there
         if ((GameManager.getInstance().piecesPosition[newRow][newCol] == null) && (GameManager.getInstance().isEmptySquare(newRow, newCol))) {
             //=========<SKILL EFFECT>====================================================================
-            EffectManager.getInstance()
-                    .renderEffect( EffectManager.TYPE.ON_SELF ,
+            EffectMaker.getInstance()
+                    .renderEffect( EffectMaker.TYPE.ON_SELF ,
                             GameManager.getInstance().player ,
                             newRow, newCol,
-                            EffectManager.getInstance().createInPlaceEffects(7) ,
+                            EffectMaker.getInstance().createInPlaceEffects(7) ,
                             new EffectConfig(-8 , -40 , 0 , 1.1) );
             //===========================================================================================
 

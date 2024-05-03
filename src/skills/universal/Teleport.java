@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.players.BasePlayerPiece;
 import skills.BaseSkill;
@@ -35,11 +35,11 @@ public class Teleport extends BaseSkill {
 
 
         //=========<SKILL EFFECT PHASE 1>====================================================================
-        EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.ON_SELF ,
+        EffectMaker.getInstance()
+                .renderEffect( EffectMaker.TYPE.ON_SELF ,
                         player ,
                         player.getRow(), player.getCol() ,
-                        EffectManager.getInstance().createInPlaceEffects(21) ,
+                        EffectMaker.getInstance().createInPlaceEffects(21) ,
                         new EffectConfig(0 , -4 , 0 , 1.4) );
         //===========================================================================================);
 

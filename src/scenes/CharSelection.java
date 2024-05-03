@@ -11,7 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import logic.GameManager;
 import utils.ImageScaler;
@@ -30,17 +29,17 @@ import pieces.Healable;
 import java.util.ArrayList;
 
 public class CharSelection {
-    Scene scene;
-    Pane rootPane;
+    private Scene scene;
+    private Pane rootPane;
 
-    Button playBtn;
-    Button returnBtn;
+    private Button playBtn;
+    private Button returnBtn;
 
-    StackPane scrollPaneContainer;
-    ScrollPane scrollPane;
+    private StackPane scrollPaneContainer;
+    private ScrollPane scrollPane;
 
-    static CharInfoBox charInfoBox;
-    static CharCard selectedCard;
+    private static CharInfoBox charInfoBox;
+    private static CharCard selectedCard;
 
 
     public CharSelection(){
@@ -201,382 +200,338 @@ public class CharSelection {
         return gridPane;
     }
 
-    public VBox makeCharacterCard(BasePlayerPiece piece){
-        VBox card = new VBox();
-        card.alignmentProperty().set(Pos.BOTTOM_CENTER);
-        card.setPrefSize(200,200);
-        card.setBackground(new Background(new BackgroundFill(Color.web("#e6dbc4") , new CornerRadii(5) , Insets.EMPTY)));
-
-        StackPane charImageContainer = new StackPane();
-        charImageContainer.setPrefWidth(200);
-        charImageContainer.setPadding(new Insets(0,0,15,0));
-        //character image
-        ImageView charImage = new ImageView(ImageScaler.resample(piece.getTexture().getImage(),4));
-        charImage.setPreserveRatio(true);
-        charImageContainer.getChildren().addAll(charImage);
-
-        card.getChildren().addAll(charImageContainer , new Rectangle(200 , 72 , Color.CHOCOLATE));
-
-        //setup hover/click event
-        card.setOnMouseEntered(mouseEvent -> {
-            card.setStyle(
-                    "-fx-scale-x:1.02; " +
-                    "-fx-scale-y:1.02;"
-            );
-        });
-        card.setOnMouseExited(mouseEvent -> {
-            card.setStyle("-fx-border:none");
-        });
-
-
-
-        return card;
-    }
-
     public Scene getScene(){
         return scene;
     }
 
 
-}
+    //=========<Inner Class>======================================
 
-//===================================================
+    class CharCard extends VBox{
 
-class CharCard extends VBox{
+        public BasePlayerPiece charData;
 
-    public BasePlayerPiece charData;
+        public CharCard(BasePlayerPiece piece){
 
-    public CharCard(BasePlayerPiece piece){
+            charData = piece;
 
-        charData = piece;
+            this.alignmentProperty().set(Pos.BOTTOM_CENTER);
+            this.setPrefSize(200,200);
+            this.setBackground(new Background(new BackgroundFill(Color.web("#e6dbc4") , new CornerRadii(5) , Insets.EMPTY)));
+            this.setCursor(Cursor.HAND);
 
-        this.alignmentProperty().set(Pos.BOTTOM_CENTER);
-        this.setPrefSize(200,200);
-        this.setBackground(new Background(new BackgroundFill(Color.web("#e6dbc4") , new CornerRadii(5) , Insets.EMPTY)));
-        this.setCursor(Cursor.HAND);
+            StackPane charImageContainer = new StackPane();
+            charImageContainer.setPrefWidth(200);
+            charImageContainer.setPadding(new Insets(0,0,15,0));
+            //character image
 
-        StackPane charImageContainer = new StackPane();
-        charImageContainer.setPrefWidth(200);
-        charImageContainer.setPadding(new Insets(0,0,15,0));
-        //character image
+            ImageView charImage = new ImageView(ImageScaler.resample(piece.getTexture().getImage(),4));
+            charImage.setPreserveRatio(true);
+            charImageContainer.getChildren().addAll(charImage);
 
-        ImageView charImage = new ImageView(ImageScaler.resample(piece.getTexture().getImage(),4));
-        charImage.setPreserveRatio(true);
-        charImageContainer.getChildren().addAll(charImage);
+            this.getChildren().add(charImageContainer);
 
-        this.getChildren().add(charImageContainer);
-
-        //----------------<setup hover/click event>----------------------
-        this.setOnMouseEntered(mouseEvent -> {
-            this.setStyle(
-                    "-fx-scale-x:1.02; " +
-                            "-fx-scale-y:1.02;"
-            );
-        });
-
-        this.setOnMouseExited(mouseEvent -> {
-            this.setStyle("-fx-border:none");
-        });
-
-        this.setOnMouseClicked(mouseEvent -> {
-            //card will being focused on clicked, assign clicked in selectedCard
-            if(CharSelection.selectedCard != this){
-                if(CharSelection.selectedCard != null) CharSelection.selectedCard.setBackground(new Background(new BackgroundFill(Color.web("#e6dbc4") , new CornerRadii(5) , Insets.EMPTY)));
-                this.setBackground(new Background(new BackgroundFill(Color.GRAY,new CornerRadii(5),Insets.EMPTY)));
-                CharSelection.selectedCard = this;
-
-                CharSelection.charInfoBox.changeCharInfo(CharSelection.selectedCard.charData);
-            }
-        });
-        //---------------------------------------------------------------
-    }
-
-
-}
-
-
-//===================================================
-
-class CharInfoBox extends Pane  {
-
-    private Text charName; //display character name
-    private VBox innerContainer; //contain character data (stat, desc, skill, etc.)
-
-    private StatBox statBox;
-    private SkillList skillContainer;
-
-    public CharInfoBox(){
-
-        this.setPrefSize(360,550);
-        this.setBackground(new Background(new BackgroundImage(new Image(Config.ui_charInfo_box),BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT)));
-        this.setLayoutX(850);
-        this.setLayoutY(70);
-
-        //name on top of the box
-        charName = new Text();
-        charName.setId("charNameText");
-
-        //-----------<container on charInfoBox Pane>-----------------
-        innerContainer = new VBox();
-        innerContainer.setPrefSize(360,530);
-        innerContainer.setLayoutX(10);
-        innerContainer.setLayoutY(15);
-        innerContainer.setPadding(new Insets(20));
-        innerContainer.setSpacing(20);
-        //------------------------------------------------------------
-
-
-        //add statBox,skillContainer to innerContainer
-        statBox = new StatBox();
-        statBox.setText(999,999,999 , 999);
-        skillContainer = new SkillList();
-        innerContainer.getChildren().addAll(statBox , skillContainer);
-        innerContainer.setVisible(false); //hide at start
-
-        this.getChildren().addAll(innerContainer,charName);
-
-    }
-
-    public void changeCharInfo(BasePlayerPiece piece){
-        innerContainer.setVisible(true);
-
-        //switch to selected character info page
-        charName.setText(piece.getClass().getSimpleName());
-        statBox.changeInfo(piece);
-        skillContainer.changeInfo(piece);
-        skillContainer.displaySkill(0);
-    }
-
-
-}
-
-
-
-//===================================================
-//this class contain text of character stat
-class StatBox extends VBox{
-
-    private HBox hp;
-    private HBox mp;
-    private HBox ap;
-    private HBox atk;
-
-    public StatBox(){
-
-        hp = new HBox();
-        hp.setSpacing(10);
-        hp.setPrefSize(100,30);
-        hp.setAlignment(Pos.CENTER_LEFT);
-        hp.getChildren().add(new ImageView( ImageScaler.resample( new Image(Config.ui_heart_icon),2) ) );
-        hp.getChildren().add(new Text("0"));
-        hp.getChildren().get(0);
-        hp.getChildren().get(1).setStyle("-fx-font-family:x8y12pxTheStrongGamer; -fx-font-size:24; -fx-fill:white;");
-
-        mp = new HBox();
-        mp.setSpacing(10);
-        mp.setPrefSize(100,30);
-        mp.setAlignment(Pos.CENTER_LEFT);
-        mp.getChildren().add(new ImageView( ImageScaler.resample( new Image(Config.ui_mana_icon),2) ) );
-        mp.getChildren().add(new Text("0"));
-        mp.getChildren().get(1).setStyle("-fx-font-family:x8y12pxTheStrongGamer; -fx-font-size:24; -fx-fill:white;");
-
-        ap = new HBox();
-        ap.setSpacing(10);
-        ap.setPrefSize(100,30);
-        ap.setAlignment(Pos.CENTER_LEFT);
-        ap.getChildren().add(new ImageView( ImageScaler.resample( new Image(Config.ui_stamina_icon),2) ) );
-        ap.getChildren().add(new Text("0"));
-        ap.getChildren().get(1).setStyle("-fx-font-family:x8y12pxTheStrongGamer; -fx-font-size:24; -fx-fill:white;");
-
-        atk = new HBox();
-        atk.setSpacing(10);
-        atk.setPrefSize(100,30);
-        atk.setAlignment(Pos.CENTER_LEFT);
-        atk.getChildren().add(new ImageView( ImageScaler.resample( new Image(Config.ui_sword_icon),2) ) );
-        atk.getChildren().add(new Text("0"));
-        atk.getChildren().get(1).setStyle("-fx-font-family:x8y12pxTheStrongGamer; -fx-font-size:24; -fx-fill:white;");
-
-
-        this.getChildren().addAll(hp,mp,ap,atk);
-    }
-
-    public void setText(int hp, int mp, int ap , int atk){
-
-        //set stat number
-        ((Text) this.hp.getChildren().get(1)).setText(String.valueOf(hp));
-        ((Text) this.mp.getChildren().get(1)).setText(String.valueOf(mp));
-        ((Text) this.ap.getChildren().get(1)).setText(String.valueOf(ap));
-        ((Text) this.atk.getChildren().get(1)).setText(String.valueOf(atk));
-    }
-
-    public void changeInfo(BasePlayerPiece piece){
-
-        setText(piece.getMaxHealth(),
-                piece.getMaxMana(),
-                piece.getMaxActionPoint(),
-                piece.getAttackDamage());
-    }
-}
-
-
-
-//===================================================
-class SkillList extends VBox{
-
-    GridPane skillContainer; // display character's skill in here
-    private final int SKILLBOX_WIDTH = 64;
-    private final int SKILLBOX_HEIGHT = 64;
-
-    private ArrayList<StackPane> skills = new ArrayList<>();
-    private BaseSkill[] skillDatas;
-
-    //skill desc. component
-    private Pane skillDescContainer;
-    private VBox skillTextBox;
-    private Text skillNameText;
-    private Text skillText;
-    protected SkillStat skillStat;
-
-    public SkillList(){
-
-        Text boxLabel = new Text("Skills");
-        this.setSpacing(10);
-        boxLabel.setStyle("-fx-font-family:x12y16pxSolidLinker; -fx-font-size:20; -fx-fill:white;");
-
-        skillContainer = createSkillContainer();
-
-
-        skillDescContainer = new VBox();
-        skillDescContainer.setPrefSize(300,200);
-        skillDescContainer.setMaxSize(300,200);
-
-        Text skillContainerLabel = new Text("Description");
-        skillContainerLabel.setStyle("-fx-font-family:x12y16pxSolidLinker; -fx-font-size:16; -fx-fill:white;");
-        skillContainerLabel.setLayoutX(80);
-        skillContainerLabel.setLayoutY(20);
-
-
-        skillText = new Text("Click on skill to get details");
-        skillText.setWrappingWidth(270);
-        skillText.setStyle("-fx-font-family:x16y32pxGridGazer; -fx-font-size:18; -fx-fill:white;");
-
-        skillNameText = new Text("");
-        skillNameText.setStyle("-fx-font-family:x16y32pxGridGazer; -fx-font-size:18; -fx-fill:#00fff4;");
-        skillNameText.setLayoutX(0);
-        skillNameText.setLayoutY(0);
-
-        skillTextBox = new VBox();
-        skillTextBox.setPrefSize(280,120);
-        skillTextBox.setLayoutX(10);
-        skillTextBox.setLayoutY(25);
-        skillTextBox.setStyle("-fx-background-color:#8f94a8");
-        skillTextBox.setPadding(new Insets(5));
-        skillTextBox.getChildren().addAll(skillNameText,skillText);
-        skillTextBox.setSpacing(4);
-        StackPane.setAlignment(skillText,Pos.TOP_LEFT);
-        StackPane.setAlignment(skillNameText,Pos.TOP_LEFT);
-
-
-        skillStat = new SkillStat();
-        skillStat.setLayoutX(10);
-        skillStat.setLayoutY(150);
-
-        skillDescContainer.getChildren().addAll(skillContainerLabel,skillTextBox,skillStat);
-
-        this.getChildren().addAll(
-                boxLabel,
-                skillContainer,
-                skillDescContainer
-        );
-    }
-
-    //change displayed info
-    public void changeInfo(BasePlayerPiece piece){
-        //set skill icon to current character's (as reference)
-        skillDatas = piece.getSkills();
-        //                                    we access this
-        //                                         |
-        //                                         V
-        // skillContainer[ stackPane[ImageView skillIcon , ImageView frame] , stackPane[*,*] , stackPane[*,*] , ... ]
-
-        for(int i = 0; i<4 ; i++){
-            if(skillDatas[i] == null) {
-
-                ((ImageView)((StackPane) skillContainer.getChildren().get(i)).getChildren().get(0))
-                        .setImage(ImageScaler.resample(new Image(Config.LockedSkillIconPath),2));
-
-            }
-            else{
-                ((ImageView)((StackPane) skillContainer.getChildren().get(i)).getChildren().get(0))
-                        .setImage(ImageScaler.resample(new Image(skillDatas[i].getIcon().getImage().getUrl()),2));
-            }
-        }
-
-    }
-
-    //make initial skill container with frame image
-    public GridPane createSkillContainer(){
-
-        GridPane gridPane = new GridPane();
-
-        //set container item's size
-        gridPane.getColumnConstraints()
-                .addAll(new ColumnConstraints(SKILLBOX_WIDTH),
-                        new ColumnConstraints(SKILLBOX_WIDTH),
-                        new ColumnConstraints(SKILLBOX_WIDTH),
-                        new ColumnConstraints(SKILLBOX_WIDTH));
-        gridPane.getRowConstraints().add(new RowConstraints(SKILLBOX_HEIGHT));
-        //set container gap
-        gridPane.setHgap(15);
-
-        //add skill item to container
-        for(int i = 0; i < 4 ; i++){
-            StackPane skillBox = new StackPane();
-            skillBox.setPrefSize(SKILLBOX_WIDTH,SKILLBOX_HEIGHT);
-            //assign eventHandler to each box
-            skillBox.setOnMouseClicked(mouseEvent -> {
-                //which index is clicked
-                int index = skillContainer.getChildren().indexOf( (StackPane)mouseEvent.getSource() );
-                displaySkill(index);
+            //----------------<setup hover/click event>----------------------
+            this.setOnMouseEntered(mouseEvent -> {
+                this.setStyle(
+                        "-fx-scale-x:1.02; " +
+                                "-fx-scale-y:1.02;"
+                );
             });
 
-            ImageView frame = new ImageView(ImageScaler.resample(new Image(Config.FramePath),2));
+            this.setOnMouseExited(mouseEvent -> {
+                this.setStyle("-fx-border:none");
+            });
 
-            skillBox.getChildren().addAll(new ImageView(),frame);
-            skills.add(skillBox);
+            this.setOnMouseClicked(mouseEvent -> {
+                //card will being focused on clicked, assign clicked in selectedCard
+                if(CharSelection.selectedCard != this){
+                    if(CharSelection.selectedCard != null) CharSelection.selectedCard.setBackground(new Background(new BackgroundFill(Color.web("#e6dbc4") , new CornerRadii(5) , Insets.EMPTY)));
+                    this.setBackground(new Background(new BackgroundFill(Color.GRAY,new CornerRadii(5),Insets.EMPTY)));
+                    CharSelection.selectedCard = this;
+
+                    CharSelection.charInfoBox.changeCharInfo(CharSelection.selectedCard.charData);
+                }
+            });
+            //---------------------------------------------------------------
         }
 
-        for(int col =0 ; col<4 ; col++){
-            gridPane.add(skills.get(col),col,0);
-        }
-
-
-        return gridPane;
     }
 
+    class CharInfoBox extends Pane  {
+
+        private Text charName; //display character name
+        private VBox innerContainer; //contain character data (stat, desc, skill, etc.)
+
+        private StatBox statBox;
+        private SkillList skillList;
+
+        public CharInfoBox(){
+
+            this.setPrefSize(360,550);
+            this.setBackground(new Background(new BackgroundImage(new Image(Config.ui_charInfo_box),BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT)));
+            this.setLayoutX(850);
+            this.setLayoutY(70);
+
+            //name on top of the box
+            charName = new Text();
+            charName.setId("charNameText");
+
+            //-----------<container on charInfoBox Pane>-----------------
+            innerContainer = new VBox();
+            innerContainer.setPrefSize(360,530);
+            innerContainer.setLayoutX(10);
+            innerContainer.setLayoutY(15);
+            innerContainer.setPadding(new Insets(20));
+            innerContainer.setSpacing(20);
+            //------------------------------------------------------------
 
 
-    //clicked skill will call this to display its description
-    public void displaySkill(int index){
+            //add statBox,skillContainer to innerContainer
+            statBox = new StatBox();
+            statBox.setText(999,999,999 , 999);
+            skillList = new SkillList();
+            innerContainer.getChildren().addAll(statBox , skillList);
+            innerContainer.setVisible(false); //hide at start
+
+            this.getChildren().addAll(innerContainer,charName);
+
+        }
+
+        public void changeCharInfo(BasePlayerPiece piece){
+            innerContainer.setVisible(true);
+
+            //switch to selected character info page
+            charName.setText(piece.getClass().getSimpleName());
+            statBox.changeInfo(piece);
+            skillList.changeInfo(piece);
+            skillList.displaySkill(0);
+        }
 
 
-        if(skillDatas[index] == null) return;
+    }
 
-        //reset selection frame
-        for(int i = 0 ; i < 4 ; i++){
-            if(i == index){
-                ((ImageView) ((StackPane) skillContainer.getChildren().get(i)).getChildren().get(1)).setImage(ImageScaler.resample(new Image(Config.FrameSelectedPath),2));
-            }else{
-                ((ImageView) ((StackPane) skillContainer.getChildren().get(i)).getChildren().get(1)).setImage(ImageScaler.resample(new Image(Config.FramePath),2));
+    class StatBox extends VBox{
+
+        private HBox hp;
+        private HBox mp;
+        private HBox ap;
+        private HBox atk;
+
+        public StatBox(){
+
+            hp = new HBox();
+            hp.setSpacing(10);
+            hp.setPrefSize(100,30);
+            hp.setAlignment(Pos.CENTER_LEFT);
+            hp.getChildren().add(new ImageView( ImageScaler.resample( new Image(Config.ui_heart_icon),2) ) );
+            hp.getChildren().add(new Text("0"));
+            hp.getChildren().get(0);
+            hp.getChildren().get(1).setStyle("-fx-font-family:x8y12pxTheStrongGamer; -fx-font-size:24; -fx-fill:white;");
+
+            mp = new HBox();
+            mp.setSpacing(10);
+            mp.setPrefSize(100,30);
+            mp.setAlignment(Pos.CENTER_LEFT);
+            mp.getChildren().add(new ImageView( ImageScaler.resample( new Image(Config.ui_mana_icon),2) ) );
+            mp.getChildren().add(new Text("0"));
+            mp.getChildren().get(1).setStyle("-fx-font-family:x8y12pxTheStrongGamer; -fx-font-size:24; -fx-fill:white;");
+
+            ap = new HBox();
+            ap.setSpacing(10);
+            ap.setPrefSize(100,30);
+            ap.setAlignment(Pos.CENTER_LEFT);
+            ap.getChildren().add(new ImageView( ImageScaler.resample( new Image(Config.ui_stamina_icon),2) ) );
+            ap.getChildren().add(new Text("0"));
+            ap.getChildren().get(1).setStyle("-fx-font-family:x8y12pxTheStrongGamer; -fx-font-size:24; -fx-fill:white;");
+
+            atk = new HBox();
+            atk.setSpacing(10);
+            atk.setPrefSize(100,30);
+            atk.setAlignment(Pos.CENTER_LEFT);
+            atk.getChildren().add(new ImageView( ImageScaler.resample( new Image(Config.ui_sword_icon),2) ) );
+            atk.getChildren().add(new Text("0"));
+            atk.getChildren().get(1).setStyle("-fx-font-family:x8y12pxTheStrongGamer; -fx-font-size:24; -fx-fill:white;");
+
+
+            this.getChildren().addAll(hp,mp,ap,atk);
+        }
+
+        public void setText(int hp, int mp, int ap , int atk){
+
+            //set stat number
+            ((Text) this.hp.getChildren().get(1)).setText(String.valueOf(hp));
+            ((Text) this.mp.getChildren().get(1)).setText(String.valueOf(mp));
+            ((Text) this.ap.getChildren().get(1)).setText(String.valueOf(ap));
+            ((Text) this.atk.getChildren().get(1)).setText(String.valueOf(atk));
+        }
+
+        public void changeInfo(BasePlayerPiece piece){
+
+            setText(piece.getMaxHealth(),
+                    piece.getMaxMana(),
+                    piece.getMaxActionPoint(),
+                    piece.getAttackDamage());
+        }
+    }
+
+    class SkillList extends VBox{
+
+        private GridPane skillContainer; // display character's skill in here
+        private final int SKILLBOX_WIDTH = 64;
+        private final int SKILLBOX_HEIGHT = 64;
+
+        private ArrayList<StackPane> skills = new ArrayList<>();
+        private BaseSkill[] skillDatas;
+
+        //skill desc. component
+        private Pane skillDescContainer;
+        private VBox skillTextBox;
+        private Text skillNameText;
+        private Text skillText;
+        protected SkillStat skillStat;
+
+        public SkillList(){
+
+            Text boxLabel = new Text("Skills");
+            this.setSpacing(10);
+            boxLabel.setStyle("-fx-font-family:x12y16pxSolidLinker; -fx-font-size:20; -fx-fill:white;");
+
+            skillContainer = createSkillContainer();
+
+
+            skillDescContainer = new VBox();
+            skillDescContainer.setPrefSize(300,200);
+            skillDescContainer.setMaxSize(300,200);
+
+            Text skillContainerLabel = new Text("Description");
+            skillContainerLabel.setStyle("-fx-font-family:x12y16pxSolidLinker; -fx-font-size:16; -fx-fill:white;");
+            skillContainerLabel.setLayoutX(80);
+            skillContainerLabel.setLayoutY(20);
+
+
+            skillText = new Text("Click on skill to get details");
+            skillText.setWrappingWidth(270);
+            skillText.setStyle("-fx-font-family:x16y32pxGridGazer; -fx-font-size:18; -fx-fill:white;");
+
+            skillNameText = new Text("");
+            skillNameText.setStyle("-fx-font-family:x16y32pxGridGazer; -fx-font-size:18; -fx-fill:#00fff4;");
+            skillNameText.setLayoutX(0);
+            skillNameText.setLayoutY(0);
+
+            skillTextBox = new VBox();
+            skillTextBox.setPrefSize(280,120);
+            skillTextBox.setLayoutX(10);
+            skillTextBox.setLayoutY(25);
+            skillTextBox.setStyle("-fx-background-color:#8f94a8");
+            skillTextBox.setPadding(new Insets(5));
+            skillTextBox.getChildren().addAll(skillNameText,skillText);
+            skillTextBox.setSpacing(4);
+            StackPane.setAlignment(skillText,Pos.TOP_LEFT);
+            StackPane.setAlignment(skillNameText,Pos.TOP_LEFT);
+
+
+            skillStat = new SkillStat();
+            skillStat.setLayoutX(10);
+            skillStat.setLayoutY(150);
+
+            skillDescContainer.getChildren().addAll(skillContainerLabel,skillTextBox,skillStat);
+
+            this.getChildren().addAll(
+                    boxLabel,
+                    skillContainer,
+                    skillDescContainer
+            );
+        }
+
+        //change displayed info
+        public void changeInfo(BasePlayerPiece piece){
+            //set skill icon to current character's (as reference)
+            skillDatas = piece.getSkills();
+            //                                    we access this
+            //                                         |
+            //                                         V
+            // skillContainer[ stackPane[ImageView skillIcon , ImageView frame] , stackPane[*,*] , stackPane[*,*] , ... ]
+
+            for(int i = 0; i<4 ; i++){
+                if(skillDatas[i] == null) {
+
+                    ((ImageView)((StackPane) skillContainer.getChildren().get(i)).getChildren().get(0))
+                            .setImage(ImageScaler.resample(new Image(Config.LockedSkillIconPath),2));
+
+                }
+                else{
+                    ((ImageView)((StackPane) skillContainer.getChildren().get(i)).getChildren().get(0))
+                            .setImage(ImageScaler.resample(new Image(skillDatas[i].getIcon().getImage().getUrl()),2));
+                }
             }
+
         }
 
-        BaseSkill skill = skillDatas[index];
-        skillNameText.setText(skill.getName());
-        skillText.setText(skill.getDescription());
-        skillStat.changeSkillStat(skill);
-    }
+        //make initial skill container with frame image
+        public GridPane createSkillContainer(){
 
+            GridPane gridPane = new GridPane();
+
+            //set container item's size
+            gridPane.getColumnConstraints()
+                    .addAll(new ColumnConstraints(SKILLBOX_WIDTH),
+                            new ColumnConstraints(SKILLBOX_WIDTH),
+                            new ColumnConstraints(SKILLBOX_WIDTH),
+                            new ColumnConstraints(SKILLBOX_WIDTH));
+            gridPane.getRowConstraints().add(new RowConstraints(SKILLBOX_HEIGHT));
+            //set container gap
+            gridPane.setHgap(15);
+
+            //add skill item to container
+            for(int i = 0; i < 4 ; i++){
+                StackPane skillBox = new StackPane();
+                skillBox.setPrefSize(SKILLBOX_WIDTH,SKILLBOX_HEIGHT);
+                //assign eventHandler to each box
+                skillBox.setOnMouseClicked(mouseEvent -> {
+                    //which index is clicked
+                    int index = skillContainer.getChildren().indexOf( (StackPane)mouseEvent.getSource() );
+                    displaySkill(index);
+                });
+
+                ImageView frame = new ImageView(ImageScaler.resample(new Image(Config.FramePath),2));
+
+                skillBox.getChildren().addAll(new ImageView(),frame);
+                skills.add(skillBox);
+            }
+
+            for(int col =0 ; col<4 ; col++){
+                gridPane.add(skills.get(col),col,0);
+            }
+
+
+            return gridPane;
+        }
+
+
+
+        //clicked skill will call this to display its description
+        public void displaySkill(int index){
+
+
+            if(skillDatas[index] == null) return;
+
+            //reset selection frame
+            for(int i = 0 ; i < 4 ; i++){
+                if(i == index){
+                    ((ImageView) ((StackPane) skillContainer.getChildren().get(i)).getChildren().get(1)).setImage(ImageScaler.resample(new Image(Config.FrameSelectedPath),2));
+                }else{
+                    ((ImageView) ((StackPane) skillContainer.getChildren().get(i)).getChildren().get(1)).setImage(ImageScaler.resample(new Image(Config.FramePath),2));
+                }
+            }
+
+            BaseSkill skill = skillDatas[index];
+            skillNameText.setText(skill.getName());
+            skillText.setText(skill.getDescription());
+            skillStat.changeSkillStat(skill);
+        }
+
+    }
 
     class SkillStat extends HBox{
 

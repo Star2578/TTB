@@ -2,7 +2,7 @@ package pieces.enemies;
 
 import logic.GameManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import logic.gameUI.GUIManager;
 import pieces.players.BasePlayerPiece;
 import utils.Config;
@@ -118,11 +118,11 @@ public class Zombie extends BaseMonsterPiece{
     public void attack(BasePlayerPiece playerPiece) {
         GUIManager.getInstance().eventLogDisplay.addLog("Attack Player at " + ATTACK_DAMAGE + " damage!");
         //=========<NORMAL ATTACK EFFECT>====================================================================
-        EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.ON_SELF ,
+        EffectMaker.getInstance()
+                .renderEffect( EffectMaker.TYPE.ON_SELF ,
                         GameManager.getInstance().player ,
                         playerPiece.getRow(), playerPiece.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(9) ,
+                        EffectMaker.getInstance().createInPlaceEffects(9) ,
                         new EffectConfig(-34 , -52 , 0 , 1.5) );
         //===========================================================================================
 

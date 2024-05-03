@@ -7,7 +7,7 @@ import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpawnerManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import logic.gameUI.GUIManager;
 import pieces.BasePiece;
 import pieces.players.BasePlayerPiece;
@@ -198,11 +198,11 @@ public class SlimeBoss extends BaseMonsterPiece {
         BasePlayerPiece player = GameManager.getInstance().player;
 
         //=========<SKILL EFFECT>====================================================================
-        EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.ON_SELF ,
+        EffectMaker.getInstance()
+                .renderEffect( EffectMaker.TYPE.ON_SELF ,
                         GameManager.getInstance().player ,
                         getRow(), getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(6) ,
+                        EffectMaker.getInstance().createInPlaceEffects(6) ,
                         new EffectConfig(-9 , -16 , 0 , 1.1) );
         //===========================================================================================
 
@@ -216,11 +216,11 @@ public class SlimeBoss extends BaseMonsterPiece {
                 }
 
                 //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_SELF ,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.ON_SELF ,
                                 GameManager.getInstance().player ,
                                 newRow, newCol,
-                                EffectManager.getInstance().createInPlaceEffects(6) ,
+                                EffectMaker.getInstance().createInPlaceEffects(6) ,
                                 new EffectConfig(-9 , -16 , 0 , 1.1) );
                 //===========================================================================================
 

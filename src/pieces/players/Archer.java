@@ -6,7 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.gameUI.GUIManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.enemies.BaseMonsterPiece;
 import skills.archer.Halt;
 import skills.archer.Rolling;
@@ -106,11 +106,11 @@ public class Archer extends BasePlayerPiece {
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
 
         //=========<ARROW EFFECT>====================================================================
-        EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.BULLET_TO_TARGET ,
+        EffectMaker.getInstance()
+                .renderEffect( EffectMaker.TYPE.BULLET_TO_TARGET ,
                         this ,
                         monsterPiece.getRow(), monsterPiece.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(13) ,
+                        EffectMaker.getInstance().createInPlaceEffects(13) ,
                         new EffectConfig(-6 , 0 , -10 , 1.5) );
         //===========================================================================================
         PauseTransition pause = new PauseTransition(Duration.seconds(0.45));
@@ -118,11 +118,11 @@ public class Archer extends BasePlayerPiece {
         // Set the action to perform after the pause
         pause.setOnFinished(event -> {
             //=========<ATTACK EFFECT>====================================================================
-            EffectManager.getInstance()
-                    .renderEffect( EffectManager.TYPE.ON_TARGET ,
+            EffectMaker.getInstance()
+                    .renderEffect( EffectMaker.TYPE.ON_TARGET ,
                             this ,
                             monsterPiece.getRow(), monsterPiece.getCol(),
-                            EffectManager.getInstance().createInPlaceEffects(14) ,
+                            EffectMaker.getInstance().createInPlaceEffects(14) ,
                             new EffectConfig(3 , 0 , 0 , 1.2) );
             monsterPiece.takeDamage(getAttackDamage());
             //===========================================================================================

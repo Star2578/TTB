@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import logic.gameUI.GUIManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.enemies.BaseMonsterPiece;
 import skills.knight.Dart;
 import skills.knight.Heal;
@@ -104,11 +104,11 @@ public class Knight extends BasePlayerPiece {
         changeDirection(Integer.compare(monsterPiece.getCol(), getCol()));
 
         //attack effect
-        EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.ON_TARGET ,
+        EffectMaker.getInstance()
+                .renderEffect( EffectMaker.TYPE.ON_TARGET ,
                         this ,
                         monsterPiece.getRow(), monsterPiece.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(0) ,
+                        EffectMaker.getInstance().createInPlaceEffects(0) ,
                         new EffectConfig(0 , 8 , 0 , 1.25) );
 
         System.out.println("Attack success");

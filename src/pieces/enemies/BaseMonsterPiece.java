@@ -7,10 +7,10 @@ import logic.GameManager;
 import logic.SoundManager;
 import logic.SpawnerManager;
 import logic.effect.PopupConfig;
-import logic.effect.PopupManager;
+import logic.effect.PopupMaker;
 import logic.gameUI.GUIManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.BaseStatus;
 import pieces.players.BasePlayerPiece;
@@ -134,19 +134,19 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         //=======<popup when damaged/healed>=============
         if(GameManager.getInstance().displayDamageNumber){
             if(health < getCurrentHealth()){
-                PopupManager.createPopup(
-                        this ,
+                PopupMaker.createPopup(
+                        this.getRow() , this.getCol() ,
                         new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
-                                PopupManager.DAMAGE_COLOR ,
+                                PopupMaker.DAMAGE_COLOR ,
                                 null ,
                                 1)
                 );
             }
             else{
-                PopupManager.createPopup(
-                        this ,
+                PopupMaker.createPopup(
+                        this.getRow() , this.getCol() ,
                         new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
-                                PopupManager.HEAL_COLOR ,
+                                PopupMaker.HEAL_COLOR ,
                                 null ,
                                 1)
                 );
@@ -199,11 +199,11 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
                     throw new RuntimeException(e);
                 }
                 Platform.runLater(()->{
-                    EffectManager.getInstance()
-                            .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                    EffectMaker.getInstance()
+                            .renderEffect( EffectMaker.TYPE.ON_TARGET ,
                                     GameManager.getInstance().player ,
                                     getRow(), getCol(),
-                                    EffectManager.getInstance().createInPlaceEffects(2) ,
+                                    EffectMaker.getInstance().createInPlaceEffects(2) ,
                                     new EffectConfig(0 , 0 , 0 , 1.25) );
                 });
             }).start();
@@ -211,7 +211,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
             //=============================================================
 
             //clear effect when monster's die early
-            EffectManager.getInstance().clearDeadEffect();
+            EffectMaker.getInstance().clearDeadEffect();
 
             System.out.println(this.getClass().getSimpleName() + " is dead @" + getRow() + " " + getCol());
         }
