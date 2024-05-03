@@ -19,7 +19,7 @@ public class Targetlock extends BaseSkill implements Attackable {
     private final int DAMAGE = 7;
     public Targetlock() {
         super("TargetLock", Color.DARKRED,
-                1, 0,
+                5, 2,
                 "Concentrate... Steady aim... SHOOT!",
                 Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav"
         );
