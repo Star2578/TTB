@@ -32,8 +32,8 @@ public class Archer extends BasePlayerPiece {
         maxHp = 10;
         currentHp = maxHp;
 
-        attackDamage = 5; // Base attack for player
-        attackRange = 4;
+        attackDamage = 3; // Base attack for player
+        attackRange = 3;
 
         //add skill
         skills[0] = new Targetlock();
