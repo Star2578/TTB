@@ -4,11 +4,11 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import pieces.BasePiece;
-import pieces.player.BasePlayerPiece;
-import utils.BuffHealth;
+import pieces.players.BasePlayerPiece;
+import pieces.HealthBuffable;
 import utils.Config;
 
-public class GreenPotion extends BasePotion implements BuffHealth {
+public class GreenPotion extends BasePotion implements HealthBuffable {
     private final int MAX_HEALTH = 5;
     private BasePiece target;
 

@@ -4,11 +4,11 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import pieces.BasePiece;
-import pieces.player.BasePlayerPiece;
-import utils.BuffAttack;
+import pieces.players.BasePlayerPiece;
+import pieces.AttackBuffable;
 import utils.Config;
 
-public class PurplePotion extends BasePotion implements BuffAttack {
+public class PurplePotion extends BasePotion implements AttackBuffable {
     private final int ATTACK_BUFF = 1;
     private BasePiece target;
 

@@ -5,9 +5,9 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import logic.GameManager;
-import logic.ImageScaler;
+import utils.ImageScaler;
 import utils.Config;
-import utils.Usable;
+import items.Usable;
 
 import java.util.ArrayList;
 

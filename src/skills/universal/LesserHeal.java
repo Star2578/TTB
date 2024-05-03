@@ -7,12 +7,12 @@ import logic.SoundManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import skills.BaseSkill;
 import utils.Config;
-import utils.Healing;
+import pieces.Healable;
 
-public class LesserHeal extends BaseSkill implements Healing {
+public class LesserHeal extends BaseSkill implements Healable {
     private BasePiece target;
 
     private final int HEAL = 3;

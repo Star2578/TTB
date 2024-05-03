@@ -9,10 +9,10 @@ import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
-import utils.Attack;
+import pieces.Attackable;
 import utils.Config;
 
-public class DragonFire extends BaseSkill implements Attack {
+public class DragonFire extends BaseSkill implements Attackable {
     private BasePiece target;
     private final int DAMAGE = 15;
     public DragonFire() {

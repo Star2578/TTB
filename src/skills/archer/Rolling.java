@@ -1,26 +1,16 @@
 package skills.archer;
 
 import javafx.animation.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.CubicCurveTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import logic.GameManager;
-import logic.ImageScaler;
 import logic.SoundManager;
+import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
-import logic.effect.PopupConfig;
-import logic.effect.PopupManager;
 import pieces.BasePiece;
-import pieces.player.BasePlayerPiece;
 import skills.BaseSkill;
 import utils.Config;
-
-import static utils.Config.SQUARE_SIZE;
 
 public class Rolling extends BaseSkill {
     private BasePiece target;
@@ -44,20 +34,18 @@ public class Rolling extends BaseSkill {
         GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
 
         // change the player position to the target position
-        BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
         boolean isRollLeft = (GameManager.getInstance().player.getCol() > target.getCol());//use in rotating later
+        BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
         pieces[GameManager.getInstance().player.getRow()][GameManager.getInstance().player.getCol()] = null;
         pieces[target.getRow()][target.getCol()] = GameManager.getInstance().player;
 
         // make player move
         GameManager.getInstance().player.moveWithTransition(target.getRow(), target.getCol());
-
         // make player rotate
         RotateTransition rotateTransition = new RotateTransition(Duration.millis(500),GameManager.getInstance().player.animationImage);
         rotateTransition.setFromAngle(0);
         rotateTransition.setToAngle(isRollLeft? -360 : 360);
         rotateTransition.play();
-
 
     }
 

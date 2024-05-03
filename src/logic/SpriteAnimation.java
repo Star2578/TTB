@@ -75,7 +75,6 @@ public class SpriteAnimation extends AnimationTimer {
         }
     }
 
-
     public void changeAnimation(int totalCols , int targetRows ){
         //in our game Sprite sheet design : new row -> new sprite animation
         this.cols = totalCols;
@@ -85,7 +84,6 @@ public class SpriteAnimation extends AnimationTimer {
 
         imageView.setViewport(new Rectangle2D(0,currentRow*frameHeight , frameWidth , frameHeight));
     }
-
 
     @Override
     public SpriteAnimation clone(){

@@ -2,21 +2,14 @@ package pieces.enemies;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import logic.GameManager;
-import logic.SpriteAnimation;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import utils.Config;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-import static utils.Config.BOARD_SIZE;
 import static utils.Config.SQUARE_SIZE;
 
 public class Bomber extends BaseMonsterPiece{

@@ -7,12 +7,12 @@ import logic.SoundManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import skills.BaseSkill;
-import utils.Buff;
+import pieces.Buffable;
 import utils.Config;
 
-public class Rho_Aias extends BaseSkill implements Buff {
+public class Rho_Aias extends BaseSkill implements Buffable {
     private BasePiece target;
 
     private final int BUFF_DURATION = 1;

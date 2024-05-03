@@ -6,14 +6,13 @@ import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
-import logic.ui.GUIManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
-import utils.Attack;
+import pieces.Attackable;
 import utils.Config;
 
-public class Dart extends BaseSkill implements Attack {
+public class Dart extends BaseSkill implements Attackable {
     private BasePiece target;
     private final int DAMAGE = 5;
     private final int KNOCKBACK = 2;

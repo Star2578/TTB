@@ -8,14 +8,12 @@ import logic.effect.Effect;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
-import pieces.enemies.BaseMonsterPiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import skills.BaseSkill;
-import utils.Attack;
-import utils.Buff;
+import pieces.Buffable;
 import utils.Config;
 
-public class IceShield extends BaseSkill implements Buff {
+public class IceShield extends BaseSkill implements Buffable {
     private BasePiece target;
     private final int BUFF_DURATION = 3;
     public IceShield() {

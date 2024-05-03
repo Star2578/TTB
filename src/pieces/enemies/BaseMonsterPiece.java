@@ -1,21 +1,19 @@
 package pieces.enemies;
 
 import javafx.application.Platform;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
-import logic.ImageScaler;
 import logic.SoundManager;
 import logic.SpawnerManager;
 import logic.effect.PopupConfig;
 import logic.effect.PopupManager;
-import logic.ui.GUIManager;
+import logic.gameUI.GUIManager;
 import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.BaseStatus;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import utils.Config;
 
 import java.util.*;

@@ -8,11 +8,11 @@ import logic.effect.EffectConfig;
 import logic.effect.EffectManager;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
-import utils.Attack;
+import pieces.Attackable;
 import skills.BaseSkill;
 import utils.Config;
 
-public class Slash extends BaseSkill implements Attack {
+public class Slash extends BaseSkill implements Attackable {
     private BasePiece target;
     private final int DAMAGE = 10;
     public Slash() {

@@ -4,10 +4,10 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import logic.GameManager;
-import logic.ImageScaler;
+import utils.ImageScaler;
 import logic.SoundManager;
 import pieces.BasePiece;
-import pieces.player.BasePlayerPiece;
+import pieces.players.BasePlayerPiece;
 import utils.Config;
 
 import java.util.ArrayList;

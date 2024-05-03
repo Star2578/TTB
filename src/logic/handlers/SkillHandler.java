@@ -4,7 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import logic.GameManager;
-import logic.ImageScaler;
+import utils.ImageScaler;
 import skills.BaseSkill;
 import utils.Config;
 
