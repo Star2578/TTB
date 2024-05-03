@@ -16,7 +16,7 @@ import utils.Config;
 
 public class Snipe extends BaseSkill implements Attackable {
     private BasePiece target;
-    private final int DAMAGE = 18;
+    private final int DAMAGE = 30;
     public Snipe() {
 
         super("Snipe", Color.DARKRED,

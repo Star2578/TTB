@@ -15,17 +15,17 @@ import utils.Config;
 
 public class Fireball extends BaseSkill implements Attackable {
     private BasePiece target;
-    private final int DAMAGE = 12;
+    private final int DAMAGE = 8;
     public Fireball() {
         super("Fireball", Color.RED,
-                5, 2,
+                6, 2,
                 "Shoot a fireball to the enemies",
                 Config.Rarity.UNCOMMON, "res/SFX/skills/slash/PP_01.wav"
         );
 
         //TODO======================
         icon = new ImageView(Config.FireballPath);
-        range = 5;
+        range = 3;
     }
 
     @Override

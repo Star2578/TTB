@@ -18,6 +18,7 @@ public class Bomb extends BaseMonsterPiece{
     }
     private Bomb.State currentState;
     private int timeLeft = 2;
+    private int damage = 7;
 
     public Bomb() {
         super(0, 0, 1);
@@ -66,7 +67,7 @@ public class Bomb extends BaseMonsterPiece{
 
         BasePlayerPiece player = GameManager.getInstance().player;
 //        if (player.getRow() == getRow() || player.getCol() == getCol()) {
-//            player.takeDamage(player.getCurrentHealth());
+//            player.takeDamage(damage);
 //            GUIManager.getInstance().updateGUI();
 //        }
 //        ------------------------------------------------------------------------
@@ -114,7 +115,7 @@ public class Bomb extends BaseMonsterPiece{
                 int finalCol1 = col;
                 pause.setOnFinished(event -> {
                     if (GameManager.getInstance().piecesPosition[getRow()][finalCol1] instanceof BasePlayerPiece) {
-                        player.takeDamage(player.getCurrentHealth());
+                        player.takeDamage(damage);
                         GUIManager.getInstance().updateGUI();
                     }
                 });
@@ -149,7 +150,7 @@ public class Bomb extends BaseMonsterPiece{
                 int finalCol = col1;
                 pause.setOnFinished(event -> {
                     if (GameManager.getInstance().piecesPosition[getRow()][finalCol] instanceof BasePlayerPiece) {
-                        player.takeDamage(player.getCurrentHealth());
+                        player.takeDamage(damage);
                         GUIManager.getInstance().updateGUI();
                     }
                 });
@@ -184,7 +185,7 @@ public class Bomb extends BaseMonsterPiece{
                 int finalRow = row;
                 pause.setOnFinished(event -> {
                     if (GameManager.getInstance().piecesPosition[finalRow][getCol()] instanceof BasePlayerPiece) {
-                        player.takeDamage(player.getCurrentHealth());
+                        player.takeDamage(damage);
                         GUIManager.getInstance().updateGUI();
                     }
                 });
@@ -218,7 +219,7 @@ public class Bomb extends BaseMonsterPiece{
                 int finalRow1 = row1;
                 pause.setOnFinished(event -> {
                     if (GameManager.getInstance().piecesPosition[finalRow1][getCol()] instanceof BasePlayerPiece) {
-                        player.takeDamage(player.getCurrentHealth());
+                        player.takeDamage(damage);
                         GUIManager.getInstance().updateGUI();
                     }
                 });

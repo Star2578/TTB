@@ -20,7 +20,7 @@ public class Skeleton extends BaseMonsterPiece {
 
     private Skeleton.State currentState;
     private final double ATTACK_RANGE = 5.5; // Why it's .5? Because it's for diagonal
-    private final int VISION_RANGE = 5;
+    private final int VISION_RANGE = 3;
     private final int ATTACK_DAMAGE = 2;
 
     public Skeleton() {

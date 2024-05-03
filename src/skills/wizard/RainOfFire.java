@@ -17,12 +17,12 @@ public class RainOfFire extends BaseSkill implements Attackable {
     private final int DAMAGE = 6;
     public RainOfFire() {
         super("Rain of Fire", Color.DARKORANGE,
-                1, 2,
+                7, 2,
                 "Summon a rain of fire above the enemies for  2 x 2 range around the enemy",
                 Config.Rarity.LEGENDARY, "res/SFX/skills/slash/PP_01.wav");
 
         icon = new ImageView(Config.RainOfFirePath);
-        range = 5;
+        range = 3;
     }
 
     @Override

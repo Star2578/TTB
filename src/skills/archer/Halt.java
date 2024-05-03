@@ -17,11 +17,11 @@ import utils.Config;
 
 public class Halt extends BaseSkill implements Attackable {
     private BasePiece target;
-    private final int DAMAGE = 6;
+    private final int DAMAGE = 5;
     private final int STUN_DURATION = 1;
     public Halt() {
         super("Halt", Color.DARKRED,
-                5, 2,
+                7, 2,
                 "Get STUN on!! \n\n  - Archer probably"
                 , Config.Rarity.RARE, "res/SFX/skills/slash/PP_01.wav");
         icon = new ImageView(Config.HaltPath);

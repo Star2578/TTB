@@ -14,7 +14,7 @@ public class Rolling extends BaseSkill {
     private BasePiece target;
 
     public Rolling() {
-        super("Rolling", Color.BROWN, 0, 2,
+        super("Rolling", Color.BROWN, 3, 0,
                 "Oldest trick in the book to disengage, or the opposite", Config.Rarity.UNCOMMON, Config.sfx_moveSound);
 
         icon = new ImageView(Config.RollingPath);

@@ -14,7 +14,7 @@ import utils.Config;
 
 public class DragonFire extends BaseSkill implements Attackable {
     private BasePiece target;
-    private final int DAMAGE = 15;
+    private final int DAMAGE = 24;
     public DragonFire() {
         super("Dragon Fire", Color.ORANGE,
                 15, 2,

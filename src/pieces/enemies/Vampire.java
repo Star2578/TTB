@@ -24,7 +24,7 @@ public class Vampire extends BaseMonsterPiece{
     public Vampire() {
         super(0, 0, 1);
 
-        maxHp = 11;
+        maxHp = 12;
         currentHp = maxHp;
 
         // Initially in the Neutral/Roaming State
@@ -119,7 +119,7 @@ public class Vampire extends BaseMonsterPiece{
     @Override
     public void attack(BasePlayerPiece playerPiece) {
         System.out.println("Attack Player at " + playerPiece.getCol() + " " + playerPiece.getRow());
-        if (getCurrentHealth() <= getMaxHealth()/2 && useSkill && getCurrentHealth() < playerPiece.getCurrentHealth()) {
+        if (getCurrentHealth() <= getMaxHealth()/2 && useSkill) {
             extraSkill(playerPiece);
             useSkill = false;
             return;
@@ -157,9 +157,8 @@ public class Vampire extends BaseMonsterPiece{
     }
 
     public void extraSkill(BasePlayerPiece playerPiece) {
-        int hp = getCurrentHealth();
-        setCurrentHealth(playerPiece.getCurrentHealth());
-        playerPiece.setCurrentHealth(hp);
+        setCurrentHealth(playerPiece.getCurrentHealth()/2 + getCurrentHealth());
+        playerPiece.setCurrentHealth(playerPiece.getCurrentHealth()/2);
         //=========<SKILL EFFECT>====================================================================
         // Heal Vampire
         EffectMaker.getInstance()
