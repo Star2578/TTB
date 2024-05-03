@@ -14,16 +14,16 @@ import logic.SoundManager;
 import utils.Config;
 
 public class MainMenuScene {
-    Scene scene;
-    Pane rootPane;
+    private Scene scene;
+    private Pane rootPane;
 
-    Button playBtn;
-    Button settingBtn;
-    Button quitBtn;
+    private Button playBtn;
+    private Button settingBtn;
+    private Button quitBtn;
 
-    Text titleText;
-    Rectangle titleRect1;
-    Rectangle titleRect2;
+    private Text titleText;
+    private Rectangle titleRect1;
+    private Rectangle titleRect2;
 
     public MainMenuScene(){
         rootPane = new Pane();
