@@ -971,6 +971,9 @@ public class GameScene {
     private void BossRoom1() {
         placeDungeon(Config.BossRoom1);
 
+        fogPane.getChildren().clear();
+
+
         SlimeBoss slimeBoss = new SlimeBoss();
         slimeBoss.setRow(9);
         slimeBoss.setCol(9);
