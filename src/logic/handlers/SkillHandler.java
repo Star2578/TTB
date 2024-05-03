@@ -19,7 +19,7 @@ public class SkillHandler {
 
     public static void showValidSkillRange(int playerRow, int playerCol, BaseSkill skillSelected) {
         selectionFloor = gameManager.selectionFloor;
-        selectedTiles = gameManager.selectedSkillTiles;
+        selectedTiles = gameManager.availableSkillTiles;
         validMovesCache = gameManager.validMovesCache;
         int range = skillSelected.getRange();
 

@@ -41,7 +41,7 @@ public abstract class BaseSkill {
 
     private int priceGenerator() {
         Random random = new Random();
-        int basePrice = 10; // Starting base price
+        int basePrice = 30; // Starting base price
 
         // Adjust base price based on rarity
         return switch (rarity) {

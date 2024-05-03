@@ -24,12 +24,9 @@ public class SoundManager {
     private Thread backgroundMusicThread;
 
     public SoundManager() {
-        initialize();
-    }
-
-    private void initialize() {
 
     }
+
 
     // Public method to get the singleton instance
     public static SoundManager getInstance() {
@@ -147,15 +144,6 @@ public class SoundManager {
         }
     }
 
-    public String randomSFX(String[] choices) {
-        String sfx;
-        Random random = new Random();
-        int choose = random.nextInt(0, choices.length);
-        sfx = choices[choose];
-
-        return sfx;
-    }
-
     public float getBackgroundMusicVolume() { return backgroundMusicVolume; }
     public void setBackgroundMusicVolume(float backgroundMusicVolume) { this.backgroundMusicVolume = backgroundMusicVolume; }
 
@@ -170,11 +158,5 @@ public class SoundManager {
 
     public static float getMidDecibel() {
         return MID_DECIBEL;
-    }
-    public static float getMaxDecibel() {
-        return MAX_DECIBEL;
-    }
-    public static float getMinDecibel() {
-        return MIN_DECIBEL;
     }
 }

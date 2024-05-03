@@ -18,15 +18,15 @@ public class SpawnerManager {
     private double doorProbability = 5.0; // probability that the door to next dungeon floor would spawn
     public int monsterCount;
     public int freeSquareCount;
-    public BaseMonsterPiece[] monsterPool_1; // monster pool for area 1
-    public BaseMonsterPiece[] monsterPool_2; // Boss monster pool for Boss area
+    public BaseMonsterPiece[] monsterPool; // monster pool for area 1
+    public BaseMonsterPiece[] bossPool; // Boss monster pool for Boss area
 
     public SpawnerManager() {
         initialize();
-        monsterPool_1 = new BaseMonsterPiece[]{
+        monsterPool = new BaseMonsterPiece[]{
                 new Bomber(), new Tiny(), new Zombie(), new Skeleton(), new Vampire(), new Necromancer()
         };
-        monsterPool_2 = new BaseMonsterPiece[]{
+        bossPool = new BaseMonsterPiece[]{
             new SlimeBoss()
         };
     }

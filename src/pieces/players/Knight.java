@@ -34,8 +34,6 @@ public class Knight extends BasePlayerPiece {
         //add skill
         skills[0] = new Slash();
         skills[1] = new Heal();
-        skills[2] = new Dart();
-        skills[3] = new Stomp();
 
         // class specifics skills
         classSpecifics[0] = new Slash();

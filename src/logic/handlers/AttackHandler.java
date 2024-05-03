@@ -20,7 +20,7 @@ public class AttackHandler {
 
     public static void showValidAttackRange(int playerRow, int playerCol) {
         player = gameManager.player;
-        selectedTiles = gameManager.selectedAttackTiles;
+        selectedTiles = gameManager.availableAttackTiles;
         validMovesCache = gameManager.validMovesCache;
         selectionFloor = gameManager.selectionFloor;
 
