@@ -135,7 +135,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         if(GameManager.getInstance().displayDamageNumber){
             if(health < getCurrentHealth()){
                 PopupManager.createPopup(
-                        this ,
+                        this.getRow() , this.getCol() ,
                         new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
                                 PopupManager.DAMAGE_COLOR ,
                                 null ,
@@ -144,7 +144,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
             }
             else{
                 PopupManager.createPopup(
-                        this ,
+                        this.getRow() , this.getCol() ,
                         new PopupConfig( String.valueOf(Math.abs(health-getCurrentHealth())) ,
                                 PopupManager.HEAL_COLOR ,
                                 null ,

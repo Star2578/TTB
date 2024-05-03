@@ -35,10 +35,10 @@ public class PopupManager {
         popupConfig - config of the popup
      */
 
-    public static void createPopup(BasePiece piece , PopupConfig popupConfig){
+    public static void createPopup(int row, int col , PopupConfig popupConfig){
 
-        double posX = piece.getCol() * Config.SQUARE_SIZE + popupConfig.offsetX ;
-        double posY = piece.getRow() * Config.SQUARE_SIZE - popupConfig.offsetY ;
+        double posX = col * Config.SQUARE_SIZE + popupConfig.offsetX ;
+        double posY = row * Config.SQUARE_SIZE - popupConfig.offsetY ;
 
         //new Popup object
         Popup newPopup = new Popup( POPUP_WIDTH * popupConfig.scale , POPUP_HEIGHT * popupConfig.scale );
