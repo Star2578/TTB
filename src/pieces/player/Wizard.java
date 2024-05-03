@@ -51,6 +51,8 @@ public class Wizard extends BasePlayerPiece{
         //add skill
         skills[0] = new Fireball();
         skills[1] = new IceShield();
+        skills[2] = new DragonFire();
+        skills[3] = new RainOfFire();
         // class specifics skills
         classSpecifics[0] = new Fireball();
         classSpecifics[1] = new IceShield();

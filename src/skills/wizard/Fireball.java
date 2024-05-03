@@ -60,6 +60,7 @@ public class Fireball extends BaseSkill implements Attack {
                                         new EffectConfig(-16, -19, 0, 1));
 
                         monsterPiece.takeDamage(DAMAGE); //call it here, so that dead effect will be delayed
+
                     });
 
                 }).start();
