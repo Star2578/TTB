@@ -6,7 +6,7 @@ import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.Effect;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
@@ -60,10 +60,10 @@ public class Bind extends BaseSkill implements Attackable {
                 // Stun monster 3 turn
                 monsterPiece.addBuff(3,"Stun");
                 //=========<STUN EFFECT>====================================================================
-                Effect Stun = EffectManager.getInstance().createInPlaceEffects(8);
+                Effect Stun = EffectMaker.getInstance().createInPlaceEffects(8);
                 Stun.setOwner(target);
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_SELF ,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.ON_SELF ,
                                 GameManager.getInstance().player ,
                                 target.getRow(), target.getCol(),
                                 Stun ,
@@ -75,17 +75,17 @@ public class Bind extends BaseSkill implements Attackable {
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
                 //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.ON_TARGET ,
                                 GameManager.getInstance().player,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(0) ,
+                                EffectMaker.getInstance().createInPlaceEffects(0) ,
                                 new EffectConfig(0 , 8 , 0 , 1.25) );
                 //===========================================================================================
 
                 if (!monsterPiece.isAlive()) {
                     GameManager.getInstance().gameScene.removePiece(monsterPiece);
-                    EffectManager.getInstance().clearDeadEffect();
+                    EffectMaker.getInstance().clearDeadEffect();
                 }
             }
         }

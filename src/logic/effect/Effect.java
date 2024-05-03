@@ -25,8 +25,7 @@ public class Effect extends SpriteAnimation {
     private int turnRemain = 1;
     private BasePiece owner;
     private EffectConfig config;
-    public Pane effectPane = new Pane();
-
+  
 
     //constructor with parameters
     public Effect(ImageView imageView, int columns, int rows, int totalFrames, int frameWidth, int frameHeight, float framesPerSecond, boolean loop) {

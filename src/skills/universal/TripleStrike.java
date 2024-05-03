@@ -7,7 +7,7 @@ import javafx.util.Duration;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
@@ -73,11 +73,11 @@ public class TripleStrike extends BaseSkill implements Attackable {
 
                 //=========<SKILL EFFECT>====================================================================
                 //attack effect
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_TARGET ,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.ON_TARGET ,
                                 GameManager.getInstance().player,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(0) ,
+                                EffectMaker.getInstance().createInPlaceEffects(0) ,
                                 new EffectConfig(0 , 8 , 0 , 1.25) );
                 //===========================================================================================
             }

@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.enemies.BaseMonsterPiece;
 import skills.BaseSkill;
@@ -62,36 +62,37 @@ public class Punch extends BaseSkill implements Attackable {
                 // Check for knockback
                 double knockChance = Math.random() * 100; // Generate a random number between 0 and 100
                 if (knockChance <= 50) { // 50% chance for knockback
-                    int currentRow = target.getRow();
-                    int currentCol = target.getCol();
-                    int directionRow = GameManager.getInstance().player.getRow() - currentRow;
-                    int directionCol = GameManager.getInstance().player.getCol() - currentCol;
+
+                    int currentRow = GameManager.getInstance().player.getRow();
+                    int currentCol = GameManager.getInstance().player.getCol();
+                    int directionRow = target.getRow() - currentRow;
+                    int directionCol = target.getCol() - currentCol;
                     // Normalize the direction
                     if (directionRow != 0) directionRow /= Math.abs(directionRow);
                     if (directionCol != 0) directionCol /= Math.abs(directionCol);
 
-                    int newRow = 0;
-                    int newCol = 0;
+                    int newRow=target.getRow(),newCol = target.getCol();
                     for (int i = 1; i <= KNOCKBACK; i++) {
-                        newRow = GameManager.getInstance().player.getRow() + directionRow * i;
-                        newCol = GameManager.getInstance().player.getCol() + directionCol * i;
-                        if (!GameManager.getInstance().isEmptySquare(newRow, newCol)) {
+                        if (!GameManager.getInstance().isEmptySquare(target.getRow() + directionRow * i, target.getCol() + directionCol * i)) {
                             break;
                         }
+                        newRow = target.getRow() + directionRow * i;
+                        newCol = target.getCol() + directionCol * i;
                     }
+                        BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
+                        pieces[target.getRow()][target.getCol()] = null;
+                        pieces[newRow][newCol] = target;
+                        target.moveWithTransition(newRow, newCol);
 
-                    GameManager.getInstance().piecesPosition[GameManager.getInstance().player.getRow()][GameManager.getInstance().player.getCol()] = null;
-                    GameManager.getInstance().player.moveWithTransition(newRow, newCol);
-                    GameManager.getInstance().piecesPosition[newRow][newCol] = GameManager.getInstance().player;
                 }
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
                 //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_SELF ,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.ON_SELF ,
                                 GameManager.getInstance().player ,
                                 target.getRow(), target.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(33) ,
+                                EffectMaker.getInstance().createInPlaceEffects(33) ,
                                 new EffectConfig(0 , -16 , 0 , 1.1) );
                 //===========================================================================================
             }

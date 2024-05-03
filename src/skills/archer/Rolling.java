@@ -6,8 +6,6 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SoundManager;
-import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
 import pieces.BasePiece;
 import skills.BaseSkill;
 import utils.Config;

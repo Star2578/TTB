@@ -28,7 +28,7 @@ public class MovementHandler {
         player = gameManager.player;
         piecesPosition = gameManager.piecesPosition;
         validMovesCache = gameManager.validMovesCache;
-        selectedTiles = gameManager.selectedMoveTiles;
+        selectedTiles = gameManager.availableMoveTiles;
         selectionFloor = gameManager.selectionFloor;
 
         // Iterate over adjacent squares and update images based on cached valid moves

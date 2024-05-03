@@ -2,7 +2,7 @@ package pieces.enemies;
 
 import logic.GameManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import logic.gameUI.GUIManager;
 import pieces.players.BasePlayerPiece;
 import utils.Config;
@@ -125,11 +125,11 @@ public class Vampire extends BaseMonsterPiece{
             return;
         }
         //=========<NORMAL ATTACK EFFECT>====================================================================
-        EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.ON_SELF ,
+        EffectMaker.getInstance()
+                .renderEffect( EffectMaker.TYPE.ON_SELF ,
                         GameManager.getInstance().player ,
                         playerPiece.getRow(), playerPiece.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(9) ,
+                        EffectMaker.getInstance().createInPlaceEffects(9) ,
                         new EffectConfig(-34 , -52 , 0 , 1.5) );
         //===========================================================================================
 
@@ -162,19 +162,19 @@ public class Vampire extends BaseMonsterPiece{
         playerPiece.setCurrentHealth(hp);
         //=========<SKILL EFFECT>====================================================================
         // Heal Vampire
-        EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.ON_SELF ,
+        EffectMaker.getInstance()
+                .renderEffect( EffectMaker.TYPE.ON_SELF ,
                         GameManager.getInstance().player ,
                         getRow(), getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(5) ,
+                        EffectMaker.getInstance().createInPlaceEffects(5) ,
                         new EffectConfig(-48 , -52 , 0 , 1.2) );
         //----------------------------------------------------------------------------------------------
         // Attack Player
-        EffectManager.getInstance()
-                .renderEffect( EffectManager.TYPE.ON_SELF ,
+        EffectMaker.getInstance()
+                .renderEffect( EffectMaker.TYPE.ON_SELF ,
                         GameManager.getInstance().player ,
                         playerPiece.getRow(), playerPiece.getCol(),
-                        EffectManager.getInstance().createInPlaceEffects(10) ,
+                        EffectMaker.getInstance().createInPlaceEffects(10) ,
                         new EffectConfig(-30 , -37 , 0 , 1.1) );
         //===========================================================================================
     }

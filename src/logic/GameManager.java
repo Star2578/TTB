@@ -26,8 +26,8 @@ public class GameManager {
 
     private final Properties settingProperties;
     private final Properties gameProperties;
-    private static final String CONFIG_FILE_PATH = "config.properties";
-    private static final String PROGRESSION_FILE_PATH = "config.progression";
+    private static final String CONFIG_FILE = "config.properties";
+    private static final String PROGRESSION_FILE = "config.progression";
 
     // -------- Settings ---------
     public boolean fastUse;
@@ -64,10 +64,10 @@ public class GameManager {
 
     public TileMap wallTileMap = new TileMap(new Image(Config.WallTileMapPath) , 4 , 4,Config.SQUARE_SIZE,Config.SQUARE_SIZE);
 
-    public ArrayList<Point2D> selectedMoveTiles = new ArrayList<>(); // Contain the selected move tile
-    public ArrayList<Point2D> selectedAttackTiles = new ArrayList<>(); // Contain the selected attack tile
-    public ArrayList<Point2D> selectedSkillTiles = new ArrayList<>(); // Contain the selected skill tile
-    public ArrayList<Point2D> selectedItemTiles = new ArrayList<>(); // Contain the selected item tile
+    public ArrayList<Point2D> availableMoveTiles = new ArrayList<>(); // Contain the selected move tile
+    public ArrayList<Point2D> availableAttackTiles = new ArrayList<>(); // Contain the selected attack tile
+    public ArrayList<Point2D> availableSkillTiles = new ArrayList<>(); // Contain the selected skill tile
+    public ArrayList<Point2D> availableItemTiles = new ArrayList<>(); // Contain the selected item tile
 
     public boolean[][] validMovesCache = new boolean[Config.BOARD_SIZE][Config.BOARD_SIZE];
     public BasePiece[][] piecesPosition = new BasePiece[Config.BOARD_SIZE][Config.BOARD_SIZE]; // Where each entity located
@@ -124,10 +124,10 @@ public class GameManager {
         dungeonLevel = 1; // start at 1 bro not 0
         player = playerClass;
         playerSkills = player.getSkills();
-        selectedItemTiles.clear();
-        selectedMoveTiles.clear();
-        selectedAttackTiles.clear();
-        selectedSkillTiles.clear();
+        availableItemTiles.clear();
+        availableMoveTiles.clear();
+        availableAttackTiles.clear();
+        availableSkillTiles.clear();
         selectedSkill = null;
         selectedItem = null;
         inventory.clear();
@@ -169,7 +169,7 @@ public class GameManager {
 
     public void saveGame() {
         // save the game progression
-        try (OutputStream output = new FileOutputStream(PROGRESSION_FILE_PATH)) {
+        try (OutputStream output = new FileOutputStream(PROGRESSION_FILE)) {
             // Progression
             gameProperties.setProperty("s_totalKill", String.valueOf(totalKill));
             gameProperties.setProperty("s_totalMoney", String.valueOf(totalMoney));
@@ -182,10 +182,9 @@ public class GameManager {
             System.out.println("Error when saving game progress:" + e.getMessage());
         }
     }
-
     public void loadGame() {
         // load the game progression
-        try (InputStream input = new FileInputStream(PROGRESSION_FILE_PATH)) {
+        try (InputStream input = new FileInputStream(PROGRESSION_FILE)) {
             gameProperties.load(input);
 
             // Load progression from properties
@@ -202,7 +201,7 @@ public class GameManager {
 
     public void loadSettings() {
         // Implement loading settings from file
-        try (InputStream input = new FileInputStream(CONFIG_FILE_PATH)) {
+        try (InputStream input = new FileInputStream(CONFIG_FILE)) {
             settingProperties.load(input);
 
             // Load settings from properties
@@ -221,7 +220,7 @@ public class GameManager {
     }
     public void saveSettings() {
         // Implement saving settings to file
-        try (OutputStream output = new FileOutputStream(CONFIG_FILE_PATH)) {
+        try (OutputStream output = new FileOutputStream(CONFIG_FILE)) {
             // Save settings to properties
             settingProperties.setProperty("backgroundMusicVolume", String.valueOf(SoundManager.getInstance().getBackgroundMusicVolume()));
             settingProperties.setProperty("backgroundMusicSlider", String.valueOf(SoundManager.getInstance().getBackgroundMusicSlider()));

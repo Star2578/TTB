@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.*;
 import pieces.players.BasePlayerPiece;
 import skills.BaseSkill;
@@ -75,11 +75,11 @@ public class Narcissistic extends BaseSkill implements HealthBuffable, AttackBuf
                 playerPiece.setMaxActionPoint(currentMaxActionPoint + MAX_ACTION_POINT);
 
                 //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_SELF,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.ON_SELF,
                                 GameManager.getInstance().player ,
                                 GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(33) ,
+                                EffectMaker.getInstance().createInPlaceEffects(33) ,
                                 new EffectConfig(9 , 0 , 0 , 1.6) );
                 //===========================================================================================
             }
@@ -100,11 +100,11 @@ public class Narcissistic extends BaseSkill implements HealthBuffable, AttackBuf
                 playerPiece.setAttackDamage(currentAttack + ATTACK_BUFF);
 
                 //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_SELF,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.ON_SELF,
                                 GameManager.getInstance().player ,
                                 GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(34) ,
+                                EffectMaker.getInstance().createInPlaceEffects(34) ,
                                 new EffectConfig(9 , 0 , 0 , 1.6) );
                 //===========================================================================================
             }
@@ -125,11 +125,11 @@ public class Narcissistic extends BaseSkill implements HealthBuffable, AttackBuf
                 playerPiece.setMaxHealth(currentMaxHealth + MAX_HEALTH);
 
                 //=========<SKILL EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.ON_SELF,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.ON_SELF,
                                 GameManager.getInstance().player ,
                                 GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(35) ,
+                                EffectMaker.getInstance().createInPlaceEffects(35) ,
                                 new EffectConfig(9 , 0 , 0 , 1.6) );
                 //===========================================================================================
             }

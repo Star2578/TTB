@@ -4,7 +4,7 @@ import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.players.BasePlayerPiece;
 import pieces.wall.BaseWallPiece;
@@ -157,11 +157,11 @@ public class Skeleton extends BaseMonsterPiece {
             if (piece instanceof BasePlayerPiece) {
                 playerPiece.takeDamage(ATTACK_DAMAGE);
                 //=========<ATTACK EFFECT>====================================================================
-                EffectManager.getInstance()
-                        .renderEffect( EffectManager.TYPE.BULLET_TO_TARGET_ENEMY ,
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.BULLET_TO_TARGET_ENEMY ,
                                 playerPiece ,
                                 getRow(), getCol(),
-                                EffectManager.getInstance().createInPlaceEffects(12) ,
+                                EffectMaker.getInstance().createInPlaceEffects(12) ,
                                 new EffectConfig(-2 , -4 , -10 , 1.7) );
                 //===========================================================================================
 
@@ -171,11 +171,11 @@ public class Skeleton extends BaseMonsterPiece {
                 // Set the action to perform after the pause
                 pause.setOnFinished(event -> {
                     //=========<Blood EFFECT>====================================================================
-                    EffectManager.getInstance()
-                            .renderEffect( EffectManager.TYPE.ON_SELF ,
+                    EffectMaker.getInstance()
+                            .renderEffect( EffectMaker.TYPE.ON_SELF ,
                                     GameManager.getInstance().player ,
                                     playerPiece.getRow(), playerPiece.getCol(),
-                                    EffectManager.getInstance().createInPlaceEffects(9) ,
+                                    EffectMaker.getInstance().createInPlaceEffects(9) ,
                                     new EffectConfig(-34 , -52 , 0 , 1.5) );
                     //===========================================================================================
                 });

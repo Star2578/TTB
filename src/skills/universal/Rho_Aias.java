@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import logic.GameManager;
 import logic.SoundManager;
 import logic.effect.EffectConfig;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import pieces.BasePiece;
 import pieces.players.BasePlayerPiece;
 import skills.BaseSkill;
@@ -40,11 +40,11 @@ public class Rho_Aias extends BaseSkill implements Buffable {
             System.out.println("Use " + name + " on " + player.getClass().getSimpleName());
 
             //=========<SKILL EFFECT>====================================================================
-            EffectManager.getInstance()
-                    .renderEffect( EffectManager.TYPE.ON_SELF ,
+            EffectMaker.getInstance()
+                    .renderEffect( EffectMaker.TYPE.ON_SELF ,
                             GameManager.getInstance().player ,
                             GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
-                            EffectManager.getInstance().createInPlaceEffects(31) ,
+                            EffectMaker.getInstance().createInPlaceEffects(31) ,
                             new EffectConfig(0 , -16 , 0 , 1.1) );
             //===========================================================================================
         }

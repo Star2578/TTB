@@ -35,21 +35,6 @@ public class SceneManager {
         stage.setScene(scene);
     }
 
-    public void switchSceneWithFade(Scene scene) {
-        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), stage.getScene().getRoot());
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0);
-        fadeOut.setOnFinished(e -> {
-            stage.setScene(scene);
-
-            FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), stage.getScene().getRoot());
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-            fadeIn.play();
-        });
-        fadeOut.play();
-    }
-
     public int getScreenHeight() {
         return screenHeight;
     }
@@ -77,12 +62,10 @@ public class SceneManager {
     public void setSummary(SummaryScene summaryScene) {
         this.summaryScene = summaryScene;
     }
-
     public Scene getCharSelectionScene() {
         return charSelectionScene;
     }
     public void setCharSelectionScene(Scene charSelectionScene) {
         this.charSelectionScene = charSelectionScene;
     }
-
 }

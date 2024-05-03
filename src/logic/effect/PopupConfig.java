@@ -4,15 +4,15 @@ import javafx.scene.image.Image;
 
 public class PopupConfig {
 
-    String text = "";
-    String colorHex = "#f5f5f5";
-    double distance = 30;
-    double duration = 600;
-    double scale = 1;
-    double offsetX = 25;
-    double offsetY = 25;
-    Image image;
-    int imageSize = 1;
+    public String text = "";
+    public String colorHex = "#f5f5f5";
+    public double distance = 30;
+    public double duration = 600;
+    public double scale = 1;
+    public double offsetX = 25;
+    public double offsetY = 25;
+    public Image image;
+    public int imageSize = 1;
 
 
     //determine position

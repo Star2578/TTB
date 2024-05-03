@@ -8,14 +8,14 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
-import pieces.players.BasePlayerPiece;
+import pieces.BasePiece;
 import utils.Config;
 
 import java.util.ArrayList;
 
 import static utils.Config.SQUARE_SIZE;
 
-public class EffectManager {
+public class EffectMaker {
 
     private SpriteAnimation[] environmentEffects;
     private ArrayList<Effect> effects = new ArrayList<>();
@@ -31,18 +31,17 @@ public class EffectManager {
         BULLET_TO_TARGET,
         BULLET_TO_TARGET_ENEMY
 
-
     }
-    private static EffectManager instance;
+    private static EffectMaker instance;
 
-    public static EffectManager getInstance() {
+    public static EffectMaker getInstance() {
         if (instance == null) {
-            instance = new EffectManager();
+            instance = new EffectMaker();
         }
         return instance;
     }
 
-    public EffectManager(){
+    public EffectMaker(){
 
         //!!effect ordering matter!!
 
@@ -198,7 +197,7 @@ public class EffectManager {
         return copy;
     }
     
-    public void renderEffect(Enum<TYPE> typeEnum, BasePlayerPiece player , int row , int col, Effect effect , EffectConfig config){
+    public void renderEffect(Enum<TYPE> typeEnum, BasePiece piece , int row , int col, Effect effect , EffectConfig config){
 
         effect.setConfig(config);
         runningEffects.add(effect);
@@ -206,7 +205,7 @@ public class EffectManager {
         if (typeEnum == TYPE.AROUND_SELF){
         //effect will occur around player, also rotate and face to target
 
-            EffectManager.getInstance().effectPane.getChildren().add( effect.imageView );
+            EffectMaker.getInstance().effectPane.getChildren().add( effect.imageView );
 
             //find angle toward enemy
             double x = col - GameManager.getInstance().player.getCol();
@@ -238,7 +237,7 @@ public class EffectManager {
         //effect will occur on target position
 
             //add effect to pane
-            EffectManager.getInstance().effectPane.getChildren().add(effect.imageView);
+            EffectMaker.getInstance().effectPane.getChildren().add(effect.imageView);
 
             //scale effect size + direction
             //effect.imageView.setScaleX(config.scale * player.getCurrentDirection());
@@ -257,7 +256,7 @@ public class EffectManager {
             //effect will occur on target position
 
             //add effect to pane
-            EffectManager.getInstance().effectPane.getChildren().add(effect.imageView);
+            EffectMaker.getInstance().effectPane.getChildren().add(effect.imageView);
 
             //scale effect size + direction
             effect.imageView.setScaleX(config.scale);
@@ -275,7 +274,7 @@ public class EffectManager {
         else if (typeEnum == TYPE.AROUND_SELF_ENEMY){
             //effect will occur around enemy, also rotate and face to target
 
-            EffectManager.getInstance().effectPane.getChildren().add( effect.imageView );
+            EffectMaker.getInstance().effectPane.getChildren().add( effect.imageView );
 
             //find angle toward enemy
             double x = GameManager.getInstance().player.getCol() - col;
@@ -305,7 +304,7 @@ public class EffectManager {
         }
         else if (typeEnum == TYPE.BULLET_TO_TARGET) {
 
-            EffectManager.getInstance().effectPane.getChildren().add(effect.imageView);
+            EffectMaker.getInstance().effectPane.getChildren().add(effect.imageView);
 
             //find angle toward enemy
             double x = - GameManager.getInstance().player.getCol() + col;
@@ -314,10 +313,10 @@ public class EffectManager {
             double angleDegree = Math.atan2(y, x) * (180.0 / Math.PI);
 
             //set effect position (angle is in account)
-            effect.imageView.setX(player.getCol() * SQUARE_SIZE
+            effect.imageView.setX(piece.getCol() * SQUARE_SIZE
                     + (config.distanceFromOrigin * Math.cos(angleRadian))
                     + config.offsetX);
-            effect.imageView.setY(player.getRow() * SQUARE_SIZE
+            effect.imageView.setY(piece.getRow() * SQUARE_SIZE
                     + (config.distanceFromOrigin * Math.sin(angleRadian))
                     + config.offsetY);
             //scale effect size
@@ -334,8 +333,8 @@ public class EffectManager {
             moveTransition.setInterpolator(Interpolator.EASE_IN);
 
             //slowly move to target col,row
-            moveTransition.setToX((col - player.getCol()) * SQUARE_SIZE + config.offsetX);
-            moveTransition.setToY((row - player.getRow()) * SQUARE_SIZE + config.offsetY);
+            moveTransition.setToX((col - piece.getCol()) * SQUARE_SIZE + config.offsetX);
+            moveTransition.setToY((row - piece.getRow()) * SQUARE_SIZE + config.offsetY);
 
             moveTransition.setOnFinished(actionEvent -> {
                 effectPane.getChildren().remove(effect.imageView);
@@ -346,7 +345,7 @@ public class EffectManager {
         }
         else if (typeEnum == TYPE.BULLET_TO_TARGET_ENEMY) {
 
-            EffectManager.getInstance().effectPane.getChildren().add(effect.imageView);
+            EffectMaker.getInstance().effectPane.getChildren().add(effect.imageView);
 
             //find angle toward enemy
             double x = GameManager.getInstance().player.getCol() - col;
@@ -375,8 +374,8 @@ public class EffectManager {
             moveTransition.setInterpolator(Interpolator.EASE_IN);
 
             //slowly move to target col,row
-            moveTransition.setToX((player.getCol() - col) * SQUARE_SIZE + config.offsetX);
-            moveTransition.setToY((player.getRow() - row) * SQUARE_SIZE + config.offsetY);
+            moveTransition.setToX((piece.getCol() - col) * SQUARE_SIZE + config.offsetX);
+            moveTransition.setToY((piece.getRow() - row) * SQUARE_SIZE + config.offsetY);
 
             moveTransition.setOnFinished(actionEvent -> {
                 effectPane.getChildren().remove(effect.imageView);

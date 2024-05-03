@@ -16,7 +16,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import logic.*;
-import logic.effect.EffectManager;
+import logic.effect.EffectMaker;
 import logic.handlers.AttackHandler;
 import logic.handlers.MovementHandler;
 import logic.handlers.SkillHandler;
@@ -48,18 +48,18 @@ public class GameScene {
     private static final double MAX_FOG_VIEW_DISTANT = 2;
 
     private GameManager gameManager = GameManager.getInstance();
-    private EffectManager effectManager = EffectManager.getInstance();
+    private EffectMaker effectMaker = EffectMaker.getInstance();
     private BasePlayerPiece player;
     private GUIManager guiManager;
     private TurnManager turnManager;
     private DungeonGenerator dungeonGenerator;
 
+    private int bufferMaxActionPoint;
 
-
-    private ArrayList<Point2D> selectedAttackTiles = gameManager.selectedAttackTiles;
-    private ArrayList<Point2D> selectedMoveTiles = gameManager.selectedMoveTiles;
-    private ArrayList<Point2D> selectedSkillTiles = gameManager.selectedSkillTiles;
-    private ArrayList<Point2D> selectedItemTiles = gameManager.selectedItemTiles;
+    private ArrayList<Point2D> selectedAttackTiles = gameManager.availableAttackTiles;
+    private ArrayList<Point2D> selectedMoveTiles = gameManager.availableMoveTiles;
+    private ArrayList<Point2D> selectedSkillTiles = gameManager.availableSkillTiles;
+    private ArrayList<Point2D> selectedItemTiles = gameManager.availableItemTiles;
     private boolean[][] validMovesCache = gameManager.validMovesCache; // Valid moves without entity
     private ImageView[][] dungeonFloor = gameManager.dungeonFloor; // The dungeon floor texture
     private ImageView[][] selectionFloor = gameManager.selectionFloor; // The selection floor texture
@@ -103,9 +103,9 @@ public class GameScene {
 
         //this pane contains all effect animation node
         //placed transparently over boardPane
-        effectManager.effectPane.setMaxWidth(SQUARE_SIZE*BOARD_SIZE);
-        effectManager.effectPane.setMaxHeight(SQUARE_SIZE*BOARD_SIZE);
-        effectManager.effectPane.setDisable(true);
+        effectMaker.effectPane.setMaxWidth(SQUARE_SIZE*BOARD_SIZE);
+        effectMaker.effectPane.setMaxHeight(SQUARE_SIZE*BOARD_SIZE);
+        effectMaker.effectPane.setDisable(true);
 
         rightPane = new VBox(); // Pane for right area
         rightPane.setBackground(Background.fill(Color.DARKRED));
@@ -120,7 +120,7 @@ public class GameScene {
 
         // Center the game board using a StackPane
         centerPane = new StackPane();
-        centerPane.getChildren().addAll(boardPane , tilePane , animationPane , effectManager.effectPane);
+        centerPane.getChildren().addAll(boardPane , tilePane , animationPane , effectMaker.effectPane);
 
         if (GameManager.getInstance().fogOfWar) centerPane.getChildren().addAll(fogPane);
 
@@ -192,7 +192,7 @@ public class GameScene {
 
     private void initializeEnvironment() {
         // Add environment pieces (monsters and traps) to the list
-        BaseMonsterPiece[] monsterPool1 = SpawnerManager.getInstance().monsterPool_1;
+        BaseMonsterPiece[] monsterPool1 = SpawnerManager.getInstance().monsterPool;
 
         // clear environmentPieces
         environmentPieces.clear();
@@ -942,6 +942,12 @@ public class GameScene {
         precomputeValidMoves();
         initializeEnvironment();
         initFog(fogPane);
+
+        if (bufferMaxActionPoint > 0 && player.getMaxActionPoint() != bufferMaxActionPoint) {
+            player.setMaxActionPoint(bufferMaxActionPoint);
+            player.setCurrentActionPoint(bufferMaxActionPoint);
+            bufferMaxActionPoint = -1;
+        }
     }
 
     private void safeRoom() {
@@ -977,6 +983,8 @@ public class GameScene {
         SlimeBoss slimeBoss = new SlimeBoss();
         slimeBoss.setRow(9);
         slimeBoss.setCol(9);
+
+        bufferMaxActionPoint = player.getMaxActionPoint();
 
         player.setRow(13);
         player.setCol(6);

@@ -19,7 +19,7 @@ public class ItemHandler {
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
     public static void showValidItemRange(int playerRow, int playerCol, BaseItem itemSelected) {
         selectionFloor = gameManager.selectionFloor;
-        selectedTiles = gameManager.selectedItemTiles;
+        selectedTiles = gameManager.availableItemTiles;
         validMovesCache = gameManager.validMovesCache;
 
         if (itemSelected instanceof Usable usableItem) {
