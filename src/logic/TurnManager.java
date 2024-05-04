@@ -54,9 +54,7 @@ public class TurnManager {
         this.isPlayerTurn = false;
         // End the turn for the player
         System.out.println("Player Turn End");
-        GameManager.getInstance().gameScene.resetSelection(0);
-        GameManager.getInstance().gameScene.resetSelection(1);
-        GameManager.getInstance().gameScene.resetSelection(2);
+        GameManager.getInstance().gameScene.resetSelectionAll();
         player.setCanAct(false);
         currentEnvironmentPieceIndex = 0;
 

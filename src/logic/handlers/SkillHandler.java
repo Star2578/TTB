@@ -12,14 +12,14 @@ import java.util.ArrayList;
 
 public class SkillHandler {
     private static GameManager gameManager = GameManager.getInstance();
-    private static ImageView[][] selectionFloor;
-    private static ArrayList<Point2D> selectedTiles;
     private static boolean[][] validMovesCache;
+    private static ArrayList<Point2D> availableTiles;
+    private static ImageView[][] selectionFloor;
     private static final int BOARD_SIZE = Config.BOARD_SIZE;
 
     public static void showValidSkillRange(int playerRow, int playerCol, BaseSkill skillSelected) {
         selectionFloor = gameManager.selectionFloor;
-        selectedTiles = gameManager.availableSkillTiles;
+        availableTiles = gameManager.availableSkillTiles;
         validMovesCache = gameManager.validMovesCache;
         int range = skillSelected.getRange();
 
@@ -31,7 +31,7 @@ public class SkillHandler {
                     if (!skillSelected.castOnSelf()) {
                         if ((newRow == playerRow && newCol == playerCol)) continue;
                     }
-                    selectedTiles.add(new Point2D(newRow, newCol));
+                    availableTiles.add(new Point2D(newRow, newCol));
                     // Highlight or mark the square to indicate it's within the skill range
                     selectionFloor[newRow][newCol].setImage(ImageScaler.resample(new Image(Config.ValidSkillPath), 2)); // Set texture to indicate valid skill
                 }
