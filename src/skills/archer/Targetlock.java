@@ -16,7 +16,7 @@ import utils.Config;
 
 public class Targetlock extends BaseSkill implements Attackable {
     private BasePiece target;
-    private final int DAMAGE = 190;
+    private final int DAMAGE = 7;
     public Targetlock() {
         super("TargetLock", Color.DARKRED,
                 4, 2,
