@@ -24,7 +24,7 @@ import pieces.*;
 import pieces.players.BasePlayerPiece;
 import utils.*;
 
-public class InventoryDisplay implements Display {
+    public class InventoryDisplay implements Display {
     private VBox view;
     private VBox usableItemsSection;
     private InfoOverlay infoOverlay = new InfoOverlay();

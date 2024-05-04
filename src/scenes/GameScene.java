@@ -154,13 +154,13 @@ public class GameScene {
         // add StackPane to display box overlays
         StackPane stackOverlay = new StackPane();
         root.setLeft(stackOverlay);
-        stackOverlay.getChildren().addAll(leftPane, GUIManager.getInstance().skillSelectDisplay.getSkillInfoOverlay().getView(), GUIManager.getInstance().inventoryDisplay.getInfoOverlay().getView());
+        stackOverlay.getChildren().addAll(leftPane, GUIManager.getInstance().skillSelectDisplay.getInfoOverlay().getView(), GUIManager.getInstance().inventoryDisplay.getInfoOverlay().getView());
 
         root.getChildren().add(GUIManager.getInstance().getActionPointDisplayText());
 
         stackOverlay.setOnMouseMoved(event -> {
             // Update the position of the BoxOverlay to follow the mouse
-            GUIManager.getInstance().skillSelectDisplay.getSkillInfoOverlay().updatePosition(event.getX(), event.getY(), -140, 15);
+            GUIManager.getInstance().skillSelectDisplay.getInfoOverlay().updatePosition(event.getX(), event.getY(), -140, 15);
             GUIManager.getInstance().inventoryDisplay.getInfoOverlay().updatePosition(event.getX(), event.getY(), -140, 15);
         });
         leftPane.getChildren().addAll(guiManager.getPlayerOptionsMenu());
@@ -927,11 +927,14 @@ public class GameScene {
 
         if (GameManager.getInstance().dungeonLevel % 10 == 0) {
             BossRoom1();
-        } else if (GameManager.getInstance().dungeonLevel % 5 == 0) {
+        } else if (GameManager.getInstance().dungeonLevel % 5 == 0 ||
+                    (GameManager.getInstance().dungeonLevel + 1) % 10 == 0) {
             safeRoom();
         } else {
             normalRoom();
         }
+        // clear log after moving on to the new floor
+        GUIManager.getInstance().eventLogDisplay.clearLog();
     }
 
     private void normalRoom() {

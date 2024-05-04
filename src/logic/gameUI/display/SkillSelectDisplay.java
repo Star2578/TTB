@@ -171,7 +171,7 @@ public class SkillSelectDisplay implements Display{
         updateSkillSelect();
     }
 
-    public InfoOverlay getSkillInfoOverlay() {
+    public InfoOverlay getInfoOverlay() {
         return infoOverlay;
     }
     public void enableFrame() {

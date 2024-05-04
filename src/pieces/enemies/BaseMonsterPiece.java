@@ -32,7 +32,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         super(Config.ENTITY_TYPE.MONSTER, new ImageView(Config.PlaceholderPath), row, col, defaultDirection);
         this.validMovesCache = GameManager.getInstance().validMovesCache;
         this.random = new Random();
-        this.moneyDrop = random.nextInt(10, 100);
+        this.moneyDrop = random.nextInt(40, 120);
 
         this.currentDirection = defaultDirection;
     }

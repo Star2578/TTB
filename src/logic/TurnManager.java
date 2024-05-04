@@ -36,7 +36,7 @@ public class TurnManager {
         this.player = GameManager.getInstance().player;
         this.environmentPieces = GameManager.getInstance().environmentPieces;
         this.currentEnvironmentPieceIndex = 0;
-        this.isPlayerTurn = false;
+        this.isPlayerTurn = true;
     }
 
     public void startPlayerTurn() {
