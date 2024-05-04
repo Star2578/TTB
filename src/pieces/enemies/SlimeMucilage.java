@@ -24,7 +24,7 @@ public class SlimeMucilage extends BaseMonsterPiece{
 
         currentState = State.COUNTDOWN; // Initially in the Neutral/Roaming State
 
-        maxHp = 1;
+        maxHp = 999;
         currentHp = maxHp;
         //TODO : Change the animation path
         //configs values for animation
