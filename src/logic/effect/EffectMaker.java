@@ -5,6 +5,8 @@ import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import logic.GameManager;
 import logic.SpriteAnimation;
@@ -189,6 +191,22 @@ public class EffectMaker {
         Effect Universal_Skill_Narcissistic_Buff_Health = new Effect(
                 new ImageView(new Image(Config.skillNarcissisticBuffHealthPath)) , 4 , 1 , 4 , 16 , 16 , 6 , false);
         effects.add(Universal_Skill_Narcissistic_Buff_Health);
+        //Universal Skill Punch 36
+        Effect Universal_Skill_Punch = new Effect(
+                new ImageView(new Image(Config.skillPunchPath)) , 4 , 1 , 4 , 24 , 40 , 8 , false);
+        effects.add(Universal_Skill_Punch);
+        //Universal Skill Punch 37
+        Effect Universal_Skill_Kick = new Effect(
+                new ImageView(new Image(Config.skillKickPath)) , 5 , 1 , 5 , 32 , 32 , 10 , false);
+        effects.add(Universal_Skill_Kick);
+        //Universal Skill Ambush 38
+        Effect Universal_Skill_Ambush = new Effect(
+                new ImageView(new Image(Config.skillAmbushPath)) , 6 , 1 , 6 , 110 , 93 , 13 , false);
+        effects.add(Universal_Skill_Ambush);
+        //Universal Skill Ambush 39
+        Effect Universal_Skill_Ambush_Crit = new Effect(
+                new ImageView(new Image(Config.skillAmbushCritPath)) , 14 , 1 , 14 , 110 , 93 , 13 , false);
+        effects.add(Universal_Skill_Ambush_Crit);
 
     }
 
@@ -239,8 +257,8 @@ public class EffectMaker {
             //add effect to pane
             EffectMaker.getInstance().effectPane.getChildren().add(effect.getImageView());
 
-            //scale effect size + direction
-            //effect.imageView.setScaleX(config.scale * player.getCurrentDirection());
+            //scale effect size
+            effect.getImageView().setScaleX(config.scale);
             effect.getImageView().setScaleY(config.scale);
 
             //set effect on enemy position

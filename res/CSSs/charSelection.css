@@ -49,7 +49,7 @@
 #playBtn{
     -fx-font-family:x16y32pxGridGazer;
     -fx-font-size:32;
-    -fx-pref-width:100;
+    -fx-pref-width:180;
     -fx-background-color:#57465a;
     -fx-border-width:5;
     -fx-border-style:solid outside;

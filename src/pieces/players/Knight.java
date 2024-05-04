@@ -11,6 +11,10 @@ import skills.knight.Dart;
 import skills.knight.Heal;
 import skills.knight.Slash;
 import skills.knight.Stomp;
+import skills.universal.Ambush;
+import skills.universal.BloodLust;
+import skills.universal.Kick;
+import skills.universal.Punch;
 import utils.Config;
 
 import java.util.Map;
@@ -34,6 +38,8 @@ public class Knight extends BasePlayerPiece {
         //add skill
         skills[0] = new Slash();
         skills[1] = new Heal();
+        skills[2] = new BloodLust();
+        skills[3] = new Ambush();
 
         // class specifics skills
         classSpecifics[0] = new Slash();

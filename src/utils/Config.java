@@ -151,6 +151,12 @@ public class Config {
     public static String skillNarcissisticBuffActionPointPath = "sprites/skills/skill_universal/skill_narcissistic_buff_action_point.png";
     public static String skillNarcissisticBuffAttackPath = "sprites/skills/skill_universal/skill_narcissistic_buff_attack.png";
     public static String skillNarcissisticBuffHealthPath = "sprites/skills/skill_universal/skill_narcissistic_buff_health.png";
+    public static String skillPunchPath = "sprites/skills/skill_universal/skill_punch.png";
+    public static String skillKickPath = "sprites/skills/skill_universal/skill_kick.png";
+    public static String skillAmbushPath = "sprites/skills/skill_universal/skill_ambush.png";
+    public static String skillAmbushCritPath = "sprites/skills/skill_universal/skill_ambush_crit.png";
+
+
 
     // BGM
     public static String bgm_8_bit_adventure = "res/BGM/8_Bit_Adventure.wav";

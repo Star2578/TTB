@@ -59,10 +59,9 @@ public class Punch extends BaseSkill implements Attackable {
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
                 GameManager.getInstance().player.decreaseMana(manaCost);
 
-                // Check for knockback
+                // have a chance to knockback enemy
                 double knockChance = Math.random() * 100; // Generate a random number between 0 and 100
                 if (knockChance <= 50) { // 50% chance for knockback
-
                     int currentRow = GameManager.getInstance().player.getRow();
                     int currentCol = GameManager.getInstance().player.getCol();
                     int directionRow = target.getRow() - currentRow;
@@ -72,6 +71,7 @@ public class Punch extends BaseSkill implements Attackable {
                     if (directionCol != 0) directionCol /= Math.abs(directionCol);
 
                     int newRow=target.getRow(),newCol = target.getCol();
+
                     for (int i = 1; i <= KNOCKBACK; i++) {
                         if (!GameManager.getInstance().isEmptySquare(target.getRow() + directionRow * i, target.getCol() + directionCol * i)) {
                             break;
@@ -79,22 +79,25 @@ public class Punch extends BaseSkill implements Attackable {
                         newRow = target.getRow() + directionRow * i;
                         newCol = target.getCol() + directionCol * i;
                     }
-                        BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
-                        pieces[target.getRow()][target.getCol()] = null;
-                        pieces[newRow][newCol] = target;
-                        target.moveWithTransition(newRow, newCol);
 
+                    BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
+                    pieces[target.getRow()][target.getCol()] = null;
+                    pieces[newRow][newCol] = target;
+
+                    //=========<SKILL EFFECT>====================================================================
+                    EffectMaker.getInstance()
+                            .renderEffect( EffectMaker.TYPE.AROUND_SELF ,
+                                    GameManager.getInstance().player ,
+                                    target.getRow(), target.getCol(),
+                                    EffectMaker.getInstance().createInPlaceEffects(36) ,
+                                    new EffectConfig(0, -18 , 28, 1.3) );
+                    //===========================================================================================
+
+                    target.moveWithTransition(newRow, newCol);
                 }
+
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
-                //=========<SKILL EFFECT>====================================================================
-                EffectMaker.getInstance()
-                        .renderEffect( EffectMaker.TYPE.ON_SELF ,
-                                GameManager.getInstance().player ,
-                                target.getRow(), target.getCol(),
-                                EffectMaker.getInstance().createInPlaceEffects(33) ,
-                                new EffectConfig(0 , -16 , 0 , 1.1) );
-                //===========================================================================================
             }
         }
     }

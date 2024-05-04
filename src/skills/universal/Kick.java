@@ -63,16 +63,7 @@ public class Kick extends BaseSkill implements Attackable {
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
-                //=========<SKILL EFFECT>====================================================================
-                EffectMaker.getInstance()
-                        .renderEffect( EffectMaker.TYPE.AROUND_SELF ,
-                                GameManager.getInstance().player ,
-                                target.getRow(), target.getCol(),
-                                EffectMaker.getInstance().createInPlaceEffects(1) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
-                //===========================================================================================
-
-
+                //make player knocked away
                 int currentRow = target.getRow();
                 int currentCol = target.getCol();
                 int directionRow = GameManager.getInstance().player.getRow() - currentRow;
@@ -81,22 +72,36 @@ public class Kick extends BaseSkill implements Attackable {
                 if (directionRow != 0) directionRow /= Math.abs(directionRow);
                 if (directionCol != 0) directionCol /= Math.abs(directionCol);
 
-                int newRow=GameManager.getInstance().player.getRow();
+                int newRow = GameManager.getInstance().player.getRow();
                 int newCol = GameManager.getInstance().player.getCol();
+
                 for (int i = 1; i <= KNOCKBACK; i++) {
                     if (!GameManager.getInstance().isEmptySquare(
-                                    GameManager.getInstance().player.getRow() + directionRow * i,
-                                    GameManager.getInstance().player.getRow() + directionRow * i)) {
+                            GameManager.getInstance().player.getRow() + directionRow * i,
+                            GameManager.getInstance().player.getCol() + directionCol * i)
+                    ){
                         break;
                     }
                     newRow = GameManager.getInstance().player.getRow() + directionRow * i;
                     newCol = GameManager.getInstance().player.getCol() + directionCol * i;
                 }
+
                 BasePiece[][] pieces = GameManager.getInstance().piecesPosition;
                 pieces[GameManager.getInstance().player.getRow()][GameManager.getInstance().player.getCol()] = null;
                 pieces[newRow][newCol] = GameManager.getInstance().player;
+
+                //=========<SKILL EFFECT>====================================================================
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.ON_SELF ,
+                                GameManager.getInstance().player ,
+                                GameManager.getInstance().player.getRow() ,
+                                GameManager.getInstance().player.getCol() ,
+                                EffectMaker.getInstance().createInPlaceEffects(37) ,
+                                new EffectConfig(0 , -12 , 0 , 1.5) );
+                //===========================================================================================
+
                 GameManager.getInstance().player.moveWithTransition(newRow, newCol);
-                
+
             }
         }
     }
