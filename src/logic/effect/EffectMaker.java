@@ -216,6 +216,11 @@ public class EffectMaker {
                 new ImageView(new Image(Config.skillBloodlustHealPath)) , 11 , 1 , 11 , 32 , 32 , 12 , false);
         effects.add(Universal_Skill_Bloodlust_Heal);
 
+        //arrow icon to show whose turn 42
+        Effect Icon_Here_Arrow = new Effect(
+                new ImageView(new Image(Config.here_arrow)) , 20 , 1 , 20 , 32 , 42 , 15 , true);
+        effects.add(Icon_Here_Arrow);
+
     }
 
     public Effect createInPlaceEffects(int index){

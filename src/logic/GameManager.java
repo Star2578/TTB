@@ -95,7 +95,6 @@ public class GameManager {
 
     public GameManager() {
         player = new Knight(0, 0, 1);
-
         playerSkills = player.getSkills();
         boardPane = new GridPane();
         fogPane = new GridPane();
@@ -144,6 +143,7 @@ public class GameManager {
         TurnManager.getInstance().initialize();
         SpawnerManager.getInstance().initialize();
         GUIManager.getInstance().initialize();
+        TurnManager.getInstance().startPlayerTurn();
 
         gameScene = new GameScene();
         // set new game scene

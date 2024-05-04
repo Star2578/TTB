@@ -216,7 +216,6 @@ public class GameScene {
         placeEntityRandomly(player);
         precomputeValidMoves();
         initializeEnvironment();
-
         // fog of war only when play chose
         if (GameManager.getInstance().fogOfWar) initFog(fogPane);
 
@@ -224,7 +223,6 @@ public class GameScene {
 
         guiManager = GUIManager.getInstance();
 
-        turnManager.startPlayerTurn();
     }
 
     private void initFog(GridPane gridPane) {
@@ -367,14 +365,14 @@ public class GameScene {
 
         if (piece instanceof BasePlayerPiece) {
             // Place a text "You're here!" above the player
-            Text here = new Text("You're here!\nV");
+            Text here = new Text("You're here!");
             here.setStyle(
                     "-fx-font-family:x16y32pxGridGazer;" +
                     "-fx-font-size:24;" +
                     "-fx-fill:'white';");
             here.setTextAlignment(TextAlignment.CENTER);
             here.setX(piece.getCol()*SQUARE_SIZE - 45);
-            here.setY(piece.getRow()*SQUARE_SIZE - 30); // Adjust the Y position to place it above the player
+            here.setY(piece.getRow()*SQUARE_SIZE - 56); // Adjust the Y position to place it above the player
             animationPane.getChildren().add(here);
 
             // Animation for the text

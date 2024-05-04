@@ -3,6 +3,8 @@ package logic;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+import logic.effect.Effect;
+import logic.effect.EffectConfig;
 import logic.effect.EffectMaker;
 import logic.gameUI.GUIManager;
 import pieces.BasePiece;
@@ -17,6 +19,8 @@ public class TurnManager {
     private List<BasePiece> environmentPieces;
     private int currentEnvironmentPieceIndex;
     private Timeline waitTimeline;
+
+    private Effect whoseTurnArrow;
 
     public boolean isPlayerTurn;
     private final double DELAY_BETWEEN_ENVIRONMENT = 0.1;
@@ -36,12 +40,17 @@ public class TurnManager {
         this.player = GameManager.getInstance().player;
         this.environmentPieces = GameManager.getInstance().environmentPieces;
         this.currentEnvironmentPieceIndex = 0;
-        this.isPlayerTurn = true;
+        this.isPlayerTurn = false;
+        this.whoseTurnArrow = EffectMaker.getInstance().createInPlaceEffects(42);
+
     }
 
     public void startPlayerTurn() {
         // Start the turn for the player
         this.isPlayerTurn = true;
+        if(!GameManager.getInstance().fogOfWar) {
+            pointArrowTo(player); //point to piece that currently in action
+        }
         player.startTurn();
         player.setCanAct(true);
         GUIManager.getInstance().updateGUI();
@@ -66,6 +75,7 @@ public class TurnManager {
     }
 
     public void startEnvironmentTurn() {
+
         if (!environmentPieces.isEmpty()) {
             // Start the turn for the current environment piece
             BasePiece currentPiece = environmentPieces.get(currentEnvironmentPieceIndex);
@@ -73,11 +83,16 @@ public class TurnManager {
 
             if (currentPiece instanceof BaseMonsterPiece) {
 
+
                 Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(DELAY_BETWEEN_ENVIRONMENT), event -> {
+
                     ((BaseMonsterPiece) currentPiece).performAction(); // Perform action for monsters after a delay
 
+
+                    pointArrowTo(currentPiece); //point to piece that currently in action
+
                     // waiting for the currentPiece to finished it actions
-                    waitTimeline = new Timeline(new KeyFrame(Duration.millis(100), evt -> {
+                    waitTimeline = new Timeline(new KeyFrame(Duration.millis(800), evt -> {
 
                         if (!((BaseMonsterPiece) currentPiece).isEndAction()) {
                             // Continue waiting
@@ -114,5 +129,21 @@ public class TurnManager {
         } else {
             startEnvironmentTurn();
         }
+    }
+
+    private void pointArrowTo(BasePiece piece){
+        //remove arrow and create new one on other piece
+        EffectMaker.getInstance().effectPane.getChildren().remove(whoseTurnArrow.getImageView());
+        EffectMaker.getInstance().runningEffects.remove(whoseTurnArrow);
+        whoseTurnArrow = EffectMaker.getInstance().createInPlaceEffects(42);
+        EffectMaker.getInstance()
+                .renderEffect(
+                        EffectMaker.TYPE.ON_TARGET ,
+                        piece ,
+                        piece.getRow() , piece.getCol() ,
+                        whoseTurnArrow ,
+                        new EffectConfig(0 , -30 , 0 , 0.8)
+                );
+        whoseTurnArrow.bindToOwnerMovement(piece);
     }
 }

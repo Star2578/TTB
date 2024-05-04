@@ -184,6 +184,7 @@ public class Config {
     public static String ui_stamina_icon = "ui/stamina_icon.png";
     public static String ui_charInfo_box = "ui/char_info_box.png";
     public static String ui_charSelect_box = "ui/char_selection_box.png";
+    public static String here_arrow = "sprites/float_arrow.png";
 
 
     public enum ENTITY_TYPE {
