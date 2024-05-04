@@ -56,10 +56,10 @@ public class GameScene {
 
     private int bufferMaxActionPoint;
 
-    private ArrayList<Point2D> selectedAttackTiles = gameManager.availableAttackTiles;
-    private ArrayList<Point2D> selectedMoveTiles = gameManager.availableMoveTiles;
-    private ArrayList<Point2D> selectedSkillTiles = gameManager.availableSkillTiles;
-    private ArrayList<Point2D> selectedItemTiles = gameManager.availableItemTiles;
+    private ArrayList<Point2D> availableAttackTiles = gameManager.availableAttackTiles;
+    private ArrayList<Point2D> availableMoveTiles = gameManager.availableMoveTiles;
+    private ArrayList<Point2D> availableSkillTiles = gameManager.availableSkillTiles;
+    private ArrayList<Point2D> availableItemTiles = gameManager.availableItemTiles;
     private boolean[][] validMovesCache = gameManager.validMovesCache; // Valid moves without entity
     private ImageView[][] dungeonFloor = gameManager.dungeonFloor; // The dungeon floor texture
     private ImageView[][] selectionFloor = gameManager.selectionFloor; // The selection floor texture
@@ -680,37 +680,37 @@ public class GameScene {
 
         if(type == 0){
             //reset move Selected Tiles
-            for (Point2D selectedMoveTile : selectedMoveTiles) {
+            for (Point2D selectedMoveTile : availableMoveTiles) {
                 selectionFloor[(int) selectedMoveTile.getX()][(int) selectedMoveTile.getY()]
                         .setImage(null);
 
             }
-            selectedMoveTiles.clear();
+            availableMoveTiles.clear();
 
         }
         else if(type == 1){
             //reset attack Selected Tiles
-            for (Point2D selectedAttackTile : selectedAttackTiles) {
+            for (Point2D selectedAttackTile : availableAttackTiles) {
                 selectionFloor[(int) selectedAttackTile.getX()][(int) selectedAttackTile.getY()]
                         .setImage(null);
             }
-            selectedAttackTiles.clear();
+            availableAttackTiles.clear();
             GUIManager.getInstance().isInAttackMode = false;
 //            GUIManager.getInstance().updateCursor(scene, Config.DefaultCursor);
         }
         else if (type == 2) {
             //reset skill Selected Tiles
-            for (Point2D selectedSkillTile : selectedSkillTiles) {
+            for (Point2D selectedSkillTile : availableSkillTiles) {
                 selectionFloor[(int) selectedSkillTile.getX()][(int) selectedSkillTile.getY()]
                         .setImage(null);
             }
-            selectedSkillTiles.clear();
+            availableSkillTiles.clear();
             if (gameManager.selectedSkill != null)
                 guiManager.deselectFrame(gameManager.selectedSkill.getFrame());
             gameManager.selectedSkill = null;
         } else if (type == 3) {
             //reset item Selected Tiles
-            for (Point2D selectedItemTile : selectedItemTiles) {
+            for (Point2D selectedItemTile : availableItemTiles) {
                 selectionFloor[(int) selectedItemTile.getX()][(int) selectedItemTile.getY()]
                         .setImage(null);
             }

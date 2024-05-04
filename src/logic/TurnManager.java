@@ -42,7 +42,6 @@ public class TurnManager {
         this.currentEnvironmentPieceIndex = 0;
         this.isPlayerTurn = false;
         this.whoseTurnArrow = EffectMaker.getInstance().createInPlaceEffects(42);
-
     }
 
     public void startPlayerTurn() {

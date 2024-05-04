@@ -14,7 +14,7 @@ public class BloodPact extends BaseSkill implements Attackable {
     private BasePiece target;
 
     private final int HEALTH_COST = 5;
-    private final int DAMAGE = 20;
+    private final int DAMAGE = 25;
     public BloodPact() {
         super("Blood Pact", Color.CRIMSON, 2, 0,
                 "Just 5 of your HP for immense power", Config.Rarity.EPIC, Config.sfx_darkMagicSound);

@@ -18,7 +18,7 @@ public class Stomp extends BaseSkill implements Attackable {
     private final int DAMAGE = 7;
 
     public Stomp() {
-        super("Stomp", Color.DARKRED, 2, 2, "The Knight brings their armored boot crashing down, sending shockwaves rippling through the ground.", Config.Rarity.RARE, "res/SFX/skills/slash/PP_01.wav");
+        super("Stomp", Color.DARKRED, 2, 2, "AOE damage around player", Config.Rarity.RARE, "res/SFX/skills/slash/PP_01.wav");
         icon = new ImageView(Config.StompPath);
         range = 0;
     }

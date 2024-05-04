@@ -18,7 +18,7 @@ public class Punch extends BaseSkill implements Attackable {
     private final int DAMAGE = 3;
     private final int KNOCKBACK = 2;
     public Punch() {
-        super("Punch", Color.ORANGE, 1, 2,
+        super("Punch", Color.ORANGE, 2, 2,
                 "50% chances to knock enemy back", Config.Rarity.UNCOMMON, Config.sfx_attackSound);
 
         icon = new ImageView(Config.PunchPath);

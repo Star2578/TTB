@@ -18,7 +18,7 @@ public class HammerFall extends BaseSkill implements Attackable {
 
     private final int DAMAGE = 10;
     public HammerFall() {
-        super("Hammer Fall", Color.DARKGRAY, 5, 5,
+        super("Hammer Fall", Color.DARKGRAY, 5, 3,
                 "Have 20% chance to crit with 300% damage and 1% to crit 1000%", Config.Rarity.LEGENDARY, "");
 
         icon = new ImageView(Config.HammerFallPath);

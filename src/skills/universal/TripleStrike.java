@@ -18,7 +18,7 @@ public class TripleStrike extends BaseSkill implements Attackable {
     private BasePiece target;
 
     public TripleStrike() {
-        super("Triple Strike", Color.DEEPPINK, 7, 3,
+        super("Triple Strike", Color.DEEPPINK, 6, 3,
                 "Attack 3 times, scale by your normal attack", Config.Rarity.LEGENDARY, Config.sfx_attackSound);
 
         icon = new ImageView(Config.TripleStrikePath);

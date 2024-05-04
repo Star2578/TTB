@@ -18,7 +18,7 @@ public class Bind extends BaseSkill implements Attackable {
 
     private final int DAMAGE = 1;
     public Bind() {
-        super("Bind", Color.PALEGOLDENROD, 0, 1,
+        super("Bind", Color.PALEGOLDENROD, 3, 1,
                 "crouch and tied target legs up, stun it for 3 turns", Config.Rarity.EPIC, Config.sfx_darkMagicSound);
 
         icon = new ImageView(Config.BindPath);
