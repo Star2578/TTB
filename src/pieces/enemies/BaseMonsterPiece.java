@@ -21,7 +21,6 @@ import java.util.*;
 public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
     protected int currentHp;
     protected int maxHp;
-    protected int currentDirection;
     protected boolean isAlive = true;
     protected boolean endAction = false;
     protected boolean[][] validMovesCache; // Cache of valid moves for the entire board
@@ -35,12 +34,7 @@ public abstract class BaseMonsterPiece extends BasePiece implements BaseStatus {
         this.random = new Random();
         this.moneyDrop = random.nextInt(10, 100);
 
-        // insert 1 as default (image facing right)
-        // insert -1 to flip
-        if (defaultDirection == -1) {
-            ImageView imageView = getTexture();
-            imageView.setScaleX(-1); // Flipping the image horizontally
-        }
+        this.currentDirection = defaultDirection;
     }
 
     /******************************************

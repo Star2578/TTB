@@ -57,9 +57,11 @@ public class Ambush extends BaseSkill implements Attackable {
         if (target != null && target != GameManager.getInstance().player) {
             // Perform Attack
             if (target instanceof BaseMonsterPiece monsterPiece) {
-                monsterPiece.takeDamage(DAMAGE);
 
+                // if use from behind, dmg x 3
                 if (monsterPiece.getCurrentDirection() == GameManager.getInstance().player.getCurrentDirection()) {
+                    monsterPiece.takeDamage(DAMAGE * 3);
+                } else {
                     monsterPiece.takeDamage(DAMAGE);
                 }
 

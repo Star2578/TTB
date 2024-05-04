@@ -57,6 +57,7 @@ public abstract class BasePlayerPiece extends BasePiece implements BaseStatus {
         classSpecifics = new BaseSkill[4];
 
         this.currentHp = maxHp;
+        this.currentDirection = defaultDirection;
     }
 
 
