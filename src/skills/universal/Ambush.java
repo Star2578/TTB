@@ -1,5 +1,6 @@
 package skills.universal;
 
+import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import logic.GameManager;
@@ -60,8 +61,33 @@ public class Ambush extends BaseSkill implements Attackable {
 
                 // if use from behind, dmg x 3
                 if (monsterPiece.getCurrentDirection() == GameManager.getInstance().player.getCurrentDirection()) {
-                    monsterPiece.takeDamage(DAMAGE * 3);
+                    //=========<SKILL CRIT EFFECT>====================================================================
+                    EffectMaker.getInstance()
+                            .renderEffect( EffectMaker.TYPE.ON_TARGET ,
+                                    GameManager.getInstance().player ,
+                                    target.getRow(), target.getCol(),
+                                    EffectMaker.getInstance().createInPlaceEffects(39) ,
+                                    new EffectConfig(-12 , -52 , 0 , 0.8) );
+                    //===========================================================================================
+                    new Thread(()->{
+                        for(int i = 0 ; i < 3 ; i++){
+                            try {
+                                Platform.runLater(()->monsterPiece.takeDamage(DAMAGE));
+                                Thread.sleep(150);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }).start();
                 } else {
+                    //=========<SKILL EFFECT>====================================================================
+                    EffectMaker.getInstance()
+                            .renderEffect( EffectMaker.TYPE.ON_TARGET ,
+                                    GameManager.getInstance().player ,
+                                    target.getRow(), target.getCol(),
+                                    EffectMaker.getInstance().createInPlaceEffects(38) ,
+                                    new EffectConfig(-12 , -56 , 0 , 1) );
+                    //===========================================================================================
                     monsterPiece.takeDamage(DAMAGE);
                 }
 
@@ -69,14 +95,7 @@ public class Ambush extends BaseSkill implements Attackable {
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
-                //=========<SKILL EFFECT>====================================================================
-                EffectMaker.getInstance()
-                        .renderEffect( EffectMaker.TYPE.AROUND_SELF ,
-                                GameManager.getInstance().player ,
-                                target.getRow(), target.getCol(),
-                                EffectMaker.getInstance().createInPlaceEffects(1) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
-                //===========================================================================================
+
             }
         }
     }

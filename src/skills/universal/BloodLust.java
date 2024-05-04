@@ -20,9 +20,9 @@ public class BloodLust extends BaseSkill implements Attackable, Healable {
     private final int DAMAGE = 9;
     private final int HEAL = 5;
     public BloodLust() {
-        super("Blood Lust", Color.CRIMSON, 5, 5,
+        super("Blood Lust", Color.CRIMSON, 0, 0,
                 "More damage if target not at full health, heal if killed", Config.Rarity.LEGENDARY, Config.sfx_attackSound);
-
+//mana 5 ap 5
         icon = new ImageView(Config.BloodLustPath);
         range = 1;
     }
@@ -58,13 +58,23 @@ public class BloodLust extends BaseSkill implements Attackable, Healable {
         if (target != null && target != GameManager.getInstance().player) {
             // Perform Attack
             if (target instanceof BaseMonsterPiece monsterPiece) {
+
                 if (monsterPiece.getCurrentHealth() != monsterPiece.getMaxHealth()) {
                     monsterPiece.takeDamage(DAMAGE + 5);
                 } else {
                     monsterPiece.takeDamage(DAMAGE);
                 }
 
-                if (!monsterPiece.isAlive()){
+                //=========<SKILL BLOOD EFFECT>====================================================================
+                EffectMaker.getInstance()
+                        .renderEffect( EffectMaker.TYPE.ON_TARGET ,
+                                GameManager.getInstance().player ,
+                                target.getRow(), target.getCol(),
+                                EffectMaker.getInstance().createInPlaceEffects(40) ,
+                                new EffectConfig(-24 , -40 , 0 , 0.8) );
+                //===========================================================================================
+
+                if (!monsterPiece.isAlive()) {
                     heal();
                 }
 
@@ -72,14 +82,7 @@ public class BloodLust extends BaseSkill implements Attackable, Healable {
                 GameManager.getInstance().player.decreaseMana(manaCost);
                 System.out.println("Use " + name + " on " + monsterPiece.getClass().getSimpleName());
 
-                //=========<SKILL EFFECT>====================================================================
-                EffectMaker.getInstance()
-                        .renderEffect( EffectMaker.TYPE.AROUND_SELF ,
-                                GameManager.getInstance().player ,
-                                target.getRow(), target.getCol(),
-                                EffectMaker.getInstance().createInPlaceEffects(1) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
-                //===========================================================================================
+
             }
         }
     }
@@ -92,20 +95,17 @@ public class BloodLust extends BaseSkill implements Attackable, Healable {
     @Override
     public void heal() {
         if (target != null) {
-            if (target instanceof BasePlayerPiece playerPiece) {
-                int currentHealth = playerPiece.getCurrentHealth();
+            int currentHealth = GameManager.getInstance().player.getCurrentHealth();
+            GameManager.getInstance().player.setCurrentHealth(currentHealth + HEAL);
 
-                playerPiece.setCurrentHealth(currentHealth + HEAL);
-
-                //=========<SKILL EFFECT>====================================================================
-                EffectMaker.getInstance()
-                        .renderEffect( EffectMaker.TYPE.ON_TARGET ,
-                                GameManager.getInstance().player ,
-                                GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
-                                EffectMaker.getInstance().createInPlaceEffects(5) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
-                //===========================================================================================
-            }
+            //=========<SKILL HEAL EFFECT>====================================================================
+            EffectMaker.getInstance()
+                    .renderEffect( EffectMaker.TYPE.ON_SELF ,
+                            GameManager.getInstance().player ,
+                            GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
+                            EffectMaker.getInstance().createInPlaceEffects(41) ,
+                            new EffectConfig(0 , -8 , 0 , 1.5) );
+            //===========================================================================================
         }
     }
 

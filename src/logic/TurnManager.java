@@ -84,14 +84,8 @@ public class TurnManager {
                             return;
                         }
                         // Move to the next environment piece
-<<<<<<< HEAD
-                        if (player.isAlive())
-                            cycleNextEnvironment();
-||||||| parent of f9d6d8c (add punch,kick effect, fix hovered button bug)
-                        cycleNextEnvironment();
-=======
                         if(player.isAlive()) cycleNextEnvironment();
->>>>>>> f9d6d8c (add punch,kick effect, fix hovered button bug)
+
                     }));
                     waitTimeline.setCycleCount(Timeline.INDEFINITE);
                     waitTimeline.play();

@@ -205,8 +205,16 @@ public class EffectMaker {
         effects.add(Universal_Skill_Ambush);
         //Universal Skill Ambush 39
         Effect Universal_Skill_Ambush_Crit = new Effect(
-                new ImageView(new Image(Config.skillAmbushCritPath)) , 14 , 1 , 14 , 110 , 93 , 13 , false);
+                new ImageView(new Image(Config.skillAmbushCritPath)) , 14 , 1 , 14 , 110 , 93 , 15 , false);
         effects.add(Universal_Skill_Ambush_Crit);
+        //Universal Skill Ambush 40
+        Effect Universal_Skill_Bloodlust = new Effect(
+                new ImageView(new Image(Config.skillBloodlustPath)) , 9 , 1 , 9 , 110 , 93 , 15 , false);
+        effects.add(Universal_Skill_Bloodlust);
+        //Universal Skill Ambush 41
+        Effect Universal_Skill_Bloodlust_Heal = new Effect(
+                new ImageView(new Image(Config.skillBloodlustHealPath)) , 11 , 1 , 11 , 32 , 32 , 12 , false);
+        effects.add(Universal_Skill_Bloodlust_Heal);
 
     }
 

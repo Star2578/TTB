@@ -155,6 +155,8 @@ public class Config {
     public static String skillKickPath = "sprites/skills/skill_universal/skill_kick.png";
     public static String skillAmbushPath = "sprites/skills/skill_universal/skill_ambush.png";
     public static String skillAmbushCritPath = "sprites/skills/skill_universal/skill_ambush_crit.png";
+    public static String skillBloodlustPath = "sprites/skills/skill_universal/skill_bloodlust.png";
+    public static String skillBloodlustHealPath = "sprites/skills/skill_universal/skill_bloodlust_heal.png";
 
 
 
