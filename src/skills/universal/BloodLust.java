@@ -20,9 +20,8 @@ public class BloodLust extends BaseSkill implements Attackable, Healable {
     private final int DAMAGE = 9;
     private final int HEAL = 5;
     public BloodLust() {
-        super("Blood Lust", Color.CRIMSON, 0, 0,
+        super("Blood Lust", Color.CRIMSON, 5, 5,
                 "More damage if target not at full health, heal if killed", Config.Rarity.LEGENDARY, Config.sfx_attackSound);
-//mana 5 ap 5
         icon = new ImageView(Config.BloodLustPath);
         range = 1;
     }
