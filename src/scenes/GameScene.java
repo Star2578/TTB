@@ -947,8 +947,11 @@ public class GameScene {
         initFog(fogPane);
 
         if (bufferMaxActionPoint > 0 && player.getMaxActionPoint() != bufferMaxActionPoint) {
-            player.setMaxActionPoint(bufferMaxActionPoint);
-            player.setCurrentActionPoint(bufferMaxActionPoint);
+            // player may have drink +max actionPoint
+            int additionalActionPoints = player.getMaxActionPoint() > 5 ? player.getMaxActionPoint() - 5 : 0;
+
+            player.setMaxActionPoint(bufferMaxActionPoint + additionalActionPoints);
+            player.setCurrentActionPoint(player.getMaxActionPoint());
             bufferMaxActionPoint = -1;
         }
     }

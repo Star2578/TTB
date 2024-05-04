@@ -460,10 +460,10 @@ public class Dealer extends BaseNpcPiece {
             skillShopGrid.add(button, col, row+2);
         }
 
-        Button rerollItem = new Button("Reroll Item  (250)");
+        Button rerollItem = new Button("Reroll Item  (100)");
         rerollItem.setStyle("-fx-max-width: Infinity;");
         rerollItem.setOnMouseClicked(mouseEvent -> {
-            int cost = 250;
+            int cost = 100;
 
             if (GameManager.getInstance().playerMoney >= cost) {
                 GameManager.getInstance().playerMoney -= cost;
@@ -475,10 +475,10 @@ public class Dealer extends BaseNpcPiece {
             }
         });
 
-        Button rerollSkill = new Button("Reroll Skill  (250)");
+        Button rerollSkill = new Button("Reroll Skill  (100)");
         rerollSkill.setStyle("-fx-max-width: Infinity;");
         rerollSkill.setOnMouseClicked(mouseEvent -> {
-            int cost = 250;
+            int cost = 100;
 
             if (GameManager.getInstance().playerMoney >= cost) {
                 GameManager.getInstance().playerMoney -= cost;
