@@ -19,7 +19,7 @@ public class Skeleton extends BaseMonsterPiece {
     }
 
     private Skeleton.State currentState;
-    private final double ATTACK_RANGE = 5.5; // Why it's .5? Because it's for diagonal
+    private final double ATTACK_RANGE = 4.5; // Why it's .5? Because it's for diagonal
     private final int VISION_RANGE = 3;
     private final int ATTACK_DAMAGE = 4;
 
@@ -102,7 +102,7 @@ public class Skeleton extends BaseMonsterPiece {
         int dCol = Integer.compare(GameManager.getInstance().player.getCol(), getCol());
 
         // If the player is within attack range, attempt to attack
-        if (distance <= VISION_RANGE) {
+        if (distance <= ATTACK_RANGE) {
             // Turn to face the player
             changeDirection(dCol);
 

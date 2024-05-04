@@ -34,8 +34,8 @@ public class Effect extends SpriteAnimation {
 
     //constructor using SpriteAnimation object
     public Effect(SpriteAnimation base){
-        super(new ImageView(new Image( base.imageView.getImage().getUrl()))
-                ,base.cols,base.rows,base.totalFrames,base.frameWidth,base.frameHeight,base.fps,base.loop);
+        super(new ImageView(new Image( base.getImageView().getImage().getUrl()))
+                ,base.getCols(),base.getRows(),base.getTotalFrames(),base.getFrameWidth(),base.getFrameHeight(),base.getFps(),base.isLoop());
     }
 
     //clone itself and return

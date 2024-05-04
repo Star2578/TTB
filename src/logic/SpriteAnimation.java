@@ -7,16 +7,16 @@ import javafx.scene.image.ImageView;
 
 public class SpriteAnimation extends AnimationTimer {
 
-    public ImageView imageView; //Image view that will display our sprite
+    protected ImageView imageView; //Image view that will display our sprite
 
-    public final int totalFrames; //Total number of frames in the sequence
-    public final float fps; //frames per second I.E. 24
+    protected final int totalFrames; //Total number of frames in the sequence
+    protected final float fps; //frames per second I.E. 24
 
-    public int cols; //Number of columns on the sprite sheet
-    public int rows; //Number of rows on the sprite sheet
+    protected int cols; //Number of columns on the sprite sheet
+    protected int rows; //Number of rows on the sprite sheet
 
-    public final int frameWidth; //Width of an individual frame
-    public final int frameHeight; //Height of an individual frame
+    protected final int frameWidth; //Width of an individual frame
+    protected final int frameHeight; //Height of an individual frame
 
     protected int currentCol = 0;
     protected int currentRow = 0;
@@ -24,7 +24,7 @@ public class SpriteAnimation extends AnimationTimer {
     protected long lastFrame;
 
     protected boolean isPause = true;
-    public boolean loop;
+    protected boolean loop;
 
     public SpriteAnimation(ImageView imageView, int columns, int rows, int totalFrames, int frameWidth, int frameHeight, float framesPerSecond , boolean loop) {
         this.imageView = imageView;
@@ -90,5 +90,36 @@ public class SpriteAnimation extends AnimationTimer {
         SpriteAnimation clone = new SpriteAnimation(new ImageView(new Image( imageView.getImage().getUrl()))
                 ,cols,rows,totalFrames,frameWidth,frameHeight,fps,loop);
         return clone;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+    public int getTotalFrames() {
+        return totalFrames;
+    }
+    public float getFps() {
+        return fps;
+    }
+    public int getCols() {
+        return cols;
+    }
+    public int getRows() {
+        return rows;
+    }
+    public int getCurrentCol() {
+        return currentCol;
+    }
+    public int getCurrentRow() {
+        return currentRow;
+    }
+    public int getFrameHeight() {
+        return frameHeight;
+    }
+    public int getFrameWidth() {
+        return frameWidth;
+    }
+    public boolean isLoop() {
+        return loop;
     }
 }

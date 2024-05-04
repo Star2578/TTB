@@ -205,7 +205,7 @@ public class EffectMaker {
         if (typeEnum == TYPE.AROUND_SELF){
         //effect will occur around player, also rotate and face to target
 
-            EffectMaker.getInstance().effectPane.getChildren().add( effect.imageView );
+            EffectMaker.getInstance().effectPane.getChildren().add( effect.getImageView() );
 
             //find angle toward enemy
             double x = col - GameManager.getInstance().player.getCol();
@@ -214,22 +214,22 @@ public class EffectMaker {
             double angleDegree = Math.atan2(y , x) * (180.0 / Math.PI);
 
             //set effect position (angle is in account)
-            effect.imageView.setX(GameManager.getInstance().player.getCol()*SQUARE_SIZE
+            effect.getImageView().setX(GameManager.getInstance().player.getCol()*SQUARE_SIZE
                                     + (config.distanceFromOrigin * Math.cos(angleRadian) )
                                     + config.offsetX);
-            effect.imageView.setY(GameManager.getInstance().player.getRow()*SQUARE_SIZE
+            effect.getImageView().setY(GameManager.getInstance().player.getRow()*SQUARE_SIZE
                                     + (config.distanceFromOrigin * Math.sin(angleRadian) )
                                     + config.offsetY);
 
             //rotate effect
-            effect.imageView.setRotate(angleDegree);
+            effect.getImageView().setRotate(angleDegree);
 
             //scale effect size
-            effect.imageView.setScaleX(config.scale);
-            effect.imageView.setScaleY(config.scale);
+            effect.getImageView().setScaleX(config.scale);
+            effect.getImageView().setScaleY(config.scale);
 
-            effect.imageView.toFront();
-            effect.imageView.setDisable(true);
+            effect.getImageView().toFront();
+            effect.getImageView().setDisable(true);
 
             effect.start();
         }
@@ -237,18 +237,18 @@ public class EffectMaker {
         //effect will occur on target position
 
             //add effect to pane
-            EffectMaker.getInstance().effectPane.getChildren().add(effect.imageView);
+            EffectMaker.getInstance().effectPane.getChildren().add(effect.getImageView());
 
             //scale effect size + direction
             //effect.imageView.setScaleX(config.scale * player.getCurrentDirection());
-            effect.imageView.setScaleY(config.scale);
+            effect.getImageView().setScaleY(config.scale);
 
             //set effect on enemy position
-            effect.imageView.setX(col*SQUARE_SIZE + config.offsetX);
-            effect.imageView.setY(row*SQUARE_SIZE + config.offsetY);
+            effect.getImageView().setX(col*SQUARE_SIZE + config.offsetX);
+            effect.getImageView().setY(row*SQUARE_SIZE + config.offsetY);
 
-            effect.imageView.toFront();
-            effect.imageView.setDisable(true);
+            effect.getImageView().toFront();
+            effect.getImageView().setDisable(true);
 
             effect.start();
         }
@@ -256,25 +256,25 @@ public class EffectMaker {
             //effect will occur on target position
 
             //add effect to pane
-            EffectMaker.getInstance().effectPane.getChildren().add(effect.imageView);
+            EffectMaker.getInstance().effectPane.getChildren().add(effect.getImageView());
 
             //scale effect size + direction
-            effect.imageView.setScaleX(config.scale);
-            effect.imageView.setScaleY(config.scale);
+            effect.getImageView().setScaleX(config.scale);
+            effect.getImageView().setScaleY(config.scale);
 
             //set effect on enemy position
-            effect.imageView.setX(col*SQUARE_SIZE + config.offsetX);
-            effect.imageView.setY(row*SQUARE_SIZE + config.offsetY);
+            effect.getImageView().setX(col*SQUARE_SIZE + config.offsetX);
+            effect.getImageView().setY(row*SQUARE_SIZE + config.offsetY);
 
-            effect.imageView.toFront();
-            effect.imageView.setDisable(true);
+            effect.getImageView().toFront();
+            effect.getImageView().setDisable(true);
 
             effect.start();
         }
         else if (typeEnum == TYPE.AROUND_SELF_ENEMY){
             //effect will occur around enemy, also rotate and face to target
 
-            EffectMaker.getInstance().effectPane.getChildren().add( effect.imageView );
+            EffectMaker.getInstance().effectPane.getChildren().add( effect.getImageView() );
 
             //find angle toward enemy
             double x = GameManager.getInstance().player.getCol() - col;
@@ -283,28 +283,28 @@ public class EffectMaker {
             double angleDegree = Math.atan2(y , x) * (180.0 / Math.PI);
 
             //set effect position (angle is in account)
-            effect.imageView.setX(col*SQUARE_SIZE
+            effect.getImageView().setX(col*SQUARE_SIZE
                     + (config.distanceFromOrigin * Math.cos(angleRadian) )
                     + config.offsetX);
-            effect.imageView.setY(row*SQUARE_SIZE
+            effect.getImageView().setY(row*SQUARE_SIZE
                     + (config.distanceFromOrigin * Math.sin(angleRadian) )
                     + config.offsetY);
 
             //rotate effect
-            effect.imageView.setRotate(angleDegree);
+            effect.getImageView().setRotate(angleDegree);
 
             //scale effect size
-            effect.imageView.setScaleX(config.scale);
-            effect.imageView.setScaleY(config.scale);
+            effect.getImageView().setScaleX(config.scale);
+            effect.getImageView().setScaleY(config.scale);
 
-            effect.imageView.toFront();
-            effect.imageView.setDisable(true);
+            effect.getImageView().toFront();
+            effect.getImageView().setDisable(true);
 
             effect.start();
         }
         else if (typeEnum == TYPE.BULLET_TO_TARGET) {
 
-            EffectMaker.getInstance().effectPane.getChildren().add(effect.imageView);
+            EffectMaker.getInstance().effectPane.getChildren().add(effect.getImageView());
 
             //find angle toward enemy
             double x = - GameManager.getInstance().player.getCol() + col;
@@ -313,21 +313,21 @@ public class EffectMaker {
             double angleDegree = Math.atan2(y, x) * (180.0 / Math.PI);
 
             //set effect position (angle is in account)
-            effect.imageView.setX(piece.getCol() * SQUARE_SIZE
+            effect.getImageView().setX(piece.getCol() * SQUARE_SIZE
                     + (config.distanceFromOrigin * Math.cos(angleRadian))
                     + config.offsetX);
-            effect.imageView.setY(piece.getRow() * SQUARE_SIZE
+            effect.getImageView().setY(piece.getRow() * SQUARE_SIZE
                     + (config.distanceFromOrigin * Math.sin(angleRadian))
                     + config.offsetY);
             //scale effect size
-            effect.imageView.setScaleX(config.scale);
-            effect.imageView.setScaleY(config.scale);
+            effect.getImageView().setScaleX(config.scale);
+            effect.getImageView().setScaleY(config.scale);
             //rotate effect
-            effect.imageView.setRotate(angleDegree);
+            effect.getImageView().setRotate(angleDegree);
 
             //prepare transition behaviour for this effect
             TranslateTransition moveTransition = new TranslateTransition();
-            moveTransition.setNode(effect.imageView);
+            moveTransition.setNode(effect.getImageView());
             moveTransition.setDuration(Duration.millis(400));
             moveTransition.setCycleCount(1);
             moveTransition.setInterpolator(Interpolator.EASE_IN);
@@ -337,7 +337,7 @@ public class EffectMaker {
             moveTransition.setToY((row - piece.getRow()) * SQUARE_SIZE + config.offsetY);
 
             moveTransition.setOnFinished(actionEvent -> {
-                effectPane.getChildren().remove(effect.imageView);
+                effectPane.getChildren().remove(effect.getImageView());
             });
 
             effect.start();
@@ -345,7 +345,7 @@ public class EffectMaker {
         }
         else if (typeEnum == TYPE.BULLET_TO_TARGET_ENEMY) {
 
-            EffectMaker.getInstance().effectPane.getChildren().add(effect.imageView);
+            EffectMaker.getInstance().effectPane.getChildren().add(effect.getImageView());
 
             //find angle toward enemy
             double x = GameManager.getInstance().player.getCol() - col;
@@ -354,21 +354,21 @@ public class EffectMaker {
             double angleDegree = Math.atan2(y , x) * (180.0 / Math.PI);
 
             //set effect position (angle is in account)
-            effect.imageView.setX(col*SQUARE_SIZE
+            effect.getImageView().setX(col*SQUARE_SIZE
                     + (config.distanceFromOrigin * Math.cos(angleRadian) )
                     + config.offsetX);
-            effect.imageView.setY(row*SQUARE_SIZE
+            effect.getImageView().setY(row*SQUARE_SIZE
                     + (config.distanceFromOrigin * Math.sin(angleRadian) )
                     + config.offsetY);
             //scale effect size
-            effect.imageView.setScaleX(config.scale);
-            effect.imageView.setScaleY(config.scale);
+            effect.getImageView().setScaleX(config.scale);
+            effect.getImageView().setScaleY(config.scale);
             //rotate effect
-            effect.imageView.setRotate(angleDegree);
+            effect.getImageView().setRotate(angleDegree);
 
             //prepare transition behaviour for this effect
             TranslateTransition moveTransition = new TranslateTransition();
-            moveTransition.setNode(effect.imageView);
+            moveTransition.setNode(effect.getImageView());
             moveTransition.setDuration(Duration.millis(400));
             moveTransition.setCycleCount(1);
             moveTransition.setInterpolator(Interpolator.EASE_IN);
@@ -378,14 +378,14 @@ public class EffectMaker {
             moveTransition.setToY((piece.getRow() - row) * SQUARE_SIZE + config.offsetY);
 
             moveTransition.setOnFinished(actionEvent -> {
-                effectPane.getChildren().remove(effect.imageView);
+                effectPane.getChildren().remove(effect.getImageView());
             });
 
             effect.start();
             moveTransition.play();
         }
 
-        effect.imageView.toFront();
+        effect.getImageView().toFront();
     }
 
     //this method will clear effect in array if the effect is timeout/remains turn is 0
@@ -395,7 +395,7 @@ public class EffectMaker {
         for (Effect effect : runningEffects) {
             if (effect.canKill || effect.getTurnRemain() == 0 || (effect.getOwner() != null && (!(effect.getOwner()).isAlive()))) {
                 //effect is timeout or reach turn limit
-                effectPane.getChildren().remove(effect.imageView);
+                effectPane.getChildren().remove(effect.getImageView());
             }
         }
 
