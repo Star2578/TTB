@@ -9,22 +9,22 @@ public class SpriteAnimation extends AnimationTimer {
 
     protected ImageView imageView; //Image view that will display our sprite
 
-    protected final int totalFrames; //Total number of frames in the sequence
-    protected final float fps; //frames per second I.E. 24
+    private final int totalFrames; //Total number of frames in the sequence
+    private final float fps; //frames per second I.E. 24
 
-    protected int cols; //Number of columns on the sprite sheet
-    protected int rows; //Number of rows on the sprite sheet
+    private int cols; //Number of columns on the sprite sheet
+    private int rows; //Number of rows on the sprite sheet
 
-    protected final int frameWidth; //Width of an individual frame
-    protected final int frameHeight; //Height of an individual frame
+    private final int frameWidth; //Width of an individual frame
+    private final int frameHeight; //Height of an individual frame
 
-    protected int currentCol = 0;
-    protected int currentRow = 0;
+    private int currentCol = 0;
+    private int currentRow = 0;
 
-    protected long lastFrame;
+    private long lastFrame;
 
-    protected boolean isPause = true;
-    protected boolean loop;
+    private boolean isPause = true;
+    private boolean loop;
 
     public SpriteAnimation(ImageView imageView, int columns, int rows, int totalFrames, int frameWidth, int frameHeight, float framesPerSecond , boolean loop) {
         this.imageView = imageView;
