@@ -44,7 +44,7 @@ public class GUIManager {
     private Text actionPointDisplayText;
 
     // Buttons
-    VBox playerOptionButtonBox;
+    private VBox playerOptionButtonBox;
     private Button endTurnButton;
     private Button attackButton;
 
@@ -60,6 +60,13 @@ public class GUIManager {
 
     public GUIManager() {
         initialize();
+    }
+
+    public static GUIManager getInstance() {
+        if (instance == null) {
+            instance = new GUIManager();
+        }
+        return instance;
     }
 
     public void initialize() {
@@ -81,13 +88,6 @@ public class GUIManager {
 
         initializePlayerOptionsMenu();
         initializeRightSideUI();
-    }
-
-    public static GUIManager getInstance() {
-        if (instance == null) {
-            instance = new GUIManager();
-        }
-        return instance;
     }
 
     private void initializePlayerOptionsMenu() {
@@ -259,18 +259,6 @@ public class GUIManager {
     public void updateCursor(Scene currentScene, String cursorPath) {
         Image cursorImage = new Image(cursorPath);
         currentScene.setCursor(new ImageCursor(cursorImage));
-    }
-    public void updateCursor(Scene currentScene, String cursorPath, double delay) {
-        Cursor bufferCursor = currentScene.getCursor();
-
-        Image cursorImage = new Image(cursorPath);
-        currentScene.setCursor(new ImageCursor(cursorImage));
-
-        // Schedule a task to restore the original cursor after the delay
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(delay), event -> {
-            currentScene.setCursor(bufferCursor);
-        }));
-        timeline.play();
     }
 
     public Text getActionPointDisplayText() {

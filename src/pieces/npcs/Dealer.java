@@ -20,8 +20,7 @@ import utils.ImageScaler;
 import logic.SoundManager;
 import logic.gameUI.GUIManager;
 import logic.gameUI.display.NpcDisplay;
-import logic.gameUI.overlay.ItemInfoOverlay;
-import logic.gameUI.overlay.SkillInfoOverlay;
+import logic.gameUI.overlay.InfoOverlay;
 import pieces.*;
 import skills.BaseSkill;
 import skills.EmptySkill;
@@ -35,8 +34,7 @@ public class Dealer extends BaseNpcPiece {
 
     private List<BaseItem> items_noDuplicate = new ArrayList<>(); // contain items that already on the shop, so there won't be any duplicate
     private List<BaseSkill> skills_noDuplicate = new ArrayList<>(); // contain skills that already on the shop, so there won't be any duplicate
-    private SkillInfoOverlay skillInfoOverlay = new SkillInfoOverlay();
-    private ItemInfoOverlay itemInfoOverlay = new ItemInfoOverlay();
+    private InfoOverlay infoOverlay = new InfoOverlay();
     private VBox shopLayout; // layout
     private StackPane overlayPane; // contain shop grid & info overlay
     private GridPane skillShopGrid;
@@ -142,12 +140,11 @@ public class Dealer extends BaseNpcPiece {
         overlayPane = new StackPane();
         VBox shopContainer = new VBox();
         shopContainer.getChildren().addAll(itemShopGrid, skillShopGrid);
-        overlayPane.getChildren().addAll(shopContainer, itemInfoOverlay.getView(), skillInfoOverlay.getView(), priceTag);
+        overlayPane.getChildren().addAll(shopContainer, infoOverlay.getView(), priceTag);
 
         overlayPane.setOnMouseMoved(event -> {
             // Update the position of the BoxOverlay to follow the mouse
-            itemInfoOverlay.updatePosition(event.getX(), event.getY(), -160, -70);
-            skillInfoOverlay.updatePosition(event.getX(), event.getY(), -160, -70);
+            infoOverlay.updatePosition(event.getX(), event.getY(), -160, -70);
             priceTagPosition(event.getX(), event.getY(), 200, 270);
         });
 
@@ -194,35 +191,35 @@ public class Dealer extends BaseNpcPiece {
             });
 
             itemFrame.setOnMouseEntered(mouseEvent -> {
-                itemInfoOverlay.getView().setVisible(true);
+                infoOverlay.getView().setVisible(true);
 
                 // show price
                 priceTag.setText("$" + item.getPrice());
                 priceTag.setVisible(true);
 
                 // setup info
-                itemInfoOverlay.getTitle().setText(item.getName());
-                itemInfoOverlay.getTitle().setTextFill(item.getNameColor());
-                itemInfoOverlay.getDesc().setText(item.getDescription());
+                infoOverlay.getTitle().setText(item.getName());
+                infoOverlay.getTitle().setTextFill(item.getNameColor());
+                infoOverlay.getDesc().setText(item.getDescription());
 
-                itemInfoOverlay.getDataContainer().getChildren().clear();
+                infoOverlay.getDataContainer().getChildren().clear();
                 if (item instanceof Attackable r) {
-                    itemInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
+                    infoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
                 }if (item instanceof Healable r) {
-                    itemInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
+                    infoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
                 }if (item instanceof ManaRefillable r) {
-                    itemInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+                    infoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
                 }if (item instanceof AttackBuffable r) {
-                    itemInfoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
+                    infoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
                 }if (item instanceof ActionPointBuffable r) {
-                    itemInfoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
+                    infoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
                 }if (item instanceof HealthBuffable r) {
-                    itemInfoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
+                    infoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
                 }
             });
 
             itemFrame.setOnMouseExited(mouseEvent -> {
-                itemInfoOverlay.getView().setVisible(false);
+                infoOverlay.getView().setVisible(false);
                 priceTag.setVisible(false);
             });
 
@@ -264,40 +261,40 @@ public class Dealer extends BaseNpcPiece {
             });
 
             skillFrame.setOnMouseEntered(mouseEvent -> {
-                skillInfoOverlay.getView().setVisible(true);
-                skillInfoOverlay.getView().toFront();
+                infoOverlay.getView().setVisible(true);
+                infoOverlay.getView().toFront();
 
                 // show price
                 priceTag.setText("$" + skill.getPrice());
                 priceTag.setVisible(true);
 
                 // Update overlay info
-                skillInfoOverlay.getTitle().setText(skill.getName());
-                skillInfoOverlay.getTitle().setTextFill(skill.getNameColor());
-                skillInfoOverlay.getDesc().setText(skill.getDescription());
+                infoOverlay.getTitle().setText(skill.getName());
+                infoOverlay.getTitle().setTextFill(skill.getNameColor());
+                infoOverlay.getDesc().setText(skill.getDescription());
 
-                skillInfoOverlay.getDataContainer().getChildren().clear();
-                skillInfoOverlay.newInfo("Mana", Color.DARKBLUE, String.valueOf(skill.getManaCost()));
-                skillInfoOverlay.newInfo("Action Point", Color.ORANGE, String.valueOf(skill.getActionPointCost()));
+                infoOverlay.getDataContainer().getChildren().clear();
+                infoOverlay.newInfo("Mana", Color.DARKBLUE, String.valueOf(skill.getManaCost()));
+                infoOverlay.newInfo("Action Point", Color.ORANGE, String.valueOf(skill.getActionPointCost()));
 
                 // Other skill info base on type
                 if (skill instanceof Attackable r) {
-                    skillInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
+                    infoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
                 }if (skill instanceof Healable r) {
-                    skillInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
+                    infoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
                 }if (skill instanceof ManaRefillable r) {
-                    skillInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+                    infoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
                 }if (skill instanceof AttackBuffable r) {
-                    skillInfoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
+                    infoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
                 }if (skill instanceof ActionPointBuffable r) {
-                    skillInfoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
+                    infoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
                 }if (skill instanceof HealthBuffable r) {
-                    skillInfoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
+                    infoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
                 }
             });
 
             skillFrame.setOnMouseExited(mouseEvent -> {
-                skillInfoOverlay.getView().setVisible(false);
+                infoOverlay.getView().setVisible(false);
                 priceTag.setVisible(false);
             });
         }

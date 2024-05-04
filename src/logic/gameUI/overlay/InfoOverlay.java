@@ -9,13 +9,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-public class ItemInfoOverlay extends Overlay {
+public class InfoOverlay extends Overlay {
 
     private Label title;
     private Text desc;
     private VBox dataContainer;
 
-    public ItemInfoOverlay() {
+    public InfoOverlay() {
         super(180, 220);
         view.setVisible(false);
 

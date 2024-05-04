@@ -5,8 +5,7 @@ import logic.SceneManager;
 
 public class Overlay {
     protected VBox view;
-    private double offsetX;
-    private double offsetY;
+
 
     public Overlay (int width, int height) {
         view = new VBox();
@@ -18,8 +17,8 @@ public class Overlay {
     // Method to update the position of the overlay
     public void updatePosition(double x, double y, double offsetX, double offsetY) {
         // Calculate the total offset including the additional offset for the application border
-        double totalOffsetX = this.offsetX + view.getWidth() + offsetX;
-        double totalOffsetY = this.offsetY + view.getHeight() + offsetY;
+        double totalOffsetX = view.getWidth() + offsetX;
+        double totalOffsetY = view.getHeight() + offsetY;
 
         // Adjust the layout parameters of the VBox to position it at (x, y)
         double newX = x - totalOffsetX;
@@ -29,15 +28,11 @@ public class Overlay {
         int windowHeight = SceneManager.getInstance().getScreenHeight();
 
         // Check if the new position is within the application window
-        if (newX < 0) {
-            newX = 0; // Adjust to the left edge
-        } else if (newX + view.getWidth() > windowWidth) {
+        if (newX + view.getWidth() > windowWidth) {
             newX = windowWidth - view.getWidth(); // Adjust to the right edge
         }
 
-        if (newY < 0) {
-            newY = 0; // Adjust to the top edge
-        } else if (newY + view.getHeight() > windowHeight) {
+        if (newY + view.getHeight() > windowHeight) {
             newY = windowHeight - view.getHeight(); // Adjust to the bottom edge
         }
 

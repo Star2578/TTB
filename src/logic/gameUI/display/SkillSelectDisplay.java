@@ -15,7 +15,7 @@ import logic.SceneManager;
 import logic.SoundManager;
 import logic.handlers.SkillHandler;
 import logic.gameUI.GUIManager;
-import logic.gameUI.overlay.SkillInfoOverlay;
+import logic.gameUI.overlay.InfoOverlay;
 import pieces.*;
 import pieces.players.BasePlayerPiece;
 import skills.BaseSkill;
@@ -27,7 +27,7 @@ public class SkillSelectDisplay implements Display{
     private VBox view;
 
     private GridPane skillSelectorGrid;
-    private SkillInfoOverlay skillInfoOverlay = new SkillInfoOverlay();
+    private InfoOverlay infoOverlay = new InfoOverlay();
     private ImageView frameView;
 
 
@@ -128,36 +128,36 @@ public class SkillSelectDisplay implements Display{
             });
 
             skillFrame.setOnMouseEntered(mouseEvent -> {
-                skillInfoOverlay.getView().setVisible(true);
-                skillInfoOverlay.getView().toFront();
+                infoOverlay.getView().setVisible(true);
+                infoOverlay.getView().toFront();
 
                 // Update overlay info
-                skillInfoOverlay.getTitle().setText(skill.getName());
-                skillInfoOverlay.getTitle().setTextFill(skill.getNameColor());
-                skillInfoOverlay.getDesc().setText(skill.getDescription());
+                infoOverlay.getTitle().setText(skill.getName());
+                infoOverlay.getTitle().setTextFill(skill.getNameColor());
+                infoOverlay.getDesc().setText(skill.getDescription());
 
-                skillInfoOverlay.getDataContainer().getChildren().clear();
-                skillInfoOverlay.newInfo("Mana", Color.DARKBLUE, String.valueOf(skill.getManaCost()));
-                skillInfoOverlay.newInfo("Action Point", Color.ORANGE, String.valueOf(skill.getActionPointCost()));
+                infoOverlay.getDataContainer().getChildren().clear();
+                infoOverlay.newInfo("Mana", Color.DARKBLUE, String.valueOf(skill.getManaCost()));
+                infoOverlay.newInfo("Action Point", Color.ORANGE, String.valueOf(skill.getActionPointCost()));
 
                 // Other skill info base on type
                 if (skill instanceof Attackable r) {
-                    skillInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
+                    infoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
                 }if (skill instanceof Healable r) {
-                    skillInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
+                    infoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
                 }if (skill instanceof ManaRefillable r) {
-                    skillInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+                    infoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
                 }if (skill instanceof AttackBuffable r) {
-                    skillInfoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
+                    infoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
                 }if (skill instanceof ActionPointBuffable r) {
-                    skillInfoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
+                    infoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
                 }if (skill instanceof HealthBuffable r) {
-                    skillInfoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
+                    infoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
                 }
             });
 
             skillFrame.setOnMouseExited(mouseEvent -> {
-                skillInfoOverlay.getView().setVisible(false);
+                infoOverlay.getView().setVisible(false);
             });
         }
 
@@ -171,8 +171,8 @@ public class SkillSelectDisplay implements Display{
         updateSkillSelect();
     }
 
-    public SkillInfoOverlay getSkillInfoOverlay() {
-        return skillInfoOverlay;
+    public InfoOverlay getSkillInfoOverlay() {
+        return infoOverlay;
     }
     public void enableFrame() {
         view.setDisable(false);

@@ -14,12 +14,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import logic.GameManager;
+import logic.gameUI.overlay.InfoOverlay;
 import utils.ImageScaler;
 import logic.SceneManager;
 import logic.SoundManager;
 import logic.handlers.ItemHandler;
 import logic.gameUI.GUIManager;
-import logic.gameUI.overlay.ItemInfoOverlay;
 import pieces.*;
 import pieces.players.BasePlayerPiece;
 import utils.*;
@@ -27,7 +27,7 @@ import utils.*;
 public class InventoryDisplay implements Display {
     private VBox view;
     private VBox usableItemsSection;
-    private ItemInfoOverlay itemInfoOverlay = new ItemInfoOverlay();
+    private InfoOverlay infoOverlay = new InfoOverlay();
 
     private Button useItem;
     private Button throwAwayItem;
@@ -179,31 +179,31 @@ public class InventoryDisplay implements Display {
             });
 
             itemFrame.setOnMouseEntered(mouseEvent -> {
-                itemInfoOverlay.getView().setVisible(true);
+                infoOverlay.getView().setVisible(true);
 
                 // setup info
-                itemInfoOverlay.getTitle().setText(item.getName());
-                itemInfoOverlay.getTitle().setTextFill(item.getNameColor());
-                itemInfoOverlay.getDesc().setText(item.getDescription());
+                infoOverlay.getTitle().setText(item.getName());
+                infoOverlay.getTitle().setTextFill(item.getNameColor());
+                infoOverlay.getDesc().setText(item.getDescription());
 
-                itemInfoOverlay.getDataContainer().getChildren().clear();
+                infoOverlay.getDataContainer().getChildren().clear();
                 if (item instanceof Attackable r) {
-                    itemInfoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
+                    infoOverlay.newInfo("Attack", Color.DARKRED, String.valueOf(r.getAttack()));
                 }if (item instanceof Healable r) {
-                    itemInfoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
+                    infoOverlay.newInfo("Heal", Color.DARKGREEN, String.valueOf(r.getHeal()));
                 }if (item instanceof ManaRefillable r) {
-                    itemInfoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
+                    infoOverlay.newInfo("Mana Refill", Color.CYAN, "+" + r.getRefill());
                 }if (item instanceof AttackBuffable r) {
-                    itemInfoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
+                    infoOverlay.newInfo("Attack Damage", Color.DARKRED, "+" + r.getBuffAttack());
                 }if (item instanceof ActionPointBuffable r) {
-                    itemInfoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
+                    infoOverlay.newInfo("Max Action Point", Color.ORANGE, "+" + r.getBuffActionPoint());
                 }if (item instanceof HealthBuffable r) {
-                    itemInfoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
+                    infoOverlay.newInfo("Max Health", Color.DARKGREEN, "+" + r.getBuffHealth());
                 }
             });
 
             itemFrame.setOnMouseExited(mouseEvent -> {
-                itemInfoOverlay.getView().setVisible(false);
+                infoOverlay.getView().setVisible(false);
             });
 
             itemFrame.setBackground(Background.fill(item.getBackgroundColor()));
@@ -233,8 +233,8 @@ public class InventoryDisplay implements Display {
         }
     }
 
-    public ItemInfoOverlay getItemInfoOverlay() {
-        return itemInfoOverlay;
+    public InfoOverlay getInfoOverlay() {
+        return infoOverlay;
     }
     public void enableFrame() {
         useItem.setDisable(false);
