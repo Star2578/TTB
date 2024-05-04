@@ -50,7 +50,8 @@ public class SlimeBoss extends BaseMonsterPiece {
     @Override
     public void performAction() {
         endAction = false;
-        updateState();
+//        updateState();
+        onDeath();
         ATK_CNT = 0;
         switch (currentPhase) {
             case FIRST:
@@ -154,8 +155,10 @@ public class SlimeBoss extends BaseMonsterPiece {
         if(currentPhase == Phase.FIRST || currentPhase == Phase.SECOND) {
             deadbomb();
         }
-        GameManager.getInstance().gameScene.removePiece(this);
-        gameManager.environmentPieces.remove(this);
+        if(this != null) {
+            GameManager.getInstance().gameScene.removePiece(this);
+            gameManager.environmentPieces.remove(this);
+        }
 
         for(int i = 0; i < nextPhase.ordinal() + 1; i++) {
             int row, col;
@@ -297,5 +300,21 @@ public class SlimeBoss extends BaseMonsterPiece {
             changeDirection(newDirection);
             move(newRow, newCol);
         }
+    }
+
+    @Override
+    public void onDeath() {
+        // update state & summon more slim ...
+        if (currentPhase == Phase.FIRST && getCurrentHealth() <= 0) {
+            super.onDeath();
+            splitSlime( 100, Phase.SECOND);
+        } else if (currentPhase == Phase.SECOND && getCurrentHealth() <= 0) {
+            super.onDeath();
+            splitSlime(50, Phase.THIRD);
+        } else if (currentPhase == Phase.THIRD && getCurrentHealth() <= 0) {
+            super.onDeath();
+        }
+
+        System.out.println("Slime Boss is in " + currentPhase);
     }
 }
