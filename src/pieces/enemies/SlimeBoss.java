@@ -27,8 +27,8 @@ public class SlimeBoss extends BaseMonsterPiece {
 
     private Phase currentPhase;
     private final int ATTACK_DAMAGE_FIRST_PHASE = 5;
-    private final int ATTACK_DAMAGE_SECOND_PHASE = 4;
-    private final int ATTACK_DAMAGE_THIRD_PHASE = 3;
+    private final int ATTACK_DAMAGE_SECOND_PHASE = 5;
+    private final int ATTACK_DAMAGE_THIRD_PHASE = 5;
     private final double ATTACK_RANGE = 1.5;
     private final int MOVE = 2;
     private int ATK_CNT = 0;

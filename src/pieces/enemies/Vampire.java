@@ -18,7 +18,7 @@ public class Vampire extends BaseMonsterPiece{
     private State currentState;
     private final double ATTACK_RANGE = 1.5; // Why it's .5? Because it's for diagonal
     private final int VISION_RANGE = 5;
-    private final int ATTACK_DAMAGE = 1;
+    private final int ATTACK_DAMAGE = 3;
     private boolean useSkill = true;
 
     public Vampire() {

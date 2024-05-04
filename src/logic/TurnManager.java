@@ -84,7 +84,8 @@ public class TurnManager {
                             return;
                         }
                         // Move to the next environment piece
-                        cycleNextEnvironment();
+                        if (player.isAlive())
+                            cycleNextEnvironment();
                     }));
                     waitTimeline.setCycleCount(Timeline.INDEFINITE);
                     waitTimeline.play();

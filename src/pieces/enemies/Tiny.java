@@ -17,7 +17,7 @@ public class Tiny extends BaseMonsterPiece{
 
     private State currentState;
     private final double ATTACK_RANGE = 1.5; // Why it's .5? Because it's for diagonal
-    private final int VISION_RANGE = 3;
+    private final int VISION_RANGE = 4;
     private final int ATTACK_DAMAGE = 3;
 
     public Tiny() {
