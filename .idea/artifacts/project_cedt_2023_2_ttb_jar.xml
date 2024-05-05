@@ -13,6 +13,7 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/../../../../../openjfx-21.0.1_windows-x64_bin-sdk/javafx-sdk-21.0.1/lib/javafx.controls.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../../../../../openjfx-21.0.1_windows-x64_bin-sdk/javafx-sdk-21.0.1/lib/javafx.graphics.jar" path-in-jar="/" />
       <element id="module-source" name="project-cedt-2023-2-ttb" />
+      <element id="dir-copy" path="$PROJECT_DIR$/res" />
     </root>
   </artifact>
 </component>

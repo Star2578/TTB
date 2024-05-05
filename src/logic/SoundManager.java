@@ -31,18 +31,26 @@ public class SoundManager {
     }
 
     public void playSoundEffect(String filePath) {
-        Media media = new Media(new File(filePath).toURI().toString());
-        soundEffectPlayer = new MediaPlayer(media);
-        soundEffectPlayer.setVolume(soundEffectVolume);
-        soundEffectPlayer.play();
+        try {
+            Media media = new Media(new File(filePath).toURI().toString());
+            soundEffectPlayer = new MediaPlayer(media);
+            soundEffectPlayer.setVolume(soundEffectVolume);
+            soundEffectPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing sound effect: " + e.getMessage());
+        }
     }
 
     public void playBackgroundMusic(String filePath) {
-        Media media = new Media(new File(filePath).toURI().toString());
-        backgroundMusicPlayer = new MediaPlayer(media);
-        backgroundMusicPlayer.setVolume(backgroundMusicVolume);
-        backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        backgroundMusicPlayer.play();
+        try {
+            Media media = new Media(new File(filePath).toURI().toString());
+            backgroundMusicPlayer = new MediaPlayer(media);
+            backgroundMusicPlayer.setVolume(backgroundMusicVolume);
+            backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            backgroundMusicPlayer.play();
+        } catch (Exception e) {
+            System.out.println("Error playing background music: " + e.getMessage());
+        }
     }
 
     public void changeBackgroundMusic(String filePath) {
