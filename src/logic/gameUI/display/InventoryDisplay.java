@@ -58,6 +58,7 @@ import utils.*;
 
                 BasePlayerPiece player = GameManager.getInstance().player;
 
+                GameManager.getInstance().selectedItem = currentItem;
                 ItemHandler.showValidItemRange(player.getRow(), player.getCol(), currentItem);
                 GUIManager.getInstance().updateCursor(SceneManager.getInstance().getGameScene(), Config.HandCursor);
             }
