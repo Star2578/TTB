@@ -865,6 +865,9 @@ public class GameScene {
                 case DIGIT8:
                     handleSkillShortcut(8);
                     break;
+                case F2:
+                    generateNewFloor();
+                    break;
             }
         });
     }
