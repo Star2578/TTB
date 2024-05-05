@@ -44,17 +44,16 @@ public class Config {
     public static String BomberAnimationPath = "sprites/enemies/bomber_sprite_sheet.png";
     public static String BombAnimationPath = "sprites/objects/bomb/bomb_f0.png";
     public static String BombExplosionPath = "sprites/objects/bomb/bombExplosion.png";
-    public  static  String NecromancerPath = "sprites/enemies/necromancer_sprite_sheet.png";
+    public static String NecromancerPath = "sprites/enemies/necromancer_sprite_sheet.png";
     public static String NecromancerSummonPath = "sprites/enemies/necromancer_summon_sprite_sheet.png";
     public static String NecromancerAttackPath = "sprites/enemies/necromancer_attack_sprite_sheet.png";
-    public  static  String SkeletonPath = "sprites/enemies/skeleton_sprite_sheet.png";
+    public static String SkeletonPath = "sprites/enemies/skeleton_sprite_sheet.png";
     public static String SkeletonAttackPath = "sprites/enemies/skeleton_attack_sprite_sheet.png";
-    public  static  String VampirePath = "sprites/enemies/vampire_sprite_sheet.png";
+    public static String VampirePath = "sprites/enemies/vampire_sprite_sheet.png";
     public static String VampireSkillPath = "sprites/enemies/vampire_skill_sprite_sheet.png";
-    public  static  String SlimePath = "sprites/enemies/slimeboss_sprite_sheet.png";
-    public  static  String SlimePath2 = "sprites/enemies/slimeboss_sprite_sheet2.png";
-    public  static  String SlimePath3 = "sprites/enemies/slime3.png";
-    public  static  String SlimePath4 = "sprites/enemies/slimeboss4.png";
+    public static String SlimePath = "sprites/enemies/slimeboss_sprite_sheet1.png";
+    public static String SlimePath2 = "sprites/enemies/slimeboss_sprite_sheet2.png";
+    public static String SlimePath3 = "sprites/enemies/slimeboss_sprite_sheet3.png";
 
 
     // NPC

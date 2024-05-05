@@ -44,7 +44,7 @@ public class SlimeBoss extends BaseMonsterPiece {
 
         this.currentPhase = Phase.FIRST;
 
-        setupAnimation(Config.SlimePath4, 0, -10, 32, 46 , true);
+        setupAnimation(Config.SlimePath, 0, -10, 32, 46 , true);
     }
 
     @Override
@@ -178,9 +178,9 @@ public class SlimeBoss extends BaseMonsterPiece {
 
             //TODO : FIX ANIMATION PATH
             if (nextPhase == Phase.SECOND) {
-                smallerSlime.setupAnimation(Config.WizardAnimationPath, 0, -10, 32, 32 , true);
+                smallerSlime.setupAnimation(Config.SlimePath2, 0, -10, 32, 49 , true);
             } else if (nextPhase == Phase.THIRD) {
-                smallerSlime.setupAnimation(Config.SkeletonPath, 0, -10, 32, 32 , true);
+                smallerSlime.setupAnimation(Config.SlimePath3, 0, -10, 32, 49 , true);
             }
 
             piecesPosition[row][col] = smallerSlime;
