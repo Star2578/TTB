@@ -160,20 +160,20 @@ public class Config {
 
 
     // BGM
-    public static String bgm_8_bit_adventure = "BGM/8_Bit_Adventure.wav";
-    public static String bgm_8_bit_nostalgia = "BGM/8_Bit_Nostalgia.wav";
+    public static String bgm_8_bit_adventure = "res/BGM/8_Bit_Adventure.wav";
+    public static String bgm_8_bit_nostalgia = "res/BGM/8_Bit_Nostalgia.wav";
 
     // SFX
-    public static String sfx_attackSound = "SFX/attack/Swipe_2_converted.wav";
-    public static String sfx_moveSound = "SFX/walk/jump2.wav";
-    public static String sfx_hurtSound = "SFX/hurt/hit_003.wav";
-    public static String sfx_gameOverSound = "SFX/gameover/Game Over.wav";
-    public static String sfx_buttonSound = "SFX/click/click.wav";
-    public static String sfx_failedSound = "SFX/failed/8bit-blip4.wav";
-    public static String sfx_deadSound = "SFX/monster/dead/explosion_03.wav";
-    public static String sfx_holyMagicSound = "SFX/skills/holylight/Retro Magic 06.wav";
-    public static String sfx_darkMagicSound = "SFX/skills/bloodpact/Retro Magic 54.wav";
-    public static String sfx_powerupSound = "SFX/skills/heal/8bit-powerup1.wav";
+    public static String sfx_attackSound = "res/SFX/attack/Swipe_2_converted.wav";
+    public static String sfx_moveSound = "res/SFX/walk/jump2.wav";
+    public static String sfx_hurtSound = "res/SFX/hurt/hit_003.wav";
+    public static String sfx_gameOverSound = "res/SFX/gameover/Game Over.wav";
+    public static String sfx_buttonSound = "res/SFX/click/click.wav";
+    public static String sfx_failedSound = "res/SFX/failed/8bit-blip4.wav";
+    public static String sfx_deadSound = "res/SFX/monster/dead/explosion_03.wav";
+    public static String sfx_holyMagicSound = "res/SFX/skills/holylight/Retro Magic 06.wav";
+    public static String sfx_darkMagicSound = "res/SFX/skills/bloodpact/Retro Magic 54.wav";
+    public static String sfx_powerupSound = "res/SFX/skills/heal/8bit-powerup1.wav";
 
 
     // UI image, icon, ...
