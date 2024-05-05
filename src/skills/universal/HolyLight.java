@@ -92,22 +92,17 @@ public class HolyLight extends BaseSkill implements Healable, Attackable {
 
     @Override
     public void heal() {
-        if (target != null) {
-            if (target instanceof BasePlayerPiece playerPiece) {
-                int currentHealth = playerPiece.getCurrentHealth();
+        int currentHealth = GameManager.getInstance().player.getCurrentHealth();
+        GameManager.getInstance().player.setCurrentHealth(currentHealth + HEAL);
 
-                playerPiece.setCurrentHealth(currentHealth + HEAL);
-
-                //=========<SKILL EFFECT>====================================================================
-                EffectMaker.getInstance()
-                        .renderEffect( EffectMaker.TYPE.ON_TARGET ,
-                                GameManager.getInstance().player ,
-                                GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
-                                EffectMaker.getInstance().createInPlaceEffects(5) ,
-                                new EffectConfig(0 , -16 , 24 , 1.1) );
-                //===========================================================================================
-            }
-        }
+        //=========<SKILL EFFECT>====================================================================
+        EffectMaker.getInstance()
+                .renderEffect( EffectMaker.TYPE.ON_TARGET ,
+                        GameManager.getInstance().player ,
+                        GameManager.getInstance().player.getRow(), GameManager.getInstance().player.getCol(),
+                        EffectMaker.getInstance().createInPlaceEffects(5) ,
+                        new EffectConfig(0 , -16 , 24 , 1.1) );
+        //===========================================================================================
     }
 
     @Override
