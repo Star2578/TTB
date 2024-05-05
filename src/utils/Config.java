@@ -160,8 +160,8 @@ public class Config {
 
 
     // BGM
-    public static String bgm_8_bit_adventure = "res/BGM/8_Bit_Adventure.wav";
-    public static String bgm_8_bit_nostalgia = "res/BGM/8_Bit_Nostalgia.wav";
+    public static String bgm_8_bit_adventure = "BGM/8_Bit_Adventure.wav";
+    public static String bgm_8_bit_nostalgia = "BGM/8_Bit_Nostalgia.wav";
 
     // SFX
     public static String sfx_attackSound = "res/SFX/attack/Swipe_2_converted.wav";

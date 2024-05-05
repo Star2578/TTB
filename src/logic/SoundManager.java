@@ -32,7 +32,7 @@ public class SoundManager {
 
     public void playSoundEffect(String filePath) {
         try {
-            Media media = new Media(new File(filePath).toURI().toString());
+            Media media = new Media(ClassLoader.getSystemResource(filePath).toString());
             soundEffectPlayer = new MediaPlayer(media);
             soundEffectPlayer.setVolume(soundEffectVolume);
             soundEffectPlayer.play();
@@ -43,7 +43,7 @@ public class SoundManager {
 
     public void playBackgroundMusic(String filePath) {
         try {
-            Media media = new Media(new File(filePath).toURI().toString());
+            Media media = new Media(ClassLoader.getSystemResource(filePath).toString());
             backgroundMusicPlayer = new MediaPlayer(media);
             backgroundMusicPlayer.setVolume(backgroundMusicVolume);
             backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
@@ -52,6 +52,7 @@ public class SoundManager {
             System.out.println("Error playing background music: " + e.getMessage());
         }
     }
+
 
     public void changeBackgroundMusic(String filePath) {
         if (backgroundMusicPlayer != null && backgroundMusicPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
