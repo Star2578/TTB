@@ -23,7 +23,7 @@ public class TurnManager {
     private Effect whoseTurnArrow;
 
     public boolean isPlayerTurn;
-    private final double DELAY_BETWEEN_ENVIRONMENT = 0.1;
+    private final double DELAY_BETWEEN_ENVIRONMENT = 0.05;
 
     public TurnManager() {
         initialize();
@@ -47,9 +47,7 @@ public class TurnManager {
     public void startPlayerTurn() {
         // Start the turn for the player
         this.isPlayerTurn = true;
-        if(!GameManager.getInstance().fogOfWar) {
-            pointArrowTo(player); //point to piece that currently in action
-        }
+        pointArrowTo(player); //point to piece that currently in action
         player.startTurn();
         player.setCanAct(true);
         GUIManager.getInstance().updateGUI();
@@ -99,7 +97,11 @@ public class TurnManager {
                         }
                         // Move to the next environment piece
                         if(player.isAlive()) cycleNextEnvironment();
-
+                        else {
+                            waitTimeline.stop();
+                            EffectMaker.getInstance().effectPane.getChildren().remove(whoseTurnArrow.getImageView());
+                            EffectMaker.getInstance().runningEffects.remove(whoseTurnArrow);
+                        }
                     }));
                     waitTimeline.setCycleCount(Timeline.INDEFINITE);
                     waitTimeline.play();
@@ -131,6 +133,9 @@ public class TurnManager {
     }
 
     private void pointArrowTo(BasePiece piece){
+        if (GameManager.getInstance().fogOfWar) {
+            return;
+        }
         //remove arrow and create new one on other piece
         EffectMaker.getInstance().effectPane.getChildren().remove(whoseTurnArrow.getImageView());
         EffectMaker.getInstance().runningEffects.remove(whoseTurnArrow);

@@ -11,6 +11,7 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
 import logic.*;
+import logic.effect.EffectMaker;
 import logic.effect.PopupConfig;
 import logic.effect.PopupMaker;
 import logic.gameUI.GUIManager;

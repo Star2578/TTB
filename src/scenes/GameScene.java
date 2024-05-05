@@ -108,10 +108,10 @@ public class GameScene {
         effectMaker.effectPane.setDisable(true);
 
         rightPane = new VBox(); // Pane for right area
-        rightPane.setBackground(Background.fill(Color.DARKRED));
+        rightPane.setBackground(Background.fill(Color.web("#1c0a05")));
 
         leftPane = new VBox(); // Pane for left area
-        leftPane.setBackground(Background.fill(Color.DARKCYAN));
+        leftPane.setBackground(Background.fill(Color.web("#1c0a05")));
 
         // Create the main game area
         initFloor(boardPane);
@@ -480,6 +480,7 @@ public class GameScene {
             SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
 
             resetSelectionAll();
+            GUIManager.getInstance().updateCursor(this.getScene(), Config.UnavailableCursor);
             return;
         }
 
@@ -737,8 +738,6 @@ public class GameScene {
     }
 
     private void removeElements() {
-        // Mostly for debugging purpose
-        // to try re-generate the dungeon
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 if (piecesPosition[row][col] != null) {
@@ -774,16 +773,13 @@ public class GameScene {
     }
 
     private void setupKeyEvents(Scene scene) {
-        // Debug tool
         scene.setOnKeyPressed(event -> {
-
 
             switch (event.getCode()) {
                 case ESCAPE:
                     SceneManager.getInstance().switchSceneTo(SettingScene.setting(SceneManager.getInstance().getStage(), this.scene));
                     break;
                 case SHIFT:
-                    System.out.println("Space pressed");
                     GameManager.getInstance().gameScene.resetSelectionAll();
                     turnManager.endPlayerTurn();
                     GUIManager.getInstance().disableButton();
@@ -792,11 +788,6 @@ public class GameScene {
                 case A:
                 case S:
                 case D:
-                case UP:
-                case DOWN:
-                case LEFT:
-                case RIGHT:
-
                     if (player.canAct()) {
                         if (!isPlayerPieceSelected) {
                             resetSelectionAll();
@@ -872,37 +863,6 @@ public class GameScene {
                     break;
                 case DIGIT8:
                     handleSkillShortcut(8);
-                    break;
-                case F1:
-                    gameManager.playerMoney += 1000;
-                    GUIManager.getInstance().updateGUI();
-                    break;
-                case F2:
-                    generateNewFloor();
-                    break;
-                case F3:
-                    for (int i = 0; i < Config.BOARD_SIZE; i++) {
-                        for (int j = 0; j < Config.BOARD_SIZE; j++) {
-                            if (piecesPosition[i][j] != null && !(piecesPosition[i][j] instanceof BaseWallPiece)) {
-                                System.out.println("There is " + piecesPosition[i][j] + "at " + i + " " + j);
-                                GUIManager.getInstance().eventLogDisplay.addLog("There is " + piecesPosition[i][j] + "at " + i + " " + j);
-                            }
-                        }
-                    }
-                    break;
-                case F4:
-                    GameManager.getInstance().player.setCurrentHealth(GameManager.getInstance().player.getMaxHealth());
-                    GameManager.getInstance().player.setCurrentActionPoint(GameManager.getInstance().player.getMaxActionPoint());
-                    GameManager.getInstance().player.setCurrentMana(GameManager.getInstance().player.getMaxMana());
-                    break;
-                case F5:
-                    for (int i = 0; i < gameManager.inventory.size(); i++) {
-                        System.out.println("Inventory[" + i + "] is " + gameManager.inventory.get(i).getName());
-                        GUIManager.getInstance().eventLogDisplay.addLog("Inventory[" + i + "] is " + gameManager.inventory.get(i).getName());
-                    }
-                    break;
-                case F6:
-                    GameManager.getInstance().GameOver();
                     break;
             }
         });

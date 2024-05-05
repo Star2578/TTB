@@ -37,6 +37,7 @@ public class BasePiece {
             ImageView imageView = getTexture();
             imageView.setScaleX(-1); // Flipping the image horizontally
         }
+        this.currentDirection = defaultDirection;
 
         this.animationImage = new ImageView();
     }

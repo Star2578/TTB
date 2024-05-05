@@ -32,7 +32,7 @@ public class Knight extends BasePlayerPiece {
         maxHp = 20;
         currentHp = maxHp;
 
-        attackDamage = 4; // Base attack for player
+        attackDamage = 5; // Base attack for player
         attackRange = 1;
 
         //add skill

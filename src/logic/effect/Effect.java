@@ -1,22 +1,13 @@
 package logic.effect;
 
-import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.binding.StringBinding;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 import javafx.util.Duration;
-import logic.GameManager;
 import logic.SpriteAnimation;
 import pieces.BasePiece;
-import pieces.enemies.BaseMonsterPiece;
-
-import static utils.Config.SQUARE_SIZE;
 
 public class Effect extends SpriteAnimation {
 

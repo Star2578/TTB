@@ -20,9 +20,6 @@ public class Archer extends BasePlayerPiece {
     public Archer(int row, int col, int defaultDirection) {
         super(row, col, defaultDirection);
 
-        maxHp = 15;
-        currentHp = maxHp;
-
         maxActionPoint = 10;
         currentActionPoint = maxActionPoint;
 
@@ -84,7 +81,7 @@ public class Archer extends BasePlayerPiece {
             }
             System.out.println(BuffName + " " + duration);
         }
-        setCurrentMana(getCurrentMana() + 1); // Archer restore 1 mana every turn
+        setCurrentMana(getCurrentMana() + 2); // Archer restore 2 mana every turn
         setCurrentActionPoint(getMaxActionPoint());
     }
 
