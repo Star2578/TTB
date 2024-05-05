@@ -23,7 +23,7 @@ public class Halt extends BaseSkill implements Attackable {
         super("Halt", Color.DARKRED,
                 7, 2,
                 "Get STUN on!! \n\n  - Archer probably"
-                , Config.Rarity.RARE, "res/SFX/skills/slash/PP_01.wav");
+                , Config.Rarity.RARE, "SFX/skills/slash/PP_01.wav");
         icon = new ImageView(Config.HaltPath);
         range = 5;
     }

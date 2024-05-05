@@ -18,7 +18,7 @@ public class Rho_Aias extends BaseSkill implements Buffable {
     private final int BUFF_DURATION = 1;
     public Rho_Aias() {
         super("Rho Aias", Color.PINK, 10, 2,
-                "Reduce incoming damage by 80% for 1 turn", Config.Rarity.LEGENDARY, "");
+                "Reduce incoming damage by 80% for 1 turn", Config.Rarity.LEGENDARY, Config.sfx_powerupSound);
 
         icon = new ImageView(Config.RhoAiasPath);
     }

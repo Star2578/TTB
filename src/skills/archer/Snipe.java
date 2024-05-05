@@ -22,7 +22,7 @@ public class Snipe extends BaseSkill implements Attackable {
         super("Snipe", Color.DARKRED,
                 12, 2,
                 "Costly but Deadly"
-                , Config.Rarity.LEGENDARY, "res/SFX/skills/slash/PP_01.wav"
+                , Config.Rarity.LEGENDARY, "SFX/skills/slash/PP_01.wav"
         );
         icon = new ImageView(Config.SnipePath);
         range = 7;

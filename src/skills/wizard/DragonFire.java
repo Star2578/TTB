@@ -19,7 +19,7 @@ public class DragonFire extends BaseSkill implements Attackable {
         super("Dragon Fire", Color.ORANGE,
                 15, 2,
                 "Ultimate Skill Summon a dragon fire to the enemies by Triangle AOE for 3 range ",
-                Config.Rarity.RARE, "res/SFX/skills/slash/PP_01.wav"
+                Config.Rarity.RARE, "SFX/skills/slash/PP_01.wav"
         );
 
         icon = new ImageView(Config.DragonFirePath);

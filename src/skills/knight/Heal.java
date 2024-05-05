@@ -16,7 +16,7 @@ public class Heal extends BaseSkill implements Healable {
     private BasePiece target;
     private final int HEAL = 10;
     public Heal() {
-        super("Heal", Color.DARKGREEN, 5, 10, "Rest for one turn to heal", Config.Rarity.COMMON, "res/SFX/skills/heal/8bit-powerup1.wav");
+        super("Heal", Color.DARKGREEN, 5, 10, "Rest for one turn to heal", Config.Rarity.COMMON, "SFX/skills/heal/8bit-powerup1.wav");
         icon = new ImageView(Config.HealPath);
         range = 0;
     }

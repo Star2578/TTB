@@ -20,7 +20,7 @@ public class Teleport extends BaseSkill {
         super("Teleport", Color.DARKRED,
                 6, 2,
                 "Teleport to a chosen location",
-                Config.Rarity.EPIC, "res/SFX/skills/slash/PP_01.wav"
+                Config.Rarity.EPIC, "SFX/skills/slash/PP_01.wav"
         );
         icon = new ImageView(Config.TeleportPath);
         range = 5; // Set the range to 5

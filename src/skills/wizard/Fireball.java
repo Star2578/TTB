@@ -20,7 +20,7 @@ public class Fireball extends BaseSkill implements Attackable {
         super("Fireball", Color.RED,
                 6, 2,
                 "Shoot a fireball to the enemies",
-                Config.Rarity.UNCOMMON, "res/SFX/skills/slash/PP_01.wav"
+                Config.Rarity.UNCOMMON, "SFX/skills/slash/PP_01.wav"
         );
 
         //TODO======================

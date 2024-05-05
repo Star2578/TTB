@@ -17,7 +17,7 @@ public class Dart extends BaseSkill implements Attackable {
     private final int DAMAGE = 8;
     private final int KNOCKBACK = 2;
     public Dart() {
-        super("Dart", Color.DARKRED, 4, 0, "Knock target 2 blocks away from you", Config.Rarity.UNCOMMON, "res/SFX/skills/slash/PP_01.wav");
+        super("Dart", Color.DARKRED, 4, 0, "Knock target 2 blocks away from you", Config.Rarity.UNCOMMON, "SFX/skills/slash/PP_01.wav");
         icon = new ImageView(Config.DartPath);
         range = 1;
     }

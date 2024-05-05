@@ -21,7 +21,7 @@ public class Targetlock extends BaseSkill implements Attackable {
         super("TargetLock", Color.DARKRED,
                 4, 2,
                 "Concentrate... Steady aim... SHOOT!",
-                Config.Rarity.COMMON, "res/SFX/skills/slash/PP_01.wav"
+                Config.Rarity.COMMON, "SFX/skills/slash/PP_01.wav"
         );
         icon = new ImageView(Config.TargetLockPath);
         range = 5;
