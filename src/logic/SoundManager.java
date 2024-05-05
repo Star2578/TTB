@@ -14,7 +14,9 @@ public class SoundManager {
     private static final double MID_VOLUME = (MAX_VOLUME + MIN_VOLUME) / 2;
 
     private double soundEffectVolume = MID_VOLUME;
+    private double soundEffectSlider = 50.0;
     private double backgroundMusicVolume = MID_VOLUME;
+    private double backgroundMusicSlider = 50.0;
 
     private MediaPlayer backgroundMusicPlayer;
     private MediaPlayer soundEffectPlayer;
@@ -94,8 +96,14 @@ public class SoundManager {
     public double getBackgroundMusicSlider() {
         return volumeToSliderValue(backgroundMusicVolume);
     }
+    public void setBackgroundMusicSlider(double backgroundMusicSlider) {
+        this.backgroundMusicSlider = backgroundMusicSlider;
+    }
     public double getSoundEffectSlider() {
         return volumeToSliderValue(soundEffectVolume);
+    }
+    public void setSoundEffectSlider(double soundEffectSlider) {
+        this.soundEffectSlider = soundEffectSlider;
     }
     private double volumeToSliderValue(double volume) {
         return (volume - MIN_VOLUME) / (MAX_VOLUME - MIN_VOLUME) * 100.0;
