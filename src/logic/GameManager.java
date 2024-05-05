@@ -130,10 +130,6 @@ public class GameManager {
         selectedSkill = null;
         selectedItem = null;
         inventory.clear();
-        inventory.add(new RedPotion());
-        inventory.add(new RedPotion());
-        inventory.add(new RedPotion());
-        inventory.add(new RedPotion());
         environmentPieces.clear();
         boardPane = new GridPane();
         fogPane = new GridPane();

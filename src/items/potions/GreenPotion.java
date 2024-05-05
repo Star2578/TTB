@@ -14,7 +14,7 @@ public class GreenPotion extends BasePotion implements HealthBuffable {
 
     public GreenPotion() {
         super("Green Potion", Color.OLIVE, Config.GreenPotionPath,
-                "It slightly glowing in the darkness of the dungeon, you're not sure if you could drink this.", Config.Rarity.EPIC, "res/SFX/powerup/8bit-powerup2.wav", Color.DARKOLIVEGREEN);
+                "It slightly glowing in the darkness of the dungeon, you're not sure if you could drink this.", Config.Rarity.EPIC, "SFX/powerup/8bit-powerup2.wav", Color.DARKOLIVEGREEN);
     }
 
     @Override

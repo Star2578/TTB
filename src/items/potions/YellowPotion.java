@@ -14,7 +14,7 @@ public class YellowPotion extends BasePotion implements ActionPointBuffable {
 
     public YellowPotion() {
         super("Yellow Potion", Color.ORANGE, Config.YellowPotionPath,
-                "You only hope it's not the other yellow liquid", Config.Rarity.LEGENDARY, "res/SFX/powerup/8bit-powerup2.wav", Color.DARKORANGE);
+                "You only hope it's not the other yellow liquid", Config.Rarity.LEGENDARY, "SFX/powerup/8bit-powerup2.wav", Color.DARKORANGE);
     }
 
     @Override

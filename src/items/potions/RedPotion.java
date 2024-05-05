@@ -14,7 +14,7 @@ public class RedPotion extends BasePotion implements Healable {
 
     public RedPotion() {
         super("Red Potion", Color.CRIMSON, Config.RedPotionPath,
-                "The classic red potion, it's very red.", Config.Rarity.UNCOMMON, "res/SFX/powerup/8bit-powerup2.wav", Color.DARKRED);
+                "The classic red potion, it's very red.", Config.Rarity.UNCOMMON, "SFX/powerup/8bit-powerup2.wav", Color.DARKRED);
     }
 
     @Override

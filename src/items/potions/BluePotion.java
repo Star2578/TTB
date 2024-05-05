@@ -14,7 +14,7 @@ public class BluePotion extends BasePotion implements ManaRefillable {
 
     public BluePotion() {
         super("Blue Potion", Color.AQUAMARINE, Config.BluePotionPath,
-                "Help replenish mana", Config.Rarity.COMMON, "res/SFX/powerup/8bit-powerup2.wav", Color.DARKCYAN);
+                "Help replenish mana", Config.Rarity.COMMON, "SFX/powerup/8bit-powerup2.wav", Color.DARKCYAN);
     }
 
     @Override

@@ -14,7 +14,7 @@ public class PurplePotion extends BasePotion implements AttackBuffable {
 
     public PurplePotion() {
         super("Purple Potion", Color.MAGENTA, Config.PurplePotionPath,
-                "You could feel immense aura coming from the bottle (it's smelly)", Config.Rarity.LEGENDARY, "res/SFX/powerup/8bit-powerup2.wav", Color.DARKMAGENTA);
+                "You could feel immense aura coming from the bottle (it's smelly)", Config.Rarity.LEGENDARY, "SFX/powerup/8bit-powerup2.wav", Color.DARKMAGENTA);
     }
 
     @Override
