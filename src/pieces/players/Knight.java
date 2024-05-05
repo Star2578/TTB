@@ -11,10 +11,6 @@ import skills.knight.Dart;
 import skills.knight.Heal;
 import skills.knight.Slash;
 import skills.knight.Stomp;
-import skills.universal.Ambush;
-import skills.universal.BloodLust;
-import skills.universal.Kick;
-import skills.universal.Punch;
 import utils.Config;
 
 import java.util.Map;

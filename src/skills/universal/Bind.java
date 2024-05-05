@@ -68,6 +68,7 @@ public class Bind extends BaseSkill implements Attackable {
                                 target.getRow(), target.getCol(),
                                 Stun ,
                                 new EffectConfig(12 , -6 , 0 , 1.6) );
+                Stun.bindToOwnerMovement(target);
                 Stun.setTurnRemain(4);
                 //===========================================================================================
                 GameManager.getInstance().player.decreaseActionPoint(actionPointCost);
