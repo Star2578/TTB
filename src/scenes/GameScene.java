@@ -822,7 +822,8 @@ public class GameScene {
                             resetSelection(0); // DON'T MOVE THIS LINE, it's for unavailable cursor to work properly
                             if (validMovesCache[rowToMove][colToMove] && player.validMove(rowToMove, colToMove) && piecesPosition[rowToMove][colToMove] == null) {
                                 // Move the player
-                                MovementHandler.movePlayer(player.getRow() + rowDelta, player.getCol() + colDelta);
+                                MovementHandler.movePlayer(rowToMove, colToMove);
+                                GUIManager.getInstance().eventLogDisplay.addLog("Moving player to square (" + rowToMove + ", " + colToMove + ")");
                             } else {
                                 SoundManager.getInstance().playSoundEffect(Config.sfx_failedSound);
                                 System.out.println("Invalid move");
