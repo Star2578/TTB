@@ -206,9 +206,9 @@ public class GameManager {
 
             // Load settings from properties
             SoundManager.getInstance().setBackgroundMusicSlider(Float.parseFloat(settingProperties.getProperty("backgroundMusicSlider", "50")));
-            SoundManager.getInstance().setBackgroundMusicVolume(Float.parseFloat(settingProperties.getProperty("backgroundMusicVolume", String.valueOf(SoundManager.getMidDecibel()))));
+            SoundManager.getInstance().setBackgroundMusicVolume(Float.parseFloat(settingProperties.getProperty("backgroundMusicVolume", String.valueOf(SoundManager.getMidVolume()))));
             SoundManager.getInstance().setSoundEffectSlider(Float.parseFloat(settingProperties.getProperty("soundEffectSlider", "50")));
-            SoundManager.getInstance().setSoundEffectVolume(Float.parseFloat(settingProperties.getProperty("soundEffectVolume", String.valueOf(SoundManager.getMidDecibel()))));
+            SoundManager.getInstance().setSoundEffectVolume(Float.parseFloat(settingProperties.getProperty("soundEffectVolume", String.valueOf(SoundManager.getMidVolume()))));
             fastUse = Boolean.parseBoolean(settingProperties.getProperty("_fastUse", String.valueOf(false)));
             autoEndTurn = Boolean.parseBoolean(settingProperties.getProperty("_autoEndTurn", String.valueOf(false)));
             displayDamageNumber = Boolean.parseBoolean(settingProperties.getProperty("_displayDamageNumber", String.valueOf(false)));

@@ -57,7 +57,7 @@ public class SettingScene {
         // Event listener for background music volume slider
         bgMusicSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             // Map the slider value to the decibel range
-            float decibelValue = soundManager.mapToDecibelRange(newValue.floatValue());
+            float decibelValue = (float) soundManager.mapToDecibelRange(newValue.floatValue());
 
             // Adjust the background music volume in real-time
             soundManager.setBackgroundMusicVolume(decibelValue);
@@ -69,11 +69,12 @@ public class SettingScene {
         // Event listener for SFX volume slider
         sfxSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             // Map the slider value to the decibel range
-            float decibelValue = soundManager.mapToDecibelRange(newValue.floatValue());
+            float decibelValue = (float) soundManager.mapToDecibelRange(newValue.floatValue());
 
             // Adjust the sound effect volume in real-time
             soundManager.setSoundEffectVolume(decibelValue);
             soundManager.setSoundEffectSlider(newValue.floatValue());
+            soundManager.adjustSoundEffectVolume(soundManager.getSoundEffectVolume());
             System.out.println("new sfx value(" + newValue + ", " + decibelValue + " dcb)");
         });
 

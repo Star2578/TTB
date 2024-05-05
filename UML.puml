@@ -1,0 +1,1921 @@
+@startuml
+class pieces.BasePiece {
+# Config.ENTITY_TYPE type
+# ImageView texture
+# int row
+# int col
+# SpriteAnimation spriteAnimation
++ ImageView animationImage
+# TranslateTransition moveTransition
+# int currentDirection
+# int offsetX
+# int offsetY
++ <<Create>> BasePiece(Config.ENTITY_TYPE,ImageView,int,int,int)
++ Config.ENTITY_TYPE getType()
++ ImageView getTexture()
++ int getRow()
++ void setRow(int)
++ int getCol()
++ void setCol(int)
++ int getOffsetX()
++ int getOffsetY()
++ int getCurrentDirection()
++ void setTexture(ImageView)
++ boolean isAlive()
+# void setupAnimation(String,int,int,int,int,boolean)
++ void moveWithTransition(int,int)
+}
+
+
+class items.potions.GreenPotion {
+- int MAX_HEALTH
+- BasePiece target
++ <<Create>> GreenPotion()
++ void usePotion(BasePiece)
++ void buffHealth()
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getRange()
++ boolean validRange(int,int)
++ void useItem(BasePiece)
++ int getBuffHealth()
+}
+
+
+class logic.gameUI.overlay.Overlay {
+# VBox view
++ <<Create>> Overlay(int,int)
++ void updatePosition(double,double,double,double)
++ void setViewSize(int,int)
++ VBox getView()
+}
+
+
+class pieces.players.Wizard {
++ <<Create>> Wizard(int,int,int)
++ boolean validMove(int,int)
++ boolean validAttack(int,int)
++ void startTurn()
++ void endTurn()
++ void attack(BaseMonsterPiece)
++ void takeDamage(int)
+}
+
+class logic.SoundManager {
+- {static} SoundManager instance
+- {static} float MIN_DECIBEL
+- {static} float MAX_DECIBEL
+- {static} float MID_DECIBEL
+- float soundEffectVolume
+- float soundEffectSlider
+- float backgroundMusicVolume
+- float backgroundMusicSlider
+- AudioInputStream audioInputStream
+- Clip backgroundMusic
+- Thread backgroundMusicThread
++ <<Create>> SoundManager()
++ {static} SoundManager getInstance()
++ void playSoundEffect(String)
++ void playBackgroundMusic(String)
++ float mapToDecibelRange(float)
++ void changeBackgroundMusic(String)
++ void stopBackgroundMusic()
++ void adjustBackgroundMusicVolume(float)
++ void adjustSoundEffectVolume(Clip,float)
++ float getBackgroundMusicVolume()
++ void setBackgroundMusicVolume(float)
++ float getSoundEffectVolume()
++ void setSoundEffectVolume(float)
++ float getBackgroundMusicSlider()
++ void setBackgroundMusicSlider(float)
++ float getSoundEffectSlider()
++ void setSoundEffectSlider(float)
++ {static} float getMidDecibel()
+}
+
+
+class logic.SceneManager {
+- {static} SceneManager instance
+- Stage stage
+- Scene menuScene
+- Scene charSelectionScene
+- Scene gameScene
+- SummaryScene summaryScene
+- int screenHeight
+- int screenWidth
++ <<Create>> SceneManager()
++ {static} SceneManager getInstance()
++ void switchSceneTo(Scene)
++ int getScreenHeight()
++ int getScreenWidth()
++ Stage getStage()
++ void setStage(Stage)
++ Scene getGameScene()
++ void setGameScene(Scene)
++ Scene getMenuScene()
++ void setMenuScene(Scene)
++ Scene getSummaryScene()
++ void setSummary(SummaryScene)
++ Scene getCharSelectionScene()
++ void setCharSelectionScene(Scene)
+}
+
+
+class skills.EmptySkill {
++ <<Create>> EmptySkill()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
+}
+
+class items.BaseItem {
+# String name
+# Color nameColor
+# ImageView icon
+# ImageView frame
+# String description
+# Color backgroundColor
+# int price
+# Config.Rarity rarity
+# String sfxPath
+# <<Create>> BaseItem(String,Color,String,String,Config.Rarity,String,Color)
+- int priceGenerator()
++ String getName()
++ Color getNameColor()
++ ImageView getIcon()
++ String getDescription()
++ ImageView getFrame()
++ int getPrice()
++ Config.Rarity getRarity()
++ Color getBackgroundColor()
++ void setName(String)
++ void setIcon(ImageView)
++ void setIconByPath(String)
++ void setFrame(ImageView)
+}
+
+
+class logic.gameUI.display.NpcDisplay {
+- VBox view
+- ImageView npcPortrait
+- Text npcName
+- Text dialogueText
+- VBox optionContainer
+- BorderPane additionalOverlay
++ <<Create>> NpcDisplay()
+- ScrollPane getScrollPane()
++ void setNpcPortrait(Image)
++ void setDialogueText(String)
++ void addDialogueOption(String,Runnable)
++ void clearDialogueOption()
++ Text getNpcName()
++ void newAdditionalOverlay(Node)
++ void clearAdditionalOverlay()
++ int getAdditionalOverlaySize()
++ Node getView()
+}
+
+
+class scenes.SummaryScene {
+- Scene scene
+- VBox root
+- Text killedMonstersText
+- Text moneyGatheredText
+- Text moveCountText
+- Text levelDiedOnText
++ <<Create>> SummaryScene()
++ void updateText()
++ Scene getScene()
+}
+
+
+class skills.universal.Narcissistic {
+- BasePiece target
+- int MAX_HEALTH
+- int ATTACK_BUFF
+- int MAX_ACTION_POINT
+- int MAX_MANA
++ <<Create>> Narcissistic()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ void buffActionPoint()
++ int getBuffActionPoint()
++ void buffAttack()
++ int getBuffAttack()
++ void buffHealth()
++ int getBuffHealth()
++ void buffMana()
++ int getBuffMana()
+}
+
+
+class logic.handlers.MovementHandler {
+- {static} GameManager gameManager
+- {static} BasePlayerPiece player
+- {static} boolean[][] validMovesCache
+- {static} ArrayList<Point2D> availableTiles
+- {static} ImageView[][] selectionFloor
+- {static} BasePiece[][] piecesPosition
+- {static} int newDirection
+- {static} int bufferDirection
+- {static} int BOARD_SIZE
++ {static} void showValidMoves(int,int)
++ {static} void movePlayer(int,int)
+- {static} boolean isInBoardPosition(int,int)
+}
+
+
+class logic.TurnManager {
+- {static} TurnManager instance
+- BasePlayerPiece player
+- List<BasePiece> environmentPieces
+- int currentEnvironmentPieceIndex
+- Timeline waitTimeline
+- Effect whoseTurnArrow
++ boolean isPlayerTurn
+- double DELAY_BETWEEN_ENVIRONMENT
++ <<Create>> TurnManager()
++ {static} TurnManager getInstance()
++ void initialize()
++ void startPlayerTurn()
++ void endPlayerTurn()
++ void startEnvironmentTurn()
+- void cycleNextEnvironment()
+- void pointArrowTo(BasePiece)
+}
+
+
+class skills.knight.Slash {
+- BasePiece target
+- int DAMAGE
++ <<Create>> Slash()
++ void attack()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getAttack()
+}
+
+
+class skills.knight.Heal {
+- BasePiece target
+- int HEAL
++ <<Create>> Heal()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ void heal()
++ int getHeal()
+}
+
+
+class skills.universal.Teleport {
+- BasePiece target
++ <<Create>> Teleport()
++ void teleport()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
+}
+
+
+interface items.Usable {
+~ int getRange()
+~ boolean validRange(int,int)
+~ boolean castOnSelf()
+~ boolean castOnMonster()
+~ void useItem(BasePiece)
+}
+
+class logic.effect.PopupConfig {
++ String text
++ String colorHex
++ double distance
++ double duration
++ double scale
++ double offsetX
++ double offsetY
++ Image image
++ int imageSize
++ <<Create>> PopupConfig(String,String,double,double,double,double,double,Image,int)
++ <<Create>> PopupConfig(String,String,double,double,double,Image,int)
++ <<Create>> PopupConfig(String,String,Image,int)
+}
+
+
+class skills.universal.TripleStrike {
+- BasePiece target
++ <<Create>> TripleStrike()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ void attack()
++ int getAttack()
+}
+
+
+class pieces.wall.BaseWallPiece {
+- TileMap tileMap
++ <<Create>> BaseWallPiece(int,int)
++ TileMap getTileMap()
+}
+
+
+class logic.handlers.ItemHandler {
+- {static} GameManager gameManager
+- {static} boolean[][] validMovesCache
+- {static} ArrayList<Point2D> availableTiles
+- {static} ImageView[][] selectionFloor
+- {static} int BOARD_SIZE
++ {static} void showValidItemRange(int,int,BaseItem)
+- {static} boolean isInBoardPosition(int,int)
+}
+
+
+class scenes.SettingScene {
++ {static} GameManager gameManager
++ {static} SoundManager soundManager
++ {static} Scene setting(Stage,Scene)
+- {static} Label createLabel(String)
+- {static} VBox createHowToPlayContainer()
+- {static} VBox createHowToPlaySubtitle(String,String)
+- {static} void addChangingDropShadow(Label)
+- {static} Color generateRandomColor()
+}
+
+
+abstract class pieces.enemies.BaseMonsterPiece {
+# int currentHp
+# int maxHp
+# boolean isAlive
+# boolean endAction
+# boolean[][] validMovesCache
+# int moneyDrop
+# Random random
+# Map<String,Integer> EffectBuffs
++ <<Create>> BaseMonsterPiece(int,int,int)
++ {abstract}void performAction()
++ {abstract}void updateState()
++ {abstract}void attack(BasePlayerPiece)
+# void move(int,int)
++ void takeDamage(int)
++ void changeDirection(int)
+# void roamRandomly()
+# List<int[]> getValidMoves(int,int)
+# boolean isValidMoveSet(int,int)
++ int getCurrentHealth()
++ void setCurrentHealth(int)
++ int getMaxHealth()
++ void setMaxHealth(int)
++ boolean isAlive()
++ void onDeath()
++ boolean isEndAction()
++ void addBuff(int,String)
+}
+
+
+interface pieces.ManaBuffable {
+~ void buffMana()
+~ int getBuffMana()
+}
+
+class skills.universal.Rho_Aias {
+- BasePiece target
+- int BUFF_DURATION
++ <<Create>> Rho_Aias()
++ void perform(BasePiece)
++ void applyBuff()
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getDuration()
+}
+
+
+class skills.universal.HammerFall {
+- BasePiece target
+- int DAMAGE
++ <<Create>> HammerFall()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ void attack()
++ int getAttack()
+}
+
+
+interface pieces.Healable {
+~ void heal()
+~ int getHeal()
+}
+
+class app.Main {
+~ GameScene gameScene
+~ MainMenuScene mainMenuScene
+~ SummaryScene summaryScene
+~ CharSelectionScene charSelectionScene
++ {static} void main(String[])
++ void start(Stage)
+}
+
+
+class pieces.wall.TileMap {
+- Rectangle2D[][] tileMapGrids
+- int cols
+- int rows
+- int tileWidth
+- int tileHeight
+- Image tileMapImage
+- int realCols
+- int realRows
++ <<Create>> TileMap(Image,int,int,int,int)
++ ImageView getTileAt(int,int,double)
++ ImageView getTileAt(int,int)
+}
+
+
+class skills.universal.BloodPact {
+- BasePiece target
+- int HEALTH_COST
+- int DAMAGE
++ <<Create>> BloodPact()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ void attack()
++ int getAttack()
+}
+
+
+class logic.effect.EffectMaker {
+- SpriteAnimation[] environmentEffects
+- ArrayList<Effect> effects
++ Pane effectPane
++ ArrayList<Effect> runningEffects
+- {static} EffectMaker instance
++ <<Create>> EffectMaker()
++ {static} EffectMaker getInstance()
++ Effect createInPlaceEffects(int)
++ void renderEffect(Enum<TYPE>,BasePiece,int,int,Effect,EffectConfig)
++ void clearDeadEffect()
++ void updateEffectTimer()
+}
+
+
+enum logic.effect.TYPE {
++  AROUND_SELF
++  ON_TARGET
++  ON_SELF
++  AROUND_SELF_ENEMY
++  BULLET_TO_TARGET
++  BULLET_TO_TARGET_ENEMY
+}
+
+class skills.archer.Halt {
+- BasePiece target
+- int DAMAGE
+- int STUN_DURATION
++ <<Create>> Halt()
++ void attack()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getAttack()
+}
+
+
+class items.potions.PurplePotion {
+- int ATTACK_BUFF
+- BasePiece target
++ <<Create>> PurplePotion()
++ void usePotion(BasePiece)
++ void buffAttack()
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getRange()
++ boolean validRange(int,int)
++ void useItem(BasePiece)
++ int getBuffAttack()
+}
+
+
+interface pieces.ActionPointBuffable {
+~ void buffActionPoint()
+~ int getBuffActionPoint()
+}
+
+class skills.universal.Ambush {
+- BasePiece target
+- int DAMAGE
++ <<Create>> Ambush()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ void attack()
++ int getAttack()
+}
+
+
+class pieces.enemies.Necromancer {
+- Necromancer.State currentState
+- double ATTACK_RANGE
+- int VISION_RANGE
+- int ATTACK_DAMAGE
+- int counter
+- int SUMMON_ZOMBIE_EVERY
++ <<Create>> Necromancer()
++ void updateState()
++ void performAction()
+- void chasePlayer()
+# void roamRandomly()
++ void attack(BasePlayerPiece)
++ void summonZombie(int,int)
++ void positionSummonZombie()
+}
+
+
+enum pieces.enemies.State {
++  NEUTRAL_ROAMING
++  AGGRESSIVE
+}
+
+class pieces.enemies.Skeleton {
+- Skeleton.State currentState
+- double ATTACK_RANGE
+- int VISION_RANGE
+- int ATTACK_DAMAGE
++ <<Create>> Skeleton()
++ void updateState()
++ void performAction()
+- void chasePlayer()
++ void attack(BasePlayerPiece)
+}
+
+
+enum pieces.enemies.State {
++  NEUTRAL_ROAMING
++  AGGRESSIVE
+}
+
+class skills.knight.Stomp {
+- BasePiece target
+- int DAMAGE
++ <<Create>> Stomp()
++ void attack()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getAttack()
+}
+
+
+class skills.universal.HolyLight {
+- BasePiece target
+- int DAMAGE
+- int HEAL
++ <<Create>> HolyLight()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ void attack()
++ int getAttack()
++ void heal()
++ int getHeal()
+}
+
+
+class skills.LockedSlot {
++ <<Create>> LockedSlot()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
+}
+
+class logic.handlers.AttackHandler {
+- {static} GameManager gameManager
+- {static} boolean[][] validMovesCache
+- {static} ArrayList<Point2D> availableTiles
+- {static} ImageView[][] selectionFloor
+- {static} int BOARD_SIZE
++ {static} void showValidAttackRange(int,int)
+- {static} boolean isInBoardPosition(int,int)
+}
+
+
+class logic.GameManager {
+- {static} GameManager instance
+- Properties settingProperties
+- Properties gameProperties
+- {static} String CONFIG_FILE
+- {static} String PROGRESSION_FILE
++ boolean fastUse
++ boolean autoEndTurn
++ boolean displayDamageNumber
++ boolean displayActionPointOnCursor
++ boolean fogOfWar
++ boolean moreMonster
++ int playerMoney
++ int dungeonLevel
++ int totalKill
++ int totalKillThisRun
++ int totalMoves
++ int totalMovesThisRun
++ int totalMoney
++ int totalMoneyThisRun
++ int farthestLevelReach
++ int currentLevelReach
++ GameScene gameScene
++ Pane animationPane
++ GridPane fogPane
++ BasePlayerPiece player
++ GridPane boardPane
++ ImageView[][] dungeonFloor
++ ImageView[][] selectionFloor
++ TileMap wallTileMap
++ ArrayList<Point2D> availableMoveTiles
++ ArrayList<Point2D> availableAttackTiles
++ ArrayList<Point2D> availableSkillTiles
++ ArrayList<Point2D> availableItemTiles
++ boolean[][] validMovesCache
++ BasePiece[][] piecesPosition
++ List<BasePiece> environmentPieces
++ int SKILL_SLOTS
++ int skillUnlockedSlots
++ int itemUnlockedSlots
++ BaseSkill[] playerSkills
++ BaseSkill selectedSkill
++ BaseItem selectedItem
++ List<BaseItem> inventory
++ List<Point2D> doorAt
++ BaseSkill[] SKILL_POOL
++ BaseItem[] ITEM_POOL
++ <<Create>> GameManager()
++ {static} GameManager getInstance()
++ boolean isEmptySquare(int,int)
++ void GameStart(BasePlayerPiece)
++ void GameOver()
++ void saveGame()
++ void loadGame()
++ void loadSettings()
++ void saveSettings()
+}
+
+
+interface logic.gameUI.display.Display {
+~ Node getView()
+}
+
+class pieces.enemies.Vampire {
+- State currentState
+- double ATTACK_RANGE
+- int VISION_RANGE
+- int ATTACK_DAMAGE
+- boolean useSkill
++ <<Create>> Vampire()
++ void updateState()
++ void performAction()
+- void chasePlayer()
++ void attack(BasePlayerPiece)
+- void moveTowardsPlayer()
++ void extraSkill(BasePlayerPiece)
+}
+
+
+enum pieces.enemies.State {
++  NEUTRAL_ROAMING
++  AGGRESSIVE
+}
+
+class logic.effect.Effect {
++ boolean canKill
+- {static} int defaultTimeout
+- int turnRemain
+- BasePiece owner
+- EffectConfig config
++ <<Create>> Effect(ImageView,int,int,int,int,int,float,boolean)
++ <<Create>> Effect(SpriteAnimation)
++ Effect clone()
++ void setTimeout(double)
++ void setTurnRemain(int)
++ int getTurnRemain()
++ void setConfig(EffectConfig)
++ EffectConfig getConfig()
++ void setOwner(BasePiece)
++ BasePiece getOwner()
++ void bindToOwnerMovement(BasePiece)
+}
+
+
+class logic.SpriteAnimation {
+# ImageView imageView
+- int totalFrames
+- float fps
+- int cols
+- int rows
+- int frameWidth
+- int frameHeight
+- int currentCol
+- int currentRow
+- long lastFrame
+- boolean isPause
+- boolean loop
++ <<Create>> SpriteAnimation(ImageView,int,int,int,int,int,float,boolean)
++ void handle(long)
++ void stop()
++ void start()
++ void changeAnimation(int,int)
++ SpriteAnimation clone()
++ ImageView getImageView()
++ int getTotalFrames()
++ float getFps()
++ int getCols()
++ int getRows()
++ int getCurrentCol()
++ int getCurrentRow()
++ int getFrameHeight()
++ int getFrameWidth()
++ boolean isLoop()
+}
+
+
+interface pieces.HealthBuffable {
+~ void buffHealth()
+~ int getBuffHealth()
+}
+
+interface pieces.BaseStatus {
+~ int getCurrentHealth()
+~ void setCurrentHealth(int)
+~ int getMaxHealth()
+~ void setMaxHealth(int)
+~ void takeDamage(int)
+~ boolean isAlive()
+~ void onDeath()
+}
+
+class utils.ImageScaler {
+- {static} int SCALE_FACTOR
++ {static} Image resample(Image,int)
++ {static} Image resample(Image)
+}
+
+
+class items.potions.BluePotion {
+- int MANA_REFILL
+- BasePiece target
++ <<Create>> BluePotion()
++ void usePotion(BasePiece)
++ void refillMana()
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getRange()
++ boolean validRange(int,int)
++ void useItem(BasePiece)
++ int getRefill()
+}
+
+
+class utils.Config {
++ {static} String PlaceholderPath
++ {static} String FramePath
++ {static} String FrameSelectedPath
++ {static} int BOARD_SIZE
++ {static} int SQUARE_SIZE
++ {static} int GAME_SIZE
++ {static} int MOVE_ACTIONPOINT
++ {static} String DefaultCursor
++ {static} String UnavailableCursor
++ {static} String AttackCursor
++ {static} String AimCursor
++ {static} String QuestionCursor
++ {static} String HandCursor
++ {static} String HandClickCursor
++ {static} String FootShadowPath
++ {static} String KnightPath
++ {static} String KnightAnimationPath
++ {static} String ArcherPath
++ {static} String ArcherAnimationPath
++ {static} String WizardPath
++ {static} String WizardAnimationPath
++ {static} String DeadEffectPath
++ {static} String StunEffectPath
++ {static} String EnemiesNormalAttackPath
++ {static} String TinyAnimationPath
++ {static} String ZombieAnimationPath
++ {static} String BomberAnimationPath
++ {static} String BombAnimationPath
++ {static} String BombExplosionPath
++ {static} String NecromancerPath
++ {static} String NecromancerSummonPath
++ {static} String NecromancerAttackPath
++ {static} String SkeletonPath
++ {static} String SkeletonAttackPath
++ {static} String VampirePath
++ {static} String VampireSkillPath
++ {static} String SlimePath
++ {static} String SlimePath2
++ {static} String SlimePath3
++ {static} String DealerPortraitPath
++ {static} String DealerAnimationPath
++ {static} String WallPath
++ {static} String WallTileMapPath
++ {static} String FloorPath
++ {static} String FloorHoverPath
++ {static} String FogPath
++ {static} String DoorPath
++ {static} String ValidMovePath
++ {static} String ValidAttackPath
++ {static} String ValidSkillPath
++ {static} String ValidItemPath
++ {static} String LockedSkillIconPath
++ {static} String UnlockedSkillIconPath
++ {static} String SlashPath
++ {static} String HealPath
++ {static} String DartPath
++ {static} String StompPath
++ {static} String HaltPath
++ {static} String TargetLockPath
++ {static} String SnipePath
++ {static} String TeleportPath
++ {static} String FireballPath
++ {static} String IceShieldPath
++ {static} String RainOfFirePath
++ {static} String DragonFirePath
++ {static} String HolyLightPath
++ {static} String BloodPactPath
++ {static} String RollingPath
++ {static} String LesserHealPath
++ {static} String RhoAiasPath
++ {static} String HammerFallPath
++ {static} String AmbushPath
++ {static} String BindPath
++ {static} String BloodLustPath
++ {static} String KickPath
++ {static} String NarcissisticPath
++ {static} String PunchPath
++ {static} String StaticShockPath
++ {static} String TripleStrikePath
++ {static} String BluePotionPath
++ {static} String RedPotionPath
++ {static} String PurplePotionPath
++ {static} String GreenPotionPath
++ {static} String YellowPotionPath
++ {static} String meleeAttackPath
++ {static} String rangedAttackPath
++ {static} String rangedAttackTakeDamagePath
++ {static} String magicAttackPath
++ {static} String magicAttackTakeDamagePath
++ {static} String skillSlashPath
++ {static} String skillStompPath
++ {static} String skillDartPath
++ {static} String skillHealPath
++ {static} String skillSnipePath
++ {static} String skillSnipePath2
++ {static} String skillSnipePath3
++ {static} String skillSnipePath4
++ {static} String skillTargetlockPath
++ {static} String skillHaltPath
++ {static} String skillTeleportPath
++ {static} String skillFireballPath
++ {static} String skillRainOfFirePath
++ {static} String skillDragonFirePath
++ {static} String skillIceShieldPath
++ {static} String skillIceShieldBuffPath
++ {static} String skillHammerFallPath
++ {static} String skillHolyLightPath
++ {static} String skillRhoAiasPath
++ {static} String skillStaticShockPath
++ {static} String skillNarcissisticBuffActionPointPath
++ {static} String skillNarcissisticBuffAttackPath
++ {static} String skillNarcissisticBuffHealthPath
++ {static} String skillPunchPath
++ {static} String skillKickPath
++ {static} String skillAmbushPath
++ {static} String skillAmbushCritPath
++ {static} String skillBloodlustPath
++ {static} String skillBloodlustHealPath
++ {static} String bgm_8_bit_adventure
++ {static} String bgm_8_bit_nostalgia
++ {static} String sfx_attackSound
++ {static} String sfx_moveSound
++ {static} String sfx_hurtSound
++ {static} String sfx_gameOverSound
++ {static} String sfx_buttonSound
++ {static} String sfx_failedSound
++ {static} String sfx_deadSound
++ {static} String sfx_holyMagicSound
++ {static} String sfx_darkMagicSound
++ {static} String sfx_powerupSound
++ {static} String ui_heart_icon
++ {static} String ui_sword_icon
++ {static} String ui_mana_icon
++ {static} String ui_stamina_icon
++ {static} String ui_charInfo_box
++ {static} String ui_charSelect_box
++ {static} String here_arrow
+- {static} char[][] customRoom
++ {static} char[][] safeRoom
++ {static} char[][] BossRoom1
+}
+
+enum utils.ENTITY_TYPE {
++  PLAYER
++  MONSTER
++  TRAP
++  NPC
++  WALL
++  EMPTY
+}
+
+enum utils.Rarity {
++  COMMON
++  UNCOMMON
++  RARE
++  EPIC
++  LEGENDARY
+}
+
+interface pieces.AttackBuffable {
+~ void buffAttack()
+~ int getBuffAttack()
+}
+
+interface pieces.Buffable {
+~ void applyBuff()
+~ int getDuration()
+}
+
+interface pieces.ManaRefillable {
+~ void refillMana()
+~ int getRefill()
+}
+
+abstract class skills.BaseSkill {
+# String name
+# Color nameColor
+# int manaCost
+# int actionPointCost
+# String description
+# ImageView icon
+# ImageView frame
+# int range
+# boolean[][] areaRange
+# int price
+# Config.Rarity rarity
+# String sfxPath
+# <<Create>> BaseSkill(String,Color,int,int,String,Config.Rarity,String)
+- int priceGenerator()
++ {abstract}void perform(BasePiece)
++ {abstract}boolean validRange(int,int)
++ {abstract}boolean castOnSelf()
++ {abstract}boolean castOnMonster()
++ String getName()
++ Color getNameColor()
++ int getManaCost()
++ int getActionPointCost()
++ String getDescription()
++ ImageView getIcon()
++ int getRange()
++ ImageView getFrame()
++ int getPrice()
++ Config.Rarity getRarity()
++ void setFrame(ImageView)
+}
+
+
+class logic.gameUI.display.EventLogDisplay {
+- VBox view
+- ScrollPane scrollPane
+- VBox logContainer
++ <<Create>> EventLogDisplay()
++ void addLog(String)
++ void addLog(String,Color)
++ void clearLog()
++ Node getView()
+}
+
+
+class scenes.MainMenuScene {
+- Scene scene
+- Pane rootPane
+- Button playBtn
+- Button settingBtn
+- Button quitBtn
+- Text titleText
+- Rectangle titleRect1
+- Rectangle titleRect2
++ <<Create>> MainMenuScene()
++ Scene getScene()
+}
+
+
+class skills.knight.Dart {
+- BasePiece target
+- int DAMAGE
+- int KNOCKBACK
++ <<Create>> Dart()
++ void attack()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getAttack()
+}
+
+
+class items.EmptyItem {
++ <<Create>> EmptyItem()
+}
+
+class scenes.CharSelectionScene {
+- Scene scene
+- Pane rootPane
+- Button playBtn
+- Button returnBtn
+- StackPane scrollPaneContainer
+- ScrollPane scrollPane
+- {static} CharInfoBox charInfoBox
+- {static} CharCard selectedCard
++ <<Create>> CharSelectionScene()
++ GridPane getCharContainer(BasePlayerPiece)
++ Scene getScene()
+}
+
+
+class scenes.CharSelectionScene$CharCard {
++ BasePlayerPiece charData
++ <<Create>> CharCard(BasePlayerPiece)
+}
+
+
+class scenes.CharSelectionScene$CharInfoBox {
+- Text charName
+- VBox innerContainer
+- StatBox statBox
+- SkillList skillList
++ <<Create>> CharInfoBox()
++ void changeCharInfo(BasePlayerPiece)
+}
+
+
+class scenes.CharSelectionScene$StatBox {
+- HBox hp
+- HBox mp
+- HBox ap
+- HBox atk
++ <<Create>> StatBox()
++ void setText(int,int,int,int)
++ void changeInfo(BasePlayerPiece)
+}
+
+
+class scenes.CharSelectionScene$SkillList {
+- GridPane skillContainer
+- int SKILLBOX_WIDTH
+- int SKILLBOX_HEIGHT
+- ArrayList<StackPane> skills
+- BaseSkill[] skillDatas
+- Pane skillDescContainer
+- VBox skillTextBox
+- Text skillNameText
+- Text skillText
+# SkillStat skillStat
++ <<Create>> SkillList()
++ void changeInfo(BasePlayerPiece)
++ GridPane createSkillContainer()
++ void displaySkill(int)
+}
+
+
+class scenes.CharSelectionScene$SkillStat {
+# HBox dmg
+# HBox mp
+# HBox ap
++ <<Create>> SkillStat()
++ void changeSkillStat(BaseSkill)
+}
+
+
+class skills.wizard.RainOfFire {
+- BasePiece target
+- int DAMAGE
++ <<Create>> RainOfFire()
++ void attack()
+- void renderEffects(int,int)
+- boolean checkRange(int,int)
+- void PieceAttack(BasePiece)
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getAttack()
+}
+
+
+class skills.wizard.IceShield {
+- BasePiece target
+- int BUFF_DURATION
++ <<Create>> IceShield()
++ void perform(BasePiece)
++ void applyBuff()
++ boolean castOnSelf()
++ boolean castOnMonster()
++ boolean validRange(int,int)
++ int getDuration()
+}
+
+
+class pieces.enemies.SlimeMucilage {
+- SlimeMucilage.State currentState
+- int timeLeft
++ <<Create>> SlimeMucilage()
++ void attack(BasePlayerPiece)
++ void performAction()
+- void countingDownTimer()
++ void removing()
++ void updateState()
+}
+
+
+enum pieces.enemies.State {
++  COUNTDOWN
++  EXPIRED
+}
+
+class logic.handlers.SkillHandler {
+- {static} GameManager gameManager
+- {static} boolean[][] validMovesCache
+- {static} ArrayList<Point2D> availableTiles
+- {static} ImageView[][] selectionFloor
+- {static} int BOARD_SIZE
++ {static} void showValidSkillRange(int,int,BaseSkill)
+- {static} boolean isInBoardPosition(int,int)
+}
+
+
+class pieces.enemies.Tiny {
+- State currentState
+- double ATTACK_RANGE
+- int VISION_RANGE
+- int ATTACK_DAMAGE
++ <<Create>> Tiny()
++ void updateState()
++ void performAction()
+- void chasePlayer()
++ void attack(BasePlayerPiece)
+- void moveTowardsPlayer()
+}
+
+
+enum pieces.enemies.State {
++  NEUTRAL_ROAMING
++  AGGRESSIVE
+}
+
+class skills.universal.Bind {
+- BasePiece target
+- int DAMAGE
++ <<Create>> Bind()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ void attack()
++ int getAttack()
+}
+
+
+class skills.archer.Rolling {
+- BasePiece target
++ <<Create>> Rolling()
++ void perform(BasePiece)
++ void roll()
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
+}
+
+
+class pieces.enemies.SlimeBoss {
+- Phase currentPhase
+- int ATTACK_DAMAGE_FIRST_PHASE
+- int ATTACK_DAMAGE_SECOND_PHASE
+- int ATTACK_DAMAGE_THIRD_PHASE
+- double ATTACK_RANGE
+- int MOVE
+- int ATK_CNT
+- int Skill_CNT
+- int Spilt_range
+- BasePiece[][] piecesPosition
++ <<Create>> SlimeBoss()
++ void performAction()
++ void updateState()
++ void attack(BasePlayerPiece)
+- void SplitMucilage()
+- void splitSlime(int,Phase)
+- void deadbomb()
+- void chasePlayer()
+- void moveTowardsPlayer()
++ void onDeath()
+}
+
+
+enum pieces.enemies.Phase {
++  FIRST
++  SECOND
++  THIRD
++  DEAD
+}
+
+class skills.archer.Targetlock {
+- BasePiece target
+- int DAMAGE
++ <<Create>> Targetlock()
++ void attack()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getAttack()
+}
+
+
+class skills.universal.StaticShock {
+- BasePiece target
+- int DAMAGE
++ <<Create>> StaticShock()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ void attack()
++ int getAttack()
+}
+
+
+class skills.universal.Kick {
+- BasePiece target
+- int DAMAGE
+- int KNOCKBACK
++ <<Create>> Kick()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ void attack()
++ int getAttack()
+}
+
+
+class pieces.npcs.Dealer {
+- List<BaseItem> items_noDuplicate
+- List<BaseSkill> skills_noDuplicate
+- InfoOverlay infoOverlay
+- VBox shopLayout
+- StackPane overlayPane
+- GridPane skillShopGrid
+- GridPane itemShopGrid
+- Text priceTag
+- int buySkillIndex
++ <<Create>> Dealer()
++ void setDialogueOptions(NpcDisplay)
+- void setupShop()
+- StackPane createItemFrame(BaseItem)
+- StackPane createSkillFrame(BaseSkill)
+- List<BaseItem> getRandomItems(int)
+- List<BaseSkill> getRandomSkills(int)
++ void priceTagPosition(double,double,double,double)
+- BaseSkill createNewInstance(BaseSkill)
+- BaseItem createNewInstance(BaseItem)
+- void updateShop()
+}
+
+
+class logic.effect.PopupMaker {
+# {static} int POPUP_WIDTH
+# {static} int POPUP_HEIGHT
+# {static} int DURATION
++ {static} String DAMAGE_COLOR
++ {static} String HEAL_COLOR
++ {static} String BUFF_COLOR
++ <<Create>> PopupMaker()
++ {static} void createPopup(int,int,PopupConfig)
+}
+
+
+class logic.effect.Popup {
++ <<Create>> Popup(double,double)
+}
+
+class logic.effect.EffectConfig {
++ double offsetX
++ double offsetY
++ double distanceFromOrigin
++ double scale
++ <<Create>> EffectConfig(double,double,double,double)
+}
+
+
+class skills.universal.Punch {
+- BasePiece target
+- int DAMAGE
+- int KNOCKBACK
++ <<Create>> Punch()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ void attack()
++ int getAttack()
+}
+
+
+class skills.wizard.DragonFire {
+- BasePiece target
+- int DAMAGE
++ <<Create>> DragonFire()
++ void attack()
+- int normalizeDirection(int)
+- void performAttackInDirection(int,int,int,int,int)
+- void renderEffects(int,int)
+- void performSecondaryAttack(int,int,int,int)
+- void performTertiaryAttack(int,int,int,int)
+- boolean checkRange(int,int)
+- void PieceAttack(BasePiece)
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getAttack()
+}
+
+
+class items.potions.YellowPotion {
+- int MAX_ACTION_POINT
+- BasePiece target
++ <<Create>> YellowPotion()
++ void usePotion(BasePiece)
++ void buffActionPoint()
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getRange()
++ boolean validRange(int,int)
++ void useItem(BasePiece)
++ int getBuffActionPoint()
+}
+
+
+interface pieces.Attackable {
+~ void attack()
+~ int getAttack()
+}
+
+abstract class items.potions.BasePotion {
++ <<Create>> BasePotion(String,Color,String,String,Config.Rarity,String,Color)
++ {abstract}void usePotion(BasePiece)
++ {abstract}boolean castOnSelf()
++ {abstract}boolean castOnMonster()
++ {abstract}boolean validRange(int,int)
++ {abstract}void useItem(BasePiece)
+}
+
+class pieces.enemies.Bomb {
+- Bomb.State currentState
+- int timeLeft
+- int damage
++ <<Create>> Bomb()
++ void attack(BasePlayerPiece)
++ void performAction()
+- void countingDownTimer()
+- void explode()
++ void updateState()
+}
+
+
+enum pieces.enemies.State {
++  COUNTDOWN
++  EXPLODE
+}
+
+class items.potions.RedPotion {
+- int HEALTH_REGEN
+- BasePiece target
++ <<Create>> RedPotion()
++ void usePotion(BasePiece)
++ void heal()
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getRange()
++ boolean validRange(int,int)
++ void useItem(BasePiece)
++ int getHeal()
+}
+
+
+abstract class pieces.npcs.BaseNpcPiece {
+- String name
+- Image portrait
+- String currentDialogue
+- Map<String,Object> dialogues
++ <<Create>> BaseNpcPiece(String,String,int)
+# void importDialogues(String)
++ void talk(String,String)
++ void talk(String)
++ void setupAnimation(String,int,int,int,int,boolean)
++ void setName(String)
++ Image getPortrait()
++ String getName()
++ String getCurrentDialogue()
++ {abstract}void setDialogueOptions(NpcDisplay)
+}
+
+
+abstract class pieces.players.BasePlayerPiece {
+# int currentHp
+# int maxHp
+# int currentActionPoint
+# int maxActionPoint
+# int currentMana
+# int maxMana
+# int attackDamage
+# boolean canAct
+# BaseSkill[] skills
+# BaseSkill[] classSpecifics
+# int ATTACK_COST
+# int attackRange
+# int buffturn
+# Map<String,Integer> EffectBuffs
++ <<Create>> BasePlayerPiece(int,int,int)
++ {abstract}boolean validAttack(int,int)
++ {abstract}void attack(BaseMonsterPiece)
++ {abstract}boolean validMove(int,int)
+# void setupAnimation(String,int,int,int,int,boolean)
++ {abstract}void startTurn()
++ {abstract}void endTurn()
++ void takeDamage(int)
++ void decreaseMana(int)
++ void decreaseActionPoint(int)
++ void changeDirection(int)
++ void moveWithTransition(int,int)
++ int getCurrentHealth()
++ int getMaxHealth()
++ void setCurrentHealth(int)
++ void setMaxHealth(int)
++ int getAttackDamage()
++ void setAttackDamage(int)
++ int getAttackRange()
++ int getCurrentMana()
++ void setCurrentMana(int)
++ int getMaxMana()
++ void setMaxMana(int)
++ void setCurrentActionPoint(int)
++ void setCurrentActionPointForce(int)
++ int getCurrentActionPoint()
++ void setMaxActionPoint(int)
++ int getMaxActionPoint()
++ void setCanAct(boolean)
++ boolean canAct()
++ BaseSkill[] getSkills()
++ BaseSkill[] getClassSpecifics()
++ boolean isAlive()
++ void onDeath()
++ void addBuff(int,String)
++ BasePlayerPiece createNewInstance()
+}
+
+
+class pieces.players.Archer {
++ <<Create>> Archer(int,int,int)
++ boolean validMove(int,int)
++ boolean validAttack(int,int)
++ void startTurn()
++ void endTurn()
++ void attack(BaseMonsterPiece)
++ void takeDamage(int)
+}
+
+class logic.gameUI.overlay.InfoOverlay {
+- Label title
+- Text desc
+- VBox dataContainer
++ <<Create>> InfoOverlay()
++ void newInfo(String,Color,String)
++ Label getTitle()
++ Text getDesc()
++ VBox getDataContainer()
+}
+
+
+class pieces.enemies.Zombie {
+- State currentState
+- double ATTACK_RANGE
+- int VISION_RANGE
+- int ATTACK_DAMAGE
++ <<Create>> Zombie()
++ void updateState()
++ void performAction()
+- void chasePlayer()
++ void attack(BasePlayerPiece)
+- void moveTowardsPlayer()
+}
+
+
+enum pieces.enemies.State {
++  NEUTRAL_ROAMING
++  AGGRESSIVE
+}
+
+class pieces.players.Knight {
++ <<Create>> Knight(int,int,int)
++ boolean validMove(int,int)
++ boolean validAttack(int,int)
++ void startTurn()
++ void endTurn()
++ void attack(BaseMonsterPiece)
++ void takeDamage(int)
+}
+
+class skills.universal.BloodLust {
+- BasePiece target
+- int DAMAGE
+- int HEAL
++ <<Create>> BloodLust()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ void attack()
++ int getAttack()
++ void heal()
++ int getHeal()
+}
+
+
+class skills.wizard.Fireball {
+- BasePiece target
+- int DAMAGE
++ <<Create>> Fireball()
++ void attack()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getAttack()
+}
+
+
+class skills.universal.LesserHeal {
+- BasePiece target
+- int HEAL
++ <<Create>> LesserHeal()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ void heal()
++ int getHeal()
+}
+
+
+class logic.gameUI.display.SkillSelectDisplay {
+- VBox view
+- GridPane skillSelectorGrid
+- InfoOverlay infoOverlay
+- ImageView frameView
++ <<Create>> SkillSelectDisplay()
++ void updateSkillSelect()
+- StackPane createSkillFrame(BaseSkill)
++ void updateSkillFrame(int,BaseSkill)
++ InfoOverlay getInfoOverlay()
++ void enableFrame()
++ void disableFrame()
++ Node getView()
+}
+
+
+class skills.archer.Snipe {
+- BasePiece target
+- int DAMAGE
++ <<Create>> Snipe()
++ void attack()
++ void perform(BasePiece)
++ boolean validRange(int,int)
++ boolean castOnSelf()
++ boolean castOnMonster()
++ int getAttack()
+}
+
+
+class logic.gameUI.display.InventoryDisplay {
+- VBox view
+- VBox usableItemsSection
+- InfoOverlay infoOverlay
+- Button useItem
+- Button throwAwayItem
++ <<Create>> InventoryDisplay()
+- VBox createSection(String)
+- StackPane createItemFrame(BaseItem)
++ void updateInventoryUI()
++ void throwAwayItem(BaseItem)
++ InfoOverlay getInfoOverlay()
++ void enableFrame()
++ void disableFrame()
++ Node getView()
+}
+
+
+class logic.SpawnerManager {
++ {static} SpawnerManager instance
+- GameManager gameManager
+- ImageView[][] dungeonFloor
+- double doorProbability
++ int monsterCount
++ int freeSquareCount
++ BaseMonsterPiece[] monsterPool
++ BaseMonsterPiece[] bossPool
++ <<Create>> SpawnerManager()
++ void initialize()
++ {static} SpawnerManager getInstance()
++ void trySpawnDoor(int,int)
++ void spawnDoor(int,int)
++ void increaseDoorChance()
++ void randomMonsterSpawnFromPool(BaseMonsterPiece[],List<BasePiece>)
+}
+
+
+class pieces.enemies.Bomber {
+- Bomber.State currentState
+- int VISION_RANGE
+- int MOVE
+- int BOMB_EVERY
+- int counter
++ <<Create>> Bomber()
++ void attack(BasePlayerPiece)
++ void performAction()
++ void updateState()
+# void move(int,int)
+# void roamRandomly()
+- void runAwayFromPlayer()
+}
+
+
+enum pieces.enemies.State {
++  NEUTRAL_ROAMING
++  RUNNING_AWAY
+}
+
+class logic.gameUI.GUIManager {
+- {static} GUIManager instance
+- TurnManager turnManager
+- BasePlayerPiece player
+- VBox playerOptionsMenu
+- VBox rightSideUI
+- Display currentDisplay
+- Text displayActionPoint
+- Text displayMoney
+- VBox hpBox
+- Text hpText
+- ProgressBar hpBar
+- VBox manaBox
+- Text manaText
+- ProgressBar manaBar
+- Text actionPointDisplayText
+- VBox playerOptionButtonBox
+- Button endTurnButton
+- Button attackButton
++ InventoryDisplay inventoryDisplay
++ SkillSelectDisplay skillSelectDisplay
++ NpcDisplay npcDisplay
++ EventLogDisplay eventLogDisplay
++ boolean isInAttackMode
++ <<Create>> GUIManager()
++ {static} GUIManager getInstance()
++ void initialize()
+- void initializePlayerOptionsMenu()
+- void initializeRightSideUI()
+- void setDisplay(Display)
++ VBox getPlayerOptionsMenu()
++ VBox getRightSideUI()
++ void updateGUI()
+- void updateStatusBar()
+- void updateText()
++ void updateCursor(Scene,String)
++ Text getActionPointDisplayText()
++ void switchToEventLog()
++ void switchToNpcDisplay()
++ NpcDisplay getNpcDisplay()
++ void enableButton()
++ void disableButton()
++ void deselectFrame(ImageView)
+}
+
+
+class utils.DungeonGenerator {
+- {static} int BOARD_SIZE
+- {static} int ROOM_MIN_SIZE
+- {static} int ROOM_MAX_SIZE
+- {static} int MIN_ROOM_DISTANCE
+- char[][] dungeon
++ <<Create>> DungeonGenerator()
++ void generateDungeon()
+- boolean isValidRoomPlacement(Room,List<Room>)
+- void connectRooms(Room,List<Room>,Set<Room>)
++ char[][] getDungeonLayout()
+}
+
+
+class utils.DungeonGenerator$Room {
+~ int startX
++ <<Create>> Room(int,int,int,int)
++ int centerX()
++ int centerY()
+}
+
+
+class scenes.GameScene {
+- {static} int BOARD_SIZE
+- {static} int SQUARE_SIZE
+- {static} int GAME_SIZE
+- {static} double MAX_FOG_OPACITY
+- {static} double MAX_FOG_VIEW_DISTANT
+- GameManager gameManager
+- EffectMaker effectMaker
+- BasePlayerPiece player
+- GUIManager guiManager
+- TurnManager turnManager
+- DungeonGenerator dungeonGenerator
+- int bufferMaxActionPoint
+- ArrayList<Point2D> availableAttackTiles
+- ArrayList<Point2D> availableMoveTiles
+- ArrayList<Point2D> availableSkillTiles
+- ArrayList<Point2D> availableItemTiles
+- boolean[][] validMovesCache
+- ImageView[][] dungeonFloor
+- ImageView[][] selectionFloor
+- BasePiece[][] piecesPosition
+- List<BasePiece> environmentPieces
+- boolean isPlayerPieceSelected
+- Scene scene
+- Pane animationPane
+- GridPane boardPane
+- GridPane fogPane
+- GridPane tilePane
+- BorderPane root
+- VBox rightPane
+- VBox leftPane
+- StackPane centerPane
+- Text currentLevelText
++ <<Create>> GameScene()
++ Scene getScene()
+- void initializeEnvironment()
+- void gameStart()
+- void initFog(GridPane)
+- void startFogOpacityUpdate(ImageView)
+- void updateFogOpacity(ImageView,int,int)
+- void initFloor(GridPane)
+- void placeDungeon(char[][])
+- void placePiece(BasePiece)
+- void setupMouseEvents()
+- void handleSquareClick(int,int)
+- boolean isValidMove(int,int)
+- void precomputeValidMoves()
++ void resetSelection(int)
+- void placeEntityRandomly(BasePiece)
+- void removeElements()
++ void removePiece(BasePiece)
+- void setupKeyEvents(Scene)
++ void generateNewFloor()
+- void normalRoom()
+- void safeRoom()
+- void BossRoom1()
++ void resetSelectionAll()
+- void handleSkillShortcut(int)
+}
+
+
+
+
+pieces.HealthBuffable <|.. items.potions.GreenPotion
+items.potions.BasePotion <|-- items.potions.GreenPotion
+pieces.players.BasePlayerPiece <|-- pieces.players.Wizard
+skills.BaseSkill <|-- skills.EmptySkill
+logic.gameUI.display.Display <|.. logic.gameUI.display.NpcDisplay
+skills.universal.HealthBuffable <|.. skills.universal.Narcissistic
+skills.universal.AttackBuffable <|.. skills.universal.Narcissistic
+skills.universal.ActionPointBuffable <|.. skills.universal.Narcissistic
+skills.universal.ManaBuffable <|.. skills.universal.Narcissistic
+skills.BaseSkill <|-- skills.universal.Narcissistic
+pieces.Attackable <|.. skills.knight.Slash
+skills.BaseSkill <|-- skills.knight.Slash
+pieces.Healable <|.. skills.knight.Heal
+skills.BaseSkill <|-- skills.knight.Heal
+skills.BaseSkill <|-- skills.universal.Teleport
+pieces.Attackable <|.. skills.universal.TripleStrike
+skills.BaseSkill <|-- skills.universal.TripleStrike
+pieces.BasePiece <|-- pieces.wall.BaseWallPiece
+pieces.BaseStatus <|.. pieces.enemies.BaseMonsterPiece
+pieces.BasePiece <|-- pieces.enemies.BaseMonsterPiece
+pieces.Buffable <|.. skills.universal.Rho_Aias
+skills.BaseSkill <|-- skills.universal.Rho_Aias
+pieces.Attackable <|.. skills.universal.HammerFall
+skills.BaseSkill <|-- skills.universal.HammerFall
+javafx.application.Application <|-- app.Main
+pieces.Attackable <|.. skills.universal.BloodPact
+skills.BaseSkill <|-- skills.universal.BloodPact
+pieces.Attackable <|.. skills.archer.Halt
+skills.BaseSkill <|-- skills.archer.Halt
+pieces.AttackBuffable <|.. items.potions.PurplePotion
+items.potions.BasePotion <|-- items.potions.PurplePotion
+pieces.Attackable <|.. skills.universal.Ambush
+skills.BaseSkill <|-- skills.universal.Ambush
+pieces.enemies.BaseMonsterPiece <|-- pieces.enemies.Necromancer
+pieces.enemies.BaseMonsterPiece <|-- pieces.enemies.Skeleton
+pieces.Attackable <|.. skills.knight.Stomp
+skills.BaseSkill <|-- skills.knight.Stomp
+pieces.Healable <|.. skills.universal.HolyLight
+pieces.Attackable <|.. skills.universal.HolyLight
+skills.BaseSkill <|-- skills.universal.HolyLight
+skills.BaseSkill <|-- skills.LockedSlot
+pieces.enemies.BaseMonsterPiece <|-- pieces.enemies.Vampire
+logic.SpriteAnimation <|-- logic.effect.Effect
+javafx.animation.AnimationTimer <|-- logic.SpriteAnimation
+pieces.ManaRefillable <|.. items.potions.BluePotion
+items.potions.BasePotion <|-- items.potions.BluePotion
+logic.gameUI.display.Display <|.. logic.gameUI.display.EventLogDisplay
+pieces.Attackable <|.. skills.knight.Dart
+skills.BaseSkill <|-- skills.knight.Dart
+items.BaseItem <|-- items.EmptyItem
+scenes.CharSelectionScene +.. scenes.CharSelectionScene$CharCard
+scenes.VBox <|-- scenes.CharSelectionScene$CharCard
+scenes.CharSelectionScene +.. scenes.CharSelectionScene$CharInfoBox
+scenes.Pane <|-- scenes.CharSelectionScene$CharInfoBox
+scenes.CharSelectionScene +.. scenes.CharSelectionScene$StatBox
+scenes.VBox <|-- scenes.CharSelectionScene$StatBox
+scenes.CharSelectionScene +.. scenes.CharSelectionScene$SkillList
+scenes.VBox <|-- scenes.CharSelectionScene$SkillList
+scenes.CharSelectionScene +.. scenes.CharSelectionScene$SkillStat
+scenes.HBox <|-- scenes.CharSelectionScene$SkillStat
+pieces.Attackable <|.. skills.wizard.RainOfFire
+skills.BaseSkill <|-- skills.wizard.RainOfFire
+pieces.Buffable <|.. skills.wizard.IceShield
+skills.BaseSkill <|-- skills.wizard.IceShield
+pieces.enemies.BaseMonsterPiece <|-- pieces.enemies.SlimeMucilage
+pieces.enemies.BaseMonsterPiece <|-- pieces.enemies.Tiny
+pieces.Attackable <|.. skills.universal.Bind
+skills.BaseSkill <|-- skills.universal.Bind
+skills.BaseSkill <|-- skills.archer.Rolling
+pieces.enemies.BaseMonsterPiece <|-- pieces.enemies.SlimeBoss
+pieces.Attackable <|.. skills.archer.Targetlock
+skills.BaseSkill <|-- skills.archer.Targetlock
+pieces.Attackable <|.. skills.universal.StaticShock
+skills.BaseSkill <|-- skills.universal.StaticShock
+pieces.Attackable <|.. skills.universal.Kick
+skills.BaseSkill <|-- skills.universal.Kick
+pieces.npcs.BaseNpcPiece <|-- pieces.npcs.Dealer
+javafx.scene.layout.HBox <|-- logic.effect.Popup
+pieces.Attackable <|.. skills.universal.Punch
+skills.BaseSkill <|-- skills.universal.Punch
+pieces.Attackable <|.. skills.wizard.DragonFire
+skills.BaseSkill <|-- skills.wizard.DragonFire
+pieces.ActionPointBuffable <|.. items.potions.YellowPotion
+items.potions.BasePotion <|-- items.potions.YellowPotion
+items.Usable <|.. items.potions.BasePotion
+items.BaseItem <|-- items.potions.BasePotion
+pieces.enemies.BaseMonsterPiece <|-- pieces.enemies.Bomb
+pieces.Healable <|.. items.potions.RedPotion
+items.potions.BasePotion <|-- items.potions.RedPotion
+pieces.BasePiece <|-- pieces.npcs.BaseNpcPiece
+pieces.BaseStatus <|.. pieces.players.BasePlayerPiece
+pieces.BasePiece <|-- pieces.players.BasePlayerPiece
+pieces.players.BasePlayerPiece <|-- pieces.players.Archer
+logic.gameUI.overlay.Overlay <|-- logic.gameUI.overlay.InfoOverlay
+pieces.enemies.BaseMonsterPiece <|-- pieces.enemies.Zombie
+pieces.players.BasePlayerPiece <|-- pieces.players.Knight
+pieces.Attackable <|.. skills.universal.BloodLust
+pieces.Healable <|.. skills.universal.BloodLust
+skills.BaseSkill <|-- skills.universal.BloodLust
+pieces.Attackable <|.. skills.wizard.Fireball
+skills.BaseSkill <|-- skills.wizard.Fireball
+pieces.Healable <|.. skills.universal.LesserHeal
+skills.BaseSkill <|-- skills.universal.LesserHeal
+logic.gameUI.display.Display <|.. logic.gameUI.display.SkillSelectDisplay
+pieces.Attackable <|.. skills.archer.Snipe
+skills.BaseSkill <|-- skills.archer.Snipe
+logic.gameUI.display.Display <|.. logic.gameUI.display.InventoryDisplay
+pieces.enemies.BaseMonsterPiece <|-- pieces.enemies.Bomber
+utils.DungeonGenerator +.. utils.DungeonGenerator$Room
+@enduml
